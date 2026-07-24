@@ -22,11 +22,13 @@ WerkOS draait om één centrale operationele entiteit:
 
 **Project**
 
-Alles wat binnen de dagelijkse operatie gebeurt, behoort tot een project.
+Alles wat tot de dagelijkse operatie van een opdracht behoort, leeft binnen een project.
 
-Er bestaan geen losse entiteiten zoals Lead, Offerte of Werk.
+Er bestaan geen losse entiteiten buiten die context, zoals een aparte Lead.
 
-Een project verandert gedurende zijn levenscyclus alleen van fase.
+Offertes, werkzaamheden, werkbonnen, facturen en bestanden zijn onderdelen van een project — geen vervangers ervan.
+
+Een project verandert gedurende zijn levenscyclus alleen van status.
 
 Daardoor ontstaat één doorlopende tijdlijn: vanaf het eerste klantcontact tot en met de uiteindelijke betaling.
 
@@ -34,11 +36,9 @@ Daardoor ontstaat één doorlopende tijdlijn: vanaf het eerste klantcontact tot 
 
 # Levenscyclus van een project
 
-Een project doorloopt de volgende fases.
+De **domeinstatussen** van een project zijn:
 
 ```
-Nieuwe aanvraag
-        ↓
 Voorbereiding
         ↓
 Uitvoering
@@ -52,19 +52,25 @@ Afgerond
 Archief
 ```
 
-Iedere fase vertegenwoordigt een andere stap binnen de dagelijkse operatie.
+**Nieuwe aanvraag** is geen aparte status.
+
+Het is een **UI-label / filter** voor projecten in Voorbereiding (bijvoorbeeld zonder geaccepteerde offerte).
+
+Zo voelt het voor de ondernemer als een aanvraag, terwijl technisch hetzelfde project doorloopt.
 
 ---
 
-# Fase 1 — Nieuwe aanvraag
+# Voorbereiding (en de weergave “Nieuwe aanvraag”)
 
 Een project ontstaat zodra de ondernemer begint met een klantaanvraag.
 
 Technisch bestaat het project dus direct.
 
-Voor de ondernemer voelt dit echter nog niet als een project.
+De status is **Voorbereiding**.
 
-Daarom toont WerkOS deze fase als:
+Voor de ondernemer voelt dit vaak nog niet als “het project”.
+
+Daarom kan WerkOS deze projecten tonen als:
 
 **Nieuwe aanvraag**
 
@@ -87,19 +93,19 @@ Het doel van deze fase is eenvoudig:
 
 # De mentale overgang
 
-Wanneer de offerte wordt geaccepteerd verandert er technisch niets.
+Wanneer de offerte wordt geaccepteerd verandert er technisch niets aan het bestaan van het project.
 
 Het project bestond immers al.
 
 Alleen de beleving van de ondernemer verandert.
 
-De "Nieuwe aanvraag" wordt vanaf dat moment een **Project**.
+De weergave “Nieuwe aanvraag” wordt vanaf dat moment een lopend **project** in uitvoering.
 
 WerkOS sluit hiermee aan op de natuurlijke manier waarop ondernemers denken.
 
 ---
 
-# Fase 2 — Uitvoering
+# Uitvoering
 
 Na akkoord op de offerte start de uitvoering.
 
@@ -109,23 +115,19 @@ Niet de planning.
 
 Niet de werkbon.
 
-Maar het:
+Maar de **Werkzaamheden**.
 
-# Werkplan
-
-Ieder project bevat precies één Werkplan.
-
-Het Werkplan beschrijft alles wat moet gebeuren om het project succesvol af te ronden.
-
-Het Werkplan geeft antwoord op de vraag:
+De werkzaamheden op een project geven samen antwoord op de vraag:
 
 > Wat moet er nog gebeuren?
 
 ---
 
-# Werkplan
+# Werkzaamheden
 
-Een Werkplan bestaat uit Werkzaamheden.
+Een project bevat nul of meer werkzaamheden.
+
+Werkzaamheden kunnen hiërarchisch zijn (subwerkzaamheden).
 
 Voorbeelden:
 
@@ -139,14 +141,11 @@ Werkzaamheden kunnen:
 
 - Handmatig worden aangemaakt
 - Vanuit een template worden toegevoegd
+- Op basis van een geaccepteerde offerte worden **voorgesteld** (nooit automatisch zonder bevestiging)
 
-Hierdoor kunnen ondernemers snel nieuwe projecten opzetten.
+Optioneel kan een werkzaamheid gekoppeld blijven aan één of meer **offerteregels**, zodat verwachting en werkelijkheid vergelijkbaar blijven.
 
----
-
-# Werkzaamheden
-
-Iedere Werkzaamheid beschikt over een eigen detailpagina.
+Iedere werkzaamheid beschikt over een eigen detailpagina.
 
 Hier kunnen onder andere worden vastgelegd:
 
@@ -160,7 +159,7 @@ Hier kunnen onder andere worden vastgelegd:
 - Urenregistratie
 - Materiaalregistratie
 
-Een Werkzaamheid vertegenwoordigt daadwerkelijk werk.
+Een werkzaamheid vertegenwoordigt daadwerkelijk werk.
 
 Geen administratief document.
 
@@ -170,9 +169,9 @@ Geen administratief document.
 
 Werkbonnen zijn optioneel.
 
-Een Werkbon is een uitvoeringsdocument.
+Een werkbon is een uitvoeringsdocument.
 
-Niet iedere Werkzaamheid heeft een Werkbon nodig.
+Niet iedere werkzaamheid heeft een werkbon nodig.
 
 Voorbeeld:
 
@@ -180,27 +179,27 @@ Werkzaamheid:
 
 "Interieurdesigner bellen"
 
-Hiervoor is geen Werkbon nodig.
+Hiervoor is geen werkbon nodig.
 
 Werkzaamheid:
 
 "Dak vervangen"
 
-Hiervoor kan een Werkbon worden aangemaakt.
+Hiervoor kan een werkbon worden aangemaakt.
 
-Een Werkbon ondersteunt de uitvoering van één of meerdere Werkzaamheden.
+Een werkbon ondersteunt de uitvoering van één of meerdere werkzaamheden.
 
-WerkOS mag ondernemers nooit verplichten om Werkbonnen te gebruiken.
+WerkOS mag ondernemers nooit verplichten om werkbonnen te gebruiken.
 
 ---
 
-# Planning
+# Planning en afspraken
 
 Planning ondersteunt de uitvoering.
 
-Planning vervangt nooit het Werkplan.
+Planning vervangt nooit de werkzaamheden.
 
-Het Werkplan geeft antwoord op:
+Werkzaamheden geven antwoord op:
 
 > Wat moet er gebeuren?
 
@@ -208,11 +207,21 @@ Planning geeft antwoord op:
 
 > Wanneer gebeurt het?
 
+Een **afspraak** is een eigen object.
+
+Een afspraak kan:
+
+- bij een project horen;
+- optioneel aan een werkzaamheid of werkbon gekoppeld zijn;
+- of bedrijfsbreed bestaan zonder project (bijvoorbeeld intern overleg).
+
 ---
 
 # Communicatie
 
 Communicatie is een eerste klas onderdeel van WerkOS.
+
+*(Product-UI voor communicatie volgt na de MVP; het domein en de infrastructuur moeten er wel op voorbereid zijn.)*
 
 Communicatie is altijd gekoppeld aan een context.
 
@@ -250,9 +259,9 @@ Hier worden automatisch opgeslagen:
 - Gegenereerde documenten
 - Geüploade bestanden
 
-Iedere Werkzaamheid beschikt daarnaast over een eigen bestandenbibliotheek.
+Iedere werkzaamheid beschikt daarnaast over een weergave van relevante bestanden.
 
-Bestanden die aan een Werkzaamheid worden toegevoegd verschijnen automatisch ook binnen de algemene projectbibliotheek, gegroepeerd per Werkzaamheid.
+Bestanden die aan een werkzaamheid worden toegevoegd verschijnen automatisch ook binnen de algemene projectbibliotheek, gegroepeerd per werkzaamheid.
 
 Een bestand bestaat altijd maar één keer.
 
@@ -287,7 +296,7 @@ WerkOS maakt deze verschillen inzichtelijk zonder extra administratie te creëre
 
 # Operationeel afgerond
 
-De uitvoering is afgerond wanneer alle Werkzaamheden uit het Werkplan zijn voltooid.
+De uitvoering is afgerond wanneer alle werkzaamheden van het project zijn voltooid.
 
 Vanaf dat moment hoeft er buiten niets meer uitgevoerd te worden.
 
@@ -327,6 +336,8 @@ Ook vanuit een gearchiveerd project kan later nog terugkerend werk ontstaan.
 Terugkerend werk is geen aparte module.
 
 Het is een uitbreiding van een bestaand project.
+
+*(Product-UI hiervoor volgt na de MVP; het domein moet er wel op voorbereid zijn.)*
 
 Bij ieder project kan een terugkerend werkschema worden ingesteld.
 
@@ -374,13 +385,17 @@ Het notificatiecentrum laat zien wat er sinds de vorige keer is veranderd.
 
 # Uitgangspunten
 
-## Eén project
+## Eén project als ruggengraat
 
-Alles behoort tot een project.
+Opdrachtgerelateerd werk behoort tot een project.
 
-## Eén Werkplan
+## Werkzaamheden beantwoorden “wat nog?”
 
-Ieder project heeft precies één Werkplan.
+Het overzicht van openstaande werkzaamheden is het hart van de uitvoering.
+
+## Werkbonnen zijn optioneel
+
+Nooit verplicht.
 
 ## Werk vóór administratie
 

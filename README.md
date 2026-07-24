@@ -47,9 +47,17 @@ src/
 
 ## Multi-tenancy & roles
 
-Every customer is an **organization**. All business data is organization-scoped.
+Every customer company is an **organization**. Business data is organization-scoped via **memberships**.
 
-Roles (from day one): `super_admin` · `owner` · `employee` · `customer`
+| Role | Scope | Notes |
+| --- | --- | --- |
+| `super_admin` | Platform | WerkOS internal; can access orgs for support |
+| `owner` | Organization | Exactly one per org; user may own multiple orgs |
+| `office_employee` | Organization | Staff; exactly one organization |
+| `field_employee` | Organization | Field staff; exactly one organization |
+| `customer` | Organization | Portal; user may be customer of multiple orgs |
+
+Product docs (source of truth for domain language): [`docs/`](docs/). Start with [`docs/GLOSSARY.md`](docs/GLOSSARY.md).
 
 ## Environment
 
@@ -65,4 +73,8 @@ Validated via `@t3-oss/env-nextjs` in `src/lib/env.ts`.
 
 ## Current status
 
-Foundation only — no business features yet.
+Phase 1 in progress: auth, multi-step onboarding, Stripe trial, Werk/Bedrijf shell.
+
+Setup instructions: [`docs/PHASE1_SETUP.md`](docs/PHASE1_SETUP.md).
+
+Live: [https://app.werkos.nl](https://app.werkos.nl) (default locale `/nl`).

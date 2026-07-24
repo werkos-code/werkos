@@ -126,8 +126,7 @@ Gedurende de volledige levenscyclus van een project werkt de ondernemer vrijwel 
 
 Tijdens de verschillende fases van een project wordt deze pagina gebruikt voor:
 
-- Werkplan beheren
-- Werkzaamheden aanmaken
+- Werkzaamheden beheren
 - Planning bekijken
 - Materialen registreren
 - Uren registreren
@@ -227,19 +226,20 @@ WerkOS kent één bron van waarheid.
 
 Voorbeelden:
 
-Een Werkzaamheid kan zichtbaar zijn binnen:
+Een werkzaamheid kan zichtbaar zijn binnen:
 
-- Werkplan
+- Het projectoverzicht van werkzaamheden
 - Planning
 - Zoekresultaten
 - Facturatie
 - Dashboard
 
-Het blijft altijd dezelfde Werkzaamheid.
+Het blijft altijd dezelfde werkzaamheid.
 
 Hetzelfde geldt voor:
 
 - Werkbonnen
+- Afspraken
 - Bestanden
 - Facturen
 - Offertes
@@ -281,7 +281,7 @@ Projecten
 
 + Nieuw project
 
-Werkplan
+Werkzaamheden (binnen een project)
 
 + Nieuwe werkzaamheid
 
@@ -301,7 +301,7 @@ Hierdoor sluit iedere actie logisch aan op de huidige werkruimte.
 
 Planning is een eigen hoofdwerkruimte.
 
-Planning organiseert de uitvoering van werkzaamheden.
+Planning organiseert wanneer werk plaatsvindt.
 
 Planning is gebaseerd op een kalenderweergave.
 
@@ -309,9 +309,15 @@ Planning is verantwoordelijk voor de vraag:
 
 > Wie doet wat en wanneer?
 
+Planning toont onder andere:
+
+- geplande werkzaamheden;
+- afspraken gekoppeld aan een project;
+- bedrijfsbrede afspraken zonder project.
+
 Planning is geen alternatieve projectweergave.
 
-Planning ondersteunt projecten.
+Planning ondersteunt projecten en de dagelijkse agenda van het bedrijf.
 
 ---
 

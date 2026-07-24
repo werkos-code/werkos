@@ -1,7 +1,3 @@
-/**
- * Placeholder for Supabase-generated Database types.
- * Replace with `supabase gen types typescript` output once the schema exists.
- */
 export type Json =
   | string
   | number
@@ -10,19 +6,202 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
+export type OrganizationRole =
+  | "owner"
+  | "office_employee"
+  | "field_employee"
+  | "customer";
+
+export type SubscriptionStatus =
+  | "trialing"
+  | "active"
+  | "past_due"
+  | "canceled"
+  | "incomplete"
+  | "incomplete_expired"
+  | "unpaid"
+  | "paused";
+
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never;
+      profiles: {
+        Row: {
+          id: string;
+          full_name: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          full_name?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          full_name?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      organizations: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          industry: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+          industry?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          slug?: string;
+          industry?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      organization_memberships: {
+        Row: {
+          id: string;
+          organization_id: string;
+          user_id: string;
+          role: OrganizationRole;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          user_id: string;
+          role: OrganizationRole;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          user_id?: string;
+          role?: OrganizationRole;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      onboarding_drafts: {
+        Row: {
+          user_id: string;
+          step: string;
+          company_name: string | null;
+          industry: string | null;
+          industry_other: string | null;
+          office_seats: number;
+          field_seats: number;
+          stripe_checkout_session_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          step?: string;
+          company_name?: string | null;
+          industry?: string | null;
+          industry_other?: string | null;
+          office_seats?: number;
+          field_seats?: number;
+          stripe_checkout_session_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          step?: string;
+          company_name?: string | null;
+          industry?: string | null;
+          industry_other?: string | null;
+          office_seats?: number;
+          field_seats?: number;
+          stripe_checkout_session_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      subscriptions: {
+        Row: {
+          id: string;
+          organization_id: string;
+          stripe_customer_id: string | null;
+          stripe_subscription_id: string | null;
+          status: SubscriptionStatus;
+          trial_ends_at: string | null;
+          office_seats: number;
+          field_seats: number;
+          cancel_at_period_end: boolean;
+          current_period_end: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          stripe_customer_id?: string | null;
+          stripe_subscription_id?: string | null;
+          status?: SubscriptionStatus;
+          trial_ends_at?: string | null;
+          office_seats?: number;
+          field_seats?: number;
+          cancel_at_period_end?: boolean;
+          current_period_end?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          stripe_customer_id?: string | null;
+          stripe_subscription_id?: string | null;
+          status?: SubscriptionStatus;
+          trial_ends_at?: string | null;
+          office_seats?: number;
+          field_seats?: number;
+          cancel_at_period_end?: boolean;
+          current_period_end?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      is_org_member: {
+        Args: { org_id: string };
+        Returns: boolean;
+      };
+      user_has_organization: {
+        Args: Record<string, never>;
+        Returns: boolean;
+      };
     };
     Enums: {
-      user_role: "super_admin" | "owner" | "employee" | "customer";
+      organization_role: OrganizationRole;
+      subscription_status: SubscriptionStatus;
+      platform_role: "super_admin";
     };
     CompositeTypes: {
       [_ in never]: never;

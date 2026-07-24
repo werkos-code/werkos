@@ -1,0 +1,130 @@
+{
+  "common": {
+    "appName": "WerkOS",
+    "loading": "Laden…",
+    "continue": "Doorgaan",
+    "back": "Terug",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "error": "Er ging iets mis. Probeer het opnieuw.",
+    "perMonth": "/ maand"
+  },
+  "home": {
+    "eyebrow": "WerkOS",
+    "title": "The cockpit of your daily operations",
+    "description": "Everything around your projects in one place. Fast, calm, and clear.",
+    "ctaStart": "Get started",
+    "ctaLogin": "Log in"
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "loginSubtitle": "Welkom terug bij WerkOS.",
+    "email": "E-mailadres",
+    "password": "Wachtwoord",
+    "submitLogin": "Inloggen",
+    "noAccount": "Nog geen account?",
+    "startOnboarding": "Start met WerkOS",
+    "logout": "Log out",
+    "invalidCredentials": "E-mail of wachtwoord is onjuist."
+  },
+  "onboarding": {
+    "progress": "Stap {current} van {total}",
+    "welcome": {
+      "title": "Welcome to WerkOS",
+      "description": "We helpen je om jouw bedrijf binnen enkele minuten klaar te zetten.",
+      "cta": "Get started"
+    },
+    "account": {
+      "title": "Maak je account",
+      "description": "Alleen wat nodig is om te beginnen.",
+      "fullName": "Naam",
+      "email": "E-mailadres",
+      "password": "Wachtwoord",
+      "passwordHint": "Minimaal 8 tekens",
+      "submit": "Doorgaan",
+      "emailInUse": "Dit e-mailadres is al in gebruik. Log in of gebruik een ander adres."
+    },
+    "company": {
+      "title": "Over je bedrijf",
+      "description": "Alleen de basis. De rest vul je later aan.",
+      "companyName": "Bedrijfsnaam",
+      "industry": "Branche",
+      "industryOther": "Andere branche",
+      "industryPlaceholder": "Typ je branche",
+      "submit": "Doorgaan",
+      "industries": {
+        "painter": "Schilder",
+        "roofer": "Dakdekker",
+        "installer": "Installateur",
+        "landscaper": "Hovenier",
+        "plasterer": "Stukadoor",
+        "other": "Anders"
+      }
+    },
+    "team": {
+      "title": "Met hoeveel mensen ga je WerkOS gebruiken?",
+      "description": "De owner zit in het basisabonnement. Tel alleen extra medewerkers.",
+      "office": "Kantoormedewerkers",
+      "field": "Uitvoerende medewerkers",
+      "priceTitle": "Maandelijks",
+      "base": "WerkOS basis",
+      "officeLine": "Kantoormedewerkers (+{count})",
+      "fieldLine": "Uitvoerende (+{count})",
+      "total": "Totaal",
+      "includesAll": "Inclusief alle functionaliteiten",
+      "includesTrial": "14 dagen gratis proefperiode",
+      "submit": "Doorgaan"
+    },
+    "payment": {
+      "title": "Start je proefperiode",
+      "description": "Eén abonnement. Geen modules. Geen feature locks.",
+      "plan": "WerkOS",
+      "users": "Gebruikers",
+      "ownerIncluded": "1 owner (inbegrepen)",
+      "officeSeats": "{count} kantoormedewerker(s)",
+      "fieldSeats": "{count} uitvoerende medewerker(s)",
+      "total": "Totaal",
+      "trial": "14 dagen gratis proefperiode",
+      "trialNote": "Je voert een betaalmethode in. Tijdens de trial wordt niets afgeschreven.",
+      "cta": "Start gratis proefperiode",
+      "stripeMissing": "Betalingen zijn nog niet geconfigureerd. Voeg Stripe-keys toe."
+    },
+    "provisioning": {
+      "title": "WerkOS wordt ingericht…",
+      "company": "Bedrijf aangemaakt",
+      "team": "Team ingesteld",
+      "environment": "Standaardomgeving voorbereid",
+      "almost": "Bijna klaar…",
+      "waiting": "Even geduld terwijl we alles klaarzetten.",
+      "failed": "Het inrichten duurt langer dan verwacht. Vernieuw de pagina of neem contact op."
+    },
+    "complete": {
+      "title": "Welkom bij WerkOS",
+      "description": "Je proefperiode is gestart. Nog 14 dagen gratis.",
+      "cta": "Open WerkOS"
+    }
+  },
+  "shell": {
+    "werk": "Work",
+    "bedrijf": "Company",
+    "openInWerk": "Open in Werk",
+    "dashboard": "Dashboard",
+    "projects": "Projecten",
+    "planning": "Planning",
+    "communications": "Communicatie",
+    "customers": "Klanten",
+    "finance": "Financiën",
+    "settings": "Instellingen",
+    "werkEmptyTitle": "Welkom in Werk",
+    "werkEmptyDescription": "Dit is je operationele cockpit. Projecten volgen in een volgende fase.",
+    "bedrijfEmptyTitle": "Welkom in Bedrijf",
+    "bedrijfEmptyDescription": "Hier komt bedrijfsvoering, financiën en instellingen."
+  },
+  "pricing": {
+    "currency": "EUR",
+    "baseCents": 5900,
+    "officeSeatCents": 2500,
+    "fieldSeatCents": 1500,
+    "trialDays": 14
+  }
+}

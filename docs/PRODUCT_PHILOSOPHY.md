@@ -50,7 +50,7 @@ Voorbeelden:
 
 - “Werk” in plaats van “Operations”
 - “Bedrijf” in plaats van “Management”
-- “Werkplan” in plaats van “Task hierarchy”
+- “Werkzaamheden” in plaats van “Tasks” of “Task hierarchy”
 - “Werkbon” in plaats van “Service Order”
 
 De software past zich aan de ondernemer aan.
@@ -97,16 +97,16 @@ Vrijwel iedere vorm van informatie hoort uiteindelijk terug te leiden te zijn na
 
 Bijvoorbeeld:
 
-- Leads
+- Nieuwe aanvragen (vroege projectfase)
 - Offertes
 - Planningen
+- Werkzaamheden
 - Werkbonnen
 - Bestanden
 - Foto's
 - Notities
 - Communicatie
 - Facturen
-- Taken
 - Tijdregistraties
 
 Alles komt samen rondom hetzelfde project.
@@ -137,15 +137,15 @@ En het project blijft bestaan wanneer er wordt uitgevoerd, afgerond en nagezorgd
 
 ---
 
-# Het werkplan organiseert het werk
+# Werkzaamheden organiseren het werk
 
-Tijdens de uitvoering wordt het werkplan het operationele hart van het project.
+Tijdens de uitvoering vormen de **werkzaamheden** het operationele hart van het project.
 
-Het werkplan bevat het werk dat nog gedaan moet worden.
+Zij bevatten het werk dat nog gedaan moet worden.
 
-Uitvoeringsdocumenten, zoals werkbonnen, ondersteunen het werkplan.
+Uitvoeringsdocumenten, zoals werkbonnen, ondersteunen werkzaamheden.
 
-Zij vervangen het niet.
+Zij vervangen ze niet.
 
 De vraag die WerkOS altijd moet beantwoorden is:
 
@@ -428,7 +428,7 @@ Bij iedere ontwerpbeslissing gelden de volgende uitgangspunten.
 - De dagelijkse operatie staat altijd centraal.
 - Projecten vormen de context van vrijwel alle informatie.
 - Een project begint bij de voorbereiding, niet pas bij de uitvoering.
-- Het werkplan is het hart van de uitvoering; documenten ondersteunen het werk.
+- Werkzaamheden zijn het hart van de uitvoering; documenten (zoals werkbonnen) ondersteunen het werk.
 - Context weegt zwaarder dan modules.
 - Spreek altijd de taal van de ondernemer.
 - Minimaliseer schermtijd; digitaliseer niet om te digitaliseren.

@@ -1,8 +1,8 @@
 # DOMAIN_MODEL.md
 DOMAIN_MODEL.md
 
-Versie: 1.0
-Status: Concept (Levend document)
+Versie: 1.1
+Status: Concept (Levend document) — gesynchroniseerd Phase 0
 Project: WerkOS
 
 ⸻
@@ -162,15 +162,17 @@ Deze objecten vormen samen het complete operationele model.
 
 Bedrijf
 │
-├── Gebruikers
+├── Lidmaatschappen (gebruikers + rol)
 │
 ├── Klanten
 │
 ├── Projecten
 │   │
 │   ├── Offertes
+│   │   └── Offerteregels
 │   ├── Werkzaamheden
-│   ├── Planning
+│   ├── Werkbonnen (optioneel)
+│   ├── Afspraken (optioneel)
 │   ├── Communicatie
 │   ├── Bestanden
 │   ├── Facturen
@@ -178,9 +180,13 @@ Bedrijf
 │   ├── Notities
 │   └── Logboek
 │
+├── Afspraken (bedrijfsbreed, zonder project)
+│
 └── Instellingen
 
-Vrijwel alles binnen WerkOS bestaat uiteindelijk binnen de context van een project.
+Vrijwel alles binnen de dagelijkse operatie van een opdracht bestaat uiteindelijk binnen de context van een project.
+
+Afspraken kunnen uitzonderlijk ook bedrijfsbreed bestaan.
 
 ⸻
 
@@ -207,15 +213,27 @@ WerkOS is daarmee volledig multi-tenant.
 
 ⸻
 
-Gebruikers
+Gebruikers en lidmaatschappen
 
-Een gebruiker is iemand die toegang heeft tot WerkOS.
+Een gebruiker is iemand met een account in WerkOS.
 
-Er bestaan vier soorten gebruikers.
+Toegang tot een bedrijf verloopt via een **lidmaatschap** (membership): gebruiker ↔ bedrijf + rol.
 
-Eigenaar
+### Platformrol
 
-Iedere organisatie heeft precies één eigenaar.
+**Super admin**
+
+Een interne WerkOS-medewerker.
+
+Geen lid van een klantbedrijf in de normale zin.
+
+Heeft een eigen platformdashboard en kan ten behoeve van support inloggen bij bedrijven op het platform.
+
+### Rollen binnen een bedrijf
+
+**Eigenaar (`owner`)**
+
+Ieder bedrijf heeft precies één eigenaar.
 
 De eigenaar is verantwoordelijk voor:
 
@@ -223,11 +241,13 @@ De eigenaar is verantwoordelijk voor:
 * betalingen
 * bedrijfsinstellingen
 * uitnodigen van gebruikers
-* hoogste rechten
+* hoogste rechten binnen dat bedrijf
+
+Eén gebruiker mag **eigenaar zijn van meerdere bedrijven**.
 
 ⸻
 
-Kantoormedewerker
+**Kantoormedewerker (`office_employee`)**
 
 Een administratieve gebruiker.
 
@@ -241,9 +261,11 @@ Voorbeelden:
 
 Een kantoormedewerker gebruikt vrijwel alle onderdelen van WerkOS.
 
+Personeel (kantoor én uitvoerend) hoort altijd bij **precies één bedrijf**.
+
 ⸻
 
-Uitvoerend medewerker
+**Uitvoerend medewerker (`field_employee`)**
 
 Een uitvoerende medewerker werkt voornamelijk buiten.
 
@@ -252,18 +274,21 @@ Daarom is de interface veel eenvoudiger.
 De focus ligt op:
 
 * werkzaamheden
+* werkbonnen
 * planning
 * foto’s
 * uren
-* communicatie
+* materialen
 
 Niet op administratie.
 
+Ook uitvoerend personeel hoort bij precies één bedrijf.
+
 ⸻
 
-Klant
+**Klant (`customer`)**
 
-Een klant kan optioneel toegang krijgen tot zijn eigen projecten.
+Een klantgebruiker kan optioneel toegang krijgen tot projecten van één of meer bedrijven waar die persoon klant is.
 
 De klant ziet uitsluitend informatie die relevant is voor de samenwerking.
 
@@ -275,9 +300,22 @@ Bijvoorbeeld:
 * communicatie
 * facturen
 
-WerkOS ondersteunt bewust slechts één klantaccount per klant.
+Per bedrijf geldt: één klantaccount per klantrelatie (zoals eerder vastgelegd).
+
+Een persoon mag wel bij **meerdere bedrijven** als klant lid zijn.
 
 Hoe een klant intern informatie deelt, is de verantwoordelijkheid van de klant zelf.
+
+⸻
+
+### Lidmaatschapsregels (samenvatting)
+
+* Eigenaar: mag lid zijn van meerdere bedrijven (als eigenaar).
+* Kantoormedewerker / uitvoerend medewerker: precies één bedrijf.
+* Klantgebruiker: mag lid zijn van meerdere bedrijven (als klant).
+* Super admin: platformniveau; geen gewone bedrijfsrol.
+* Binnen één lidmaatschap heeft een gebruiker precies één rol.
+* Ieder bedrijf heeft precies één eigenaar.
 
 ⸻
 
@@ -377,6 +415,10 @@ Deze status helpt bij overzicht.
 Hij bepaalt niet welke acties uitgevoerd mogen worden.
 
 Een ondernemer kan altijd afwijken.
+
+**Nieuwe aanvraag** is geen status.
+
+Het is een weergave/filter over projecten in Voorbereiding (bijvoorbeeld zonder geaccepteerde offerte).
 
 ⸻
 
@@ -512,13 +554,27 @@ Vrijwel alle eigenschappen zijn optioneel.
 
 ---
 
+## Koppeling met werkzaamheden
+
+Bij acceptatie van een offerte stelt WerkOS voor om werkzaamheden aan te maken.
+
+Nooit automatisch zonder bevestiging.
+
+Optioneel blijft een **blijvende koppeling** bestaan tussen offerteregel(s) en werkzaamheid(en).
+
+Die koppeling ondersteunt calculatie: verwachting versus werkelijkheid.
+
+---
+
 # Werkzaamheden
 
 Werkzaamheden vormen het uitvoerbare werk binnen een project.
 
 Waar een offerte beschrijft **wat de klant koopt**, beschrijven werkzaamheden **wat uitgevoerd moet worden**.
 
-Werkzaamheden zijn volledig onafhankelijk van offertes.
+Werkzaamheden kunnen bestaan zonder offerte.
+
+Optioneel kunnen zij gekoppeld zijn aan offerteregels.
 
 Een ondernemer mag:
 
@@ -693,9 +749,27 @@ Checklists zijn volledig optioneel.
 
 ---
 
-# Planning
+# Werkbonnen
 
-Planning beschrijft wanneer werkzaamheden uitgevoerd worden.
+Een werkbon is een optioneel uitvoeringsdocument.
+
+Een werkbon behoort tot een project.
+
+Een werkbon ondersteunt één of meerdere werkzaamheden.
+
+Niet iedere werkzaamheid heeft een werkbon nodig.
+
+WerkOS mag ondernemers nooit verplichten om werkbonnen te gebruiken.
+
+De werkzaamheid blijft leidend.
+
+De werkbon is hulpmiddel.
+
+---
+
+# Planning en afspraken
+
+Planning beschrijft wanneer werk plaatsvindt.
 
 Planning is geen verplicht onderdeel van een project.
 
@@ -705,30 +779,46 @@ WerkOS ondersteunt dat.
 
 ---
 
+## Afspraak
+
+Een afspraak is een eigen domeinobject.
+
+Een afspraak kan:
+
+- bij een project horen;
+- optioneel gekoppeld zijn aan een werkzaamheid of werkbon;
+- of **bedrijfsbreed** bestaan zonder project (bijvoorbeeld intern overleg).
+
+Een afspraak is dus niet hetzelfde als “een geplande werkzaamheid”.
+
+Beide kunnen in de planning zichtbaar zijn.
+
+---
+
 ## Bedrijfsplanning
 
-Naast de planning binnen projecten bestaat er één centrale planning.
+Naast planning binnen projecten bestaat er één centrale planning.
 
 Hier ziet de ondernemer:
 
 - medewerkers
 - werkzaamheden
-- afspraken
+- afspraken (projectgebonden en bedrijfsbreed)
 - bezetting
 
-De planning is daarmee een andere weergave van dezelfde gegevens.
+De planning is daarmee een weergave van bestaande objecten.
 
-Niet een aparte administratie.
+Niet een aparte administratie met gedupliceerde gegevens.
 
 ---
 
 ## Planning is een weergave
 
-Werkzaamheden bevatten de planning.
+Werkzaamheden en afspraken dragen de tijdsinformatie.
 
 De centrale planning toont die informatie.
 
-Hierdoor bestaat er nooit dubbele informatie.
+Hierdoor bestaat er nooit dubbele kerninformatie.
 
 ---
 
@@ -938,7 +1028,7 @@ Een zoekopdracht op een postcode levert bijvoorbeeld eerder projecten en klanten
 Het domein van WerkOS kent bewust weinig relaties.
 
 Bedrijf
-└── Gebruikers
+└── Lidmaatschappen → Gebruikers (+ rol)
 
 Bedrijf
 └── Klanten
@@ -949,13 +1039,17 @@ Klant
 Project
 ├── Offertes
 ├── Werkzaamheden
-├── Planning
+├── Werkbonnen
+├── Afspraken
 ├── Communicatie
 ├── Bestanden
 ├── Facturen
 ├── Locaties
 ├── Notities
 └── Logboek
+
+Bedrijf
+└── Afspraken (zonder project)
 
 Offerte
 └── Offerteregels
@@ -966,7 +1060,17 @@ Werkzaamheid
 Offerteregel
 └── Offerteregels
 
-Deze eenvoudige structuur vormt de basis van vrijwel alle functionaliteit binnen WerkOS.
+Offerteregel ←──optionele koppeling──→ Werkzaamheid
+
+Werkbon
+└── Werkzaamheden (één of meer)
+
+Afspraak
+├── optioneel → Project
+├── optioneel → Werkzaamheid
+└── optioneel → Werkbon
+
+Deze structuur vormt de basis van vrijwel alle functionaliteit binnen WerkOS.
 
 Nieuwe functionaliteiten horen bij voorkeur bestaande domeinobjecten uit te breiden in plaats van nieuwe concepten te introduceren.
 
@@ -994,10 +1098,10 @@ Deze regels vormen de contracten van het domein. Ze beschrijven niet hoe iets te
 
 # Algemene regels
 
-- Alle gegevens behoren altijd tot precies één bedrijf.
+- Alle bedrijfsgegevens behoren altijd tot precies één bedrijf.
 - Bedrijven zijn volledig van elkaar gescheiden.
-- Een gebruiker behoort altijd tot precies één bedrijf.
-- Iedere entiteit heeft één eigenaar (bedrijf).
+- Toegang tot een bedrijf verloopt via lidmaatschappen.
+- Iedere entiteit heeft één eigenaar (bedrijf), tenzij expliciet anders (bijv. platform-super-admin).
 - WerkOS probeert nooit gegevens te dupliceren wanneer een verwijzing voldoende is.
 - WerkOS automatiseert nooit zonder expliciete bevestiging van de gebruiker.
 - Iedere entiteit heeft een minimale geldige vorm.
@@ -1008,19 +1112,22 @@ Deze regels vormen de contracten van het domein. Ze beschrijven niet hoe iets te
 # Bedrijf
 
 - Een bedrijf heeft precies één eigenaar.
-- Een bedrijf kan meerdere gebruikers hebben.
+- Een bedrijf kan meerdere gebruikers hebben via lidmaatschappen.
 - Een bedrijf kan meerdere klanten hebben.
 - Een bedrijf kan meerdere projecten hebben.
 - Een bedrijf kan slechts één abonnement hebben.
-- Alle data binnen WerkOS behoort uiteindelijk toe aan één bedrijf.
+- Alle bedrijfsdata binnen WerkOS behoort uiteindelijk toe aan één bedrijf.
 
 ---
 
-# Gebruikers
+# Gebruikers en lidmaatschappen
 
-- Iedere gebruiker behoort tot precies één bedrijf.
-- Een gebruiker heeft precies één rol.
-- Een eigenaar kan niet verwijderd worden.
+- Toegang tot een bedrijf verloopt via een lidmaatschap met precies één rol.
+- Een eigenaar mag lid zijn van meerdere bedrijven (als eigenaar).
+- Kantoormedewerkers en uitvoerende medewerkers horen bij precies één bedrijf.
+- Een klantgebruiker mag lid zijn van meerdere bedrijven (als klant).
+- Super admin is een platformrol, geen gewone bedrijfsrol.
+- Een eigenaar van een bedrijf kan niet verwijderd worden zolang die de enige eigenaar is.
 - Een klantaccount is geen medewerker.
 - Een medewerker is geen klantaccount.
 
@@ -1028,11 +1135,11 @@ Deze regels vormen de contracten van het domein. Ze beschrijven niet hoe iets te
 
 # Klanten
 
-- Een klant behoort altijd tot één bedrijf.
+- Een klant (relatie) behoort altijd tot één bedrijf.
 - Een klant kan meerdere projecten hebben.
 - Een project heeft altijd precies één opdrachtgever.
 - Een klantaccount is optioneel.
-- WerkOS ondersteunt één klantaccount per klant.
+- Per bedrijf ondersteunt WerkOS één klantaccount per klantrelatie.
 
 ---
 
@@ -1047,11 +1154,15 @@ Deze regels vormen de contracten van het domein. Ze beschrijven niet hoe iets te
 - Een project kan zonder werkzaamheden bestaan.
 - Een project kan meerdere offertes bevatten.
 - Een project kan meerdere werkzaamheden bevatten.
+- Een project kan meerdere werkbonnen bevatten.
+- Een project kan meerdere afspraken bevatten.
 - Een project kan meerdere facturen bevatten.
 - Een project kan meerdere locaties bevatten.
 - Een project kan meerdere documenten bevatten.
 - Een project kan meerdere gesprekken bevatten.
 - Een project kan meerdere notities bevatten.
+- Domeinstatussen: Voorbereiding → Uitvoering → Operationeel afgerond → Administratief afgerond → Afgerond → Archief.
+- “Nieuwe aanvraag” is een weergave, geen status.
 
 ---
 
@@ -1079,6 +1190,7 @@ Deze regels vormen de contracten van het domein. Ze beschrijven niet hoe iets te
 - Subregels kunnen zelf weer subregels bevatten.
 - Iedere offerteregel kan zelfstandig geprijsd worden.
 - WerkOS legt geen maximale diepte op.
+- Een offerteregel mag optioneel gekoppeld blijven aan één of meer werkzaamheden.
 
 ---
 
@@ -1097,10 +1209,28 @@ Deze regels vormen de contracten van het domein. Ze beschrijven niet hoe iets te
 
 ---
 
+# Werkbonnen
+
+- Een werkbon behoort altijd tot één project.
+- Een werkbon is altijd optioneel.
+- Een werkbon ondersteunt één of meerdere werkzaamheden.
+- WerkOS mag werkbonnen nooit verplichten.
+
+---
+
+# Afspraken
+
+- Een afspraak behoort tot een bedrijf.
+- Een afspraak mag bij een project horen, maar dat is niet verplicht.
+- Een afspraak mag optioneel gekoppeld zijn aan een werkzaamheid of werkbon.
+- Afspraken en werkzaamheden worden niet gedupliceerd in de planningweergave.
+
+---
+
 # Planning
 
 - Planning is altijd optioneel.
-- Planning is een weergave van werkzaamheden.
+- Planning is een weergave van werkzaamheden en afspraken.
 - Planning is geen aparte administratie.
 - Een werkzaamheid hoeft niet gepland te zijn.
 
@@ -1108,7 +1238,7 @@ Deze regels vormen de contracten van het domein. Ze beschrijven niet hoe iets te
 
 # Bestanden
 
-- Alle bestanden behoren uiteindelijk tot het project.
+- Alle projectbestanden behoren uiteindelijk tot het project.
 - Bestanden kunnen vanuit meerdere onderdelen benaderd worden.
 - Werkzaamheden bezitten bestanden niet.
 - Offertes bezitten bestanden niet.
@@ -1118,7 +1248,7 @@ Deze regels vormen de contracten van het domein. Ze beschrijven niet hoe iets te
 
 # Communicatie
 
-- Communicatie behoort altijd tot een project.
+- Communicatie behoort altijd tot een project (tot nadere productuitwerking van contextthreads).
 - Klanten zien uitsluitend externe communicatie.
 - Interne communicatie is nooit zichtbaar voor klanten.
 - Systeemnotificaties zijn geen gesprekken.
@@ -1153,7 +1283,7 @@ Deze regels vormen de contracten van het domein. Ze beschrijven niet hoe iets te
 
 # Zoeken
 
-- Zoeken is projectoverstijgend.
+- Zoeken is projectoverstijgend binnen het actieve bedrijf.
 - Zoeken bepaalt automatisch de meest relevante resultaten.
 - Resultaten kunnen uit meerdere domeinobjecten bestaan.
 
@@ -1170,6 +1300,4 @@ Binnen WerkOS gelden altijd de volgende ontwerpprincipes:
 - WerkOS doet slimme suggesties, geen aannames.
 - Bestaande concepten worden uitgebreid voordat nieuwe concepten worden toegevoegd.
 - Iedere entiteit heeft een kleinst mogelijke geldige vorm.
-- Het project vormt altijd de centrale context van de dagelijkse operatie.
-
-# Domain Model
+- Het project vormt de centrale context van de dagelijkse operatie van een opdracht.
