@@ -9,20 +9,27 @@ import {
   formatEurFromCents,
 } from "@/config/pricing";
 import { createCheckoutSessionAction } from "@/features/onboarding/checkout-action";
+import { temporarySkipPaymentAction } from "@/features/onboarding/temporary-bypass-action";
+import { useRouter } from "@/i18n/navigation";
 
 type PaymentStepProps = {
   officeSeats: number;
   fieldSeats: number;
 };
 
+const BYPASS_ENABLED =
+  process.env.NEXT_PUBLIC_ENABLE_ONBOARDING_BYPASS === "1";
+
 export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
   const t = useTranslations("onboarding.payment");
   const tCommon = useTranslations("common");
   const locale = useLocale();
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
-  const numberLocale = locale === "de" ? "de-DE" : locale === "en" ? "en-GB" : "nl-NL";
+  const numberLocale =
+    locale === "de" ? "de-DE" : locale === "en" ? "en-GB" : "nl-NL";
   const total = calculateMonthlyTotalCents(officeSeats, fieldSeats);
 
   return (
@@ -72,6 +79,30 @@ export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
       >
         {pending ? tCommon("loading") : t("cta")}
       </Button>
+
+      {/* TEMPORARY — remove when Stripe is live */}
+      {BYPASS_ENABLED ? (
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full border-dashed"
+          disabled={pending}
+          onClick={() => {
+            setError(null);
+            startTransition(async () => {
+              const result = await temporarySkipPaymentAction();
+              if (result.error || !result.success) {
+                setError(result.error ?? tCommon("error"));
+                return;
+              }
+              router.push("/onboarding/complete");
+              router.refresh();
+            });
+          }}
+        >
+          {pending ? tCommon("loading") : t("bypassCta")}
+        </Button>
+      ) : null}
     </div>
   );
 }

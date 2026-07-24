@@ -28,10 +28,13 @@
     "invalidCredentials": "E-mail of wachtwoord is onjuist."
   },
   "onboarding": {
-    "progress": "Stap {current} van {total}",
+    "progress": "Step {current} of {total}",
+    "atmosphere": {
+      "tagline": "More calm. More overview. Less admin."
+    },
     "welcome": {
       "title": "Welcome to WerkOS",
-      "description": "We helpen je om jouw bedrijf binnen enkele minuten klaar te zetten.",
+      "description": "We'll get your company ready in a few minutes so you can start right away.",
       "cta": "Get started"
     },
     "account": {
@@ -87,7 +90,8 @@
       "trial": "14 dagen gratis proefperiode",
       "trialNote": "Je voert een betaalmethode in. Tijdens de trial wordt niets afgeschreven.",
       "cta": "Start gratis proefperiode",
-      "stripeMissing": "Betalingen zijn nog niet geconfigureerd. Voeg Stripe-keys toe."
+      "stripeMissing": "Betalingen zijn nog niet geconfigureerd. Voeg Stripe-keys toe.",
+      "bypassCta": "Tijdelijk: ga door zonder betaling"
     },
     "provisioning": {
       "title": "WerkOS wordt ingericht…",

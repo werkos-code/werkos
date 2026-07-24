@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import { OnboardingProgress } from "@/features/onboarding/components/onboarding-progress";
+import { OnboardingStepFrame } from "@/features/onboarding/components/onboarding-step-frame";
 import { PaymentStepForm } from "@/features/onboarding/components/payment-step-form";
 import {
   getOnboardingDraft,
@@ -30,16 +30,16 @@ export default async function OnboardingPaymentPage({ params }: Props) {
   const t = await getTranslations("onboarding.payment");
 
   return (
-    <main className="flex flex-1 flex-col items-center px-6 py-16">
-      <OnboardingProgress current={5} />
-      <div className="mb-8 w-full max-w-md text-center">
-        <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
-        <p className="mt-2 text-muted-foreground">{t("description")}</p>
-      </div>
+    <OnboardingStepFrame
+      step={5}
+      title={t("title")}
+      description={t("description")}
+      align="start"
+    >
       <PaymentStepForm
         officeSeats={draft!.office_seats}
         fieldSeats={draft!.field_seats}
       />
-    </main>
+    </OnboardingStepFrame>
   );
 }

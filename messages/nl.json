@@ -29,9 +29,12 @@
   },
   "onboarding": {
     "progress": "Stap {current} van {total}",
+    "atmosphere": {
+      "tagline": "Meer rust. Meer overzicht. Minder administratie."
+    },
     "welcome": {
       "title": "Welkom bij WerkOS",
-      "description": "We helpen je om jouw bedrijf binnen enkele minuten klaar te zetten.",
+      "description": "We zetten jouw bedrijf in een paar minuten klaar zodat je direct aan de slag kunt.",
       "cta": "Aan de slag"
     },
     "account": {
@@ -87,7 +90,8 @@
       "trial": "14 dagen gratis proefperiode",
       "trialNote": "Je voert een betaalmethode in. Tijdens de trial wordt niets afgeschreven.",
       "cta": "Start gratis proefperiode",
-      "stripeMissing": "Betalingen zijn nog niet geconfigureerd. Voeg Stripe-keys toe."
+      "stripeMissing": "Betalingen zijn nog niet geconfigureerd. Voeg Stripe-keys toe.",
+      "bypassCta": "Tijdelijk: ga door zonder betaling"
     },
     "provisioning": {
       "title": "WerkOS wordt ingericht…",

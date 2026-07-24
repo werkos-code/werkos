@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { Button } from "@/components/ui/button";
-import { OnboardingProgress } from "@/features/onboarding/components/onboarding-progress";
+import { OnboardingStepFrame } from "@/features/onboarding/components/onboarding-step-frame";
 import { userHasOrganization } from "@/features/onboarding/actions";
 import { Link, redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -24,15 +24,14 @@ export default async function OnboardingCompletePage({ params }: Props) {
   const t = await getTranslations("onboarding.complete");
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
-      <OnboardingProgress current={7} />
-      <h1 className="text-4xl font-semibold tracking-tight">{t("title")}</h1>
-      <p className="mt-4 max-w-md text-lg text-muted-foreground">
-        {t("description")}
-      </p>
-      <Button asChild size="lg" className="mt-10">
+    <OnboardingStepFrame
+      step={7}
+      title={t("title")}
+      description={t("description")}
+    >
+      <Button asChild size="lg" className="mt-2">
         <Link href="/werk">{t("cta")}</Link>
       </Button>
-    </main>
+    </OnboardingStepFrame>
   );
 }

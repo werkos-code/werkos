@@ -2,7 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 
 import { CompanyStepForm } from "@/features/onboarding/components/company-step-form";
-import { OnboardingProgress } from "@/features/onboarding/components/onboarding-progress";
+import { OnboardingStepFrame } from "@/features/onboarding/components/onboarding-step-frame";
 import {
   getOnboardingDraft,
   userHasOrganization,
@@ -29,17 +29,17 @@ export default async function OnboardingCompanyPage({ params }: Props) {
   const t = await getTranslations("onboarding.company");
 
   return (
-    <main className="flex flex-1 flex-col items-center px-6 py-16">
-      <OnboardingProgress current={3} />
-      <div className="mb-8 w-full max-w-md text-center">
-        <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
-        <p className="mt-2 text-muted-foreground">{t("description")}</p>
-      </div>
+    <OnboardingStepFrame
+      step={3}
+      title={t("title")}
+      description={t("description")}
+      align="start"
+    >
       <CompanyStepForm
         initialCompanyName={draft?.company_name ?? ""}
         initialIndustry={draft?.industry ?? ""}
         initialIndustryOther={draft?.industry_other ?? ""}
       />
-    </main>
+    </OnboardingStepFrame>
   );
 }

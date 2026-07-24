@@ -1,6 +1,6 @@
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import { OnboardingProgress } from "@/features/onboarding/components/onboarding-progress";
+import { OnboardingStepFrame } from "@/features/onboarding/components/onboarding-step-frame";
 import { ProvisioningView } from "@/features/onboarding/components/provisioning-view";
 import { userHasOrganization } from "@/features/onboarding/actions";
 import { createClient } from "@/lib/supabase/server";
@@ -22,10 +22,15 @@ export default async function OnboardingProvisioningPage({ params }: Props) {
     redirect({ href: "/onboarding/complete", locale });
   }
 
+  const t = await getTranslations("onboarding.provisioning");
+
   return (
-    <main className="flex flex-1 flex-col items-center px-6 py-16">
-      <OnboardingProgress current={6} />
+    <OnboardingStepFrame
+      step={6}
+      title={t("title")}
+      description={t("waiting")}
+    >
       <ProvisioningView />
-    </main>
+    </OnboardingStepFrame>
   );
 }

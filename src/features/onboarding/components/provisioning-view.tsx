@@ -44,9 +44,7 @@ export function ProvisioningView() {
   }, [router]);
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-6">
-      <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
-      <p className="text-muted-foreground">{t("waiting")}</p>
+    <div className="flex w-full flex-col gap-6">
       <ul className="space-y-3 text-sm">
         {STEPS.map((key, index) => (
           <li
