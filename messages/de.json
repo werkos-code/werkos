@@ -111,18 +111,112 @@
   "shell": {
     "werk": "Arbeit",
     "bedrijf": "Unternehmen",
-    "openInWerk": "Open in Werk",
+    "openInWerk": "In Arbeit öffnen",
     "dashboard": "Dashboard",
-    "projects": "Projecten",
-    "planning": "Planning",
-    "communications": "Communicatie",
-    "customers": "Klanten",
-    "finance": "Financiën",
-    "settings": "Instellingen",
-    "werkEmptyTitle": "Welkom in Werk",
-    "werkEmptyDescription": "Dit is je operationele cockpit. Projecten volgen in een volgende fase.",
-    "bedrijfEmptyTitle": "Welkom in Bedrijf",
-    "bedrijfEmptyDescription": "Hier komt bedrijfsvoering, financiën en instellingen."
+    "projects": "Projekte",
+    "allProjects": "Alle Projekte",
+    "quotes": "Angebote",
+    "workOrders": "Arbeitsaufträge",
+    "invoices": "Rechnungen",
+    "planning": "Planung",
+    "materials": "Material",
+    "stock": "Bestand",
+    "articles": "Artikel",
+    "purchasing": "Einkauf",
+    "installations": "Installationen",
+    "people": "Personen",
+    "customers": "Kunden",
+    "suppliers": "Lieferanten",
+    "subcontractors": "Subunternehmer / Freelancer",
+    "inbox": "Posteingang",
+    "communications": "Kommunikation",
+    "finance": "Finanzen",
+    "reports": "Berichte",
+    "settings": "Einstellungen",
+    "newRequest": "Neue Anfrage",
+    "accountMenu": "Konto-Menü",
+    "back": "Zurück",
+    "search": "Suchen",
+    "notifications": "Benachrichtigungen",
+    "help": "Hilfe",
+    "pages": {
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "Dein operatives Cockpit. Widgets und Übersichten folgen in einer späteren Phase."
+      },
+      "allProjects": {
+        "title": "Alle Projekte",
+        "description": "Projekte werden in einer späteren Phase gebaut."
+      },
+      "quotes": {
+        "title": "Angebote",
+        "description": "Angebote werden in einer späteren Phase gebaut."
+      },
+      "workOrders": {
+        "title": "Arbeitsaufträge",
+        "description": "Arbeitsaufträge werden in einer späteren Phase gebaut."
+      },
+      "invoices": {
+        "title": "Rechnungen",
+        "description": "Rechnungen werden in einer späteren Phase gebaut."
+      },
+      "planning": {
+        "title": "Planung",
+        "description": "Planung wird in einer späteren Phase gebaut."
+      },
+      "stock": {
+        "title": "Bestand",
+        "description": "Bestand wird in einer späteren Phase gebaut."
+      },
+      "articles": {
+        "title": "Artikel",
+        "description": "Artikel werden in einer späteren Phase gebaut."
+      },
+      "purchasing": {
+        "title": "Einkauf",
+        "description": "Einkauf wird in einer späteren Phase gebaut."
+      },
+      "installations": {
+        "title": "Installationen",
+        "description": "Installationen werden in einer späteren Phase gebaut."
+      },
+      "customers": {
+        "title": "Kunden",
+        "description": "Kunden werden in einer späteren Phase gebaut."
+      },
+      "suppliers": {
+        "title": "Lieferanten",
+        "description": "Lieferanten werden in einer späteren Phase gebaut."
+      },
+      "subcontractors": {
+        "title": "Subunternehmer / Freelancer",
+        "description": "Subunternehmer und Freelancer werden in einer späteren Phase gebaut."
+      },
+      "inbox": {
+        "title": "Posteingang",
+        "description": "Posteingang wird in einer späteren Phase gebaut."
+      },
+      "newRequest": {
+        "title": "Neue Anfrage",
+        "description": "Neue Anfragen werden in einer späteren Phase gebaut."
+      },
+      "bedrijfDashboard": {
+        "title": "Dashboard",
+        "description": "Unternehmensführung und Übersicht folgen in einer späteren Phase."
+      },
+      "finance": {
+        "title": "Finanzen",
+        "description": "Finanzen werden in einer späteren Phase gebaut."
+      },
+      "reports": {
+        "title": "Berichte",
+        "description": "Berichte werden in einer späteren Phase gebaut."
+      },
+      "settings": {
+        "title": "Einstellungen",
+        "description": "Einstellungen werden in einer späteren Phase gebaut."
+      }
+    }
   },
   "pricing": {
     "currency": "EUR",

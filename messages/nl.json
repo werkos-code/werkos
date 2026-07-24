@@ -114,15 +114,109 @@
     "openInWerk": "Open in Werk",
     "dashboard": "Dashboard",
     "projects": "Projecten",
+    "allProjects": "Alle projecten",
+    "quotes": "Offertes",
+    "workOrders": "Werkbonnen",
+    "invoices": "Facturen",
     "planning": "Planning",
-    "communications": "Communicatie",
+    "materials": "Materiaal",
+    "stock": "Voorraad",
+    "articles": "Artikelen",
+    "purchasing": "Inkoop",
+    "installations": "Installaties",
+    "people": "Personen",
     "customers": "Klanten",
+    "suppliers": "Leveranciers",
+    "subcontractors": "Onderaannemers / ZZP'ers",
+    "inbox": "Inbox",
+    "communications": "Communicatie",
     "finance": "Financiën",
+    "reports": "Rapportages",
     "settings": "Instellingen",
-    "werkEmptyTitle": "Welkom in Werk",
-    "werkEmptyDescription": "Dit is je operationele cockpit. Projecten volgen in een volgende fase.",
-    "bedrijfEmptyTitle": "Welkom in Bedrijf",
-    "bedrijfEmptyDescription": "Hier komt bedrijfsvoering, financiën en instellingen."
+    "newRequest": "Nieuwe aanvraag",
+    "accountMenu": "Accountmenu",
+    "back": "Terug",
+    "search": "Zoeken",
+    "notifications": "Notificaties",
+    "help": "Help",
+    "pages": {
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "Je operationele cockpit. Widgets en overzichten volgen in een volgende fase."
+      },
+      "allProjects": {
+        "title": "Alle projecten",
+        "description": "Projecten worden gebouwd in een volgende fase."
+      },
+      "quotes": {
+        "title": "Offertes",
+        "description": "Offertes worden gebouwd in een volgende fase."
+      },
+      "workOrders": {
+        "title": "Werkbonnen",
+        "description": "Werkbonnen worden gebouwd in een volgende fase."
+      },
+      "invoices": {
+        "title": "Facturen",
+        "description": "Facturen worden gebouwd in een volgende fase."
+      },
+      "planning": {
+        "title": "Planning",
+        "description": "Planning wordt gebouwd in een volgende fase."
+      },
+      "stock": {
+        "title": "Voorraad",
+        "description": "Voorraad wordt gebouwd in een volgende fase."
+      },
+      "articles": {
+        "title": "Artikelen",
+        "description": "Artikelen worden gebouwd in een volgende fase."
+      },
+      "purchasing": {
+        "title": "Inkoop",
+        "description": "Inkoop wordt gebouwd in een volgende fase."
+      },
+      "installations": {
+        "title": "Installaties",
+        "description": "Installaties worden gebouwd in een volgende fase."
+      },
+      "customers": {
+        "title": "Klanten",
+        "description": "Klanten worden gebouwd in een volgende fase."
+      },
+      "suppliers": {
+        "title": "Leveranciers",
+        "description": "Leveranciers worden gebouwd in een volgende fase."
+      },
+      "subcontractors": {
+        "title": "Onderaannemers / ZZP'ers",
+        "description": "Onderaannemers en ZZP'ers worden gebouwd in een volgende fase."
+      },
+      "inbox": {
+        "title": "Inbox",
+        "description": "Inbox wordt gebouwd in een volgende fase."
+      },
+      "newRequest": {
+        "title": "Nieuwe aanvraag",
+        "description": "Nieuwe aanvragen worden gebouwd in een volgende fase."
+      },
+      "bedrijfDashboard": {
+        "title": "Dashboard",
+        "description": "Bedrijfsvoering en overzicht volgen in een volgende fase."
+      },
+      "finance": {
+        "title": "Financiën",
+        "description": "Financiën worden gebouwd in een volgende fase."
+      },
+      "reports": {
+        "title": "Rapportages",
+        "description": "Rapportages worden gebouwd in een volgende fase."
+      },
+      "settings": {
+        "title": "Instellingen",
+        "description": "Instellingen worden gebouwd in een volgende fase."
+      }
+    }
   },
   "pricing": {
     "currency": "EUR",

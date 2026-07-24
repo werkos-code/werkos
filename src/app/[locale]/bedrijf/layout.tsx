@@ -14,7 +14,11 @@ export default async function BedrijfLayout({ children, params }: Props) {
   const session = await requireOrganization(locale);
 
   return (
-    <AppShell context="bedrijf" organizationName={session.organizationName}>
+    <AppShell
+      context="bedrijf"
+      organizationName={session.organizationName}
+      userName={session.userName}
+    >
       {children}
     </AppShell>
   );

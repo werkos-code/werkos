@@ -22,16 +22,29 @@ export async function requireOrganization(locale: string) {
     redirect({ href: "/onboarding/company", locale });
   }
 
-  const { data: organization } = await supabase
-    .from("organizations")
-    .select("name")
-    .eq("id", membership!.organization_id)
-    .maybeSingle();
+  const [{ data: organization }, { data: profile }] = await Promise.all([
+    supabase
+      .from("organizations")
+      .select("name")
+      .eq("id", membership!.organization_id)
+      .maybeSingle(),
+    supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user!.id)
+      .maybeSingle(),
+  ]);
+
+  const userName =
+    profile?.full_name?.trim() ||
+    user!.email?.split("@")[0] ||
+    "Gebruiker";
 
   return {
     user: user!,
     organizationId: membership!.organization_id,
     role: membership!.role,
     organizationName: organization?.name ?? null,
+    userName,
   };
 }

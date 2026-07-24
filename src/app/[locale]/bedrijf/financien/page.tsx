@@ -1,9 +1,13 @@
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+
+import { ShellPage } from "@/features/shell/components/shell-page";
 
 type Props = { params: Promise<{ locale: string }> };
 
-export default async function StubPage({ params }: Props) {
+export default async function FinancienPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <p className="text-muted-foreground">Binnenkort beschikbaar.</p>;
+  const t = await getTranslations("shell.pages.finance");
+
+  return <ShellPage title={t("title")} description={t("description")} />;
 }

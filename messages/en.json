@@ -111,18 +111,112 @@
   "shell": {
     "werk": "Work",
     "bedrijf": "Company",
-    "openInWerk": "Open in Werk",
+    "openInWerk": "Open in Work",
     "dashboard": "Dashboard",
-    "projects": "Projecten",
+    "projects": "Projects",
+    "allProjects": "All projects",
+    "quotes": "Quotes",
+    "workOrders": "Work orders",
+    "invoices": "Invoices",
     "planning": "Planning",
-    "communications": "Communicatie",
-    "customers": "Klanten",
-    "finance": "Financiën",
-    "settings": "Instellingen",
-    "werkEmptyTitle": "Welkom in Werk",
-    "werkEmptyDescription": "Dit is je operationele cockpit. Projecten volgen in een volgende fase.",
-    "bedrijfEmptyTitle": "Welkom in Bedrijf",
-    "bedrijfEmptyDescription": "Hier komt bedrijfsvoering, financiën en instellingen."
+    "materials": "Materials",
+    "stock": "Stock",
+    "articles": "Articles",
+    "purchasing": "Purchasing",
+    "installations": "Installations",
+    "people": "People",
+    "customers": "Customers",
+    "suppliers": "Suppliers",
+    "subcontractors": "Subcontractors / freelancers",
+    "inbox": "Inbox",
+    "communications": "Communications",
+    "finance": "Finance",
+    "reports": "Reports",
+    "settings": "Settings",
+    "newRequest": "New request",
+    "accountMenu": "Account menu",
+    "back": "Back",
+    "search": "Search",
+    "notifications": "Notifications",
+    "help": "Help",
+    "pages": {
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "Your operational cockpit. Widgets and overviews will follow in a later phase."
+      },
+      "allProjects": {
+        "title": "All projects",
+        "description": "Projects will be built in a later phase."
+      },
+      "quotes": {
+        "title": "Quotes",
+        "description": "Quotes will be built in a later phase."
+      },
+      "workOrders": {
+        "title": "Work orders",
+        "description": "Work orders will be built in a later phase."
+      },
+      "invoices": {
+        "title": "Invoices",
+        "description": "Invoices will be built in a later phase."
+      },
+      "planning": {
+        "title": "Planning",
+        "description": "Planning will be built in a later phase."
+      },
+      "stock": {
+        "title": "Stock",
+        "description": "Stock will be built in a later phase."
+      },
+      "articles": {
+        "title": "Articles",
+        "description": "Articles will be built in a later phase."
+      },
+      "purchasing": {
+        "title": "Purchasing",
+        "description": "Purchasing will be built in a later phase."
+      },
+      "installations": {
+        "title": "Installations",
+        "description": "Installations will be built in a later phase."
+      },
+      "customers": {
+        "title": "Customers",
+        "description": "Customers will be built in a later phase."
+      },
+      "suppliers": {
+        "title": "Suppliers",
+        "description": "Suppliers will be built in a later phase."
+      },
+      "subcontractors": {
+        "title": "Subcontractors / freelancers",
+        "description": "Subcontractors and freelancers will be built in a later phase."
+      },
+      "inbox": {
+        "title": "Inbox",
+        "description": "Inbox will be built in a later phase."
+      },
+      "newRequest": {
+        "title": "New request",
+        "description": "New requests will be built in a later phase."
+      },
+      "bedrijfDashboard": {
+        "title": "Dashboard",
+        "description": "Company operations and overview will follow in a later phase."
+      },
+      "finance": {
+        "title": "Finance",
+        "description": "Finance will be built in a later phase."
+      },
+      "reports": {
+        "title": "Reports",
+        "description": "Reports will be built in a later phase."
+      },
+      "settings": {
+        "title": "Settings",
+        "description": "Settings will be built in a later phase."
+      }
+    }
   },
   "pricing": {
     "currency": "EUR",

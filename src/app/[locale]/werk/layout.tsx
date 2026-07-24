@@ -14,7 +14,11 @@ export default async function WerkLayout({ children, params }: Props) {
   const session = await requireOrganization(locale);
 
   return (
-    <AppShell context="werk" organizationName={session.organizationName}>
+    <AppShell
+      context="werk"
+      organizationName={session.organizationName}
+      userName={session.userName}
+    >
       {children}
     </AppShell>
   );
