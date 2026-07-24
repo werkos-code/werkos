@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,7 +35,7 @@ export function CompanyStepForm({
   const router = useRouter();
   const [industry, setIndustry] = useState(initialIndustry);
   const [error, setError] = useState<string | null>(null);
-  const [pending, startTransition] = useTransition();
+  const [pending, setPending] = useState(false);
 
   return (
     <form
@@ -47,20 +47,28 @@ export function CompanyStepForm({
           setError(tCommon("error"));
           return;
         }
+
         setError(null);
-        startTransition(async () => {
-          const result = await saveCompanyDraft({
-            companyName: String(form.get("companyName") ?? ""),
-            industry,
-            industryOther: String(form.get("industryOther") ?? ""),
-          });
-          if (result.error) {
-            setError(result.error);
-            return;
+        setPending(true);
+
+        void (async () => {
+          try {
+            const result = await saveCompanyDraft({
+              companyName: String(form.get("companyName") ?? ""),
+              industry,
+              industryOther: String(form.get("industryOther") ?? ""),
+            });
+            if (result.error) {
+              setError(result.error);
+              setPending(false);
+              return;
+            }
+            router.push("/onboarding/team");
+          } catch (err) {
+            setError(err instanceof Error ? err.message : tCommon("error"));
+            setPending(false);
           }
-          router.push("/onboarding/team");
-          router.refresh();
-        });
+        })();
       }}
     >
       <div className="space-y-2">

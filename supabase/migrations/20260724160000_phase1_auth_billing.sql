@@ -240,3 +240,21 @@ drop policy if exists "subscriptions_select_member" on public.subscriptions;
 create policy "subscriptions_select_member"
   on public.subscriptions for select
   using (public.is_org_member(organization_id));
+
+-- Privileges for PostgREST roles (RLS still applies)
+grant usage on schema public to anon, authenticated;
+
+grant select, update on table public.profiles to authenticated;
+grant select on table public.organizations to authenticated;
+grant select on table public.organization_memberships to authenticated;
+grant select on table public.subscriptions to authenticated;
+grant select, insert, update, delete on table public.onboarding_drafts to authenticated;
+
+grant all on table public.profiles to service_role;
+grant all on table public.organizations to service_role;
+grant all on table public.organization_memberships to service_role;
+grant all on table public.subscriptions to service_role;
+grant all on table public.onboarding_drafts to service_role;
+
+grant execute on function public.is_org_member(uuid) to authenticated;
+grant execute on function public.user_has_organization() to authenticated;

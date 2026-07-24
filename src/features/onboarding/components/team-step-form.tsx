@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo, useState, useTransition } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -65,14 +65,12 @@ export function TeamStepForm({
   const [officeSeats, setOfficeSeats] = useState(initialOfficeSeats);
   const [fieldSeats, setFieldSeats] = useState(initialFieldSeats);
   const [error, setError] = useState<string | null>(null);
-  const [pending, startTransition] = useTransition();
+  const [pending, setPending] = useState(false);
 
-  const numberLocale = locale === "de" ? "de-DE" : locale === "en" ? "en-GB" : "nl-NL";
+  const numberLocale =
+    locale === "de" ? "de-DE" : locale === "en" ? "en-GB" : "nl-NL";
 
-  const total = useMemo(
-    () => calculateMonthlyTotalCents(officeSeats, fieldSeats),
-    [officeSeats, fieldSeats],
-  );
+  const total = calculateMonthlyTotalCents(officeSeats, fieldSeats);
 
   return (
     <form
@@ -80,15 +78,22 @@ export function TeamStepForm({
       onSubmit={(event) => {
         event.preventDefault();
         setError(null);
-        startTransition(async () => {
-          const result = await saveTeamDraft({ officeSeats, fieldSeats });
-          if (result.error) {
-            setError(result.error);
-            return;
+        setPending(true);
+
+        void (async () => {
+          try {
+            const result = await saveTeamDraft({ officeSeats, fieldSeats });
+            if (result.error) {
+              setError(result.error);
+              setPending(false);
+              return;
+            }
+            router.push("/onboarding/payment");
+          } catch (err) {
+            setError(err instanceof Error ? err.message : tCommon("error"));
+            setPending(false);
           }
-          router.push("/onboarding/payment");
-          router.refresh();
-        });
+        })();
       }}
     >
       <div className="space-y-3">
@@ -109,7 +114,9 @@ export function TeamStepForm({
         <div className="space-y-2 text-muted-foreground">
           <div className="flex justify-between">
             <span>{t("base")}</span>
-            <span>{formatEurFromCents(PRICING.baseMonthlyCents, numberLocale)}</span>
+            <span>
+              {formatEurFromCents(PRICING.baseMonthlyCents, numberLocale)}
+            </span>
           </div>
           {officeSeats > 0 ? (
             <div className="flex justify-between">

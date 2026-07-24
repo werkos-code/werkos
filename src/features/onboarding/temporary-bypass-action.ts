@@ -11,10 +11,6 @@ export async function temporarySkipPaymentAction(): Promise<{
   error?: string;
   success?: boolean;
 }> {
-  if (process.env.NEXT_PUBLIC_ENABLE_ONBOARDING_BYPASS !== "1") {
-    return { error: "bypass_disabled" };
-  }
-
   const supabase = await createClient();
   const {
     data: { user },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +17,8 @@ type PaymentStepProps = {
   fieldSeats: number;
 };
 
-const BYPASS_ENABLED =
-  process.env.NEXT_PUBLIC_ENABLE_ONBOARDING_BYPASS === "1";
+/** TEMPORARY — always on until Stripe is live; then delete bypass entirely. */
+const BYPASS_ENABLED = true;
 
 export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
   const t = useTranslations("onboarding.payment");
@@ -26,7 +26,7 @@ export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
   const locale = useLocale();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [pending, startTransition] = useTransition();
+  const [pending, setPending] = useState(false);
 
   const numberLocale =
     locale === "de" ? "de-DE" : locale === "en" ? "en-GB" : "nl-NL";
@@ -63,18 +63,26 @@ export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
         disabled={pending}
         onClick={() => {
           setError(null);
-          startTransition(async () => {
-            const result = await createCheckoutSessionAction();
-            if (result.error === "stripe_missing") {
-              setError(t("stripeMissing"));
-              return;
+          setPending(true);
+          void (async () => {
+            try {
+              const result = await createCheckoutSessionAction();
+              if (result.error === "stripe_missing") {
+                setError(t("stripeMissing"));
+                setPending(false);
+                return;
+              }
+              if (result.error || !result.url) {
+                setError(tCommon("error"));
+                setPending(false);
+                return;
+              }
+              window.location.href = result.url;
+            } catch (err) {
+              setError(err instanceof Error ? err.message : tCommon("error"));
+              setPending(false);
             }
-            if (result.error || !result.url) {
-              setError(tCommon("error"));
-              return;
-            }
-            window.location.href = result.url;
-          });
+          })();
         }}
       >
         {pending ? tCommon("loading") : t("cta")}
@@ -89,15 +97,21 @@ export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
           disabled={pending}
           onClick={() => {
             setError(null);
-            startTransition(async () => {
-              const result = await temporarySkipPaymentAction();
-              if (result.error || !result.success) {
-                setError(result.error ?? tCommon("error"));
-                return;
+            setPending(true);
+            void (async () => {
+              try {
+                const result = await temporarySkipPaymentAction();
+                if (result.error || !result.success) {
+                  setError(result.error ?? tCommon("error"));
+                  setPending(false);
+                  return;
+                }
+                router.push("/onboarding/complete");
+              } catch (err) {
+                setError(err instanceof Error ? err.message : tCommon("error"));
+                setPending(false);
               }
-              router.push("/onboarding/complete");
-              router.refresh();
-            });
+            })();
           }}
         >
           {pending ? tCommon("loading") : t("bypassCta")}

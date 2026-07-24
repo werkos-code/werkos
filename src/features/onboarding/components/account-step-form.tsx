@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,7 @@ export function AccountStepForm() {
   const tCommon = useTranslations("common");
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [pending, startTransition] = useTransition();
+  const [pending, setPending] = useState(false);
 
   return (
     <form
@@ -23,23 +23,31 @@ export function AccountStepForm() {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
         setError(null);
-        startTransition(async () => {
-          const result = await signUpAction({
-            fullName: String(form.get("fullName") ?? ""),
-            email: String(form.get("email") ?? ""),
-            password: String(form.get("password") ?? ""),
-          });
-          if (result.error === "email_in_use") {
-            setError(t("emailInUse"));
-            return;
+        setPending(true);
+
+        void (async () => {
+          try {
+            const result = await signUpAction({
+              fullName: String(form.get("fullName") ?? ""),
+              email: String(form.get("email") ?? ""),
+              password: String(form.get("password") ?? ""),
+            });
+            if (result.error === "email_in_use") {
+              setError(t("emailInUse"));
+              setPending(false);
+              return;
+            }
+            if (result.error) {
+              setError(result.error);
+              setPending(false);
+              return;
+            }
+            router.push("/onboarding/company");
+          } catch (err) {
+            setError(err instanceof Error ? err.message : tCommon("error"));
+            setPending(false);
           }
-          if (result.error) {
-            setError(result.error);
-            return;
-          }
-          router.push("/onboarding/company");
-          router.refresh();
-        });
+        })();
       }}
     >
       <div className="space-y-2">
