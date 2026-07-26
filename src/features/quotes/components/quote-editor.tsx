@@ -49,6 +49,11 @@ type QuoteEditorProps = {
 
 type EditorTab = "lines" | "info" | "terms" | "notes";
 
+/** Shared line table grid — header and rows must use the exact same template. */
+const LINE_GRID_CLASS =
+  "lg:grid-cols-[1.75rem_minmax(0,1fr)_4.5rem_7rem_6rem_6.5rem_7rem]";
+
+
 function formatEuro(cents: number) {
   return new Intl.NumberFormat("nl-NL", {
     style: "currency",
@@ -600,19 +605,30 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
     return (
       <div key={line.id}>
         <div
-          className="group grid grid-cols-1 items-center gap-2 border-b border-border/60 px-3 py-3 lg:grid-cols-[minmax(0,1.8fr)_4.5rem_5rem_6.5rem_7rem_auto]"
-          style={{ paddingLeft: 12 + depth * 16 }}
+          className={cn(
+            "group grid grid-cols-1 items-start gap-x-2 gap-y-1 border-b border-border/60 px-3 py-3 lg:items-center",
+            LINE_GRID_CLASS,
+          )}
         >
-          <div className="min-w-0 space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="w-6 shrink-0 text-[11px] tabular-nums text-muted-foreground">
+          <span
+            className="hidden pt-2 text-[11px] tabular-nums text-muted-foreground lg:block"
+            style={{ paddingLeft: depth * 12 }}
+          >
+            {indexLabel}
+          </span>
+          <div
+            className="min-w-0 space-y-1"
+            style={{ paddingLeft: depth * 12 }}
+          >
+            <div className="flex items-center gap-2 lg:block">
+              <span className="w-6 shrink-0 text-[11px] tabular-nums text-muted-foreground lg:hidden">
                 {indexLabel}
               </span>
               <Input
                 value={line.title}
                 disabled={!editable}
                 placeholder={t("placeholders.line")}
-                className="h-8 border-transparent bg-transparent font-medium shadow-none focus-visible:border-input focus-visible:bg-background"
+                className="h-8 border-transparent bg-transparent px-0 font-medium shadow-none focus-visible:border-input focus-visible:bg-background focus-visible:px-2"
                 onChange={(e) =>
                   updateLocalLine(line.id, { title: e.target.value })
                 }
@@ -623,7 +639,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
               value={line.description ?? ""}
               disabled={!editable}
               placeholder={t("placeholders.description")}
-              className="text-muted-foreground placeholder:text-muted-foreground/70 focus-visible:border-input ml-8 w-[calc(100%-2rem)] resize-y rounded-lg border border-transparent bg-transparent px-2 py-1 text-xs outline-none focus-visible:bg-background"
+              className="text-muted-foreground placeholder:text-muted-foreground/70 focus-visible:border-input w-full resize-y rounded-lg border border-transparent bg-transparent px-0 py-1 text-xs outline-none focus-visible:bg-background focus-visible:px-2"
               onChange={(e) =>
                 updateLocalLine(line.id, {
                   description: e.target.value || null,
@@ -654,7 +670,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
           <div className="flex h-8 items-center justify-end font-mono text-sm tabular-nums">
             {formatEuro(net)}
           </div>
-          <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100">
+          <div className="flex h-8 items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100">
             {editable ? (
               <>
                 <Button
@@ -895,13 +911,19 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
                   </Button>
                 </div>
 
-                <div className="hidden grid-cols-[minmax(0,1.8fr)_4.5rem_5rem_6.5rem_7rem_auto] gap-2 border-b border-border px-3 py-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase lg:grid">
-                  <span className="pl-8">{t("fields.lineTitle")}</span>
-                  <span>{t("fields.unit")}</span>
+                <div
+                  className={cn(
+                    "hidden gap-x-2 border-b border-border px-3 py-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase lg:grid",
+                    LINE_GRID_CLASS,
+                  )}
+                >
+                  <span aria-hidden className="block" />
+                  <span>{t("fields.lineTitle")}</span>
+                  <span className="text-center">{t("fields.unit")}</span>
                   <span className="text-right">{t("fields.quantity")}</span>
                   <span className="text-right">{t("fields.unitPrice")}</span>
                   <span className="text-right">{t("fields.lineTotal")}</span>
-                  <span />
+                  <span aria-hidden className="block" />
                 </div>
 
                 {roots.length === 0 ? (
