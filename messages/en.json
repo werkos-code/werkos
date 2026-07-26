@@ -162,7 +162,7 @@
       },
       "invoices": {
         "title": "Invoices",
-        "description": "Invoices will be built in a later phase."
+        "description": "Overview of invoices by project."
       },
       "planning": {
         "title": "Planning",
@@ -895,6 +895,103 @@
       "unassigned": "Unassigned",
       "checklist": "Subtasks (one per line)",
       "checklistPlaceholder": "Preparation…\nFinishing…",
+      "required": "Title and project are required."
+    }
+  },
+  "invoices": {
+    "title": "Invoices",
+    "export": "Export",
+    "settings": "Settings",
+    "newInvoice": "New invoice",
+    "searchPlaceholder": "Search by invoice number, project or customer…",
+    "empty": "No invoices yet. Create one to track outstanding amounts.",
+    "rowMenu": "More actions",
+    "inclVat": "incl. VAT",
+    "detailTitle": "Invoice {number}",
+    "tabs": {
+      "overview": "Overview",
+      "drafts": "Drafts",
+      "reminders": "Reminders",
+      "sent": "Sent",
+      "paid": "Paid",
+      "all": "All"
+    },
+    "filters": {
+      "allProjects": "All projects",
+      "allCustomers": "All customers",
+      "allStatuses": "All statuses"
+    },
+    "columns": {
+      "invoice": "Invoice",
+      "project": "Project",
+      "customer": "Customer",
+      "issueDate": "Date",
+      "dueDate": "Due date",
+      "amount": "Amount",
+      "status": "Status"
+    },
+    "status": {
+      "draft": "Draft",
+      "open": "Open",
+      "sent": "Sent",
+      "paid": "Paid",
+      "overdue": "Overdue"
+    },
+    "due": {
+      "overdueDays": "{days} days overdue",
+      "today": "Due today",
+      "tomorrow": "Due tomorrow",
+      "inDays": "{days} days left"
+    },
+    "kpi": {
+      "outstanding": "Total outstanding",
+      "outstandingHint": "No overdue invoices",
+      "outstandingOverdue": "{amount} overdue",
+      "paidMonth": "Paid this month",
+      "paidMonthHint": "No comparison yet",
+      "paidMonthChange": "{sign}{percent}% vs previous month",
+      "sentMonth": "Sent this month",
+      "sentMonthHint": "{count} invoices",
+      "avgDays": "Average payment term",
+      "avgDaysValue": "{days} days",
+      "avgDaysHint": "No paid invoices yet",
+      "avgDaysChange": "{sign}{days} days vs previous month"
+    },
+    "widgets": {
+      "agingTitle": "Outstanding invoices",
+      "aging": {
+        "overdue": "Overdue",
+        "d7": "Within 7 days",
+        "d30": "8-30 days",
+        "d30plus": "> 30 days"
+      },
+      "trendTitle": "Trend",
+      "trendThis": "This month",
+      "trendPrev": "Previous month",
+      "topTitle": "Top 5 outstanding",
+      "topEmpty": "No outstanding amounts."
+    },
+    "pagination": {
+      "range": "{from}-{to} of {total} invoices",
+      "perPage": "{count} per page",
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "detail": {
+      "subtotal": "Subtotal",
+      "vat": "VAT",
+      "total": "Total",
+      "notes": "Notes",
+      "notesEmpty": "No notes yet.",
+      "openFull": "Open invoice"
+    },
+    "form": {
+      "createTitle": "New invoice",
+      "title": "Title",
+      "project": "Project",
+      "selectProject": "Choose a project",
+      "total": "Total incl. VAT (€)",
+      "vat": "VAT (€)",
       "required": "Title and project are required."
     }
   }

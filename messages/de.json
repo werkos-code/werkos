@@ -162,7 +162,7 @@
       },
       "invoices": {
         "title": "Rechnungen",
-        "description": "Rechnungen werden in einer späteren Phase gebaut."
+        "description": "Übersicht der Rechnungen je Projekt."
       },
       "planning": {
         "title": "Planung",
@@ -895,6 +895,103 @@
       "unassigned": "Nicht zugewiesen",
       "checklist": "Unteraufgaben (eine pro Zeile)",
       "checklistPlaceholder": "Vorbereitung…\nAbschluss…",
+      "required": "Titel und Projekt sind Pflicht."
+    }
+  },
+  "invoices": {
+    "title": "Rechnungen",
+    "export": "Exportieren",
+    "settings": "Einstellungen",
+    "newInvoice": "Neue Rechnung",
+    "searchPlaceholder": "Suche nach Rechnungsnummer, Projekt oder Kunde…",
+    "empty": "Noch keine Rechnungen. Erstelle eine, um offene Beträge zu verfolgen.",
+    "rowMenu": "Weitere Aktionen",
+    "inclVat": "inkl. MwSt.",
+    "detailTitle": "Rechnung {number}",
+    "tabs": {
+      "overview": "Übersicht",
+      "drafts": "Entwürfe",
+      "reminders": "Erinnerungen",
+      "sent": "Gesendet",
+      "paid": "Bezahlt",
+      "all": "Alle"
+    },
+    "filters": {
+      "allProjects": "Alle Projekte",
+      "allCustomers": "Alle Kunden",
+      "allStatuses": "Alle Status"
+    },
+    "columns": {
+      "invoice": "Rechnung",
+      "project": "Projekt",
+      "customer": "Kunde",
+      "issueDate": "Datum",
+      "dueDate": "Fällig",
+      "amount": "Betrag",
+      "status": "Status"
+    },
+    "status": {
+      "draft": "Entwurf",
+      "open": "Offen",
+      "sent": "Gesendet",
+      "paid": "Bezahlt",
+      "overdue": "Überfällig"
+    },
+    "due": {
+      "overdueDays": "{days} Tage überfällig",
+      "today": "Heute fällig",
+      "tomorrow": "Morgen fällig",
+      "inDays": "Noch {days} Tage"
+    },
+    "kpi": {
+      "outstanding": "Offen gesamt",
+      "outstandingHint": "Keine überfälligen Rechnungen",
+      "outstandingOverdue": "{amount} überfällig",
+      "paidMonth": "Bezahlt diesen Monat",
+      "paidMonthHint": "Kein Vergleich",
+      "paidMonthChange": "{sign}{percent}% ggü. Vormonat",
+      "sentMonth": "Gesendet diesen Monat",
+      "sentMonthHint": "{count} Rechnungen",
+      "avgDays": "Durchschnittliche Zahlungsfrist",
+      "avgDaysValue": "{days} Tage",
+      "avgDaysHint": "Noch keine bezahlten Rechnungen",
+      "avgDaysChange": "{sign}{days} Tage ggü. Vormonat"
+    },
+    "widgets": {
+      "agingTitle": "Offene Rechnungen",
+      "aging": {
+        "overdue": "Überfällig",
+        "d7": "Innerhalb 7 Tagen",
+        "d30": "8-30 Tage",
+        "d30plus": "> 30 Tage"
+      },
+      "trendTitle": "Entwicklung",
+      "trendThis": "Dieser Monat",
+      "trendPrev": "Vormonat",
+      "topTitle": "Top 5 offen",
+      "topEmpty": "Keine offenen Beträge."
+    },
+    "pagination": {
+      "range": "{from}-{to} von {total} Rechnungen",
+      "perPage": "{count} pro Seite",
+      "prev": "Zurück",
+      "next": "Weiter"
+    },
+    "detail": {
+      "subtotal": "Zwischensumme",
+      "vat": "MwSt.",
+      "total": "Gesamt",
+      "notes": "Notizen",
+      "notesEmpty": "Noch keine Notizen.",
+      "openFull": "Rechnung öffnen"
+    },
+    "form": {
+      "createTitle": "Neue Rechnung",
+      "title": "Titel",
+      "project": "Projekt",
+      "selectProject": "Projekt wählen",
+      "total": "Gesamt inkl. MwSt. (€)",
+      "vat": "MwSt. (€)",
       "required": "Titel und Projekt sind Pflicht."
     }
   }

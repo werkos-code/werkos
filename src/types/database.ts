@@ -52,6 +52,7 @@ export type WorkOrderStatus =
   | "done"
   | "cancelled";
 export type WorkOrderPriority = "low" | "normal" | "high";
+export type InvoiceStatus = "draft" | "open" | "sent" | "paid";
 
 export type ProjectActivityType =
   | "project_created"
@@ -880,6 +881,147 @@ export type Database = {
           },
         ];
       };
+      invoices: {
+        Row: {
+          id: string;
+          organization_id: string;
+          project_id: string;
+          quote_id: string | null;
+          invoice_number: string;
+          sequence_number: number;
+          title: string;
+          status: InvoiceStatus;
+          issue_date: string;
+          due_date: string | null;
+          paid_at: string | null;
+          subtotal_cents: number;
+          vat_cents: number;
+          total_cents: number;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          project_id: string;
+          quote_id?: string | null;
+          invoice_number?: string;
+          sequence_number?: number;
+          title: string;
+          status?: InvoiceStatus;
+          issue_date?: string;
+          due_date?: string | null;
+          paid_at?: string | null;
+          subtotal_cents?: number;
+          vat_cents?: number;
+          total_cents?: number;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          project_id?: string;
+          quote_id?: string | null;
+          invoice_number?: string;
+          sequence_number?: number;
+          title?: string;
+          status?: InvoiceStatus;
+          issue_date?: string;
+          due_date?: string | null;
+          paid_at?: string | null;
+          subtotal_cents?: number;
+          vat_cents?: number;
+          total_cents?: number;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "invoices_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "invoices_project_id_fkey";
+            columns: ["project_id"];
+            isOneToOne: false;
+            referencedRelation: "projects";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "invoices_quote_id_fkey";
+            columns: ["quote_id"];
+            isOneToOne: false;
+            referencedRelation: "quotes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      invoice_lines: {
+        Row: {
+          id: string;
+          organization_id: string;
+          invoice_id: string;
+          parent_id: string | null;
+          sort_order: number;
+          title: string;
+          description: string | null;
+          quantity: number;
+          unit: string | null;
+          unit_price_cents: number;
+          vat_rate_bps: number;
+          discount_cents: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          invoice_id: string;
+          parent_id?: string | null;
+          sort_order?: number;
+          title: string;
+          description?: string | null;
+          quantity?: number;
+          unit?: string | null;
+          unit_price_cents?: number;
+          vat_rate_bps?: number;
+          discount_cents?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          invoice_id?: string;
+          parent_id?: string | null;
+          sort_order?: number;
+          title?: string;
+          description?: string | null;
+          quantity?: number;
+          unit?: string | null;
+          unit_price_cents?: number;
+          vat_rate_bps?: number;
+          discount_cents?: number;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "invoice_lines_invoice_id_fkey";
+            columns: ["invoice_id"];
+            isOneToOne: false;
+            referencedRelation: "invoices";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -913,6 +1055,7 @@ export type Database = {
       appointment_type: AppointmentType;
       work_order_status: WorkOrderStatus;
       work_order_priority: WorkOrderPriority;
+      invoice_status: InvoiceStatus;
     };
     CompositeTypes: {
       [_ in never]: never;

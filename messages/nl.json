@@ -162,7 +162,7 @@
       },
       "invoices": {
         "title": "Facturen",
-        "description": "Facturen worden gebouwd in een volgende fase."
+        "description": "Overzicht van facturen per project."
       },
       "planning": {
         "title": "Planning",
@@ -895,6 +895,103 @@
       "unassigned": "Niet toegewezen",
       "checklist": "Subtaken (één per regel)",
       "checklistPlaceholder": "Voorbereiding…\nAfwerking…",
+      "required": "Titel en project zijn verplicht."
+    }
+  },
+  "invoices": {
+    "title": "Facturen",
+    "export": "Exporteren",
+    "settings": "Instellingen",
+    "newInvoice": "Nieuwe factuur",
+    "searchPlaceholder": "Zoek op factuurnummer, project of klant…",
+    "empty": "Nog geen facturen. Maak er een aan om openstaande bedragen te volgen.",
+    "rowMenu": "Meer acties",
+    "inclVat": "incl. btw",
+    "detailTitle": "Factuur {number}",
+    "tabs": {
+      "overview": "Overzicht",
+      "drafts": "Concepten",
+      "reminders": "Herinneringen",
+      "sent": "Verzonden",
+      "paid": "Betaald",
+      "all": "Alle"
+    },
+    "filters": {
+      "allProjects": "Alle projecten",
+      "allCustomers": "Alle klanten",
+      "allStatuses": "Alle statussen"
+    },
+    "columns": {
+      "invoice": "Factuur",
+      "project": "Project",
+      "customer": "Klant",
+      "issueDate": "Datum",
+      "dueDate": "Vervaldatum",
+      "amount": "Bedrag",
+      "status": "Status"
+    },
+    "status": {
+      "draft": "Concept",
+      "open": "Open",
+      "sent": "Verzonden",
+      "paid": "Betaald",
+      "overdue": "Vervallen"
+    },
+    "due": {
+      "overdueDays": "{days} dagen te laat",
+      "today": "Vandaag vervallen",
+      "tomorrow": "Morgen vervallen",
+      "inDays": "Nog {days} dagen"
+    },
+    "kpi": {
+      "outstanding": "Openstaand totaal",
+      "outstandingHint": "Geen vervallen facturen",
+      "outstandingOverdue": "{amount} vervallen",
+      "paidMonth": "Betaald deze maand",
+      "paidMonthHint": "Geen vergelijking",
+      "paidMonthChange": "{sign}{percent}% t.o.v. vorige maand",
+      "sentMonth": "Verzonden deze maand",
+      "sentMonthHint": "{count} facturen",
+      "avgDays": "Gemiddelde betalingstermijn",
+      "avgDaysValue": "{days} dagen",
+      "avgDaysHint": "Nog geen betaalde facturen",
+      "avgDaysChange": "{sign}{days} dagen t.o.v. vorige maand"
+    },
+    "widgets": {
+      "agingTitle": "Openstaande facturen",
+      "aging": {
+        "overdue": "Vervallen",
+        "d7": "Binnen 7 dagen",
+        "d30": "8-30 dagen",
+        "d30plus": "> 30 dagen"
+      },
+      "trendTitle": "Ontwikkeling",
+      "trendThis": "Deze maand",
+      "trendPrev": "Vorige maand",
+      "topTitle": "Top 5 openstaand",
+      "topEmpty": "Geen openstaande bedragen."
+    },
+    "pagination": {
+      "range": "{from}-{to} van {total} facturen",
+      "perPage": "{count} per pagina",
+      "prev": "Vorige",
+      "next": "Volgende"
+    },
+    "detail": {
+      "subtotal": "Subtotaal",
+      "vat": "Btw",
+      "total": "Totaal",
+      "notes": "Notities",
+      "notesEmpty": "Nog geen notities.",
+      "openFull": "Factuur openen"
+    },
+    "form": {
+      "createTitle": "Nieuwe factuur",
+      "title": "Titel",
+      "project": "Project",
+      "selectProject": "Kies een project",
+      "total": "Totaal incl. btw (€)",
+      "vat": "Btw (€)",
       "required": "Titel en project zijn verplicht."
     }
   }

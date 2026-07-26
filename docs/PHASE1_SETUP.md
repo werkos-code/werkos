@@ -185,6 +185,18 @@ Na Phase 1 / Super Admin:
    - Projectdetail → tab Werkbonnen
 4. Rest: [`WORK_ORDERS_BACKLOG.md`](./WORK_ORDERS_BACKLOG.md)
 
+## 17. Facturen
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260726260000_invoices.sql`
+3. Test:
+   - `/werk/projecten/facturen` — KPI’s + tabel + widgets
+   - + Nieuwe factuur (project + bedrag)
+   - Tabs Concepten / Herinneringen / Verzonden / Betaald
+   - Klik rij → detail sheet + status wijzigen
+4. Rest: [`INVOICES_BACKLOG.md`](./INVOICES_BACKLOG.md)
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  

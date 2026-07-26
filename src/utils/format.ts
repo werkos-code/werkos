@@ -28,3 +28,11 @@ export function formatCurrency(
     currency,
   }).format(amount);
 }
+
+/** Format integer eurocents as currency with decimals. */
+export function formatEuroFromCents(
+  cents: number,
+  locale = "nl-NL",
+): string {
+  return formatCurrency(cents / 100, "EUR", locale);
+}

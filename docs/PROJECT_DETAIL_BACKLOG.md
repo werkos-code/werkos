@@ -30,7 +30,7 @@
 | Tab Werkbonnen | Lijst + link naar module (v1) |
 | Tab Planning | Link naar centrale Planning |
 | Tab Bestanden (volledige bibliotheek) | Coming soon — cover is apart afgerond |
-| Tab Financieel | Coming soon |
+| Tab Financieel | Coming soon — facturenmodule staat los klaar |
 | Tab Communicatie | Coming soon |
 | Omzet / winstmarge / facturatiegraad | Facturen / kostprijs |
 
