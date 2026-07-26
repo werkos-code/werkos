@@ -202,7 +202,7 @@ export async function getQuote(quoteId: string): Promise<{
   };
 }
 
-import type { WorkItemRow } from "@/features/projects/lib/work-item";
+import type { WorkItemRow, WorkItemPriority } from "@/features/projects/lib/work-item";
 import type { WorkItemStatus } from "@/types/database";
 
 export async function listWorkItemsForProject(projectId: string): Promise<{
@@ -215,7 +215,7 @@ export async function listWorkItemsForProject(projectId: string): Promise<{
   const { data, error } = await ctx.supabase
     .from("work_items")
     .select(
-      "id, title, status, parent_id, description, category, assignee_user_id, planned_start, planned_end, estimated_minutes, is_group, sort_order",
+      "id, title, status, parent_id, description, category, assignee_user_id, planned_start, planned_end, estimated_minutes, priority, labels, is_group, sort_order",
     )
     .eq("organization_id", ctx.organizationId)
     .eq("project_id", projectId)
@@ -257,6 +257,8 @@ export async function listWorkItemsForProject(projectId: string): Promise<{
       plannedStart: row.planned_start,
       plannedEnd: row.planned_end,
       estimatedMinutes: row.estimated_minutes,
+      priority: (row.priority as WorkItemPriority | null) ?? "normal",
+      labels: Array.isArray(row.labels) ? row.labels.filter(Boolean) : [],
       isGroup: Boolean(row.is_group),
       sortOrder: row.sort_order,
     })),

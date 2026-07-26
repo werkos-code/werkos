@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 
 import { logProjectActivity } from "@/features/projects/lib/project-activity";
-import { WORK_ITEM_STATUSES } from "@/features/projects/lib/work-item";
+import { WORK_ITEM_PRIORITIES, WORK_ITEM_STATUSES } from "@/features/projects/lib/work-item";
 import { requireApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
-import type { WorkItemStatus } from "@/types/database";
+import type { WorkItemPriority, WorkItemStatus } from "@/types/database";
 
 function emptyToNull(value: string | null | undefined) {
   const trimmed = value?.trim() ?? "";
@@ -16,6 +16,25 @@ function parseMinutes(value: unknown) {
   const n = typeof value === "number" ? value : Number(value);
   if (!Number.isFinite(n) || n < 0) return null;
   return Math.round(n);
+}
+
+function parseLabels(value: unknown): string[] | undefined {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) return [];
+  return [
+    ...new Set(
+      value
+        .map((entry) => (typeof entry === "string" ? entry.trim() : ""))
+        .filter(Boolean),
+    ),
+  ];
+}
+
+function parsePriority(value: unknown): WorkItemPriority | null {
+  if (typeof value !== "string") return null;
+  return WORK_ITEM_PRIORITIES.includes(value as WorkItemPriority)
+    ? (value as WorkItemPriority)
+    : null;
 }
 
 export async function POST(request: Request) {
@@ -34,6 +53,8 @@ export async function POST(request: Request) {
       plannedEnd?: string | null;
       estimatedMinutes?: number | null;
       status?: WorkItemStatus;
+      priority?: WorkItemPriority;
+      labels?: string[];
       asGroup?: boolean;
     };
 
@@ -50,6 +71,13 @@ export async function POST(request: Request) {
     if (!WORK_ITEM_STATUSES.includes(status)) {
       return NextResponse.json({ error: "invalid_status" }, { status: 400 });
     }
+
+    const priority = body.priority ? parsePriority(body.priority) : "normal";
+    if (body.priority && !priority) {
+      return NextResponse.json({ error: "invalid_priority" }, { status: 400 });
+    }
+
+    const labels = parseLabels(body.labels) ?? [];
 
     const admin = createAdminClient();
     const { data: project } = await admin
@@ -105,12 +133,14 @@ export async function POST(request: Request) {
         planned_start: emptyToNull(body.plannedStart),
         planned_end: emptyToNull(body.plannedEnd),
         estimated_minutes: parseMinutes(body.estimatedMinutes),
+        priority: priority ?? "normal",
+        labels,
         is_group: Boolean(body.asGroup),
         sort_order: (maxSort?.sort_order ?? -1) + 1,
         created_by: gate.userId,
       })
       .select(
-        "id, title, status, parent_id, description, category, assignee_user_id, planned_start, planned_end, estimated_minutes, is_group, sort_order",
+        "id, title, status, parent_id, description, category, assignee_user_id, planned_start, planned_end, estimated_minutes, priority, labels, is_group, sort_order",
       )
       .single();
 
@@ -152,6 +182,8 @@ export async function PATCH(request: Request) {
       estimatedMinutes?: number | null;
       parentId?: string | null;
       sortOrder?: number;
+      priority?: WorkItemPriority;
+      labels?: string[];
     };
 
     const id = body.id?.trim() ?? "";
@@ -162,6 +194,14 @@ export async function PATCH(request: Request) {
     if (body.status && !WORK_ITEM_STATUSES.includes(body.status)) {
       return NextResponse.json({ error: "invalid_status" }, { status: 400 });
     }
+
+    const nextPriority =
+      body.priority !== undefined ? parsePriority(body.priority) : undefined;
+    if (body.priority !== undefined && !nextPriority) {
+      return NextResponse.json({ error: "invalid_priority" }, { status: 400 });
+    }
+
+    const nextLabels = parseLabels(body.labels);
 
     const admin = createAdminClient();
     const { data: existing } = await admin
@@ -206,6 +246,8 @@ export async function PATCH(request: Request) {
         ...(body.estimatedMinutes !== undefined
           ? { estimated_minutes: parseMinutes(body.estimatedMinutes) }
           : {}),
+        ...(nextPriority ? { priority: nextPriority } : {}),
+        ...(nextLabels !== undefined ? { labels: nextLabels } : {}),
         ...(body.parentId !== undefined
           ? { parent_id: emptyToNull(body.parentId) }
           : {}),
@@ -239,6 +281,8 @@ export async function PATCH(request: Request) {
       body.plannedStart !== undefined ||
       body.plannedEnd !== undefined ||
       body.estimatedMinutes !== undefined ||
+      body.priority !== undefined ||
+      body.labels !== undefined ||
       body.parentId !== undefined
     ) {
       await logProjectActivity(admin, {

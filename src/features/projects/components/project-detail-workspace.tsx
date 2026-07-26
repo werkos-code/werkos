@@ -1068,6 +1068,7 @@ export function ProjectDetailWorkspace({
           projectId={project.id}
           workItems={workItems}
           staff={staff}
+          activities={activities}
         />
       ) : null}
 

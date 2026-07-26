@@ -100,8 +100,10 @@ Nieuwe pagina’s vallen in één type. Kopieer het recept; verzin geen nieuwe l
 1. Toolbar: segmented view · zoek · filters · split primary-add
 2. Hoofdlijst `PageCard p-0` (+ optionele rechterrail ~`17.5rem`)
 3. Rijen: CSS-grid of tabel met rustige hover; hiërarchie via indent/groepen
+4. Klik rij → **brede Sheet** (subwerkruimte, ~`min(100%, 72rem)`): hero + underline-tabs + 2-koloms overzicht
 
-**Voorbeeld:** `project-work-items-workspace.tsx`
+**Voorbeeld:** `project-work-items-workspace.tsx`, `work-item-detail-sheet.tsx`  
+Detail-rest: [`WORK_ITEM_DETAIL_BACKLOG.md`](./WORK_ITEM_DETAIL_BACKLOG.md)
 
 ### 4.4 Editor / workspace-dicht
 

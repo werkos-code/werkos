@@ -150,6 +150,17 @@ Na Phase 1 / Super Admin:
    - Sleep items tussen groepen en herorden
    - Verwijderknop op rij
 
+## 14. Werkzaamheid-detail overlay
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260726230000_work_item_detail.sql`
+3. Test:
+   - Taken → klik rij → brede overlay
+   - Overzicht: beschrijving, prioriteit, labels, planning, subtaken
+   - Tabs Tijd/Bestanden/Communicatie = placeholders
+4. Rest: [`WORK_ITEM_DETAIL_BACKLOG.md`](./WORK_ITEM_DETAIL_BACKLOG.md)
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  

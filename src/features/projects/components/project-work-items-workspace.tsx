@@ -45,7 +45,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { WorkItemDetailSheet } from "@/features/projects/components/work-item-detail-sheet";
-import type { StaffOption } from "@/features/projects/projects-actions";
+import type {
+  ProjectActivityRow,
+  StaffOption,
+} from "@/features/projects/projects-actions";
 import {
   formatEstimatedHours,
   isWorkItemOverdue,
@@ -63,6 +66,7 @@ type ProjectWorkItemsWorkspaceProps = {
   projectId: string;
   workItems: WorkItemRow[];
   staff: StaffOption[];
+  activities: ProjectActivityRow[];
 };
 
 type ContainerId = "root" | `group:${string}`;
@@ -125,6 +129,7 @@ export function ProjectWorkItemsWorkspace({
   projectId,
   workItems,
   staff,
+  activities,
 }: ProjectWorkItemsWorkspaceProps) {
   const t = useTranslations("projects.workItems");
   const tCommon = useTranslations("common");
@@ -842,8 +847,13 @@ export function ProjectWorkItemsWorkspace({
 
       <WorkItemDetailSheet
         item={selectedItem}
+        items={items}
+        staff={staff}
+        activities={activities}
+        projectId={projectId}
         open={sheetOpen}
         onOpenChange={setSheetOpen}
+        onChanged={() => router.refresh()}
       />
     </div>
   );

@@ -6,6 +6,9 @@ export const WORK_ITEM_STATUSES: WorkItemStatus[] = [
   "done",
 ];
 
+export const WORK_ITEM_PRIORITIES = ["low", "normal", "high"] as const;
+export type WorkItemPriority = (typeof WORK_ITEM_PRIORITIES)[number];
+
 export type WorkItemRow = {
   id: string;
   title: string;
@@ -18,9 +21,38 @@ export type WorkItemRow = {
   plannedStart: string | null;
   plannedEnd: string | null;
   estimatedMinutes: number | null;
+  priority: WorkItemPriority;
+  labels: string[];
   isGroup: boolean;
   sortOrder: number;
 };
+
+export function workItemProgressPercent(
+  item: WorkItemRow,
+  children: WorkItemRow[],
+) {
+  const leaves = children.filter((child) => !child.isGroup);
+  if (leaves.length > 0) {
+    const done = leaves.filter((child) => child.status === "done").length;
+    return Math.round((done / leaves.length) * 100);
+  }
+  if (item.status === "done") return 100;
+  if (item.status === "in_progress") return 50;
+  return 0;
+}
+
+export function plannedDurationDays(
+  start: string | null,
+  end: string | null,
+) {
+  if (!start || !end) return null;
+  const a = new Date(`${start}T12:00:00`);
+  const b = new Date(`${end}T12:00:00`);
+  if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime()) || b < a) {
+    return null;
+  }
+  return Math.round((b.getTime() - a.getTime()) / 86_400_000) + 1;
+}
 
 export function isWorkItemOverdue(item: {
   status: WorkItemStatus;

@@ -38,6 +38,7 @@ export type QuoteStatus =
   | "cancelled";
 
 export type WorkItemStatus = "open" | "in_progress" | "done";
+export type WorkItemPriority = "low" | "normal" | "high";
 
 export type ProjectActivityType =
   | "project_created"
@@ -568,6 +569,8 @@ export type Database = {
           planned_start: string | null;
           planned_end: string | null;
           estimated_minutes: number | null;
+          priority: WorkItemPriority;
+          labels: string[];
           is_group: boolean;
           sort_order: number;
           created_by: string | null;
@@ -588,6 +591,8 @@ export type Database = {
           planned_start?: string | null;
           planned_end?: string | null;
           estimated_minutes?: number | null;
+          priority?: WorkItemPriority;
+          labels?: string[];
           is_group?: boolean;
           sort_order?: number;
           created_by?: string | null;
@@ -608,6 +613,8 @@ export type Database = {
           planned_start?: string | null;
           planned_end?: string | null;
           estimated_minutes?: number | null;
+          priority?: WorkItemPriority;
+          labels?: string[];
           is_group?: boolean;
           sort_order?: number;
           created_by?: string | null;

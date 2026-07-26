@@ -23,15 +23,15 @@
 - [ ] Sub-sub niveaus UI (diepere boom dan 1 groepniveau)
 - [ ] Categorie als beheerde taxonomie i.p.v. vrije tekst
 
-## Overlay detail (nu: placeholder)
+## Overlay detail
 
-- [ ] Volledige werkzaamheid-detailwerkruimte
-- [ ] Planning / afspraken koppelen
-- [ ] Urenregistratie
-- [ ] Materiaalregistratie
-- [ ] Checklist & formulieren
-- [ ] Bestanden & foto’s op werkzaamheid
-- [ ] Communicatie-thread
+- [x] Volledige werkzaamheid-detailwerkruimte (v1) — zie `WORK_ITEM_DETAIL_BACKLOG.md`
+- [ ] Planning / afspraken koppelen (module)
+- [ ] Urenregistratie (module)
+- [ ] Materiaalregistratie (module)
+- [ ] Checklist & formulieren (module)
+- [ ] Bestanden & foto’s op werkzaamheid (module)
+- [ ] Communicatie-thread (module)
 - [ ] Terug-nav “← Terug naar project” als eigen hoofdroute (IA)
 
 ## Widgets & product
