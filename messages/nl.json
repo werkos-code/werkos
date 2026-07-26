@@ -153,7 +153,7 @@
       },
       "quotes": {
         "title": "Offertes",
-        "description": "Offertes worden gebouwd in een volgende fase."
+        "description": "Alle offertes van je bedrijf, per project."
       },
       "workOrders": {
         "title": "Werkbonnen",
@@ -304,6 +304,64 @@
       "hoursMaterials": "Uren & materialen",
       "quotes": "Offertes",
       "invoices": "Facturen"
+    }
+  },
+  "quotes": {
+    "listTitle": "Offertes",
+    "listDescription": "Overzicht van alle offertes in je bedrijf.",
+    "sectionTitle": "Offertes",
+    "editorDescription": "Offerte voor {project}",
+    "defaultTitle": "Offerte",
+    "newQuote": "Nieuwe offerte",
+    "empty": "Nog geen offertes.",
+    "noLines": "Nog geen regels. Voeg een regel toe.",
+    "noWorkItems": "Nog geen werkzaamheden. Die kun je bij acceptatie van een offerte aanmaken.",
+    "linesTitle": "Regels",
+    "addLine": "Regel toevoegen",
+    "addChildLine": "Subregel",
+    "deleteLine": "Verwijderen",
+    "deleteLineConfirm": "Deze regel (en subregels) verwijderen?",
+    "newLineTitle": "Nieuwe regel",
+    "untitledLine": "Naamloze regel",
+    "saveMeta": "Gegevens opslaan",
+    "acceptTitle": "Offerte accepteren",
+    "acceptDescription": "Kies welke regels als werkzaamheden worden aangemaakt. Niets gebeurt automatisch zonder bevestiging.",
+    "setProjectExecution": "Zet projectstatus op Uitvoering",
+    "confirmAccept": "Accepteren en werkzaamheden aanmaken",
+    "columns": {
+      "title": "Offerte",
+      "project": "Project",
+      "status": "Status"
+    },
+    "status": {
+      "draft": "Concept",
+      "sent": "Verstuurd",
+      "accepted": "Geaccepteerd",
+      "rejected": "Afgewezen",
+      "cancelled": "Geannuleerd"
+    },
+    "actions": {
+      "send": "Versturen",
+      "accept": "Accepteren",
+      "reject": "Afwijzen",
+      "cancel": "Annuleren"
+    },
+    "fields": {
+      "title": "Titel",
+      "validUntil": "Geldig tot",
+      "externalNotes": "Externe notities",
+      "internalNotes": "Interne notities",
+      "lineTitle": "Regel",
+      "unit": "Eenheid",
+      "quantity": "Aantal",
+      "unitPrice": "Prijs (€)",
+      "discount": "Korting (€)",
+      "lineTotal": "Subtotaal"
+    },
+    "totals": {
+      "net": "Netto",
+      "vat": "BTW",
+      "gross": "Totaal"
     }
   },
   "platform": {

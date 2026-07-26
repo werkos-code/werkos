@@ -1,0 +1,203 @@
+"use server";
+
+import { getStaffOrgContext } from "@/features/shell/lib/staff-org-context";
+import type { QuoteStatus } from "@/types/database";
+
+export type QuoteListItem = {
+  id: string;
+  title: string;
+  status: QuoteStatus;
+  projectId: string;
+  projectName: string;
+  updatedAt: string;
+  validUntil: string | null;
+};
+
+export type QuoteLineRow = {
+  id: string;
+  parentId: string | null;
+  sortOrder: number;
+  title: string;
+  description: string | null;
+  quantity: number | null;
+  unit: string | null;
+  unitPriceCents: number | null;
+  vatRateBps: number;
+  discountCents: number;
+};
+
+export type QuoteDetail = {
+  id: string;
+  title: string;
+  status: QuoteStatus;
+  projectId: string;
+  projectName: string;
+  validUntil: string | null;
+  internalNotes: string | null;
+  externalNotes: string | null;
+  lines: QuoteLineRow[];
+};
+
+export async function listQuotesForProject(projectId: string): Promise<{
+  quotes?: QuoteListItem[];
+  error?: string;
+}> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const { data: project } = await ctx.supabase
+    .from("projects")
+    .select("id, name")
+    .eq("organization_id", ctx.organizationId)
+    .eq("id", projectId)
+    .maybeSingle();
+
+  if (!project) return { error: "project_not_found" };
+
+  const { data, error } = await ctx.supabase
+    .from("quotes")
+    .select("id, title, status, project_id, updated_at, valid_until")
+    .eq("organization_id", ctx.organizationId)
+    .eq("project_id", projectId)
+    .order("updated_at", { ascending: false });
+
+  if (error) return { error: error.message };
+
+  return {
+    quotes: (data ?? []).map((row) => ({
+      id: row.id,
+      title: row.title,
+      status: row.status,
+      projectId: row.project_id,
+      projectName: project.name,
+      updatedAt: row.updated_at,
+      validUntil: row.valid_until,
+    })),
+  };
+}
+
+export async function listQuotesForOrganization(): Promise<{
+  quotes?: QuoteListItem[];
+  error?: string;
+}> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const { data, error } = await ctx.supabase
+    .from("quotes")
+    .select("id, title, status, project_id, updated_at, valid_until")
+    .eq("organization_id", ctx.organizationId)
+    .order("updated_at", { ascending: false });
+
+  if (error) return { error: error.message };
+
+  const projectIds = [...new Set((data ?? []).map((q) => q.project_id))];
+  const nameById = new Map<string, string>();
+
+  if (projectIds.length > 0) {
+    const { data: projects } = await ctx.supabase
+      .from("projects")
+      .select("id, name")
+      .eq("organization_id", ctx.organizationId)
+      .in("id", projectIds);
+
+    for (const project of projects ?? []) {
+      nameById.set(project.id, project.name);
+    }
+  }
+
+  return {
+    quotes: (data ?? []).map((row) => ({
+      id: row.id,
+      title: row.title,
+      status: row.status,
+      projectId: row.project_id,
+      projectName: nameById.get(row.project_id) ?? "—",
+      updatedAt: row.updated_at,
+      validUntil: row.valid_until,
+    })),
+  };
+}
+
+export async function getQuote(quoteId: string): Promise<{
+  quote?: QuoteDetail;
+  error?: string;
+}> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const { data: quote, error } = await ctx.supabase
+    .from("quotes")
+    .select(
+      "id, title, status, project_id, valid_until, internal_notes, external_notes",
+    )
+    .eq("organization_id", ctx.organizationId)
+    .eq("id", quoteId)
+    .maybeSingle();
+
+  if (error) return { error: error.message };
+  if (!quote) return { error: "not_found" };
+
+  const [{ data: project }, { data: lines, error: linesError }] =
+    await Promise.all([
+      ctx.supabase
+        .from("projects")
+        .select("id, name")
+        .eq("organization_id", ctx.organizationId)
+        .eq("id", quote.project_id)
+        .maybeSingle(),
+      ctx.supabase
+        .from("quote_lines")
+        .select(
+          "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents",
+        )
+        .eq("organization_id", ctx.organizationId)
+        .eq("quote_id", quoteId)
+        .order("sort_order", { ascending: true }),
+    ]);
+
+  if (linesError) return { error: linesError.message };
+
+  return {
+    quote: {
+      id: quote.id,
+      title: quote.title,
+      status: quote.status,
+      projectId: quote.project_id,
+      projectName: project?.name ?? "—",
+      validUntil: quote.valid_until,
+      internalNotes: quote.internal_notes,
+      externalNotes: quote.external_notes,
+      lines: (lines ?? []).map((line) => ({
+        id: line.id,
+        parentId: line.parent_id,
+        sortOrder: line.sort_order,
+        title: line.title,
+        description: line.description,
+        quantity: line.quantity === null ? null : Number(line.quantity),
+        unit: line.unit,
+        unitPriceCents: line.unit_price_cents,
+        vatRateBps: line.vat_rate_bps,
+        discountCents: line.discount_cents,
+      })),
+    },
+  };
+}
+
+export async function listWorkItemsForProject(projectId: string): Promise<{
+  workItems?: Array<{ id: string; title: string; status: string }>;
+  error?: string;
+}> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const { data, error } = await ctx.supabase
+    .from("work_items")
+    .select("id, title, status")
+    .eq("organization_id", ctx.organizationId)
+    .eq("project_id", projectId)
+    .order("sort_order", { ascending: true });
+
+  if (error) return { error: error.message };
+  return { workItems: data ?? [] };
+}

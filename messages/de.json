@@ -153,7 +153,7 @@
       },
       "quotes": {
         "title": "Angebote",
-        "description": "Angebote werden in einer späteren Phase gebaut."
+        "description": "Alle Angebote deines Unternehmens, je Projekt."
       },
       "workOrders": {
         "title": "Arbeitsaufträge",
@@ -304,6 +304,64 @@
       "hoursMaterials": "Stunden & Materialien",
       "quotes": "Angebote",
       "invoices": "Rechnungen"
+    }
+  },
+  "quotes": {
+    "listTitle": "Angebote",
+    "listDescription": "Übersicht aller Angebote in deinem Unternehmen.",
+    "sectionTitle": "Angebote",
+    "editorDescription": "Angebot für {project}",
+    "defaultTitle": "Angebot",
+    "newQuote": "Neues Angebot",
+    "empty": "Noch keine Angebote.",
+    "noLines": "Noch keine Positionen. Füge eine Position hinzu.",
+    "noWorkItems": "Noch keine Arbeiten. Du kannst sie bei Annahme eines Angebots anlegen.",
+    "linesTitle": "Positionen",
+    "addLine": "Position hinzufügen",
+    "addChildLine": "Unterposition",
+    "deleteLine": "Löschen",
+    "deleteLineConfirm": "Diese Position (und Unterpositionen) löschen?",
+    "newLineTitle": "Neue Position",
+    "untitledLine": "Unbenannte Position",
+    "saveMeta": "Daten speichern",
+    "acceptTitle": "Angebot annehmen",
+    "acceptDescription": "Wähle, welche Positionen als Arbeiten angelegt werden. Nichts passiert ohne Bestätigung.",
+    "setProjectExecution": "Projektstatus auf Ausführung setzen",
+    "confirmAccept": "Annehmen und Arbeiten anlegen",
+    "columns": {
+      "title": "Angebot",
+      "project": "Projekt",
+      "status": "Status"
+    },
+    "status": {
+      "draft": "Entwurf",
+      "sent": "Gesendet",
+      "accepted": "Angenommen",
+      "rejected": "Abgelehnt",
+      "cancelled": "Storniert"
+    },
+    "actions": {
+      "send": "Senden",
+      "accept": "Annehmen",
+      "reject": "Ablehnen",
+      "cancel": "Stornieren"
+    },
+    "fields": {
+      "title": "Titel",
+      "validUntil": "Gültig bis",
+      "externalNotes": "Externe Notizen",
+      "internalNotes": "Interne Notizen",
+      "lineTitle": "Position",
+      "unit": "Einheit",
+      "quantity": "Menge",
+      "unitPrice": "Preis (€)",
+      "discount": "Rabatt (€)",
+      "lineTotal": "Zwischensumme"
+    },
+    "totals": {
+      "net": "Netto",
+      "vat": "MwSt.",
+      "gross": "Gesamt"
     }
   },
   "platform": {

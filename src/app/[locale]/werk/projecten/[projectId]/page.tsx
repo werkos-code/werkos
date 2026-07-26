@@ -4,6 +4,11 @@ import { notFound } from "next/navigation";
 import { listCustomerOptions } from "@/features/customers/customers-actions";
 import { ProjectDetailForm } from "@/features/projects/components/project-detail-form";
 import { getProject } from "@/features/projects/projects-actions";
+import { QuotesList } from "@/features/quotes/components/quotes-list";
+import {
+  listQuotesForProject,
+  listWorkItemsForProject,
+} from "@/features/quotes/quotes-actions";
 import { ShellPage } from "@/features/shell/components/shell-page";
 
 type Props = {
@@ -14,11 +19,15 @@ export default async function ProjectDetailPage({ params }: Props) {
   const { locale, projectId } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("projects");
+  const tQuotes = await getTranslations("quotes");
 
-  const [projectResult, customersResult] = await Promise.all([
-    getProject(projectId),
-    listCustomerOptions(),
-  ]);
+  const [projectResult, customersResult, quotesResult, workItemsResult] =
+    await Promise.all([
+      getProject(projectId),
+      listCustomerOptions(),
+      listQuotesForProject(projectId),
+      listWorkItemsForProject(projectId),
+    ]);
 
   if (projectResult.error === "not_found" || !projectResult.project) {
     notFound();
@@ -50,6 +59,44 @@ export default async function ProjectDetailPage({ params }: Props) {
         )}
       </section>
 
+      <section className="mt-12 space-y-4 border-t border-border pt-10">
+        <h2 className="text-sm font-medium text-foreground">
+          {tQuotes("sectionTitle")}
+        </h2>
+        {quotesResult.error ? (
+          <p className="text-sm text-destructive">{quotesResult.error}</p>
+        ) : (
+          <QuotesList
+            quotes={quotesResult.quotes ?? []}
+            projectId={projectId}
+          />
+        )}
+      </section>
+
+      <section className="mt-12 space-y-4 border-t border-border pt-10">
+        <h2 className="text-sm font-medium text-foreground">
+          {t("sections.workItems")}
+        </h2>
+        {workItemsResult.error ? (
+          <p className="text-sm text-destructive">{workItemsResult.error}</p>
+        ) : (workItemsResult.workItems ?? []).length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            {tQuotes("noWorkItems")}
+          </p>
+        ) : (
+          <ul className="space-y-2 text-sm">
+            {(workItemsResult.workItems ?? []).map((item) => (
+              <li
+                key={item.id}
+                className="rounded-lg border border-border/80 px-3 py-2"
+              >
+                {item.title}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
       <section className="mt-12 space-y-3 border-t border-border pt-10">
         <h2 className="text-sm font-medium text-foreground">
           {t("sections.workspace")}
@@ -59,14 +106,7 @@ export default async function ProjectDetailPage({ params }: Props) {
         </p>
         <ul className="grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
           {(
-            [
-              "workItems",
-              "planning",
-              "files",
-              "hoursMaterials",
-              "quotes",
-              "invoices",
-            ] as const
+            ["planning", "files", "hoursMaterials", "invoices"] as const
           ).map((key) => (
             <li
               key={key}

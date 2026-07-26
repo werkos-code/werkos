@@ -96,6 +96,15 @@ Na Phase 1 / Super Admin:
    - Werk → Nieuwe aanvraag → project in Voorbereiding
    - Projectdetail openen en status wijzigen
 
+## 9. Phase 3 — Offertes
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260726190000_phase3_quotes.sql`
+3. Test:
+   - Projectdetail → nieuwe offerte → regels (incl. subregel)
+   - Versturen → Accepteren → werkzaamheden laten aanmaken
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  

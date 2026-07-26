@@ -153,7 +153,7 @@
       },
       "quotes": {
         "title": "Quotes",
-        "description": "Quotes will be built in a later phase."
+        "description": "All quotes across your company, by project."
       },
       "workOrders": {
         "title": "Work orders",
@@ -304,6 +304,64 @@
       "hoursMaterials": "Hours & materials",
       "quotes": "Quotes",
       "invoices": "Invoices"
+    }
+  },
+  "quotes": {
+    "listTitle": "Quotes",
+    "listDescription": "Overview of all quotes in your company.",
+    "sectionTitle": "Quotes",
+    "editorDescription": "Quote for {project}",
+    "defaultTitle": "Quote",
+    "newQuote": "New quote",
+    "empty": "No quotes yet.",
+    "noLines": "No lines yet. Add a line.",
+    "noWorkItems": "No work items yet. You can create them when accepting a quote.",
+    "linesTitle": "Lines",
+    "addLine": "Add line",
+    "addChildLine": "Sub-line",
+    "deleteLine": "Delete",
+    "deleteLineConfirm": "Delete this line (and sub-lines)?",
+    "newLineTitle": "New line",
+    "untitledLine": "Untitled line",
+    "saveMeta": "Save details",
+    "acceptTitle": "Accept quote",
+    "acceptDescription": "Choose which lines become work items. Nothing is created without confirmation.",
+    "setProjectExecution": "Set project status to Execution",
+    "confirmAccept": "Accept and create work items",
+    "columns": {
+      "title": "Quote",
+      "project": "Project",
+      "status": "Status"
+    },
+    "status": {
+      "draft": "Draft",
+      "sent": "Sent",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    },
+    "actions": {
+      "send": "Send",
+      "accept": "Accept",
+      "reject": "Reject",
+      "cancel": "Cancel"
+    },
+    "fields": {
+      "title": "Title",
+      "validUntil": "Valid until",
+      "externalNotes": "External notes",
+      "internalNotes": "Internal notes",
+      "lineTitle": "Line",
+      "unit": "Unit",
+      "quantity": "Quantity",
+      "unitPrice": "Price (€)",
+      "discount": "Discount (€)",
+      "lineTotal": "Subtotal"
+    },
+    "totals": {
+      "net": "Net",
+      "vat": "VAT",
+      "gross": "Total"
     }
   },
   "platform": {

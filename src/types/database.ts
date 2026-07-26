@@ -30,6 +30,15 @@ export type ProjectStatus =
   | "completed"
   | "archived";
 
+export type QuoteStatus =
+  | "draft"
+  | "sent"
+  | "accepted"
+  | "rejected"
+  | "cancelled";
+
+export type WorkItemStatus = "open" | "done";
+
 export type Database = {
   public: {
     Tables: {
@@ -293,6 +302,197 @@ export type Database = {
           },
         ];
       };
+      quotes: {
+        Row: {
+          id: string;
+          organization_id: string;
+          project_id: string;
+          title: string;
+          status: QuoteStatus;
+          valid_until: string | null;
+          internal_notes: string | null;
+          external_notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          project_id: string;
+          title: string;
+          status?: QuoteStatus;
+          valid_until?: string | null;
+          internal_notes?: string | null;
+          external_notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          project_id?: string;
+          title?: string;
+          status?: QuoteStatus;
+          valid_until?: string | null;
+          internal_notes?: string | null;
+          external_notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "quotes_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "quotes_project_id_fkey";
+            columns: ["project_id"];
+            isOneToOne: false;
+            referencedRelation: "projects";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      quote_lines: {
+        Row: {
+          id: string;
+          organization_id: string;
+          quote_id: string;
+          parent_id: string | null;
+          sort_order: number;
+          title: string;
+          description: string | null;
+          quantity: number | null;
+          unit: string | null;
+          unit_price_cents: number | null;
+          vat_rate_bps: number;
+          discount_cents: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          quote_id: string;
+          parent_id?: string | null;
+          sort_order?: number;
+          title?: string;
+          description?: string | null;
+          quantity?: number | null;
+          unit?: string | null;
+          unit_price_cents?: number | null;
+          vat_rate_bps?: number;
+          discount_cents?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          quote_id?: string;
+          parent_id?: string | null;
+          sort_order?: number;
+          title?: string;
+          description?: string | null;
+          quantity?: number | null;
+          unit?: string | null;
+          unit_price_cents?: number | null;
+          vat_rate_bps?: number;
+          discount_cents?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "quote_lines_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "quote_lines_quote_id_fkey";
+            columns: ["quote_id"];
+            isOneToOne: false;
+            referencedRelation: "quotes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "quote_lines_parent_id_fkey";
+            columns: ["parent_id"];
+            isOneToOne: false;
+            referencedRelation: "quote_lines";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      work_items: {
+        Row: {
+          id: string;
+          organization_id: string;
+          project_id: string;
+          title: string;
+          status: WorkItemStatus;
+          quote_line_id: string | null;
+          sort_order: number;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          project_id: string;
+          title: string;
+          status?: WorkItemStatus;
+          quote_line_id?: string | null;
+          sort_order?: number;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          project_id?: string;
+          title?: string;
+          status?: WorkItemStatus;
+          quote_line_id?: string | null;
+          sort_order?: number;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "work_items_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "work_items_project_id_fkey";
+            columns: ["project_id"];
+            isOneToOne: false;
+            referencedRelation: "projects";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "work_items_quote_line_id_fkey";
+            columns: ["quote_line_id"];
+            isOneToOne: false;
+            referencedRelation: "quote_lines";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -320,6 +520,8 @@ export type Database = {
       subscription_status: SubscriptionStatus;
       platform_role: "super_admin";
       project_status: ProjectStatus;
+      quote_status: QuoteStatus;
+      work_item_status: WorkItemStatus;
     };
     CompositeTypes: {
       [_ in never]: never;
