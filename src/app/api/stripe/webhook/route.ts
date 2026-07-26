@@ -51,11 +51,10 @@ export async function POST(request: Request) {
       }
     }
   } catch (error) {
-    console.error("[stripe webhook]", error);
-    return NextResponse.json(
-      { error: "Provisioning failed" },
-      { status: 500 },
-    );
+    const message =
+      error instanceof Error ? error.message : "Provisioning failed";
+    console.error("[stripe webhook]", message, error);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 
   return NextResponse.json({ received: true });
