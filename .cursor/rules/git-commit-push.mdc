@@ -1,0 +1,18 @@
+---
+description: Always commit and push completed work unless high risk
+alwaysApply: true
+---
+
+# Git: commit & push by default
+
+After finishing a coherent set of changes that the user asked for, **commit and push to the remote** without asking first.
+
+Exceptions — ask (or warn) before committing/pushing when:
+
+- Secrets, credentials, or `.env` files would be included
+- Destructive git operations (force push, hard reset, history rewrite)
+- Pushing to `main`/`master` with force
+- The user explicitly said not to commit/push yet
+- The change is exploratory and clearly not ready
+
+Follow the existing commit message and HEREDOC conventions. Do not skip hooks.
