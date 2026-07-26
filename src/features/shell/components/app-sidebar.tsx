@@ -159,10 +159,11 @@ function NavSection({
 }) {
   const t = useTranslations("shell");
   const hasActive = sectionContainsActive(pathname, section);
+  const collapsible = section.collapsible !== false;
   const [manualOpen, setManualOpen] = useState(
     section.defaultOpen !== false || hasActive,
   );
-  const open = hasActive || manualOpen;
+  const open = !collapsible || hasActive || manualOpen;
 
   return (
     <div
@@ -171,21 +172,27 @@ function NavSection({
         section.dividerBefore && "border-t border-white/8 pt-4",
       )}
     >
-      <button
-        type="button"
-        onClick={() => setManualOpen((value) => !value)}
-        className="flex w-full items-center gap-2 rounded-md px-2.5 py-1 text-left transition-colors hover:bg-white/[0.04]"
-      >
-        <span className="flex-1 text-[10px] font-medium tracking-[0.08em] text-sidebar-muted/70 uppercase">
+      {collapsible ? (
+        <button
+          type="button"
+          onClick={() => setManualOpen((value) => !value)}
+          className="flex w-full items-center gap-2 rounded-md px-2.5 py-1 text-left transition-colors hover:bg-white/[0.04]"
+        >
+          <span className="flex-1 text-[10px] font-medium tracking-[0.08em] text-sidebar-muted/70 uppercase">
+            {t(`sections.${section.labelKey}`)}
+          </span>
+          <ChevronDown
+            className={cn(
+              "size-3 text-sidebar-muted/70 transition-transform duration-200",
+              open ? "rotate-0" : "-rotate-90",
+            )}
+          />
+        </button>
+      ) : (
+        <p className="px-2.5 py-1 text-[10px] font-medium tracking-[0.08em] text-sidebar-muted/70 uppercase">
           {t(`sections.${section.labelKey}`)}
-        </span>
-        <ChevronDown
-          className={cn(
-            "size-3 text-sidebar-muted/70 transition-transform duration-200",
-            open ? "rotate-0" : "-rotate-90",
-          )}
-        />
-      </button>
+        </p>
+      )}
       {open ? (
         <div className="space-y-0.5">
           {section.items.map((item) => (

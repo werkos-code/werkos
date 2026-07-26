@@ -70,7 +70,7 @@ De gebruiker denkt alleen:
 
 Organisatiewissel gebeurt via de organisatie-switcher bovenin de sidebar.
 
-Sectiekoppen in de sidebar zijn inklaptbaar. **Bedrijf** start standaard ingeklapt.
+Sectiekoppen in de sidebar zijn inklaptbaar, behalve **Operatie** (altijd open). **Bedrijf** en **Communicatie** starten standaard ingeklapt.
 
 ---
 

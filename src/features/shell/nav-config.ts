@@ -36,6 +36,8 @@ export type ShellNavSection = {
   labelKey: string;
   /** When false, section starts collapsed (unless a child is active). */
   defaultOpen?: boolean;
+  /** When false, section is always open and the header is not a toggle. Default true. */
+  collapsible?: boolean;
   /** Subtle top rule before this section */
   dividerBefore?: boolean;
   items: ShellNavItem[];
@@ -48,6 +50,7 @@ export const APP_NAV: ShellNavSection[] = [
   {
     id: "operations",
     labelKey: "operations",
+    collapsible: false,
     defaultOpen: true,
     items: [
       {
@@ -159,7 +162,7 @@ export const APP_NAV: ShellNavSection[] = [
   {
     id: "communication",
     labelKey: "communication",
-    defaultOpen: true,
+    defaultOpen: false,
     dividerBefore: true,
     items: [
       {
