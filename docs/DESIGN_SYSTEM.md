@@ -125,7 +125,7 @@ Rest: [`PLANNING_BACKLOG.md`](./PLANNING_BACKLOG.md)
 
 **Voorbeeld:** `quote-editor.tsx`
 
-### 4.5 Coming soon / stub
+### 4.6 Coming soon / stub
 
 `PageCard p-8` · icoon · `h3 text-sm font-medium` · één zin muted · optioneel outline-CTA.  
 Geen nepcijfers.
