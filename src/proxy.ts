@@ -36,6 +36,16 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Server Actions: skip i18n rewrites to avoid action-forward loops / hangs.
+  const isServerAction =
+    request.method === "POST" &&
+    (request.headers.has("next-action") ||
+      request.headers.has("Next-Action"));
+  if (isServerAction) {
+    const { response } = await updateSession(request);
+    return response;
+  }
+
   const i18nResponse = handleI18n(request);
   const { response, user } = await updateSession(request, i18nResponse);
 

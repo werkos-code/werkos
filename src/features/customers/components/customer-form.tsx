@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  createCustomer,
   updateCustomer,
   type CustomerRow,
 } from "@/features/customers/customers-actions";
@@ -45,8 +44,18 @@ export function CustomerForm({ mode, initial }: CustomerFormProps) {
         void (async () => {
           try {
             if (mode === "create") {
-              const result = await createCustomer(payload);
-              if (result.error || !result.customerId) {
+              const response = await fetch("/api/customers", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+                signal: AbortSignal.timeout(20_000),
+              });
+              const result = (await response.json()) as {
+                error?: string;
+                customerId?: string;
+              };
+
+              if (!response.ok || result.error || !result.customerId) {
                 setError(
                   result.error === "name_required"
                     ? t("nameRequired")
@@ -54,6 +63,7 @@ export function CustomerForm({ mode, initial }: CustomerFormProps) {
                 );
                 return;
               }
+
               router.replace(`/bedrijf/klanten/${result.customerId}`);
               return;
             }
@@ -73,8 +83,12 @@ export function CustomerForm({ mode, initial }: CustomerFormProps) {
               return;
             }
             router.refresh();
-          } catch {
-            setError(tCommon("error"));
+          } catch (err) {
+            setError(
+              err instanceof DOMException && err.name === "TimeoutError"
+                ? tCommon("error")
+                : tCommon("error"),
+            );
           } finally {
             setPending(false);
           }

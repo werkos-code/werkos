@@ -7,7 +7,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createProject } from "@/features/projects/projects-actions";
 
 type NewProjectFormProps = {
   customers: Array<{ id: string; name: string }>;
@@ -31,13 +30,22 @@ export function NewProjectForm({ customers }: NewProjectFormProps) {
 
         void (async () => {
           try {
-            const result = await createProject({
-              name: String(form.get("name") ?? ""),
-              customerId: String(form.get("customerId") ?? ""),
-              notes: String(form.get("notes") ?? "") || undefined,
+            const response = await fetch("/api/projects", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: String(form.get("name") ?? ""),
+                customerId: String(form.get("customerId") ?? ""),
+                notes: String(form.get("notes") ?? "") || undefined,
+              }),
+              signal: AbortSignal.timeout(20_000),
             });
+            const result = (await response.json()) as {
+              error?: string;
+              projectId?: string;
+            };
 
-            if (result.error || !result.projectId) {
+            if (!response.ok || result.error || !result.projectId) {
               setError(
                 result.error === "name_required"
                   ? t("nameRequired")
