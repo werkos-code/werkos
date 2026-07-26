@@ -13,6 +13,10 @@ export function getStripeSecretKey(): string | undefined {
   return readServerEnv("STRIPE_SECRET_KEY") ?? env.STRIPE_SECRET_KEY;
 }
 
+export function getStripeWebhookSecret(): string | undefined {
+  return readServerEnv("STRIPE_WEBHOOK_SECRET") ?? env.STRIPE_WEBHOOK_SECRET;
+}
+
 export function getStripePriceIds() {
   return {
     base: readServerEnv("STRIPE_PRICE_BASE") ?? env.STRIPE_PRICE_BASE,

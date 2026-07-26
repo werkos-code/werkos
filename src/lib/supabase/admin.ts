@@ -10,7 +10,9 @@ import type { Database } from "@/types/database";
  * Use sparingly: platform admin tasks, webhooks, background jobs.
  */
 export function createAdminClient() {
-  const serviceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY;
+  const serviceRoleKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ||
+    env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!serviceRoleKey) {
     throw new Error(
