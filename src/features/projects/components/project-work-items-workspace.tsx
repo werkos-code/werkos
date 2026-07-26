@@ -58,6 +58,10 @@ import {
   workItemStats,
   type WorkItemRow,
 } from "@/features/projects/lib/work-item";
+import {
+  hoursInputToMinutes,
+  minutesToHoursInput,
+} from "@/features/time/lib/time-entry";
 import { PageCard } from "@/features/shell/components/page-card";
 import { useRouter } from "@/i18n/navigation";
 import type { WorkItemStatus } from "@/types/database";
@@ -71,6 +75,7 @@ type ProjectWorkItemsWorkspaceProps = {
   staff: StaffOption[];
   activities: ProjectActivityRow[];
   minutesByWorkItem?: Record<string, number>;
+  articles?: import("@/features/materials/lib/materials").ArticleRow[];
 };
 
 type ContainerId = "root" | `group:${string}`;
@@ -135,6 +140,7 @@ export function ProjectWorkItemsWorkspace({
   staff,
   activities,
   minutesByWorkItem = {},
+  articles = [],
 }: ProjectWorkItemsWorkspaceProps) {
   const t = useTranslations("projects.workItems");
   const tCommon = useTranslations("common");
@@ -332,6 +338,35 @@ export function ProjectWorkItemsWorkspace({
           signal: AbortSignal.timeout(20_000),
         });
         router.refresh();
+      })();
+    });
+  }
+
+  function saveEstimatedMinutes(itemId: string, minutes: number | null) {
+    setItems((prev) =>
+      prev.map((row) =>
+        row.id === itemId ? { ...row, estimatedMinutes: minutes } : row,
+      ),
+    );
+    startTransition(() => {
+      void (async () => {
+        try {
+          const response = await fetch("/api/work-items", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: itemId, estimatedMinutes: minutes }),
+            signal: AbortSignal.timeout(20_000),
+          });
+          if (!response.ok) {
+            setError(tCommon("error"));
+            router.refresh();
+            return;
+          }
+          router.refresh();
+        } catch {
+          setError(tCommon("error"));
+          router.refresh();
+        }
       })();
     });
   }
@@ -578,7 +613,7 @@ export function ProjectWorkItemsWorkspace({
       ) : (
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_17.5rem]">
           <PageCard className="overflow-hidden p-0">
-            <div className="text-muted-foreground grid grid-cols-[1.5rem_1.5rem_minmax(10rem,1.6fr)_7rem_8rem_7rem_7rem_4rem_2rem] items-center gap-2 border-b border-border bg-muted/30 px-3 py-2 text-[11px] font-medium tracking-wide uppercase max-xl:hidden">
+            <div className="text-muted-foreground grid grid-cols-[1.5rem_1.5rem_minmax(10rem,1.6fr)_7rem_8rem_7rem_7rem_9rem_2rem] items-center gap-2 border-b border-border bg-muted/30 px-3 py-2 text-[11px] font-medium tracking-wide uppercase max-xl:hidden">
               <span />
               <span />
               <span>{t("columns.title")}</span>
@@ -666,6 +701,9 @@ export function ProjectWorkItemsWorkspace({
                                       }}
                                       onCycleStatus={() => cycleStatus(item)}
                                       onDelete={() => deleteItem(item)}
+                                      onEstimatedMinutesChange={(minutes) =>
+                                        saveEstimatedMinutes(item.id, minutes)
+                                      }
                                       t={t}
                                     />
                                   ))}
@@ -710,6 +748,9 @@ export function ProjectWorkItemsWorkspace({
                         }}
                         onCycleStatus={() => cycleStatus(item)}
                         onDelete={() => deleteItem(item)}
+                        onEstimatedMinutesChange={(minutes) =>
+                          saveEstimatedMinutes(item.id, minutes)
+                        }
                         t={t}
                       />
                     ))}
@@ -867,6 +908,7 @@ export function ProjectWorkItemsWorkspace({
         activities={activities}
         projectId={projectId}
         minutesByWorkItem={minutesByWorkItem}
+        articles={articles}
         open={sheetOpen}
         onOpenChange={setSheetOpen}
         onChanged={() => router.refresh()}
@@ -1044,6 +1086,7 @@ function SortableTaskRow({
   onOpen,
   onCycleStatus,
   onDelete,
+  onEstimatedMinutesChange,
   t,
 }: {
   item: WorkItemRow;
@@ -1053,6 +1096,7 @@ function SortableTaskRow({
   onOpen: () => void;
   onCycleStatus: () => void;
   onDelete: () => void;
+  onEstimatedMinutesChange: (minutes: number | null) => void;
   t: (key: string, values?: Record<string, string | number>) => string;
 }) {
   const {
@@ -1064,10 +1108,26 @@ function SortableTaskRow({
     isDragging,
   } = useSortable({ id: item.id });
   const overdue = isWorkItemOverdue(item);
-  const hoursLabel = formatHoursPair(
-    estimatedMinutesForItem(item, items) || null,
-    actualMinutesForItem(item, items, minutesByWorkItem) || null,
+  const actualMinutes = actualMinutesForItem(item, items, minutesByWorkItem);
+  const [expectedDraft, setExpectedDraft] = useState(
+    minutesToHoursInput(item.estimatedMinutes),
   );
+  const [expectedFocused, setExpectedFocused] = useState(false);
+
+  useEffect(() => {
+    if (!expectedFocused) {
+      setExpectedDraft(minutesToHoursInput(item.estimatedMinutes));
+    }
+  }, [item.estimatedMinutes, expectedFocused]);
+
+  function commitExpected() {
+    const next = hoursInputToMinutes(expectedDraft.replace(",", "."));
+    const normalized = next == null || next <= 0 ? null : next;
+    const current = item.estimatedMinutes ?? null;
+    setExpectedDraft(minutesToHoursInput(normalized));
+    if (normalized === current) return;
+    onEstimatedMinutesChange(normalized);
+  }
 
   return (
     <div
@@ -1077,7 +1137,7 @@ function SortableTaskRow({
         transition,
       }}
       className={cn(
-        "group grid grid-cols-[1.5rem_1.5rem_minmax(0,1fr)] items-center gap-2 px-3 py-2.5 transition-colors hover:bg-muted/40 sm:grid-cols-[1.5rem_1.5rem_minmax(10rem,1.6fr)_7rem_8rem_7rem_7rem_4rem_2rem]",
+        "group grid grid-cols-[1.5rem_1.5rem_minmax(0,1fr)] items-center gap-2 px-3 py-2.5 transition-colors hover:bg-muted/40 sm:grid-cols-[1.5rem_1.5rem_minmax(10rem,1.6fr)_7rem_8rem_7rem_7rem_9rem_2rem]",
         isDragging && "bg-card opacity-70 shadow-md",
         item.parentId && "sm:pl-8",
       )}
@@ -1141,9 +1201,37 @@ function SortableTaskRow({
       <span className="hidden text-sm text-muted-foreground sm:block">
         {formatPlan(item.plannedStart, item.plannedEnd)}
       </span>
-      <span className="hidden text-right text-sm tabular-nums text-muted-foreground sm:block">
-        {hoursLabel}
-      </span>
+      <div className="hidden items-center justify-end gap-1 sm:flex">
+        {item.isGroup ? (
+          <span className="text-right text-sm tabular-nums text-muted-foreground">
+            {formatHoursPair(
+              estimatedMinutesForItem(item, items) || null,
+              actualMinutes || null,
+            )}
+          </span>
+        ) : (
+          <>
+            <Input
+              inputMode="decimal"
+              disabled={disabled}
+              value={expectedDraft}
+              aria-label={t("columns.hours")}
+              onFocus={() => setExpectedFocused(true)}
+              onChange={(event) => setExpectedDraft(event.target.value)}
+              onBlur={() => {
+                setExpectedFocused(false);
+                commitExpected();
+              }}
+              onClick={(event) => event.stopPropagation()}
+              className="h-7 w-14 border-border/70 bg-background px-1.5 text-right font-mono text-sm tabular-nums"
+              placeholder="—"
+            />
+            <span className="text-xs text-muted-foreground tabular-nums">
+              / {formatEstimatedHours(actualMinutes || null)}
+            </span>
+          </>
+        )}
+      </div>
       <Button
         type="button"
         variant="ghost"

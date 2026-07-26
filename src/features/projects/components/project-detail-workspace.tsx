@@ -60,6 +60,7 @@ type ProjectDetailWorkspaceProps = {
   workOrders: WorkOrderRow[];
   activities: ProjectActivityRow[];
   minutesByWorkItem?: Record<string, number>;
+  articles?: import("@/features/materials/lib/materials").ArticleRow[];
   initialTab?: string;
 };
 
@@ -290,6 +291,7 @@ export function ProjectDetailWorkspace({
   workOrders,
   activities,
   minutesByWorkItem = {},
+  articles = [],
   initialTab = "overview",
 }: ProjectDetailWorkspaceProps) {
   const t = useTranslations("projects");
@@ -1084,6 +1086,7 @@ export function ProjectDetailWorkspace({
           staff={staff}
           activities={activities}
           minutesByWorkItem={minutesByWorkItem}
+          articles={articles}
         />
       ) : null}
 

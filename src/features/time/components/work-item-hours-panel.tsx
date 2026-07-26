@@ -11,6 +11,7 @@ import type { StaffOption } from "@/features/projects/projects-actions";
 import { PageCard } from "@/features/shell/components/page-card";
 import {
   hoursInputToMinutes,
+  minutesToHoursInput,
   type TimeEntryRow,
 } from "@/features/time/lib/time-entry";
 
@@ -22,6 +23,8 @@ type WorkItemHoursPanelProps = {
   actualMinutesOverride?: number | null;
   staff: StaffOption[];
   onChanged: () => void;
+  /** Called after expected hours are saved so parent draft stays in sync. */
+  onEstimatedSaved?: (minutes: number | null) => void;
 };
 
 function todayIso() {
@@ -47,6 +50,7 @@ export function WorkItemHoursPanel({
   actualMinutesOverride,
   staff,
   onChanged,
+  onEstimatedSaved,
 }: WorkItemHoursPanelProps) {
   const t = useTranslations("projects.workItems.detail.time");
   const tCommon = useTranslations("common");
@@ -59,7 +63,17 @@ export function WorkItemHoursPanel({
   const [hoursDraft, setHoursDraft] = useState("");
   const [userId, setUserId] = useState("");
   const [notes, setNotes] = useState("");
+  const [expectedDraft, setExpectedDraft] = useState(
+    minutesToHoursInput(estimatedMinutes),
+  );
+  const [expectedFocused, setExpectedFocused] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (!expectedFocused) {
+      setExpectedDraft(minutesToHoursInput(estimatedMinutes));
+    }
+  }, [estimatedMinutes, expectedFocused]);
 
   const totalMinutes = useMemo(() => {
     if (actualMinutesOverride != null) return actualMinutesOverride;
@@ -166,14 +180,73 @@ export function WorkItemHoursPanel({
     });
   }
 
+  function saveExpected() {
+    if (isGroup) return;
+    const next = hoursInputToMinutes(expectedDraft.replace(",", "."));
+    const normalized =
+      next == null ? null : next <= 0 ? null : next;
+    const current = estimatedMinutes ?? null;
+    if (normalized === current) {
+      setExpectedDraft(minutesToHoursInput(current));
+      return;
+    }
+
+    startTransition(async () => {
+      setFormError(null);
+      try {
+        const response = await fetch("/api/work-items", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: workItemId,
+            estimatedMinutes: normalized,
+          }),
+          signal: AbortSignal.timeout(20_000),
+        });
+        if (!response.ok) {
+          setFormError(tCommon("error"));
+          setExpectedDraft(minutesToHoursInput(estimatedMinutes));
+          return;
+        }
+        setExpectedDraft(minutesToHoursInput(normalized));
+        onEstimatedSaved?.(normalized);
+        onChanged();
+      } catch {
+        setFormError(tCommon("error"));
+        setExpectedDraft(minutesToHoursInput(estimatedMinutes));
+      }
+    });
+  }
+
   return (
     <div className="space-y-4">
       <PageCard className="grid gap-3 p-4 sm:grid-cols-2">
         <div>
           <p className="text-xs text-muted-foreground">{t("expected")}</p>
-          <p className="mt-0.5 text-lg font-medium tabular-nums">
-            {formatEstimatedHours(estimatedMinutes)}
-          </p>
+          {isGroup ? (
+            <p className="mt-0.5 text-lg font-medium tabular-nums">
+              {formatEstimatedHours(estimatedMinutes)}
+            </p>
+          ) : (
+            <label className="mt-1 block space-y-1">
+              <Input
+                inputMode="decimal"
+                value={expectedDraft}
+                disabled={isPending}
+                placeholder={t("expectedPlaceholder")}
+                onFocus={() => setExpectedFocused(true)}
+                onChange={(event) => setExpectedDraft(event.target.value)}
+                onBlur={() => {
+                  setExpectedFocused(false);
+                  saveExpected();
+                }}
+                className="h-10 max-w-[8rem] font-mono text-lg tabular-nums"
+              />
+              <span className="text-xs text-muted-foreground">
+                {t("expectedHint")}
+              </span>
+            </label>
+          )}
         </div>
         <div>
           <p className="text-xs text-muted-foreground">{t("actual")}</p>

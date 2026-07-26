@@ -603,6 +603,7 @@
           "subtasks": "Subtasks",
           "planning": "Schedule",
           "hours": "Time & hours",
+          "materials": "Materials",
           "files": "Files",
           "communication": "Communication",
           "activity": "Activity"
@@ -614,6 +615,8 @@
         "time": {
           "expected": "Expected",
           "actual": "Actual",
+          "expectedPlaceholder": "e.g. 2",
+          "expectedHint": "Set directly on this work item — not only via a quote.",
           "addTitle": "Log hours",
           "date": "Date",
           "hours": "Hours",
@@ -1072,6 +1075,122 @@
     "errors": {
       "folderNotEmpty": "Folder is not empty. Remove contents first.",
       "tooLarge": "File may be at most 50 MB."
+    }
+  },
+  "materials": {
+    "articles": {
+      "title": "Articles",
+      "new": "New article",
+      "newTitle": "Add article",
+      "editTitle": "Edit article",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Delete article “{name}”?",
+      "search": "Search articles…",
+      "activeOnly": "Active only",
+      "empty": "No articles yet. Add your catalog.",
+      "kpiTotal": "Total",
+      "kpiActive": "Active",
+      "kpiTracked": "Stock tracked",
+      "active": "Active",
+      "inactive": "Inactive",
+      "notTracked": "Not stock-tracked",
+      "columns": {
+        "code": "Code",
+        "name": "Name",
+        "unit": "Unit",
+        "category": "Category",
+        "purchase": "Purchase",
+        "status": "Status"
+      },
+      "fields": {
+        "name": "Name",
+        "code": "Article code",
+        "unit": "Unit",
+        "category": "Category",
+        "barcode": "Barcode",
+        "purchase": "Purchase price (€)",
+        "sale": "Sale price (€)",
+        "description": "Description",
+        "trackStock": "Track stock",
+        "active": "Active"
+      },
+      "errors": {
+        "nameRequired": "Name is required."
+      }
+    },
+    "stock": {
+      "title": "Stock",
+      "kpiLocations": "Locations",
+      "kpiBalances": "Balances",
+      "kpiLow": "Below minimum",
+      "newLocation": "New location",
+      "newMovement": "Movement",
+      "locationsTitle": "Locations",
+      "locationsEmpty": "No locations yet. Add a warehouse or van.",
+      "balancesTitle": "Balances",
+      "balancesEmpty": "No stock yet. Post a receipt.",
+      "movementsTitle": "Recent movements",
+      "movementsEmpty": "No movements yet.",
+      "active": "Active",
+      "inactive": "Inactive",
+      "columns": {
+        "article": "Article",
+        "location": "Location",
+        "qty": "Qty"
+      },
+      "fields": {
+        "name": "Name",
+        "code": "Code",
+        "kind": "Type",
+        "article": "Article",
+        "articlePick": "Pick article…",
+        "type": "Movement type",
+        "quantity": "Quantity",
+        "from": "From location",
+        "to": "To location",
+        "notes": "Note"
+      },
+      "kinds": {
+        "warehouse": "Warehouse",
+        "vehicle": "Vehicle / van",
+        "project_site": "Project site",
+        "other": "Other"
+      },
+      "types": {
+        "receipt": "Receipt",
+        "issue": "Issue",
+        "transfer": "Transfer",
+        "adjustment": "Adjustment (+)",
+        "return": "Return"
+      },
+      "errors": {
+        "nameRequired": "Name is required.",
+        "insufficient": "Insufficient stock at this location."
+      }
+    },
+    "workItem": {
+      "groupHint": "Materials can only be booked on leaf work items.",
+      "planTitle": "Planned materials",
+      "planHint": "Link an article or note ad-hoc (e.g. 5 liters of paint).",
+      "planEmpty": "No planned lines yet.",
+      "usageTitle": "Usage",
+      "usageEmpty": "No usage logged yet.",
+      "adHoc": "Ad-hoc (no article)",
+      "freeUsage": "Free usage (no plan line)",
+      "addPlan": "Add line",
+      "addUsage": "Log usage",
+      "loading": "Loading…",
+      "expectedVsActual": "Expected {expected} · actual {actual}",
+      "fields": {
+        "title": "Description",
+        "qty": "Qty",
+        "unit": "Unit"
+      },
+      "errors": {
+        "titleRequired": "Description or article is required.",
+        "usageRequired": "Description and quantity are required."
+      }
     }
   }
 }

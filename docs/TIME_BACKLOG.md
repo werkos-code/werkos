@@ -8,6 +8,7 @@
 
 - [x] `time_entries` (werkelijke uren als boekingen: wie, dag, minuten, notitie)
 - [x] Boeken alleen op blad-werkzaamheden (geen groepen)
+- [x] Verwachte uren direct op werkzaamheid (lijst / Overzicht / Tijd & uren)
 - [x] Tab Tijd & uren: verwacht vs werkelijk + CRUD boekingen
 - [x] Rollups: Taken-lijst + project-KPI (verwacht / werkelijk)
 - [x] `quote_lines.estimated_minutes` + veld in offerte-editor

@@ -603,6 +603,7 @@
           "subtasks": "Subtaken",
           "planning": "Planning",
           "hours": "Tijd & uren",
+          "materials": "Materiaal",
           "files": "Bestanden",
           "communication": "Communicatie",
           "activity": "Activiteit"
@@ -614,6 +615,8 @@
         "time": {
           "expected": "Verwacht",
           "actual": "Werkelijk",
+          "expectedPlaceholder": "bijv. 2",
+          "expectedHint": "Direct op deze werkzaamheid — niet alleen via offerte.",
           "addTitle": "Uren boeken",
           "date": "Datum",
           "hours": "Uren",
@@ -1072,6 +1075,122 @@
     "errors": {
       "folderNotEmpty": "Map is niet leeg. Verwijder eerst inhoud.",
       "tooLarge": "Bestand mag maximaal 50 MB zijn."
+    }
+  },
+  "materials": {
+    "articles": {
+      "title": "Artikelen",
+      "new": "Nieuw artikel",
+      "newTitle": "Artikel toevoegen",
+      "editTitle": "Artikel bewerken",
+      "edit": "Bewerken",
+      "delete": "Verwijderen",
+      "deleteConfirm": "Artikel “{name}” verwijderen?",
+      "search": "Zoek artikelen…",
+      "activeOnly": "Alleen actief",
+      "empty": "Nog geen artikelen. Voeg je catalogus toe.",
+      "kpiTotal": "Totaal",
+      "kpiActive": "Actief",
+      "kpiTracked": "Op voorraad",
+      "active": "Actief",
+      "inactive": "Inactief",
+      "notTracked": "Niet voorraadplichtig",
+      "columns": {
+        "code": "Code",
+        "name": "Naam",
+        "unit": "Eenheid",
+        "category": "Categorie",
+        "purchase": "Inkoop",
+        "status": "Status"
+      },
+      "fields": {
+        "name": "Naam",
+        "code": "Artikelcode",
+        "unit": "Eenheid",
+        "category": "Categorie",
+        "barcode": "Barcode",
+        "purchase": "Inkoopprijs (€)",
+        "sale": "Verkoopprijs (€)",
+        "description": "Omschrijving",
+        "trackStock": "Voorraad bijhouden",
+        "active": "Actief"
+      },
+      "errors": {
+        "nameRequired": "Naam is verplicht."
+      }
+    },
+    "stock": {
+      "title": "Voorraad",
+      "kpiLocations": "Locaties",
+      "kpiBalances": "Saldi",
+      "kpiLow": "Onder minimum",
+      "newLocation": "Nieuwe locatie",
+      "newMovement": "Mutatie",
+      "locationsTitle": "Locaties",
+      "locationsEmpty": "Nog geen locaties. Voeg een magazijn of bus toe.",
+      "balancesTitle": "Saldi",
+      "balancesEmpty": "Nog geen voorraad. Boek een ontvangst.",
+      "movementsTitle": "Recente mutaties",
+      "movementsEmpty": "Nog geen mutaties.",
+      "active": "Actief",
+      "inactive": "Inactief",
+      "columns": {
+        "article": "Artikel",
+        "location": "Locatie",
+        "qty": "Aantal"
+      },
+      "fields": {
+        "name": "Naam",
+        "code": "Code",
+        "kind": "Type",
+        "article": "Artikel",
+        "articlePick": "Kies artikel…",
+        "type": "Mutatietype",
+        "quantity": "Aantal",
+        "from": "Van locatie",
+        "to": "Naar locatie",
+        "notes": "Notitie"
+      },
+      "kinds": {
+        "warehouse": "Magazijn",
+        "vehicle": "Voertuig / bus",
+        "project_site": "Projectwerf",
+        "other": "Overig"
+      },
+      "types": {
+        "receipt": "Ontvangst",
+        "issue": "Uitgifte",
+        "transfer": "Overboeking",
+        "adjustment": "Correctie (+)",
+        "return": "Retour"
+      },
+      "errors": {
+        "nameRequired": "Naam is verplicht.",
+        "insufficient": "Onvoldoende voorraad op deze locatie."
+      }
+    },
+    "workItem": {
+      "groupHint": "Materiaal boeken kan alleen op blad-werkzaamheden.",
+      "planTitle": "Begroot materiaal",
+      "planHint": "Koppel een artikel of noteer ad-hoc (bijv. 5 liter verf).",
+      "planEmpty": "Nog geen begrote regels.",
+      "usageTitle": "Verbruik",
+      "usageEmpty": "Nog geen verbruik geboekt.",
+      "adHoc": "Ad-hoc (geen artikel)",
+      "freeUsage": "Vrij verbruik (zonder planregel)",
+      "addPlan": "Regel toevoegen",
+      "addUsage": "Verbruik boeken",
+      "loading": "Laden…",
+      "expectedVsActual": "Verwacht {expected} · werkelijk {actual}",
+      "fields": {
+        "title": "Omschrijving",
+        "qty": "Aantal",
+        "unit": "Eenheid"
+      },
+      "errors": {
+        "titleRequired": "Omschrijving of artikel is verplicht.",
+        "usageRequired": "Omschrijving en aantal zijn verplicht."
+      }
     }
   }
 }

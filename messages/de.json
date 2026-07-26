@@ -603,6 +603,7 @@
           "subtasks": "Unteraufgaben",
           "planning": "Planung",
           "hours": "Zeit & Stunden",
+          "materials": "Material",
           "files": "Dateien",
           "communication": "Kommunikation",
           "activity": "Aktivität"
@@ -614,6 +615,8 @@
         "time": {
           "expected": "Erwartet",
           "actual": "Tatsächlich",
+          "expectedPlaceholder": "z. B. 2",
+          "expectedHint": "Direkt auf diesem Arbeitsposten — nicht nur über das Angebot.",
           "addTitle": "Stunden buchen",
           "date": "Datum",
           "hours": "Stunden",
@@ -1072,6 +1075,122 @@
     "errors": {
       "folderNotEmpty": "Ordner ist nicht leer. Entferne zuerst den Inhalt.",
       "tooLarge": "Datei darf maximal 50 MB groß sein."
+    }
+  },
+  "materials": {
+    "articles": {
+      "title": "Artikel",
+      "new": "Neuer Artikel",
+      "newTitle": "Artikel hinzufügen",
+      "editTitle": "Artikel bearbeiten",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "deleteConfirm": "Artikel „{name}“ löschen?",
+      "search": "Artikel suchen…",
+      "activeOnly": "Nur aktiv",
+      "empty": "Noch keine Artikel. Füge deinen Katalog hinzu.",
+      "kpiTotal": "Gesamt",
+      "kpiActive": "Aktiv",
+      "kpiTracked": "Bestandsgeführt",
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "notTracked": "Nicht bestandsgeführt",
+      "columns": {
+        "code": "Code",
+        "name": "Name",
+        "unit": "Einheit",
+        "category": "Kategorie",
+        "purchase": "Einkauf",
+        "status": "Status"
+      },
+      "fields": {
+        "name": "Name",
+        "code": "Artikelcode",
+        "unit": "Einheit",
+        "category": "Kategorie",
+        "barcode": "Barcode",
+        "purchase": "Einkaufspreis (€)",
+        "sale": "Verkaufspreis (€)",
+        "description": "Beschreibung",
+        "trackStock": "Bestand führen",
+        "active": "Aktiv"
+      },
+      "errors": {
+        "nameRequired": "Name ist erforderlich."
+      }
+    },
+    "stock": {
+      "title": "Bestand",
+      "kpiLocations": "Standorte",
+      "kpiBalances": "Salden",
+      "kpiLow": "Unter Minimum",
+      "newLocation": "Neuer Standort",
+      "newMovement": "Bewegung",
+      "locationsTitle": "Standorte",
+      "locationsEmpty": "Noch keine Standorte. Füge ein Lager oder Fahrzeug hinzu.",
+      "balancesTitle": "Salden",
+      "balancesEmpty": "Noch kein Bestand. Buche einen Wareneingang.",
+      "movementsTitle": "Letzte Bewegungen",
+      "movementsEmpty": "Noch keine Bewegungen.",
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "columns": {
+        "article": "Artikel",
+        "location": "Standort",
+        "qty": "Menge"
+      },
+      "fields": {
+        "name": "Name",
+        "code": "Code",
+        "kind": "Typ",
+        "article": "Artikel",
+        "articlePick": "Artikel wählen…",
+        "type": "Bewegungsart",
+        "quantity": "Menge",
+        "from": "Von Standort",
+        "to": "Nach Standort",
+        "notes": "Notiz"
+      },
+      "kinds": {
+        "warehouse": "Lager",
+        "vehicle": "Fahrzeug",
+        "project_site": "Baustelle",
+        "other": "Sonstiges"
+      },
+      "types": {
+        "receipt": "Wareneingang",
+        "issue": "Ausgabe",
+        "transfer": "Umbuchung",
+        "adjustment": "Korrektur (+)",
+        "return": "Rückgabe"
+      },
+      "errors": {
+        "nameRequired": "Name ist erforderlich.",
+        "insufficient": "Nicht genug Bestand an diesem Standort."
+      }
+    },
+    "workItem": {
+      "groupHint": "Material kann nur auf Blatt-Arbeitsposten gebucht werden.",
+      "planTitle": "Geplantes Material",
+      "planHint": "Artikel verknüpfen oder ad-hoc notieren (z. B. 5 Liter Farbe).",
+      "planEmpty": "Noch keine geplanten Zeilen.",
+      "usageTitle": "Verbrauch",
+      "usageEmpty": "Noch kein Verbrauch gebucht.",
+      "adHoc": "Ad-hoc (kein Artikel)",
+      "freeUsage": "Freier Verbrauch (ohne Planzeile)",
+      "addPlan": "Zeile hinzufügen",
+      "addUsage": "Verbrauch buchen",
+      "loading": "Laden…",
+      "expectedVsActual": "Erwartet {expected} · tatsächlich {actual}",
+      "fields": {
+        "title": "Beschreibung",
+        "qty": "Menge",
+        "unit": "Einheit"
+      },
+      "errors": {
+        "titleRequired": "Beschreibung oder Artikel ist erforderlich.",
+        "usageRequired": "Beschreibung und Menge sind erforderlich."
+      }
     }
   }
 }

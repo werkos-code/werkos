@@ -613,6 +613,8 @@ Bijvoorbeeld met:
 
 **Uren:** een werkzaamheid kan een verwachting (begroot) dragen. Werkelijke uren zijn geen overschrijving van dat veld, maar een reeks boekingen (wie, welke dag, hoeveel). Groepen tonen alleen de som van hun kinderen.
 
+**Materialen:** begroot via planregels (artikel uit catalogus of ad-hoc omschrijving); werkelijk via verbruikboekingen. Voorraad en artikelen zijn bedrijfsbreed; project/werkzaamheid trekt daaruit.
+
 ---
 
 ## Hiërarchische werkzaamheden

@@ -15,6 +15,7 @@
 - [x] Enkele assignee + activiteitfeed gefilterd op `work_item_id`
 - [x] Placeholders voor modules die nog niet bestaan
 - [x] Tab Tijd & uren: boekingen + verwacht vs werkelijk (zie TIME_BACKLOG)
+- [x] Verwachte uren bewerkbaar op werkzaamheid (lijst, Overzicht, Tijd & uren)
 
 ## Wacht op andere modules
 
@@ -24,7 +25,7 @@
 | Bestanden & foto’s op werkzaamheid | Bestanden-module | Placeholder (projectbestanden elders) |
 | Communicatie-thread / berichten | Communicatie-module | Placeholder |
 | Afspraken koppelen in Planning | Planning-module | Placeholder-tekst; datums werken al |
-| Materiaalregistratie | Materiaal-module | Nog niet in mock-tabs; later |
+| Materiaalregistratie | Materiaal-ERP | **v1 A–C kern** — zie [`MATERIALS_ERP_BACKLOG.md`](./MATERIALS_ERP_BACKLOG.md) |
 | Checklist & formulieren | Formulieren-module | Later |
 
 ## Product / data later

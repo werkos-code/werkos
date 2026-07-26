@@ -24,6 +24,7 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -44,6 +45,8 @@ import {
   type WorkItemRow,
 } from "@/features/projects/lib/work-item";
 import { WorkItemHoursPanel } from "@/features/time/components/work-item-hours-panel";
+import { WorkItemMaterialsPanel } from "@/features/materials/components/work-item-materials-panel";
+import type { ArticleRow } from "@/features/materials/lib/materials";
 import { cn } from "@/lib/utils";
 import type { WorkItemStatus } from "@/types/database";
 
@@ -52,6 +55,7 @@ type DetailTab =
   | "subtasks"
   | "planning"
   | "hours"
+  | "materials"
   | "files"
   | "communication"
   | "activity";
@@ -63,6 +67,7 @@ type WorkItemDetailSheetProps = {
   activities: ProjectActivityRow[];
   projectId: string;
   minutesByWorkItem?: Record<string, number>;
+  articles?: ArticleRow[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onChanged: () => void;
@@ -125,6 +130,7 @@ export function WorkItemDetailSheet({
   activities,
   projectId,
   minutesByWorkItem = {},
+  articles = [],
   open,
   onOpenChange,
   onChanged,
@@ -192,6 +198,7 @@ export function WorkItemDetailSheet({
     },
     { id: "planning", label: t("detail.tabs.planning") },
     { id: "hours", label: t("detail.tabs.hours") },
+    { id: "materials", label: t("detail.tabs.materials") },
     { id: "files", label: t("detail.tabs.files") },
     { id: "communication", label: t("detail.tabs.communication") },
     {
@@ -622,36 +629,48 @@ export function WorkItemDetailSheet({
                         </span>
                       </DetailRow>
                       <DetailRow label={t("detail.estimatedHours")}>
-                        <input
-                          type="number"
-                          min={0}
-                          step={0.5}
-                          disabled={isPending}
-                          value={
-                            draft.estimatedMinutes == null
-                              ? ""
-                              : draft.estimatedMinutes / 60
-                          }
-                          onChange={(event) => {
-                            const raw = event.target.value;
-                            patchLocal({
-                              estimatedMinutes:
-                                raw === ""
-                                  ? null
-                                  : Math.round(Number(raw) * 60),
-                            });
-                          }}
-                          onBlur={() =>
-                            persist(
-                              { estimatedMinutes: draft.estimatedMinutes },
-                              {
-                                estimatedMinutes: draft.estimatedMinutes,
-                              },
-                            )
-                          }
-                          className="w-24 bg-transparent text-sm tabular-nums outline-none"
-                          placeholder="—"
-                        />
+                        {draft.isGroup ? (
+                          <span className="text-sm tabular-nums">
+                            {formatEstimatedHours(
+                              children.reduce(
+                                (sum, child) =>
+                                  sum + (child.estimatedMinutes ?? 0),
+                                0,
+                              ) || null,
+                            )}
+                          </span>
+                        ) : (
+                          <Input
+                            type="number"
+                            min={0}
+                            step={0.5}
+                            disabled={isPending}
+                            value={
+                              draft.estimatedMinutes == null
+                                ? ""
+                                : draft.estimatedMinutes / 60
+                            }
+                            onChange={(event) => {
+                              const raw = event.target.value;
+                              patchLocal({
+                                estimatedMinutes:
+                                  raw === ""
+                                    ? null
+                                    : Math.round(Number(raw) * 60),
+                              });
+                            }}
+                            onBlur={() =>
+                              persist(
+                                { estimatedMinutes: draft.estimatedMinutes },
+                                {
+                                  estimatedMinutes: draft.estimatedMinutes,
+                                },
+                              )
+                            }
+                            className="h-8 w-28 font-mono tabular-nums"
+                            placeholder="—"
+                          />
+                        )}
                       </DetailRow>
                       <DetailRow label={t("detail.realizedHours")}>
                         <span className="text-sm tabular-nums">
@@ -1035,6 +1054,19 @@ export function WorkItemDetailSheet({
                     draft.isGroup ? actualMinutes : undefined
                   }
                   staff={staff}
+                  onChanged={onChanged}
+                  onEstimatedSaved={(minutes) =>
+                    patchLocal({ estimatedMinutes: minutes })
+                  }
+                />
+              ) : null}
+
+              {tab === "materials" && draft ? (
+                <WorkItemMaterialsPanel
+                  workItemId={draft.id}
+                  projectId={projectId}
+                  isGroup={draft.isGroup}
+                  articles={articles}
                   onChanged={onChanged}
                 />
               ) : null}

@@ -38,6 +38,19 @@ export type QuoteStatus =
   | "cancelled";
 
 export type WorkItemStatus = "open" | "in_progress" | "done";
+
+export type StockLocationKind =
+  | "warehouse"
+  | "vehicle"
+  | "project_site"
+  | "other";
+
+export type StockMovementType =
+  | "receipt"
+  | "issue"
+  | "transfer"
+  | "adjustment"
+  | "return";
 export type WorkItemPriority = "low" | "normal" | "high";
 export type AppointmentStatus =
   | "planned"
@@ -1197,6 +1210,396 @@ export type Database = {
           },
         ];
       };
+      articles: {
+        Row: {
+          id: string;
+          organization_id: string;
+          code: string | null;
+          name: string;
+          description: string | null;
+          unit: string;
+          category: string | null;
+          barcode: string | null;
+          track_stock: boolean;
+          purchase_price_cents: number | null;
+          sale_price_cents: number | null;
+          is_active: boolean;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          code?: string | null;
+          name: string;
+          description?: string | null;
+          unit?: string;
+          category?: string | null;
+          barcode?: string | null;
+          track_stock?: boolean;
+          purchase_price_cents?: number | null;
+          sale_price_cents?: number | null;
+          is_active?: boolean;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          code?: string | null;
+          name?: string;
+          description?: string | null;
+          unit?: string;
+          category?: string | null;
+          barcode?: string | null;
+          track_stock?: boolean;
+          purchase_price_cents?: number | null;
+          sale_price_cents?: number | null;
+          is_active?: boolean;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "articles_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      article_supplier_prices: {
+        Row: {
+          id: string;
+          organization_id: string;
+          article_id: string;
+          supplier_name: string;
+          supplier_sku: string | null;
+          unit_cost_cents: number | null;
+          lead_time_days: number | null;
+          is_preferred: boolean;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          article_id: string;
+          supplier_name: string;
+          supplier_sku?: string | null;
+          unit_cost_cents?: number | null;
+          lead_time_days?: number | null;
+          is_preferred?: boolean;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          article_id?: string;
+          supplier_name?: string;
+          supplier_sku?: string | null;
+          unit_cost_cents?: number | null;
+          lead_time_days?: number | null;
+          is_preferred?: boolean;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "article_supplier_prices_article_id_fkey";
+            columns: ["article_id"];
+            isOneToOne: false;
+            referencedRelation: "articles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      stock_locations: {
+        Row: {
+          id: string;
+          organization_id: string;
+          name: string;
+          code: string | null;
+          kind: StockLocationKind;
+          project_id: string | null;
+          is_active: boolean;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          name: string;
+          code?: string | null;
+          kind?: StockLocationKind;
+          project_id?: string | null;
+          is_active?: boolean;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          name?: string;
+          code?: string | null;
+          kind?: StockLocationKind;
+          project_id?: string | null;
+          is_active?: boolean;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stock_locations_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      stock_balances: {
+        Row: {
+          id: string;
+          organization_id: string;
+          article_id: string;
+          location_id: string;
+          quantity: number;
+          reserved_quantity: number;
+          min_quantity: number | null;
+          max_quantity: number | null;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          article_id: string;
+          location_id: string;
+          quantity?: number;
+          reserved_quantity?: number;
+          min_quantity?: number | null;
+          max_quantity?: number | null;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          article_id?: string;
+          location_id?: string;
+          quantity?: number;
+          reserved_quantity?: number;
+          min_quantity?: number | null;
+          max_quantity?: number | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stock_balances_article_id_fkey";
+            columns: ["article_id"];
+            isOneToOne: false;
+            referencedRelation: "articles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "stock_balances_location_id_fkey";
+            columns: ["location_id"];
+            isOneToOne: false;
+            referencedRelation: "stock_locations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      stock_movements: {
+        Row: {
+          id: string;
+          organization_id: string;
+          article_id: string;
+          movement_type: StockMovementType;
+          quantity: number;
+          from_location_id: string | null;
+          to_location_id: string | null;
+          work_date: string;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          article_id: string;
+          movement_type: StockMovementType;
+          quantity: number;
+          from_location_id?: string | null;
+          to_location_id?: string | null;
+          work_date?: string;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          article_id?: string;
+          movement_type?: StockMovementType;
+          quantity?: number;
+          from_location_id?: string | null;
+          to_location_id?: string | null;
+          work_date?: string;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stock_movements_article_id_fkey";
+            columns: ["article_id"];
+            isOneToOne: false;
+            referencedRelation: "articles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      project_material_lines: {
+        Row: {
+          id: string;
+          organization_id: string;
+          project_id: string;
+          work_item_id: string | null;
+          article_id: string | null;
+          title: string;
+          estimated_quantity: number;
+          unit: string;
+          notes: string | null;
+          sort_order: number;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          project_id: string;
+          work_item_id?: string | null;
+          article_id?: string | null;
+          title: string;
+          estimated_quantity?: number;
+          unit?: string;
+          notes?: string | null;
+          sort_order?: number;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          project_id?: string;
+          work_item_id?: string | null;
+          article_id?: string | null;
+          title?: string;
+          estimated_quantity?: number;
+          unit?: string;
+          notes?: string | null;
+          sort_order?: number;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "project_material_lines_project_id_fkey";
+            columns: ["project_id"];
+            isOneToOne: false;
+            referencedRelation: "projects";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      material_usages: {
+        Row: {
+          id: string;
+          organization_id: string;
+          project_id: string;
+          work_item_id: string;
+          material_line_id: string | null;
+          article_id: string | null;
+          title: string;
+          quantity: number;
+          unit: string;
+          location_id: string | null;
+          stock_movement_id: string | null;
+          user_id: string;
+          work_date: string;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          project_id: string;
+          work_item_id: string;
+          material_line_id?: string | null;
+          article_id?: string | null;
+          title: string;
+          quantity: number;
+          unit?: string;
+          location_id?: string | null;
+          stock_movement_id?: string | null;
+          user_id: string;
+          work_date?: string;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          project_id?: string;
+          work_item_id?: string;
+          material_line_id?: string | null;
+          article_id?: string | null;
+          title?: string;
+          quantity?: number;
+          unit?: string;
+          location_id?: string | null;
+          stock_movement_id?: string | null;
+          user_id?: string;
+          work_date?: string;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "material_usages_work_item_id_fkey";
+            columns: ["work_item_id"];
+            isOneToOne: false;
+            referencedRelation: "work_items";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -1231,6 +1634,8 @@ export type Database = {
       work_order_status: WorkOrderStatus;
       work_order_priority: WorkOrderPriority;
       invoice_status: InvoiceStatus;
+      stock_location_kind: StockLocationKind;
+      stock_movement_type: StockMovementType;
     };
     CompositeTypes: {
       [_ in never]: never;
