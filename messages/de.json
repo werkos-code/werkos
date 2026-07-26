@@ -435,8 +435,88 @@
           "deleteTask": "Aufgabe löschen",
           "completeTask": "Als erledigt markieren",
           "reopenTask": "Wieder öffnen",
-          "dateRangeInvalid": "Enddatum darf nicht vor dem Startdatum liegen."
-        }
+          "dateRangeInvalid": "Enddatum darf nicht vor dem Startdatum liegen.",
+          "kpiProgress": "Fortschritt",
+          "kpiProgressHint": "{done}/{total} Aufgaben",
+          "kpiTasks": "Arbeiten",
+          "kpiTasksHint": "{done} erledigt",
+          "kpiOpen": "Offen",
+          "kpiOpenHint": "Keine überfälligen Items",
+          "kpiOverdueHint": "{count} überfällig",
+          "kpiHours": "Geschätzte Stunden",
+          "kpiHoursHint": "Noch {remaining}",
+          "kpiHoursEmpty": "Noch keine Stunden"
+        },
+    "workItems": {
+      "views": {
+        "list": "Liste",
+        "tree": "Baumstruktur",
+        "kanban": "Kanban",
+        "treeSoon": "Baumstruktur folgt im nächsten Schritt.",
+        "kanbanSoon": "Kanban folgt im nächsten Schritt."
+      },
+      "searchPlaceholder": "Arbeiten suchen…",
+      "filters": {
+        "statusAll": "Status: Alle",
+        "assigneeAll": "Zugewiesen: Alle",
+        "categoryAll": "Kategorie: Alle",
+        "more": "Mehr Filter"
+      },
+      "status": {
+        "open": "Offen",
+        "in_progress": "In Ausführung",
+        "done": "Erledigt",
+        "overdue": "Überfällig"
+      },
+      "columns": {
+        "title": "Arbeit",
+        "category": "Kategorie",
+        "assignee": "Zugewiesen",
+        "status": "Status",
+        "planning": "Planung",
+        "hours": "Geschätzte Stunden"
+      },
+      "add": "Hinzufügen",
+      "addGroup": "Gruppe",
+      "addInGroup": "Arbeit hinzufügen",
+      "promptItem": "Titel der Arbeit",
+      "promptGroup": "Gruppentitel (z. B. 1. Vorbereitung)",
+      "empty": "Noch keine Arbeiten. Füge eine Gruppe oder Arbeit hinzu.",
+      "deleteConfirm": "Diese Arbeit löschen?",
+      "rowMenu": "Mehr Aktionen",
+      "expand": "Aufklappen",
+      "collapse": "Zuklappen",
+      "groupCount": "{count} Arbeiten",
+      "uncategorized": "Ohne Kategorie",
+      "footer": {
+        "count": "{count} Arbeiten",
+        "hours": "{hours} geschätzte Stunden"
+      },
+      "sidebar": {
+        "overview": "Arbeiten Übersicht",
+        "total": "Gesamt",
+        "done": "Erledigt",
+        "inProgress": "In Ausführung",
+        "open": "Offen",
+        "overdue": "Überfällig",
+        "categories": "Kategorien",
+        "categoriesEmpty": "Noch keine Kategorien zugewiesen.",
+        "templatesTitle": "Vorlagen",
+        "templatesBody": "Spare Zeit mit Vorlagen für wiederkehrende Arbeit.",
+        "templatesCta": "Vorlage verwenden"
+      },
+      "detailTitle": "Arbeit",
+      "detailPlaceholderLead": "Detailarbeitsbereich folgt.",
+      "detailPlaceholderBody": "Hier entsteht die vollständige Arbeitsdetailseite. Aktuell ist dies eine Platzhalter-Overlay.",
+      "detailPlaceholderItems": {
+        "planning": "Planung & Termine",
+        "hours": "Zeiterfassung",
+        "materials": "Material",
+        "files": "Dateien & Fotos",
+        "checklist": "Checkliste & Formulare",
+        "comms": "Kommunikation"
+      }
+    }
   },
   "quotes": {
     "listTitle": "Angebote",

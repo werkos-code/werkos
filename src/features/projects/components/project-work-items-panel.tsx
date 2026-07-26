@@ -7,11 +7,10 @@ import { useState, useTransition } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import type { WorkItemRow } from "@/features/projects/lib/work-item";
 import { PageCard } from "@/features/shell/components/page-card";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-
-export type WorkItemRow = { id: string; title: string; status: string };
 
 type ProjectWorkItemsPanelProps = {
   projectId: string;

@@ -31,11 +31,17 @@ import { Button } from "@/components/ui/button";
 import type { CustomerRow } from "@/features/customers/customers-actions";
 import { ProjectDetailForm } from "@/features/projects/components/project-detail-form";
 import { ProjectWorkItemsPanel } from "@/features/projects/components/project-work-items-panel";
+import { ProjectWorkItemsWorkspace } from "@/features/projects/components/project-work-items-workspace";
 import type {
   ProjectActivityRow,
   ProjectRow,
   StaffOption,
 } from "@/features/projects/projects-actions";
+import {
+  formatEstimatedHours,
+  workItemStats,
+  type WorkItemRow,
+} from "@/features/projects/lib/work-item";
 import { QuotesList } from "@/features/quotes/components/quotes-list";
 import type { QuoteListItem } from "@/features/quotes/quotes-actions";
 import { PageCard } from "@/features/shell/components/page-card";
@@ -43,15 +49,13 @@ import { Link, useRouter } from "@/i18n/navigation";
 import type { ProjectActivityType, ProjectStatus } from "@/types/database";
 import { cn } from "@/lib/utils";
 
-type WorkItem = { id: string; title: string; status: string };
-
 type ProjectDetailWorkspaceProps = {
   project: ProjectRow;
   customer: CustomerRow | null;
   customers: Array<{ id: string; name: string }>;
   staff: StaffOption[];
   quotes: QuoteListItem[];
-  workItems: WorkItem[];
+  workItems: WorkItemRow[];
   activities: ProjectActivityRow[];
   initialTab?: string;
 };
@@ -304,12 +308,13 @@ export function ProjectDetailWorkspace({
     setFavorited(project.isFavorite);
   }, [project.isFavorite]);
 
-  const doneItems = workItems.filter((w) => w.status === "done").length;
-  const openItems = workItems.filter((w) => w.status !== "done");
-  const hasWorkItems = workItems.length > 0;
-  const progressPercent = hasWorkItems
-    ? Math.round((doneItems / workItems.length) * 100)
-    : null;
+  const taskStats = useMemo(() => workItemStats(workItems), [workItems]);
+  const openItems = workItems.filter((w) => {
+    const isParent = workItems.some((other) => other.parentId === w.id);
+    return !isParent && w.status !== "done";
+  });
+  const hasWorkItems = taskStats.total > 0;
+  const progressPercent = taskStats.progressPercent;
   const acceptedQuotes = quotes.filter((q) => q.status === "accepted").length;
   const contactDisplay =
     [project.contactName, project.contactPhone, project.contactEmail]
@@ -332,7 +337,7 @@ export function ProjectDetailWorkspace({
     {
       id: "tasks",
       label: t("detail.tabs.tasks"),
-      count: workItems.length || undefined,
+      count: taskStats.total || undefined,
     },
     { id: "files", label: t("detail.tabs.files") },
     { id: "financial", label: t("detail.tabs.financial") },
@@ -559,7 +564,8 @@ export function ProjectDetailWorkspace({
       ) : null}
 
       <PageCard className="p-5">
-        <div className="flex min-w-0 flex-1 gap-4">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex min-w-0 flex-1 gap-4">
           <div className="relative shrink-0">
             <input
               ref={coverInputRef}
@@ -734,6 +740,52 @@ export function ProjectDetailWorkspace({
               <p className="text-sm text-destructive">{coverError}</p>
             ) : null}
           </div>
+          </div>
+
+          <div className="grid w-full grid-cols-2 gap-3 sm:grid-cols-4 lg:w-auto lg:min-w-[28rem] lg:shrink-0">
+            <HeroMetric
+              label={t("detail.kpiProgress")}
+              value={
+                progressPercent == null ? "—" : `${progressPercent}%`
+              }
+              hint={
+                hasWorkItems
+                  ? t("detail.kpiProgressHint", {
+                      done: taskStats.done,
+                      total: taskStats.total,
+                    })
+                  : t("detail.progressEmpty")
+              }
+            />
+            <HeroMetric
+              label={t("detail.kpiTasks")}
+              value={String(taskStats.total)}
+              hint={t("detail.kpiTasksHint", { done: taskStats.done })}
+            />
+            <HeroMetric
+              label={t("detail.kpiOpen")}
+              value={String(taskStats.open + taskStats.inProgress)}
+              hint={
+                taskStats.overdue > 0
+                  ? t("detail.kpiOverdueHint", { count: taskStats.overdue })
+                  : t("detail.kpiOpenHint")
+              }
+              hintDanger={taskStats.overdue > 0}
+            />
+            <HeroMetric
+              label={t("detail.kpiHours")}
+              value={formatEstimatedHours(taskStats.estimatedMinutes)}
+              hint={
+                taskStats.estimatedMinutes > 0
+                  ? t("detail.kpiHoursHint", {
+                      remaining: formatEstimatedHours(
+                        taskStats.remainingMinutes,
+                      ),
+                    })
+                  : t("detail.kpiHoursEmpty")
+              }
+            />
+          </div>
         </div>
       </PageCard>
 
@@ -891,7 +943,7 @@ export function ProjectDetailWorkspace({
                           {t("detail.tabs.tasks")}
                         </span>
                         <span className="tabular-nums">
-                          {doneItems}/{workItems.length}
+                          {taskStats.done}/{taskStats.total}
                         </span>
                       </li>
                       <li className="flex items-center justify-between gap-4">
@@ -983,9 +1035,10 @@ export function ProjectDetailWorkspace({
       ) : null}
 
       {tab === "tasks" ? (
-        <ProjectWorkItemsPanel
+        <ProjectWorkItemsWorkspace
           projectId={project.id}
           workItems={workItems}
+          staff={staff}
         />
       ) : null}
 
@@ -1097,6 +1150,35 @@ export function ProjectDetailWorkspace({
           </p>
         ) : null}
       </div>
+    </div>
+  );
+}
+
+function HeroMetric({
+  label,
+  value,
+  hint,
+  hintDanger,
+}: {
+  label: string;
+  value: string;
+  hint: string;
+  hintDanger?: boolean;
+}) {
+  return (
+    <div className="rounded-xl border border-border/80 bg-muted/20 px-3 py-2.5">
+      <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+        {label}
+      </p>
+      <p className="mt-1 text-lg font-semibold tabular-nums">{value}</p>
+      <p
+        className={cn(
+          "mt-0.5 text-[11px]",
+          hintDanger ? "text-destructive" : "text-muted-foreground",
+        )}
+      >
+        {hint}
+      </p>
     </div>
   );
 }

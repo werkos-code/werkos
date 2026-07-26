@@ -37,7 +37,7 @@ export type QuoteStatus =
   | "rejected"
   | "cancelled";
 
-export type WorkItemStatus = "open" | "done";
+export type WorkItemStatus = "open" | "in_progress" | "done";
 
 export type ProjectActivityType =
   | "project_created"
@@ -561,6 +561,13 @@ export type Database = {
           title: string;
           status: WorkItemStatus;
           quote_line_id: string | null;
+          parent_id: string | null;
+          description: string | null;
+          category: string | null;
+          assignee_user_id: string | null;
+          planned_start: string | null;
+          planned_end: string | null;
+          estimated_minutes: number | null;
           sort_order: number;
           created_by: string | null;
           created_at: string;
@@ -573,6 +580,13 @@ export type Database = {
           title: string;
           status?: WorkItemStatus;
           quote_line_id?: string | null;
+          parent_id?: string | null;
+          description?: string | null;
+          category?: string | null;
+          assignee_user_id?: string | null;
+          planned_start?: string | null;
+          planned_end?: string | null;
+          estimated_minutes?: number | null;
           sort_order?: number;
           created_by?: string | null;
           created_at?: string;
@@ -585,6 +599,13 @@ export type Database = {
           title?: string;
           status?: WorkItemStatus;
           quote_line_id?: string | null;
+          parent_id?: string | null;
+          description?: string | null;
+          category?: string | null;
+          assignee_user_id?: string | null;
+          planned_start?: string | null;
+          planned_end?: string | null;
+          estimated_minutes?: number | null;
           sort_order?: number;
           created_by?: string | null;
           created_at?: string;

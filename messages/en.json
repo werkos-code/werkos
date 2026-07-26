@@ -435,8 +435,88 @@
           "deleteTask": "Delete task",
           "completeTask": "Mark as done",
           "reopenTask": "Reopen task",
-          "dateRangeInvalid": "End date cannot be before start date."
-        }
+          "dateRangeInvalid": "End date cannot be before start date.",
+          "kpiProgress": "Progress",
+          "kpiProgressHint": "{done}/{total} tasks",
+          "kpiTasks": "Work items",
+          "kpiTasksHint": "{done} done",
+          "kpiOpen": "Open",
+          "kpiOpenHint": "No overdue items",
+          "kpiOverdueHint": "{count} overdue",
+          "kpiHours": "Estimated hours",
+          "kpiHoursHint": "{remaining} left",
+          "kpiHoursEmpty": "No hours yet"
+        },
+    "workItems": {
+      "views": {
+        "list": "List",
+        "tree": "Tree",
+        "kanban": "Kanban",
+        "treeSoon": "Tree view comes in a next step.",
+        "kanbanSoon": "Kanban comes in a next step."
+      },
+      "searchPlaceholder": "Search work items…",
+      "filters": {
+        "statusAll": "Status: All",
+        "assigneeAll": "Assignee: All",
+        "categoryAll": "Category: All",
+        "more": "More filters"
+      },
+      "status": {
+        "open": "Open",
+        "in_progress": "In progress",
+        "done": "Done",
+        "overdue": "Overdue"
+      },
+      "columns": {
+        "title": "Work item",
+        "category": "Category",
+        "assignee": "Assignee",
+        "status": "Status",
+        "planning": "Schedule",
+        "hours": "Estimated hours"
+      },
+      "add": "Add",
+      "addGroup": "Group",
+      "addInGroup": "Add work item",
+      "promptItem": "Work item title",
+      "promptGroup": "Group title (e.g. 1. Preparation)",
+      "empty": "No work items yet. Add a group or work item.",
+      "deleteConfirm": "Delete this work item?",
+      "rowMenu": "More actions",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "groupCount": "{count} work items",
+      "uncategorized": "Uncategorized",
+      "footer": {
+        "count": "{count} work items",
+        "hours": "{hours} estimated hours"
+      },
+      "sidebar": {
+        "overview": "Work items overview",
+        "total": "Total",
+        "done": "Done",
+        "inProgress": "In progress",
+        "open": "Open",
+        "overdue": "Overdue",
+        "categories": "Categories",
+        "categoriesEmpty": "No categories assigned yet.",
+        "templatesTitle": "Templates",
+        "templatesBody": "Save time with templates for recurring work.",
+        "templatesCta": "Use template"
+      },
+      "detailTitle": "Work item",
+      "detailPlaceholderLead": "Detail workspace coming soon.",
+      "detailPlaceholderBody": "This will become the full work item detail page. For now this is a placeholder overlay.",
+      "detailPlaceholderItems": {
+        "planning": "Planning & appointments",
+        "hours": "Time tracking",
+        "materials": "Materials",
+        "files": "Files & photos",
+        "checklist": "Checklist & forms",
+        "comms": "Communication"
+      }
+    }
   },
   "quotes": {
     "listTitle": "Quotes",

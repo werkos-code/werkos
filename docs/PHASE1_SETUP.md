@@ -128,6 +128,17 @@ Na Phase 1 / Super Admin:
    - Taken toevoegen / afronden / bewerken
    - Activiteit filteren
 
+## 12. Werkzaamheden PM — hiërarchie + Taken-tab
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260726210000_work_items_pm.sql`
+3. Test:
+   - Projectdetail → Taken: groep + werkzaamheden
+   - Filters / zoeken
+   - Klik rij → rechter overlay (placeholder)
+   - Status klikken (open → in uitvoering → voltooid)
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  

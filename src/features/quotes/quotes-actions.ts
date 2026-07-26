@@ -202,8 +202,11 @@ export async function getQuote(quoteId: string): Promise<{
   };
 }
 
+import type { WorkItemRow } from "@/features/projects/lib/work-item";
+import type { WorkItemStatus } from "@/types/database";
+
 export async function listWorkItemsForProject(projectId: string): Promise<{
-  workItems?: Array<{ id: string; title: string; status: string }>;
+  workItems?: WorkItemRow[];
   error?: string;
 }> {
   const ctx = await getStaffOrgContext();
@@ -211,11 +214,50 @@ export async function listWorkItemsForProject(projectId: string): Promise<{
 
   const { data, error } = await ctx.supabase
     .from("work_items")
-    .select("id, title, status")
+    .select(
+      "id, title, status, parent_id, description, category, assignee_user_id, planned_start, planned_end, estimated_minutes, sort_order",
+    )
     .eq("organization_id", ctx.organizationId)
     .eq("project_id", projectId)
     .order("sort_order", { ascending: true });
 
   if (error) return { error: error.message };
-  return { workItems: data ?? [] };
+
+  const assigneeIds = [
+    ...new Set(
+      (data ?? [])
+        .map((row) => row.assignee_user_id)
+        .filter(Boolean) as string[],
+    ),
+  ];
+  const nameById = new Map<string, string>();
+
+  if (assigneeIds.length > 0) {
+    const { data: profiles } = await ctx.supabase
+      .from("profiles")
+      .select("id, full_name")
+      .in("id", assigneeIds);
+    for (const profile of profiles ?? []) {
+      nameById.set(profile.id, profile.full_name?.trim() || "—");
+    }
+  }
+
+  return {
+    workItems: (data ?? []).map((row) => ({
+      id: row.id,
+      title: row.title,
+      status: row.status as WorkItemStatus,
+      parentId: row.parent_id,
+      description: row.description,
+      category: row.category,
+      assigneeUserId: row.assignee_user_id,
+      assigneeName: row.assignee_user_id
+        ? (nameById.get(row.assignee_user_id) ?? "—")
+        : null,
+      plannedStart: row.planned_start,
+      plannedEnd: row.planned_end,
+      estimatedMinutes: row.estimated_minutes,
+      sortOrder: row.sort_order,
+    })),
+  };
 }

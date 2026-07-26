@@ -1,11 +1,22 @@
 import { NextResponse } from "next/server";
 
 import { logProjectActivity } from "@/features/projects/lib/project-activity";
+import { WORK_ITEM_STATUSES } from "@/features/projects/lib/work-item";
 import { requireApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { WorkItemStatus } from "@/types/database";
 
-const WORK_ITEM_STATUSES: WorkItemStatus[] = ["open", "done"];
+function emptyToNull(value: string | null | undefined) {
+  const trimmed = value?.trim() ?? "";
+  return trimmed ? trimmed : null;
+}
+
+function parseMinutes(value: unknown) {
+  if (value === null || value === undefined || value === "") return null;
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n) || n < 0) return null;
+  return Math.round(n);
+}
 
 export async function POST(request: Request) {
   try {
@@ -15,6 +26,15 @@ export async function POST(request: Request) {
     const body = (await request.json()) as {
       projectId?: string;
       title?: string;
+      parentId?: string | null;
+      description?: string | null;
+      category?: string | null;
+      assigneeUserId?: string | null;
+      plannedStart?: string | null;
+      plannedEnd?: string | null;
+      estimatedMinutes?: number | null;
+      status?: WorkItemStatus;
+      asGroup?: boolean;
     };
 
     const projectId = body.projectId?.trim() ?? "";
@@ -24,6 +44,11 @@ export async function POST(request: Request) {
     }
     if (!title) {
       return NextResponse.json({ error: "title_required" }, { status: 400 });
+    }
+
+    const status = body.status ?? "open";
+    if (!WORK_ITEM_STATUSES.includes(status)) {
+      return NextResponse.json({ error: "invalid_status" }, { status: 400 });
     }
 
     const admin = createAdminClient();
@@ -38,14 +63,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "not_found" }, { status: 404 });
     }
 
-    const { data: maxSort } = await admin
+    const parentId = emptyToNull(body.parentId);
+    if (parentId) {
+      const { data: parent } = await admin
+        .from("work_items")
+        .select("id")
+        .eq("organization_id", gate.organizationId)
+        .eq("project_id", projectId)
+        .eq("id", parentId)
+        .maybeSingle();
+      if (!parent) {
+        return NextResponse.json({ error: "parent_not_found" }, { status: 400 });
+      }
+    }
+
+    let sortQuery = admin
       .from("work_items")
       .select("sort_order")
       .eq("organization_id", gate.organizationId)
       .eq("project_id", projectId)
       .order("sort_order", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .limit(1);
+
+    sortQuery = parentId
+      ? sortQuery.eq("parent_id", parentId)
+      : sortQuery.is("parent_id", null);
+
+    const { data: maxSort } = await sortQuery.maybeSingle();
 
     const { data, error } = await admin
       .from("work_items")
@@ -53,11 +97,20 @@ export async function POST(request: Request) {
         organization_id: gate.organizationId,
         project_id: projectId,
         title,
-        status: "open",
+        status: body.asGroup ? "open" : status,
+        parent_id: parentId,
+        description: emptyToNull(body.description),
+        category: emptyToNull(body.category),
+        assignee_user_id: emptyToNull(body.assigneeUserId),
+        planned_start: emptyToNull(body.plannedStart),
+        planned_end: emptyToNull(body.plannedEnd),
+        estimated_minutes: parseMinutes(body.estimatedMinutes),
         sort_order: (maxSort?.sort_order ?? -1) + 1,
         created_by: gate.userId,
       })
-      .select("id, title, status")
+      .select(
+        "id, title, status, parent_id, description, category, assignee_user_id, planned_start, planned_end, estimated_minutes, sort_order",
+      )
       .single();
 
     if (error) {
@@ -68,9 +121,9 @@ export async function POST(request: Request) {
       organizationId: gate.organizationId,
       projectId,
       type: "work_item_created",
-      title: "Werkzaamheid toegevoegd",
+      title: body.asGroup ? "Groep toegevoegd" : "Werkzaamheid toegevoegd",
       body: title,
-      metadata: { work_item_id: data.id },
+      metadata: { work_item_id: data.id, parent_id: parentId },
       createdBy: gate.userId,
     });
 
@@ -90,6 +143,13 @@ export async function PATCH(request: Request) {
       id?: string;
       title?: string;
       status?: WorkItemStatus;
+      description?: string | null;
+      category?: string | null;
+      assigneeUserId?: string | null;
+      plannedStart?: string | null;
+      plannedEnd?: string | null;
+      estimatedMinutes?: number | null;
+      parentId?: string | null;
     };
 
     const id = body.id?.trim() ?? "";
@@ -126,6 +186,27 @@ export async function PATCH(request: Request) {
       .update({
         title: nextTitle,
         status: nextStatus,
+        ...(body.description !== undefined
+          ? { description: emptyToNull(body.description) }
+          : {}),
+        ...(body.category !== undefined
+          ? { category: emptyToNull(body.category) }
+          : {}),
+        ...(body.assigneeUserId !== undefined
+          ? { assignee_user_id: emptyToNull(body.assigneeUserId) }
+          : {}),
+        ...(body.plannedStart !== undefined
+          ? { planned_start: emptyToNull(body.plannedStart) }
+          : {}),
+        ...(body.plannedEnd !== undefined
+          ? { planned_end: emptyToNull(body.plannedEnd) }
+          : {}),
+        ...(body.estimatedMinutes !== undefined
+          ? { estimated_minutes: parseMinutes(body.estimatedMinutes) }
+          : {}),
+        ...(body.parentId !== undefined
+          ? { parent_id: emptyToNull(body.parentId) }
+          : {}),
       })
       .eq("organization_id", gate.organizationId)
       .eq("id", id);
@@ -146,7 +227,14 @@ export async function PATCH(request: Request) {
       });
     } else if (
       existing.title !== nextTitle ||
-      existing.status !== nextStatus
+      existing.status !== nextStatus ||
+      body.description !== undefined ||
+      body.category !== undefined ||
+      body.assigneeUserId !== undefined ||
+      body.plannedStart !== undefined ||
+      body.plannedEnd !== undefined ||
+      body.estimatedMinutes !== undefined ||
+      body.parentId !== undefined
     ) {
       await logProjectActivity(admin, {
         organizationId: gate.organizationId,
@@ -154,7 +242,7 @@ export async function PATCH(request: Request) {
         type: "work_item_updated",
         title:
           existing.status !== nextStatus
-            ? "Werkzaamheid heropend"
+            ? "Werkzaamheidstatus gewijzigd"
             : "Werkzaamheid bijgewerkt",
         body: nextTitle,
         metadata: {

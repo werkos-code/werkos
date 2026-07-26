@@ -435,8 +435,88 @@
           "deleteTask": "Verwijder taak",
           "completeTask": "Markeer als voltooid",
           "reopenTask": "Heropen taak",
-          "dateRangeInvalid": "Einddatum mag niet vóór startdatum liggen."
-        }
+          "dateRangeInvalid": "Einddatum mag niet vóór startdatum liggen.",
+          "kpiProgress": "Voortgang",
+          "kpiProgressHint": "{done}/{total} taken",
+          "kpiTasks": "Werkzaamheden",
+          "kpiTasksHint": "{done} voltooid",
+          "kpiOpen": "Openstaand",
+          "kpiOpenHint": "Geen te late items",
+          "kpiOverdueHint": "{count} te laat",
+          "kpiHours": "Geschatte uren",
+          "kpiHoursHint": "Nog {remaining}",
+          "kpiHoursEmpty": "Nog geen uren"
+        },
+    "workItems": {
+      "views": {
+        "list": "Lijst",
+        "tree": "Boomstructuur",
+        "kanban": "Kanban",
+        "treeSoon": "Boomstructuur volgt in een volgende stap.",
+        "kanbanSoon": "Kanban volgt in een volgende stap."
+      },
+      "searchPlaceholder": "Zoek werkzaamheden…",
+      "filters": {
+        "statusAll": "Status: Alle",
+        "assigneeAll": "Toegewezen: Alle",
+        "categoryAll": "Categorie: Alle",
+        "more": "Meer filters"
+      },
+      "status": {
+        "open": "Open",
+        "in_progress": "In uitvoering",
+        "done": "Voltooid",
+        "overdue": "Te laat"
+      },
+      "columns": {
+        "title": "Werkzaamheid",
+        "category": "Categorie",
+        "assignee": "Toegewezen",
+        "status": "Status",
+        "planning": "Planning",
+        "hours": "Geschatte uren"
+      },
+      "add": "Toevoegen",
+      "addGroup": "Groep",
+      "addInGroup": "Werkzaamheid toevoegen",
+      "promptItem": "Titel van de werkzaamheid",
+      "promptGroup": "Titel van de groep (bijv. 1. Voorbereiding)",
+      "empty": "Nog geen werkzaamheden. Voeg een groep of werkzaamheid toe.",
+      "deleteConfirm": "Deze werkzaamheid verwijderen?",
+      "rowMenu": "Meer acties",
+      "expand": "Uitklappen",
+      "collapse": "Inklappen",
+      "groupCount": "{count} werkzaamheden",
+      "uncategorized": "Zonder categorie",
+      "footer": {
+        "count": "{count} werkzaamheden",
+        "hours": "{hours} geschatte uren"
+      },
+      "sidebar": {
+        "overview": "Werkzaamheden overzicht",
+        "total": "Totaal",
+        "done": "Voltooid",
+        "inProgress": "In uitvoering",
+        "open": "Openstaand",
+        "overdue": "Te laat",
+        "categories": "Categorieën",
+        "categoriesEmpty": "Nog geen categorieën toegekend.",
+        "templatesTitle": "Templates",
+        "templatesBody": "Sla tijd met templates voor terugkerend werk.",
+        "templatesCta": "Template gebruiken"
+      },
+      "detailTitle": "Werkzaamheid",
+      "detailPlaceholderLead": "Detailwerkruimte volgt.",
+      "detailPlaceholderBody": "Hier komt de volledige werkzaamheid-detailpagina. Voor nu is dit een placeholder-overlay.",
+      "detailPlaceholderItems": {
+        "planning": "Planning & afspraken",
+        "hours": "Urenregistratie",
+        "materials": "Materiaal",
+        "files": "Bestanden & foto’s",
+        "checklist": "Checklist & formulieren",
+        "comms": "Communicatie"
+      }
+    }
   },
   "quotes": {
     "listTitle": "Offertes",
