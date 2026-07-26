@@ -116,7 +116,7 @@
     "workOrders": "Work orders",
     "invoices": "Invoices",
     "planning": "Planning",
-    "materials": "Materials",
+    "materials": "Equipment",
     "stock": "Stock",
     "articles": "Articles",
     "purchasing": "Purchasing",
@@ -219,6 +219,22 @@
       "staff": {
         "title": "Staff",
         "description": "Staff management will be built in a later phase."
+      },
+      "documents": {
+        "title": "Documents",
+        "description": "Central library per project."
+      },
+      "notificationsSettings": {
+        "title": "Notifications",
+        "description": "Templates, customer preferences and mail domain come later."
+      },
+      "settingsAccount": {
+        "title": "Account",
+        "description": "Account settings will follow in a later phase."
+      },
+      "settingsBilling": {
+        "title": "Subscription",
+        "description": "Billing settings will follow in a later phase."
       }
     },
     "navLabel": "Main navigation",
@@ -230,11 +246,17 @@
     "organizationSoon": "More organizations coming later",
     "sections": {
       "operations": "Operations",
+      "documents": "Documents",
       "resources": "Relations & resources",
+      "company": "Company",
       "communication": "Communication",
-      "insights": "Insights",
       "platform": "Platform"
-    }
+    },
+    "equipment": "Equipment",
+    "documentsLibrary": "Documents",
+    "notificationsSettings": "Notifications",
+    "settingsAccount": "Account",
+    "settingsBilling": "Subscription"
   },
   "customers": {
     "title": "Customers",
@@ -1007,6 +1029,26 @@
       "total": "Total incl. VAT (€)",
       "vat": "VAT (€)",
       "required": "Title and project are required."
+    }
+  },
+  "files": {
+    "title": "Documents",
+    "allProjects": "All projects",
+    "project": "Project",
+    "emptyProjects": "No projects yet. Create a project first.",
+    "empty": "This folder is empty. Upload files or create a subfolder.",
+    "newFolder": "New folder",
+    "folderName": "Folder name",
+    "folderNamePlaceholder": "e.g. Photos",
+    "upload": "Upload",
+    "download": "Download",
+    "delete": "Delete",
+    "deleteFolderConfirm": "Delete this folder?",
+    "deleteFileConfirm": "Delete this file?",
+    "openProject": "Open project",
+    "errors": {
+      "folderNotEmpty": "Folder is not empty. Remove contents first.",
+      "tooLarge": "File may be at most 50 MB."
     }
   }
 }

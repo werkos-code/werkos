@@ -1,13 +1,16 @@
 import {
   BarChart3,
+  Bell,
   CalendarDays,
   ClipboardList,
+  FolderOpen,
   Inbox,
   LayoutDashboard,
   ListTodo,
   Package,
   Receipt,
   Shield,
+  Truck,
   UserRound,
   Users,
   Wrench,
@@ -29,17 +32,23 @@ export type ShellNavItem = {
 
 export type ShellNavSection = {
   id: string;
-  /** Optional quiet section label (i18n key under shell.sections.*) */
-  labelKey?: string;
+  /** i18n key under shell.sections.* */
+  labelKey: string;
+  /** When false, section starts collapsed (unless a child is active). */
+  defaultOpen?: boolean;
+  /** Subtle top rule before this section */
+  dividerBefore?: boolean;
   items: ShellNavItem[];
 };
 
 /**
- * Single app navigation — one operating system.
+ * Single app navigation — collapsible section groups.
  */
 export const APP_NAV: ShellNavSection[] = [
   {
-    id: "daily",
+    id: "operations",
+    labelKey: "operations",
+    defaultOpen: true,
     items: [
       {
         id: "dashboard",
@@ -47,12 +56,6 @@ export const APP_NAV: ShellNavSection[] = [
         labelKey: "dashboard",
         icon: LayoutDashboard,
       },
-    ],
-  },
-  {
-    id: "operations",
-    labelKey: "operations",
-    items: [
       {
         id: "projects",
         href: "/projecten",
@@ -71,6 +74,19 @@ export const APP_NAV: ShellNavSection[] = [
         labelKey: "workItems",
         icon: ListTodo,
       },
+    ],
+  },
+  {
+    id: "documents",
+    labelKey: "documents",
+    defaultOpen: true,
+    items: [
+      {
+        id: "invoices",
+        href: "/facturen",
+        labelKey: "invoices",
+        icon: Receipt,
+      },
       {
         id: "workOrders",
         href: "/werkbonnen",
@@ -78,16 +94,17 @@ export const APP_NAV: ShellNavSection[] = [
         icon: Wrench,
       },
       {
-        id: "invoices",
-        href: "/facturen",
-        labelKey: "invoices",
-        icon: Receipt,
+        id: "files",
+        href: "/documenten",
+        labelKey: "documentsLibrary",
+        icon: FolderOpen,
       },
     ],
   },
   {
     id: "resources",
     labelKey: "resources",
+    defaultOpen: true,
     items: [
       {
         id: "customers",
@@ -96,14 +113,20 @@ export const APP_NAV: ShellNavSection[] = [
         icon: Users,
       },
       {
-        id: "staff",
-        href: "/personeel",
-        labelKey: "staff",
-        icon: UserRound,
+        id: "suppliers",
+        href: "/leveranciers",
+        labelKey: "suppliers",
+        icon: Truck,
       },
       {
-        id: "materials",
-        labelKey: "materials",
+        id: "subcontractors",
+        href: "/onderaannemers",
+        labelKey: "subcontractors",
+        icon: Users,
+      },
+      {
+        id: "equipment",
+        labelKey: "equipment",
         icon: Package,
         children: [
           { href: "/materiaal/voorraad", labelKey: "stock" },
@@ -115,20 +138,9 @@ export const APP_NAV: ShellNavSection[] = [
     ],
   },
   {
-    id: "communication",
-    labelKey: "communication",
-    items: [
-      {
-        id: "inbox",
-        href: "/inbox",
-        labelKey: "inbox",
-        icon: Inbox,
-      },
-    ],
-  },
-  {
-    id: "insights",
-    labelKey: "insights",
+    id: "company",
+    labelKey: "company",
+    defaultOpen: false,
     items: [
       {
         id: "reports",
@@ -136,16 +148,43 @@ export const APP_NAV: ShellNavSection[] = [
         labelKey: "reports",
         icon: BarChart3,
       },
+      {
+        id: "staff",
+        href: "/personeel",
+        labelKey: "staff",
+        icon: UserRound,
+      },
+    ],
+  },
+  {
+    id: "communication",
+    labelKey: "communication",
+    defaultOpen: true,
+    dividerBefore: true,
+    items: [
+      {
+        id: "inbox",
+        href: "/inbox",
+        labelKey: "inbox",
+        icon: Inbox,
+      },
+      {
+        id: "notifications",
+        href: "/notificaties",
+        labelKey: "notificationsSettings",
+        icon: Bell,
+      },
     ],
   },
 ];
 
 export const NEW_REQUEST_HREF = "/aanvragen/nieuw" as const;
 
-/** Platform Admin — shown only for super_admin. */
 export const PLATFORM_ADMIN_NAV: ShellNavSection = {
   id: "platform-admin",
   labelKey: "platform",
+  defaultOpen: true,
+  dividerBefore: true,
   items: [
     {
       id: "admin",
@@ -163,5 +202,4 @@ export const PLATFORM_ADMIN_NAV: ShellNavSection = {
   ],
 };
 
-/** Default post-login / home destination inside the app shell. */
 export const APP_HOME_HREF = "/dashboard" as const;

@@ -27,6 +27,8 @@ const APP_SHELL_PREFIXES = [
   "/werkzaamheden",
   "/werkbonnen",
   "/facturen",
+  "/documenten",
+  "/notificaties",
   "/offertes",
   "/klanten",
   "/personeel",

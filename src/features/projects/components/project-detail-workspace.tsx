@@ -8,7 +8,6 @@ import {
   Circle,
   ClipboardList,
   FileText,
-  FolderOpen,
   ImageIcon,
   Mail,
   MapPin,
@@ -29,6 +28,7 @@ import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { CustomerRow } from "@/features/customers/customers-actions";
+import { FilesWorkspace } from "@/features/files/components/files-workspace";
 import { ProjectDetailForm } from "@/features/projects/components/project-detail-form";
 import { ProjectWorkItemsPanel } from "@/features/projects/components/project-work-items-panel";
 import { ProjectWorkItemsWorkspace } from "@/features/projects/components/project-work-items-workspace";
@@ -1159,15 +1159,20 @@ export function ProjectDetailWorkspace({
         </PageCard>
       ) : null}
 
+      {tab === "files" ? (
+        <FilesWorkspace
+          projectId={project.id}
+          projectName={project.name}
+          embedded
+        />
+      ) : null}
+
       {tab === "planning" ||
-      tab === "files" ||
       tab === "financial" ||
       tab === "communication" ? (
         <PageCard className="flex flex-col items-start gap-3 p-8">
           <div className="text-muted-foreground">
-            {tab === "files" ? (
-              <FolderOpen className="size-6" />
-            ) : tab === "communication" ? (
+            {tab === "communication" ? (
               <MessageSquare className="size-6" />
             ) : (
               <Calendar className="size-6" />
@@ -1175,24 +1180,11 @@ export function ProjectDetailWorkspace({
           </div>
           <h3 className="text-sm font-medium">{t(`detail.tabs.${tab}`)}</h3>
           <p className="max-w-md text-sm text-muted-foreground">
-            {tab === "files"
-              ? t("detail.filesCoverHint")
-              : tab === "planning"
-                ? t("detail.planningModuleHint")
-                : t("detail.tabComingSoon")}
+            {tab === "planning"
+              ? t("detail.planningModuleHint")
+              : t("detail.tabComingSoon")}
           </p>
-          {tab === "files" ? (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={isCoverPending}
-              onClick={() => coverInputRef.current?.click()}
-            >
-              <Camera className="size-3.5" />
-              {t("detail.changeCover")}
-            </Button>
-          ) : tab === "planning" ? (
+          {tab === "planning" ? (
             <Button type="button" variant="outline" size="sm" asChild>
               <Link href="/planning">{t("detail.openPlanning")}</Link>
             </Button>

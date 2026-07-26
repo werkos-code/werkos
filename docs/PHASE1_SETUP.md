@@ -197,6 +197,17 @@ Na Phase 1 / Super Admin:
    - Klik rij → detail sheet + status wijzigen
 4. Rest: [`INVOICES_BACKLOG.md`](./INVOICES_BACKLOG.md)
 
+## 18. Documenten (bestandenbibliotheek)
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260726270000_project_files.sql`
+3. Test:
+   - `/documenten` — projectmappen → upload / submap
+   - Projectdetail → tab Bestanden
+4. Eerdere SQL staat in [`sql-applied/`](./sql-applied/) (niet opnieuw draaien op productie)
+5. Rest: [`FILES_BACKLOG.md`](./FILES_BACKLOG.md)
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  

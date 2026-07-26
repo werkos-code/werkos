@@ -29,7 +29,7 @@
 | --- | --- |
 | Tab Werkbonnen | Lijst + link naar module (v1) |
 | Tab Planning | Link naar centrale Planning |
-| Tab Bestanden (volledige bibliotheek) | Coming soon — cover is apart afgerond |
+| Tab Bestanden (volledige bibliotheek) | v1 via `/documenten` + projecttab |
 | Tab Financieel | Coming soon — facturenmodule staat los klaar |
 | Tab Communicatie | Coming soon |
 | Omzet / winstmarge / facturatiegraad | Facturen / kostprijs |
@@ -38,7 +38,7 @@
 
 - [x] Werkbonnen-tab (compacte lijst v1)
 - [x] Planning-tab (link naar module)
-- [ ] Bestanden-bibliotheek
+- [x] Bestanden-bibliotheek (v1)
 - [ ] Financieel echt
 - [ ] Communicatie
 - [ ] Omzet / marge / facturatiegraad

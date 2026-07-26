@@ -219,6 +219,22 @@
       "staff": {
         "title": "Personal",
         "description": "Personalverwaltung folgt in einer späteren Phase."
+      },
+      "documents": {
+        "title": "Dokumente",
+        "description": "Zentrale Bibliothek je Projekt."
+      },
+      "notificationsSettings": {
+        "title": "Benachrichtigungen",
+        "description": "Vorlagen, Kundenauswahl und Maildomain folgen später."
+      },
+      "settingsAccount": {
+        "title": "Konto",
+        "description": "Kontoeinstellungen folgen in einer späteren Phase."
+      },
+      "settingsBilling": {
+        "title": "Abo",
+        "description": "Abo-Einstellungen folgen in einer späteren Phase."
       }
     },
     "navLabel": "Hauptnavigation",
@@ -230,11 +246,17 @@
     "organizationSoon": "Weitere Organisationen folgen später",
     "sections": {
       "operations": "Betrieb",
+      "documents": "Dokumente",
       "resources": "Beziehungen & Ressourcen",
+      "company": "Unternehmen",
       "communication": "Kommunikation",
-      "insights": "Einblicke",
       "platform": "Plattform"
-    }
+    },
+    "equipment": "Material",
+    "documentsLibrary": "Dokumente",
+    "notificationsSettings": "Benachrichtigungen",
+    "settingsAccount": "Konto",
+    "settingsBilling": "Abo"
   },
   "customers": {
     "title": "Kunden",
@@ -1007,6 +1029,26 @@
       "total": "Gesamt inkl. MwSt. (€)",
       "vat": "MwSt. (€)",
       "required": "Titel und Projekt sind Pflicht."
+    }
+  },
+  "files": {
+    "title": "Dokumente",
+    "allProjects": "Alle Projekte",
+    "project": "Projekt",
+    "emptyProjects": "Noch keine Projekte. Lege zuerst ein Projekt an.",
+    "empty": "Dieser Ordner ist leer. Lade Dateien hoch oder erstelle einen Unterordner.",
+    "newFolder": "Neuer Ordner",
+    "folderName": "Ordnername",
+    "folderNamePlaceholder": "z. B. Fotos",
+    "upload": "Hochladen",
+    "download": "Herunterladen",
+    "delete": "Löschen",
+    "deleteFolderConfirm": "Diesen Ordner löschen?",
+    "deleteFileConfirm": "Diese Datei löschen?",
+    "openProject": "Projekt öffnen",
+    "errors": {
+      "folderNotEmpty": "Ordner ist nicht leer. Entferne zuerst den Inhalt.",
+      "tooLarge": "Datei darf maximal 50 MB groß sein."
     }
   }
 }

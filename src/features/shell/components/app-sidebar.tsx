@@ -10,6 +10,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logoutAction } from "@/features/auth/actions";
@@ -41,6 +42,10 @@ function itemContainsActive(pathname: string, item: ShellNavItem) {
   return item.children?.some((child) => isPathActive(pathname, child.href)) ?? false;
 }
 
+function sectionContainsActive(pathname: string, section: ShellNavSection) {
+  return section.items.some((item) => itemContainsActive(pathname, item));
+}
+
 function NavItemLink({
   href,
   label,
@@ -61,9 +66,7 @@ function NavItemLink({
         "relative flex items-center gap-2.5 rounded-lg text-[13px] transition-colors",
         nested ? "px-2.5 py-1.5" : "px-2.5 py-2 font-medium",
         active
-          ? nested
-            ? "bg-white/10 font-medium text-white"
-            : "bg-white/10 font-medium text-white"
+          ? "bg-white/10 font-medium text-white"
           : nested
             ? "text-sidebar-muted hover:bg-white/[0.06] hover:text-sidebar-foreground"
             : "text-sidebar-foreground/85 hover:bg-white/[0.06] hover:text-sidebar-foreground",
@@ -155,19 +158,41 @@ function NavSection({
   pathname: string;
 }) {
   const t = useTranslations("shell");
+  const hasActive = sectionContainsActive(pathname, section);
+  const [manualOpen, setManualOpen] = useState(
+    section.defaultOpen !== false || hasActive,
+  );
+  const open = hasActive || manualOpen;
 
   return (
-    <div className="space-y-1">
-      {section.labelKey ? (
-        <p className="px-2.5 pt-1 pb-1 text-[10px] font-medium tracking-[0.08em] text-sidebar-muted/70 uppercase">
+    <div
+      className={cn(
+        "space-y-1",
+        section.dividerBefore && "border-t border-white/8 pt-4",
+      )}
+    >
+      <button
+        type="button"
+        onClick={() => setManualOpen((value) => !value)}
+        className="flex w-full items-center gap-2 rounded-md px-2.5 py-1 text-left transition-colors hover:bg-white/[0.04]"
+      >
+        <span className="flex-1 text-[10px] font-medium tracking-[0.08em] text-sidebar-muted/70 uppercase">
           {t(`sections.${section.labelKey}`)}
-        </p>
+        </span>
+        <ChevronDown
+          className={cn(
+            "size-3 text-sidebar-muted/70 transition-transform duration-200",
+            open ? "rotate-0" : "-rotate-90",
+          )}
+        />
+      </button>
+      {open ? (
+        <div className="space-y-0.5">
+          {section.items.map((item) => (
+            <NavGroup key={item.id} item={item} pathname={pathname} />
+          ))}
+        </div>
       ) : null}
-      <div className="space-y-0.5">
-        {section.items.map((item) => (
-          <NavGroup key={item.id} item={item} pathname={pathname} />
-        ))}
-      </div>
     </div>
   );
 }
@@ -212,7 +237,7 @@ export function AppSidebar({
         </Button>
       </div>
 
-      <nav className="flex-1 space-y-5 overflow-y-auto px-3 pb-4">
+      <nav className="flex-1 space-y-4 overflow-y-auto px-3 pb-4">
         {sections.map((section) => (
           <NavSection
             key={section.id}
@@ -246,7 +271,16 @@ export function AppSidebar({
                 <Settings className="size-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" side="top" className="w-44">
+            <DropdownMenuContent align="end" side="top" className="w-48">
+              <DropdownMenuItem asChild>
+                <Link href="/instellingen/account">{t("settingsAccount")}</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/instellingen/abonnement">
+                  {t("settingsBilling")}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem
                 onSelect={() => {
                   void (async () => {

@@ -116,7 +116,7 @@
     "workOrders": "Werkbonnen",
     "invoices": "Facturen",
     "planning": "Planning",
-    "materials": "Materiaal",
+    "materials": "Materieel",
     "stock": "Voorraad",
     "articles": "Artikelen",
     "purchasing": "Inkoop",
@@ -219,6 +219,22 @@
       "staff": {
         "title": "Personeel",
         "description": "Personeelsbeheer volgt in een volgende fase."
+      },
+      "documents": {
+        "title": "Documenten",
+        "description": "Centrale bibliotheek per project."
+      },
+      "notificationsSettings": {
+        "title": "Notificaties",
+        "description": "Templates, klantkeuzes en maildomein volgen in een volgende fase."
+      },
+      "settingsAccount": {
+        "title": "Account",
+        "description": "Accountinstellingen volgen in een volgende fase."
+      },
+      "settingsBilling": {
+        "title": "Abonnement",
+        "description": "Abonnement en facturatie volgen in een volgende fase."
       }
     },
     "navLabel": "Hoofdnavigatie",
@@ -230,11 +246,17 @@
     "organizationSoon": "Meer organisaties volgen later",
     "sections": {
       "operations": "Operatie",
+      "documents": "Documenten",
       "resources": "Relaties & middelen",
+      "company": "Bedrijf",
       "communication": "Communicatie",
-      "insights": "Inzicht",
       "platform": "Platform"
-    }
+    },
+    "equipment": "Materieel",
+    "documentsLibrary": "Documenten",
+    "notificationsSettings": "Notificaties",
+    "settingsAccount": "Account",
+    "settingsBilling": "Abonnement"
   },
   "customers": {
     "title": "Klanten",
@@ -1007,6 +1029,26 @@
       "total": "Totaal incl. btw (€)",
       "vat": "Btw (€)",
       "required": "Titel en project zijn verplicht."
+    }
+  },
+  "files": {
+    "title": "Documenten",
+    "allProjects": "Alle projecten",
+    "project": "Project",
+    "emptyProjects": "Nog geen projecten. Maak eerst een project aan.",
+    "empty": "Deze map is leeg. Upload bestanden of maak een submap.",
+    "newFolder": "Nieuwe map",
+    "folderName": "Mapnaam",
+    "folderNamePlaceholder": "Bijv. Foto's",
+    "upload": "Uploaden",
+    "download": "Downloaden",
+    "delete": "Verwijderen",
+    "deleteFolderConfirm": "Deze map verwijderen?",
+    "deleteFileConfirm": "Dit bestand verwijderen?",
+    "openProject": "Open project",
+    "errors": {
+      "folderNotEmpty": "Map is niet leeg. Verwijder eerst inhoud.",
+      "tooLarge": "Bestand mag maximaal 50 MB zijn."
     }
   }
 }

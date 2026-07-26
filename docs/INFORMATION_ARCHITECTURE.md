@@ -40,28 +40,37 @@ De gebruiker denkt alleen:
 - Projecten
 - Planning
 - Werkzaamheden
-- Werkbonnen
+
+## Documenten
+
 - Facturen
+- Werkbonnen
+- Documenten (mediabibliotheek)
 
 ## Relaties & middelen
 
 - Klanten
+- Leveranciers
+- Onderaannemers / ZZP'ers
+- Materieel
+
+## Bedrijf
+
+- Rapportages
 - Personeel
-- Materiaal
 
 ## Communicatie
 
 - Inbox
-
-## Inzicht
-
-- Rapportages
+- Notificaties
 
 ## Platform
 
 - Admin (alleen super admins)
 
-Organisatiewissel gebeurt via de organisatie-switcher bovenin de sidebar — niet via een tweede app-context.
+Organisatiewissel gebeurt via de organisatie-switcher bovenin de sidebar.
+
+Sectiekoppen in de sidebar zijn inklaptbaar. **Bedrijf** start standaard ingeklapt.
 
 ---
 
