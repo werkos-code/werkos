@@ -340,6 +340,63 @@
     "pagination": {
       "range": "{start} – {end} of {total} projects",
       "perPage": "{count} per page"
+    },
+    "detail": {
+      "share": "Share",
+      "edit": "Edit",
+      "labelsStub": "No labels yet",
+      "addLabel": "Add label",
+      "revenue": "Revenue",
+      "invoicedStub": "Invoicing coming later",
+      "margin": "Profit margin",
+      "infoTitle": "Project information",
+      "progressTitle": "Project progress",
+      "completedLabel": "Complete",
+      "viewProgress": "View progress",
+      "timelineTitle": "Timeline",
+      "showAllActivity": "Show all activity",
+      "upcomingTitle": "Upcoming",
+      "upcomingEmpty": "No open work items.",
+      "viewPlanning": "View full schedule",
+      "financialTitle": "Financial overview",
+      "quotesTotal": "Quotes",
+      "invoicesTotal": "Invoices total",
+      "paid": "Paid",
+      "openAmount": "Outstanding",
+      "viewFinancial": "View financials",
+      "filesTitle": "Latest files",
+      "filesEmpty": "No files yet. Upload coming later.",
+      "viewAll": "View all",
+      "contact": "Contact person",
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "leader": "Project lead",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "chance": "Probability",
+      "open": "Open",
+      "done": "Done",
+      "tabComingSoon": "This section will be built in a later phase. The tab is already in the navigation.",
+      "notePlaceholder": "Write a note or update about this project...",
+      "tabs": {
+        "overview": "Overview",
+        "quotes": "Quotes",
+        "workOrders": "Work orders",
+        "planning": "Planning",
+        "tasks": "Tasks",
+        "files": "Files",
+        "financial": "Financial",
+        "communication": "Communication",
+        "activity": "Activity"
+      },
+      "timeline": {
+        "created": "Project created",
+        "workItem": "Work item · {status}",
+        "badges": {
+          "done": "Done"
+        }
+      }
     }
   },
   "quotes": {

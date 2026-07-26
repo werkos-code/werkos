@@ -340,6 +340,63 @@
     "pagination": {
       "range": "{start} – {end} van {total} projecten",
       "perPage": "{count} per pagina"
+    },
+    "detail": {
+      "share": "Delen",
+      "edit": "Bewerken",
+      "labelsStub": "Nog geen labels",
+      "addLabel": "Voeg label toe",
+      "revenue": "Omzet",
+      "invoicedStub": "Facturatie volgt later",
+      "margin": "Winstmarge",
+      "infoTitle": "Projectinformatie",
+      "progressTitle": "Projectvoortgang",
+      "completedLabel": "Voltooid",
+      "viewProgress": "Bekijk voortgang",
+      "timelineTitle": "Tijdlijn",
+      "showAllActivity": "Toon alle activiteit",
+      "upcomingTitle": "Binnenkort",
+      "upcomingEmpty": "Geen openstaande werkzaamheden.",
+      "viewPlanning": "Bekijk volledige planning",
+      "financialTitle": "Financieel overzicht",
+      "quotesTotal": "Offertes",
+      "invoicesTotal": "Facturen totaal",
+      "paid": "Betaald",
+      "openAmount": "Openstaand",
+      "viewFinancial": "Bekijk financieel",
+      "filesTitle": "Laatste bestanden",
+      "filesEmpty": "Nog geen bestanden. Upload volgt later.",
+      "viewAll": "Bekijk alle",
+      "contact": "Contactpersoon",
+      "address": "Adres",
+      "phone": "Telefoon",
+      "email": "E-mail",
+      "leader": "Projectleider",
+      "startDate": "Startdatum",
+      "endDate": "Einddatum",
+      "chance": "Kans",
+      "open": "Open",
+      "done": "Voltooid",
+      "tabComingSoon": "Dit onderdeel wordt in een volgende fase gebouwd. De tab staat al klaar in de navigatie.",
+      "notePlaceholder": "Schrijf een notitie of update over dit project...",
+      "tabs": {
+        "overview": "Overzicht",
+        "quotes": "Offertes",
+        "workOrders": "Werkbonnen",
+        "planning": "Planning",
+        "tasks": "Taken",
+        "files": "Bestanden",
+        "financial": "Financieel",
+        "communication": "Communicatie",
+        "activity": "Activiteit"
+      },
+      "timeline": {
+        "created": "Project aangemaakt",
+        "workItem": "Werkzaamheid · {status}",
+        "badges": {
+          "done": "Voltooid"
+        }
+      }
     }
   },
   "quotes": {

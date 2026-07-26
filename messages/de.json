@@ -340,6 +340,63 @@
     "pagination": {
       "range": "{start} – {end} von {total} Projekten",
       "perPage": "{count} pro Seite"
+    },
+    "detail": {
+      "share": "Teilen",
+      "edit": "Bearbeiten",
+      "labelsStub": "Noch keine Labels",
+      "addLabel": "Label hinzufügen",
+      "revenue": "Umsatz",
+      "invoicedStub": "Rechnungsstellung folgt später",
+      "margin": "Gewinnmarge",
+      "infoTitle": "Projektinformationen",
+      "progressTitle": "Projektfortschritt",
+      "completedLabel": "Erledigt",
+      "viewProgress": "Fortschritt ansehen",
+      "timelineTitle": "Zeitlinie",
+      "showAllActivity": "Alle Aktivität anzeigen",
+      "upcomingTitle": "Demnächst",
+      "upcomingEmpty": "Keine offenen Arbeiten.",
+      "viewPlanning": "Vollständige Planung ansehen",
+      "financialTitle": "Finanzübersicht",
+      "quotesTotal": "Angebote",
+      "invoicesTotal": "Rechnungen gesamt",
+      "paid": "Bezahlt",
+      "openAmount": "Offen",
+      "viewFinancial": "Finanzen ansehen",
+      "filesTitle": "Neueste Dateien",
+      "filesEmpty": "Noch keine Dateien. Upload folgt später.",
+      "viewAll": "Alle ansehen",
+      "contact": "Kontaktperson",
+      "address": "Adresse",
+      "phone": "Telefon",
+      "email": "E-Mail",
+      "leader": "Projektleiter",
+      "startDate": "Startdatum",
+      "endDate": "Enddatum",
+      "chance": "Chance",
+      "open": "Offen",
+      "done": "Erledigt",
+      "tabComingSoon": "Dieser Bereich wird in einer späteren Phase gebaut. Der Tab ist bereits in der Navigation.",
+      "notePlaceholder": "Schreibe eine Notiz oder ein Update zu diesem Projekt...",
+      "tabs": {
+        "overview": "Übersicht",
+        "quotes": "Angebote",
+        "workOrders": "Arbeitsaufträge",
+        "planning": "Planung",
+        "tasks": "Aufgaben",
+        "files": "Dateien",
+        "financial": "Finanzen",
+        "communication": "Kommunikation",
+        "activity": "Aktivität"
+      },
+      "timeline": {
+        "created": "Projekt erstellt",
+        "workItem": "Arbeit · {status}",
+        "badges": {
+          "done": "Erledigt"
+        }
+      }
     }
   },
   "quotes": {
