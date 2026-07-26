@@ -7,10 +7,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  updateCustomer,
-  type CustomerRow,
-} from "@/features/customers/customers-actions";
+import type { CustomerRow } from "@/features/customers/customers-actions";
 
 type CustomerFormProps = {
   mode: "create" | "edit";
@@ -70,25 +67,25 @@ export function CustomerForm({ mode, initial }: CustomerFormProps) {
 
             if (!initial) return;
 
-            const result = await updateCustomer({
-              id: initial.id,
-              ...payload,
+            const response = await fetch("/api/customers", {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ id: initial.id, ...payload }),
+              signal: AbortSignal.timeout(20_000),
             });
-            if (result.error) {
+            const result = (await response.json()) as { error?: string };
+
+            if (!response.ok || result.error) {
               setError(
                 result.error === "name_required"
                   ? t("nameRequired")
-                  : result.error,
+                  : result.error || tCommon("error"),
               );
               return;
             }
             router.refresh();
-          } catch (err) {
-            setError(
-              err instanceof DOMException && err.name === "TimeoutError"
-                ? tCommon("error")
-                : tCommon("error"),
-            );
+          } catch {
+            setError(tCommon("error"));
           } finally {
             setPending(false);
           }

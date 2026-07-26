@@ -5,10 +5,7 @@ import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  deleteCustomer,
-  type CustomerRow,
-} from "@/features/customers/customers-actions";
+import type { CustomerRow } from "@/features/customers/customers-actions";
 
 type CustomersTableProps = {
   customers: CustomerRow[];
@@ -16,6 +13,7 @@ type CustomersTableProps = {
 
 export function CustomersTable({ customers }: CustomersTableProps) {
   const t = useTranslations("customers");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
@@ -89,18 +87,31 @@ export function CustomersTable({ customers }: CustomersTableProps) {
                         setPendingId(customer.id);
                         startTransition(() => {
                           void (async () => {
-                            const result = await deleteCustomer(customer.id);
-                            if (result.error) {
-                              setError(
-                                result.error === "has_projects"
-                                  ? t("hasProjects")
-                                  : result.error,
+                            try {
+                              const response = await fetch(
+                                `/api/customers?id=${encodeURIComponent(customer.id)}`,
+                                {
+                                  method: "DELETE",
+                                  signal: AbortSignal.timeout(20_000),
+                                },
                               );
+                              const result = (await response.json()) as {
+                                error?: string;
+                              };
+                              if (!response.ok || result.error) {
+                                setError(
+                                  result.error === "has_projects"
+                                    ? t("hasProjects")
+                                    : result.error || tCommon("error"),
+                                );
+                                return;
+                              }
+                              router.refresh();
+                            } catch {
+                              setError(tCommon("error"));
+                            } finally {
                               setPendingId(null);
-                              return;
                             }
-                            setPendingId(null);
-                            router.refresh();
                           })();
                         });
                       }}

@@ -8,10 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PROJECT_STATUSES } from "@/features/projects/lib/project-status";
-import {
-  updateProject,
-  type ProjectRow,
-} from "@/features/projects/projects-actions";
+import type { ProjectRow } from "@/features/projects/projects-actions";
 
 type ProjectDetailFormProps = {
   project: ProjectRow;
@@ -37,34 +34,39 @@ export function ProjectDetailForm({
         setError(null);
         startTransition(() => {
           void (async () => {
-            const result = await updateProject({
-              id: project.id,
-              name: String(form.get("name") ?? ""),
-              customerId: String(form.get("customerId") ?? ""),
-              status: String(form.get("status") ?? "") as ProjectRow["status"],
-              notes: String(form.get("notes") ?? "") || undefined,
-            });
-            if (result.error) {
-              setError(
-                result.error === "name_required"
-                  ? t("nameRequired")
-                  : result.error,
-              );
-              return;
+            try {
+              const response = await fetch("/api/projects", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  id: project.id,
+                  name: String(form.get("name") ?? ""),
+                  customerId: String(form.get("customerId") ?? ""),
+                  status: String(form.get("status") ?? ""),
+                  notes: String(form.get("notes") ?? "") || undefined,
+                }),
+                signal: AbortSignal.timeout(20_000),
+              });
+              const result = (await response.json()) as { error?: string };
+              if (!response.ok || result.error) {
+                setError(
+                  result.error === "name_required"
+                    ? t("nameRequired")
+                    : result.error || tCommon("error"),
+                );
+                return;
+              }
+              router.refresh();
+            } catch {
+              setError(tCommon("error"));
             }
-            router.refresh();
           })();
         });
       }}
     >
       <div className="space-y-2">
         <Label htmlFor="name">{t("fields.name")}</Label>
-        <Input
-          id="name"
-          name="name"
-          required
-          defaultValue={project.name}
-        />
+        <Input id="name" name="name" required defaultValue={project.name} />
       </div>
       <div className="space-y-2">
         <Label htmlFor="customerId">{t("fields.customer")}</Label>

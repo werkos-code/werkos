@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { CustomersTable } from "@/features/customers/components/customers-table";
 import { listCustomers } from "@/features/customers/customers-actions";
-import { requireTenantOrganization } from "@/features/shell/lib/require-organization";
 import { ShellPage } from "@/features/shell/components/shell-page";
 import { Link } from "@/i18n/navigation";
 
@@ -12,7 +11,6 @@ type Props = { params: Promise<{ locale: string }> };
 export default async function BedrijfKlantenPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  await requireTenantOrganization(locale);
   const t = await getTranslations("customers");
   const result = await listCustomers();
 

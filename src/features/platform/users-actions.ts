@@ -7,8 +7,8 @@ import {
   type UserRole,
 } from "@/config/roles";
 import { uniqueOrganizationSlug } from "@/features/onboarding/lib/slug";
+import { getAppSession } from "@/features/shell/lib/require-organization";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
 
 export type PlatformUserRow = {
   id: string;
@@ -29,48 +29,22 @@ export type PlatformOrganizationOption = {
 };
 
 async function assertCallerIsSuperAdmin() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "unauthorized" as const };
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("platform_role")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (profile?.platform_role !== USER_ROLES.SUPER_ADMIN) {
-    return { error: "forbidden" as const };
-  }
-
-  return { user };
+  const session = await getAppSession();
+  if (!session) return { error: "unauthorized" as const };
+  if (!session.isSuperAdmin) return { error: "forbidden" as const };
+  return { user: session.user };
 }
 
-export async function listPlatformUsers(): Promise<{
-  users?: PlatformUserRow[];
-  error?: string;
-}> {
-  const gate = await assertCallerIsSuperAdmin();
-  if ("error" in gate && gate.error) return { error: gate.error };
-
-  const admin = createAdminClient();
-
-  const [{ data: authData, error: authError }, { data: profiles }, { data: memberships }] =
-    await Promise.all([
-      admin.auth.admin.listUsers({ perPage: 200 }),
-      admin.from("profiles").select("id, full_name, platform_role, created_at"),
-      admin
-        .from("organization_memberships")
-        .select("user_id, role, organization_id, organizations(id, name)"),
-    ]);
-
-  if (authError) return { error: authError.message };
-
-  const profileById = new Map(
-    (profiles ?? []).map((p) => [p.id, p] as const),
-  );
+function mapPlatformUsers(
+  authUsers: Array<{ id: string; email?: string; created_at: string }>,
+  profiles: Array<{
+    id: string;
+    full_name: string | null;
+    platform_role: "super_admin" | null;
+  }> | null,
+  memberships: unknown,
+): PlatformUserRow[] {
+  const profileById = new Map((profiles ?? []).map((p) => [p.id, p] as const));
 
   type MembershipJoin = {
     user_id: string;
@@ -83,7 +57,7 @@ export async function listPlatformUsers(): Promise<{
   };
 
   const membershipsByUser = new Map<string, PlatformUserRow["memberships"]>();
-  for (const row of (memberships ?? []) as unknown as MembershipJoin[]) {
+  for (const row of (memberships ?? []) as MembershipJoin[]) {
     const org = Array.isArray(row.organizations)
       ? row.organizations[0]
       : row.organizations;
@@ -97,7 +71,7 @@ export async function listPlatformUsers(): Promise<{
     membershipsByUser.set(row.user_id, list);
   }
 
-  const users: PlatformUserRow[] = (authData.users ?? []).map((authUser) => {
+  const users: PlatformUserRow[] = authUsers.map((authUser) => {
     const profile = profileById.get(authUser.id);
     return {
       id: authUser.id,
@@ -110,8 +84,49 @@ export async function listPlatformUsers(): Promise<{
   });
 
   users.sort((a, b) => a.email.localeCompare(b.email, "nl"));
+  return users;
+}
 
-  return { users };
+/** Single gate + parallel load for the platform users page. */
+export async function loadPlatformUsersPage(): Promise<{
+  users?: PlatformUserRow[];
+  organizations?: PlatformOrganizationOption[];
+  error?: string;
+}> {
+  const gate = await assertCallerIsSuperAdmin();
+  if ("error" in gate && gate.error) return { error: gate.error };
+
+  const admin = createAdminClient();
+  const [
+    { data: authData, error: authError },
+    { data: profiles },
+    { data: memberships },
+    { data: organizations, error: orgsError },
+  ] = await Promise.all([
+    admin.auth.admin.listUsers({ perPage: 200 }),
+    admin.from("profiles").select("id, full_name, platform_role, created_at"),
+    admin
+      .from("organization_memberships")
+      .select("user_id, role, organization_id, organizations(id, name)"),
+    admin.from("organizations").select("id, name").order("name"),
+  ]);
+
+  if (authError) return { error: authError.message };
+  if (orgsError) return { error: orgsError.message };
+
+  return {
+    users: mapPlatformUsers(authData.users ?? [], profiles, memberships),
+    organizations: organizations ?? [],
+  };
+}
+
+export async function listPlatformUsers(): Promise<{
+  users?: PlatformUserRow[];
+  error?: string;
+}> {
+  const result = await loadPlatformUsersPage();
+  if (result.error) return { error: result.error };
+  return { users: result.users };
 }
 
 export async function listOrganizationsForAdmin(): Promise<{

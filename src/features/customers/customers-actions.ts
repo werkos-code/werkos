@@ -1,7 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
-import { isOrgStaffRole } from "@/features/projects/lib/project-status";
+import { getStaffOrgContext } from "@/features/shell/lib/staff-org-context";
 
 export type CustomerRow = {
   id: string;
@@ -14,43 +13,24 @@ export type CustomerRow = {
   projectCount: number;
 };
 
-async function getStaffOrgContext() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "unauthorized" as const };
-
-  const { data: membership } = await supabase
-    .from("organization_memberships")
-    .select("organization_id, role")
-    .eq("user_id", user.id)
-    .limit(1)
-    .maybeSingle();
-
-  if (!membership) return { error: "no_organization" as const };
-  if (!isOrgStaffRole(membership.role)) return { error: "forbidden" as const };
-
-  return {
-    supabase,
-    userId: user.id,
-    organizationId: membership.organization_id,
-  };
-}
-
-async function projectCountForCustomer(
-  supabase: Awaited<ReturnType<typeof createClient>>,
+async function projectCountsByCustomer(
+  supabase: Awaited<
+    ReturnType<typeof import("@/lib/supabase/server").createClient>
+  >,
   organizationId: string,
-  customerId: string,
 ) {
-  const { count, error } = await supabase
+  const { data, error } = await supabase
     .from("projects")
-    .select("id", { count: "exact", head: true })
-    .eq("organization_id", organizationId)
-    .eq("customer_id", customerId);
+    .select("customer_id")
+    .eq("organization_id", organizationId);
 
-  if (error) return 0;
-  return count ?? 0;
+  const counts = new Map<string, number>();
+  if (error || !data) return counts;
+
+  for (const row of data) {
+    counts.set(row.customer_id, (counts.get(row.customer_id) ?? 0) + 1);
+  }
+  return counts;
 }
 
 export async function listCustomers(): Promise<{
@@ -58,32 +38,29 @@ export async function listCustomers(): Promise<{
   error?: string;
 }> {
   const ctx = await getStaffOrgContext();
-  if ("error" in ctx && ctx.error) return { error: ctx.error };
+  if ("error" in ctx) return { error: ctx.error };
 
-  const { data, error } = await ctx.supabase
-    .from("customers")
-    .select("id, name, email, phone, address, notes, created_at")
-    .eq("organization_id", ctx.organizationId)
-    .order("name");
+  const [{ data, error }, counts] = await Promise.all([
+    ctx.supabase
+      .from("customers")
+      .select("id, name, email, phone, address, notes, created_at")
+      .eq("organization_id", ctx.organizationId)
+      .order("name"),
+    projectCountsByCustomer(ctx.supabase, ctx.organizationId),
+  ]);
 
   if (error) return { error: error.message };
 
-  const customers: CustomerRow[] = await Promise.all(
-    (data ?? []).map(async (row) => ({
-      id: row.id,
-      name: row.name,
-      email: row.email,
-      phone: row.phone,
-      address: row.address,
-      notes: row.notes,
-      createdAt: row.created_at,
-      projectCount: await projectCountForCustomer(
-        ctx.supabase,
-        ctx.organizationId,
-        row.id,
-      ),
-    })),
-  );
+  const customers: CustomerRow[] = (data ?? []).map((row) => ({
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    phone: row.phone,
+    address: row.address,
+    notes: row.notes,
+    createdAt: row.created_at,
+    projectCount: counts.get(row.id) ?? 0,
+  }));
 
   return { customers };
 }
@@ -93,7 +70,7 @@ export async function listCustomerOptions(): Promise<{
   error?: string;
 }> {
   const ctx = await getStaffOrgContext();
-  if ("error" in ctx && ctx.error) return { error: ctx.error };
+  if ("error" in ctx) return { error: ctx.error };
 
   const { data, error } = await ctx.supabase
     .from("customers")
@@ -110,14 +87,21 @@ export async function getCustomer(customerId: string): Promise<{
   error?: string;
 }> {
   const ctx = await getStaffOrgContext();
-  if ("error" in ctx && ctx.error) return { error: ctx.error };
+  if ("error" in ctx) return { error: ctx.error };
 
-  const { data, error } = await ctx.supabase
-    .from("customers")
-    .select("id, name, email, phone, address, notes, created_at")
-    .eq("organization_id", ctx.organizationId)
-    .eq("id", customerId)
-    .maybeSingle();
+  const [{ data, error }, countResult] = await Promise.all([
+    ctx.supabase
+      .from("customers")
+      .select("id, name, email, phone, address, notes, created_at")
+      .eq("organization_id", ctx.organizationId)
+      .eq("id", customerId)
+      .maybeSingle(),
+    ctx.supabase
+      .from("projects")
+      .select("id", { count: "exact", head: true })
+      .eq("organization_id", ctx.organizationId)
+      .eq("customer_id", customerId),
+  ]);
 
   if (error) return { error: error.message };
   if (!data) return { error: "not_found" };
@@ -131,97 +115,7 @@ export async function getCustomer(customerId: string): Promise<{
       address: data.address,
       notes: data.notes,
       createdAt: data.created_at,
-      projectCount: await projectCountForCustomer(
-        ctx.supabase,
-        ctx.organizationId,
-        data.id,
-      ),
+      projectCount: countResult.count ?? 0,
     },
   };
-}
-
-export async function createCustomer(input: {
-  name: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-  notes?: string;
-}): Promise<{ error?: string; customerId?: string }> {
-  const ctx = await getStaffOrgContext();
-  if ("error" in ctx && ctx.error) return { error: ctx.error };
-
-  const name = input.name.trim();
-  if (!name) return { error: "name_required" };
-
-  const { data, error } = await ctx.supabase
-    .from("customers")
-    .insert({
-      organization_id: ctx.organizationId,
-      name,
-      email: input.email?.trim() || null,
-      phone: input.phone?.trim() || null,
-      address: input.address?.trim() || null,
-      notes: input.notes?.trim() || null,
-      created_by: ctx.userId,
-    })
-    .select("id")
-    .single();
-
-  if (error) return { error: error.message };
-  if (!data?.id) return { error: "create_failed" };
-  return { customerId: data.id };
-}
-
-export async function updateCustomer(input: {
-  id: string;
-  name: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-  notes?: string;
-}): Promise<{ error?: string; success?: boolean }> {
-  const ctx = await getStaffOrgContext();
-  if ("error" in ctx && ctx.error) return { error: ctx.error };
-
-  const name = input.name.trim();
-  if (!name) return { error: "name_required" };
-
-  const { error } = await ctx.supabase
-    .from("customers")
-    .update({
-      name,
-      email: input.email?.trim() || null,
-      phone: input.phone?.trim() || null,
-      address: input.address?.trim() || null,
-      notes: input.notes?.trim() || null,
-    })
-    .eq("organization_id", ctx.organizationId)
-    .eq("id", input.id);
-
-  if (error) return { error: error.message };
-  return { success: true };
-}
-
-export async function deleteCustomer(
-  customerId: string,
-): Promise<{ error?: string; success?: boolean }> {
-  const ctx = await getStaffOrgContext();
-  if ("error" in ctx && ctx.error) return { error: ctx.error };
-
-  const { count } = await ctx.supabase
-    .from("projects")
-    .select("id", { count: "exact", head: true })
-    .eq("organization_id", ctx.organizationId)
-    .eq("customer_id", customerId);
-
-  if ((count ?? 0) > 0) return { error: "has_projects" };
-
-  const { error } = await ctx.supabase
-    .from("customers")
-    .delete()
-    .eq("organization_id", ctx.organizationId)
-    .eq("id", customerId);
-
-  if (error) return { error: error.message };
-  return { success: true };
 }

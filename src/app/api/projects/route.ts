@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 
+import { PROJECT_STATUSES } from "@/features/projects/lib/project-status";
 import { isOrgStaffRole } from "@/features/projects/lib/project-status";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import type { ProjectStatus } from "@/types/database";
 
 async function requireStaff() {
   const supabase = await createClient();
@@ -10,7 +12,9 @@ async function requireStaff() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return { error: NextResponse.json({ error: "unauthorized" }, { status: 401 }) };
+    return {
+      error: NextResponse.json({ error: "unauthorized" }, { status: 401 }),
+    };
   }
 
   const { data: membership } = await supabase
@@ -21,7 +25,9 @@ async function requireStaff() {
     .maybeSingle();
 
   if (!membership || !isOrgStaffRole(membership.role)) {
-    return { error: NextResponse.json({ error: "forbidden" }, { status: 403 }) };
+    return {
+      error: NextResponse.json({ error: "forbidden" }, { status: 403 }),
+    };
   }
 
   return {
@@ -83,8 +89,58 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ projectId });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "create_failed";
+    const message = error instanceof Error ? error.message : "create_failed";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    const gate = await requireStaff();
+    if ("error" in gate) return gate.error;
+
+    const body = (await request.json()) as {
+      id?: string;
+      name?: string;
+      customerId?: string;
+      status?: ProjectStatus;
+      notes?: string;
+    };
+
+    const id = body.id?.trim() ?? "";
+    const name = body.name?.trim() ?? "";
+    const customerId = body.customerId?.trim() ?? "";
+    const status = body.status;
+
+    if (!id || !customerId || !status) {
+      return NextResponse.json({ error: "invalid_input" }, { status: 400 });
+    }
+    if (!name) {
+      return NextResponse.json({ error: "name_required" }, { status: 400 });
+    }
+    if (!PROJECT_STATUSES.includes(status)) {
+      return NextResponse.json({ error: "invalid_status" }, { status: 400 });
+    }
+
+    const admin = createAdminClient();
+    const { error } = await admin
+      .from("projects")
+      .update({
+        name,
+        customer_id: customerId,
+        status,
+        notes: body.notes?.trim() || null,
+      })
+      .eq("organization_id", gate.organizationId)
+      .eq("id", id);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "update_failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

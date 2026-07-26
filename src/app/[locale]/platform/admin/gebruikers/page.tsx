@@ -6,10 +6,7 @@ import {
   groupUsersByRole,
   PLATFORM_USER_TABLE_ORDER,
 } from "@/features/platform/lib/group-users-by-role";
-import {
-  listOrganizationsForAdmin,
-  listPlatformUsers,
-} from "@/features/platform/users-actions";
+import { loadPlatformUsersPage } from "@/features/platform/users-actions";
 import { USER_ROLES } from "@/config/roles";
 import { ShellPage } from "@/features/shell/components/shell-page";
 
@@ -20,17 +17,13 @@ export default async function PlatformUsersPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("platform.users");
 
-  const [usersResult, orgsResult] = await Promise.all([
-    listPlatformUsers(),
-    listOrganizationsForAdmin(),
-  ]);
-
-  const grouped = groupUsersByRole(usersResult.users ?? []);
+  const pageData = await loadPlatformUsersPage();
+  const grouped = groupUsersByRole(pageData.users ?? []);
 
   return (
     <ShellPage title={t("title")} description={t("description")}>
-      {usersResult.error ? (
-        <p className="text-sm text-destructive">{usersResult.error}</p>
+      {pageData.error ? (
+        <p className="text-sm text-destructive">{pageData.error}</p>
       ) : (
         <div className="space-y-10">
           {PLATFORM_USER_TABLE_ORDER.map((roleKey) => {
@@ -67,7 +60,7 @@ export default async function PlatformUsersPage({ params }: Props) {
         <p className="max-w-xl text-sm text-muted-foreground">
           {t("createDescription")}
         </p>
-        <CreateUserForm organizations={orgsResult.organizations ?? []} />
+        <CreateUserForm organizations={pageData.organizations ?? []} />
       </section>
     </ShellPage>
   );

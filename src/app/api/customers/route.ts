@@ -10,7 +10,9 @@ async function requireStaff() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return { error: NextResponse.json({ error: "unauthorized" }, { status: 401 }) };
+    return {
+      error: NextResponse.json({ error: "unauthorized" }, { status: 401 }),
+    };
   }
 
   const { data: membership } = await supabase
@@ -21,7 +23,9 @@ async function requireStaff() {
     .maybeSingle();
 
   if (!membership || !isOrgStaffRole(membership.role)) {
-    return { error: NextResponse.json({ error: "forbidden" }, { status: 403 }) };
+    return {
+      error: NextResponse.json({ error: "forbidden" }, { status: 403 }),
+    };
   }
 
   return {
@@ -67,8 +71,94 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ customerId });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "create_failed";
+    const message = error instanceof Error ? error.message : "create_failed";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    const gate = await requireStaff();
+    if ("error" in gate) return gate.error;
+
+    const body = (await request.json()) as {
+      id?: string;
+      name?: string;
+      email?: string;
+      phone?: string;
+      address?: string;
+      notes?: string;
+    };
+
+    const id = body.id?.trim() ?? "";
+    const name = body.name?.trim() ?? "";
+    if (!id) {
+      return NextResponse.json({ error: "invalid_input" }, { status: 400 });
+    }
+    if (!name) {
+      return NextResponse.json({ error: "name_required" }, { status: 400 });
+    }
+
+    const admin = createAdminClient();
+    const { error } = await admin
+      .from("customers")
+      .update({
+        name,
+        email: body.email?.trim() || null,
+        phone: body.phone?.trim() || null,
+        address: body.address?.trim() || null,
+        notes: body.notes?.trim() || null,
+      })
+      .eq("organization_id", gate.organizationId)
+      .eq("id", id);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "update_failed";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const gate = await requireStaff();
+    if ("error" in gate) return gate.error;
+
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id")?.trim() ?? "";
+    if (!id) {
+      return NextResponse.json({ error: "invalid_input" }, { status: 400 });
+    }
+
+    const admin = createAdminClient();
+
+    const { count } = await admin
+      .from("projects")
+      .select("id", { count: "exact", head: true })
+      .eq("organization_id", gate.organizationId)
+      .eq("customer_id", id);
+
+    if ((count ?? 0) > 0) {
+      return NextResponse.json({ error: "has_projects" }, { status: 409 });
+    }
+
+    const { error } = await admin
+      .from("customers")
+      .delete()
+      .eq("organization_id", gate.organizationId)
+      .eq("id", id);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "delete_failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

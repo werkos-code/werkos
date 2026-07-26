@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { listCustomerOptions } from "@/features/customers/customers-actions";
 import { ProjectDetailForm } from "@/features/projects/components/project-detail-form";
 import { getProject } from "@/features/projects/projects-actions";
-import { requireTenantOrganization } from "@/features/shell/lib/require-organization";
 import { ShellPage } from "@/features/shell/components/shell-page";
 
 type Props = {
@@ -14,7 +13,6 @@ type Props = {
 export default async function ProjectDetailPage({ params }: Props) {
   const { locale, projectId } = await params;
   setRequestLocale(locale);
-  await requireTenantOrganization(locale);
   const t = await getTranslations("projects");
 
   const [projectResult, customersResult] = await Promise.all([
