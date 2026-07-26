@@ -29,10 +29,16 @@ function stripLocale(pathname: string): string {
 }
 
 export async function proxy(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // API routes must never get a locale redirect (Stripe webhooks cannot follow 307).
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
+
   const i18nResponse = handleI18n(request);
   const { response, user } = await updateSession(request, i18nResponse);
 
-  const pathname = request.nextUrl.pathname;
   const pathWithoutLocale = stripLocale(pathname);
   const locale =
     routing.locales.find((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`)) ??
@@ -41,11 +47,6 @@ export async function proxy(request: NextRequest) {
   const isPublic = PUBLIC_PATHS.some(
     (p) => pathWithoutLocale === p || pathWithoutLocale.startsWith(`${p}/`),
   );
-  const isApi = pathname.startsWith("/api/");
-
-  if (isApi) {
-    return response;
-  }
 
   // Authenticated users hitting marketing home → app (org check happens in layouts)
   if (user && pathWithoutLocale === "/") {
@@ -85,5 +86,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };
