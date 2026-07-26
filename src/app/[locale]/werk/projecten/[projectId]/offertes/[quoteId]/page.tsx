@@ -25,11 +25,9 @@ export default async function QuoteDetailPage({ params }: Props) {
 
   return (
     <ShellPage
-      title={result.quote.title}
-      description={t("editorDescription", {
-        project: result.quote.projectName,
-      })}
+      title={t("editTitle")}
       backHref={`/werk/projecten/${projectId}`}
+      contentClassName="max-w-none w-[94%]"
     >
       <QuoteEditor quote={result.quote} />
     </ShellPage>

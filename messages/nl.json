@@ -311,6 +311,8 @@
     "listDescription": "Overzicht van alle offertes in je bedrijf.",
     "sectionTitle": "Offertes",
     "editorDescription": "Offerte voor {project}",
+    "documentLabel": "Offerte",
+    "editTitle": "Offerte bewerken",
     "defaultTitle": "Offerte",
     "newQuote": "Nieuwe offerte",
     "empty": "Nog geen offertes.",
@@ -318,16 +320,62 @@
     "noWorkItems": "Nog geen werkzaamheden. Die kun je bij acceptatie van een offerte aanmaken.",
     "linesTitle": "Regels",
     "addLine": "Regel toevoegen",
+    "addSection": "Sectie",
     "addChildLine": "Subregel",
     "deleteLine": "Verwijderen",
     "deleteLineConfirm": "Deze regel (en subregels) verwijderen?",
     "newLineTitle": "Nieuwe regel",
     "untitledLine": "Naamloze regel",
+    "sectionLabel": "Kop",
+    "save": "Opslaan",
     "saveMeta": "Gegevens opslaan",
+    "saved": "Opgeslagen",
+    "savedJustNow": "Laatst opgeslagen: zojuist",
+    "unsaved": "Niet-opgeslagen wijzigingen",
+    "unsavedLeave": "Je hebt niet-opgeslagen wijzigingen. Toch weggaan?",
+    "totalsTitle": "Offerte totaal",
     "acceptTitle": "Offerte accepteren",
     "acceptDescription": "Kies welke regels als werkzaamheden worden aangemaakt. Niets gebeurt automatisch zonder bevestiging.",
     "setProjectExecution": "Zet projectstatus op Uitvoering",
     "confirmAccept": "Accepteren en werkzaamheden aanmaken",
+    "tabs": {
+      "lines": "Regels",
+      "info": "Informatie",
+      "terms": "Voorwaarden",
+      "notes": "Opmerkingen"
+    },
+    "meta": {
+      "number": "Offertenummer",
+      "numberPending": "Nog niet toegekend",
+      "customer": "Klant",
+      "project": "Project"
+    },
+    "placeholders": {
+      "line": "Omschrijving van de regel",
+      "section": "Nieuw onderdeel",
+      "description": "Optionele toelichting"
+    },
+    "stubs": {
+      "more": "Meer acties volgen later",
+      "preview": "Voorbeeld volgt later",
+      "textLine": "Tekstregel",
+      "discount": "Korting",
+      "image": "Afbeelding",
+      "import": "Importeren",
+      "attachmentsTitle": "Sleep bestanden hierheen of klik om te uploaden",
+      "attachmentsHint": "PDF, JPG, PNG, Excel · max. 10MB — volgt later",
+      "attachmentsList": "Bijlagen",
+      "attachmentsEmpty": "Nog geen bijlagen. Upload volgt in een volgende versie.",
+      "paymentTerm": "Betaaltermijn",
+      "paymentTermValue": "30 dagen",
+      "paymentTerms": "Betalingsvoorwaarden",
+      "paymentTermsValue": "Standaard voorwaarden"
+    },
+    "errors": {
+      "notEditable": "Deze offerte is niet meer bewerkbaar (alleen concept).",
+      "notFound": "Offerte of regel niet gevonden.",
+      "forbidden": "Je hebt geen rechten om dit te doen."
+    },
     "columns": {
       "title": "Offerte",
       "project": "Project",
@@ -344,24 +392,30 @@
       "send": "Versturen",
       "accept": "Accepteren",
       "reject": "Afwijzen",
-      "cancel": "Annuleren"
+      "cancel": "Annuleren",
+      "preview": "Voorbeeld"
     },
     "fields": {
       "title": "Titel",
       "validUntil": "Geldig tot",
-      "externalNotes": "Externe notities",
+      "externalNotes": "Tekst voor de klant",
       "internalNotes": "Interne notities",
-      "lineTitle": "Regel",
+      "lineTitle": "Omschrijving",
       "unit": "Eenheid",
-      "quantity": "Aantal",
-      "unitPrice": "Prijs (€)",
-      "discount": "Korting (€)",
-      "lineTotal": "Subtotaal"
+      "quantity": "Hoeveelheid",
+      "unitPrice": "Prijs",
+      "vat": "BTW %",
+      "discount": "Korting",
+      "lineTotal": "Totaal"
     },
     "totals": {
-      "net": "Netto",
+      "subtotal": "Subtotaal",
+      "discount": "Korting",
+      "net": "Totaal excl. BTW",
       "vat": "BTW",
-      "gross": "Totaal"
+      "gross": "Totaal incl. BTW",
+      "showExcl": "Excl. btw",
+      "showIncl": "Incl. btw"
     }
   },
   "platform": {

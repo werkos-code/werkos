@@ -47,6 +47,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    // Seed one empty line so the editor opens ready to type.
+    const lineId = crypto.randomUUID();
+    await admin.from("quote_lines").insert({
+      id: lineId,
+      organization_id: gate.organizationId,
+      quote_id: quoteId,
+      parent_id: null,
+      sort_order: 0,
+      title: "",
+      quantity: 1,
+      unit: "st",
+      unit_price_cents: 0,
+      vat_rate_bps: 2100,
+      discount_cents: 0,
+    });
+
     return NextResponse.json({ quoteId });
   } catch (error) {
     const message = error instanceof Error ? error.message : "create_failed";

@@ -10,9 +10,16 @@ import { ArrowLeft } from "lucide-react";
 type AppPageHeaderProps = {
   title: string;
   backHref?: string;
+  status?: React.ReactNode;
+  actions?: React.ReactNode;
 };
 
-export function AppPageHeader({ title, backHref }: AppPageHeaderProps) {
+export function AppPageHeader({
+  title,
+  backHref,
+  status,
+  actions,
+}: AppPageHeaderProps) {
   const t = useTranslations("shell");
 
   return (
@@ -32,39 +39,43 @@ export function AppPageHeader({ title, backHref }: AppPageHeaderProps) {
               </Link>
             </Button>
           ) : null}
-          <h1 className="truncate text-[15px] font-semibold tracking-tight text-foreground">
+          <h1 className="truncate text-base font-semibold tracking-tight text-foreground">
             {title}
           </h1>
+          {status}
         </div>
 
-        <div className="flex items-center gap-1">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            className="text-muted-foreground"
-            aria-label={t("search")}
-          >
-            <Search className="size-4" />
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            className="text-muted-foreground"
-            aria-label={t("notifications")}
-          >
-            <Bell className="size-4" />
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            className="text-muted-foreground"
-            aria-label={t("help")}
-          >
-            <CircleHelp className="size-4" />
-          </Button>
+        <div className="flex items-center gap-2">
+          {actions}
+          <div className="flex items-center gap-1">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              className="text-muted-foreground"
+              aria-label={t("search")}
+            >
+              <Search className="size-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              className="text-muted-foreground"
+              aria-label={t("notifications")}
+            >
+              <Bell className="size-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              className="text-muted-foreground"
+              aria-label={t("help")}
+            >
+              <CircleHelp className="size-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </header>

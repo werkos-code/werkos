@@ -311,6 +311,8 @@
     "listDescription": "Übersicht aller Angebote in deinem Unternehmen.",
     "sectionTitle": "Angebote",
     "editorDescription": "Angebot für {project}",
+    "documentLabel": "Angebot",
+    "editTitle": "Angebot bearbeiten",
     "defaultTitle": "Angebot",
     "newQuote": "Neues Angebot",
     "empty": "Noch keine Angebote.",
@@ -318,16 +320,62 @@
     "noWorkItems": "Noch keine Arbeiten. Du kannst sie bei Annahme eines Angebots anlegen.",
     "linesTitle": "Positionen",
     "addLine": "Position hinzufügen",
+    "addSection": "Abschnitt",
     "addChildLine": "Unterposition",
     "deleteLine": "Löschen",
     "deleteLineConfirm": "Diese Position (und Unterpositionen) löschen?",
     "newLineTitle": "Neue Position",
     "untitledLine": "Unbenannte Position",
+    "sectionLabel": "Überschrift",
+    "save": "Speichern",
     "saveMeta": "Daten speichern",
+    "saved": "Gespeichert",
+    "savedJustNow": "Zuletzt gespeichert: gerade eben",
+    "unsaved": "Ungespeicherte Änderungen",
+    "unsavedLeave": "Du hast ungespeicherte Änderungen. Trotzdem verlassen?",
+    "totalsTitle": "Angebotssumme",
     "acceptTitle": "Angebot annehmen",
     "acceptDescription": "Wähle, welche Positionen als Arbeiten angelegt werden. Nichts passiert ohne Bestätigung.",
     "setProjectExecution": "Projektstatus auf Ausführung setzen",
     "confirmAccept": "Annehmen und Arbeiten anlegen",
+    "tabs": {
+      "lines": "Positionen",
+      "info": "Informationen",
+      "terms": "Bedingungen",
+      "notes": "Notizen"
+    },
+    "meta": {
+      "number": "Angebotsnummer",
+      "numberPending": "Noch nicht vergeben",
+      "customer": "Kunde",
+      "project": "Projekt"
+    },
+    "placeholders": {
+      "line": "Beschreibung der Position",
+      "section": "Neuer Abschnitt",
+      "description": "Optionale Erläuterung"
+    },
+    "stubs": {
+      "more": "Weitere Aktionen folgen später",
+      "preview": "Vorschau folgt später",
+      "textLine": "Textzeile",
+      "discount": "Rabatt",
+      "image": "Bild",
+      "import": "Importieren",
+      "attachmentsTitle": "Dateien hierher ziehen oder klicken zum Hochladen",
+      "attachmentsHint": "PDF, JPG, PNG, Excel · max. 10MB — folgt später",
+      "attachmentsList": "Anhänge",
+      "attachmentsEmpty": "Noch keine Anhänge. Upload folgt in einer späteren Version.",
+      "paymentTerm": "Zahlungsziel",
+      "paymentTermValue": "30 Tage",
+      "paymentTerms": "Zahlungsbedingungen",
+      "paymentTermsValue": "Standardbedingungen"
+    },
+    "errors": {
+      "notEditable": "Dieses Angebot ist nicht mehr bearbeitbar (nur Entwurf).",
+      "notFound": "Angebot oder Position nicht gefunden.",
+      "forbidden": "Du hast keine Berechtigung dafür."
+    },
     "columns": {
       "title": "Angebot",
       "project": "Projekt",
@@ -344,24 +392,30 @@
       "send": "Senden",
       "accept": "Annehmen",
       "reject": "Ablehnen",
-      "cancel": "Stornieren"
+      "cancel": "Stornieren",
+      "preview": "Vorschau"
     },
     "fields": {
       "title": "Titel",
       "validUntil": "Gültig bis",
-      "externalNotes": "Externe Notizen",
+      "externalNotes": "Text für den Kunden",
       "internalNotes": "Interne Notizen",
-      "lineTitle": "Position",
+      "lineTitle": "Beschreibung",
       "unit": "Einheit",
       "quantity": "Menge",
-      "unitPrice": "Preis (€)",
-      "discount": "Rabatt (€)",
-      "lineTotal": "Zwischensumme"
+      "unitPrice": "Preis",
+      "vat": "MwSt. %",
+      "discount": "Rabatt",
+      "lineTotal": "Gesamt"
     },
     "totals": {
-      "net": "Netto",
+      "subtotal": "Zwischensumme",
+      "discount": "Rabatt",
+      "net": "Gesamt excl. MwSt.",
       "vat": "MwSt.",
-      "gross": "Gesamt"
+      "gross": "Gesamt inkl. MwSt.",
+      "showExcl": "Excl. MwSt.",
+      "showIncl": "Inkl. MwSt."
     }
   },
   "platform": {

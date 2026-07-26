@@ -32,9 +32,12 @@ export type QuoteDetail = {
   status: QuoteStatus;
   projectId: string;
   projectName: string;
+  customerId: string | null;
+  customerName: string | null;
   validUntil: string | null;
   internalNotes: string | null;
   externalNotes: string | null;
+  createdAt: string;
   lines: QuoteLineRow[];
 };
 
@@ -129,7 +132,7 @@ export async function getQuote(quoteId: string): Promise<{
   const { data: quote, error } = await ctx.supabase
     .from("quotes")
     .select(
-      "id, title, status, project_id, valid_until, internal_notes, external_notes",
+      "id, title, status, project_id, valid_until, internal_notes, external_notes, created_at",
     )
     .eq("organization_id", ctx.organizationId)
     .eq("id", quoteId)
@@ -142,7 +145,7 @@ export async function getQuote(quoteId: string): Promise<{
     await Promise.all([
       ctx.supabase
         .from("projects")
-        .select("id, name")
+        .select("id, name, customer_id")
         .eq("organization_id", ctx.organizationId)
         .eq("id", quote.project_id)
         .maybeSingle(),
@@ -158,6 +161,18 @@ export async function getQuote(quoteId: string): Promise<{
 
   if (linesError) return { error: linesError.message };
 
+  let customerName: string | null = null;
+  let customerId: string | null = project?.customer_id ?? null;
+  if (customerId) {
+    const { data: customer } = await ctx.supabase
+      .from("customers")
+      .select("id, name")
+      .eq("organization_id", ctx.organizationId)
+      .eq("id", customerId)
+      .maybeSingle();
+    customerName = customer?.name ?? null;
+  }
+
   return {
     quote: {
       id: quote.id,
@@ -165,9 +180,12 @@ export async function getQuote(quoteId: string): Promise<{
       status: quote.status,
       projectId: quote.project_id,
       projectName: project?.name ?? "—",
+      customerId,
+      customerName,
       validUntil: quote.valid_until,
       internalNotes: quote.internal_notes,
       externalNotes: quote.external_notes,
+      createdAt: quote.created_at,
       lines: (lines ?? []).map((line) => ({
         id: line.id,
         parentId: line.parent_id,

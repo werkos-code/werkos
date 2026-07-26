@@ -311,6 +311,8 @@
     "listDescription": "Overview of all quotes in your company.",
     "sectionTitle": "Quotes",
     "editorDescription": "Quote for {project}",
+    "documentLabel": "Quote",
+    "editTitle": "Edit quote",
     "defaultTitle": "Quote",
     "newQuote": "New quote",
     "empty": "No quotes yet.",
@@ -318,16 +320,62 @@
     "noWorkItems": "No work items yet. You can create them when accepting a quote.",
     "linesTitle": "Lines",
     "addLine": "Add line",
+    "addSection": "Section",
     "addChildLine": "Sub-line",
     "deleteLine": "Delete",
     "deleteLineConfirm": "Delete this line (and sub-lines)?",
     "newLineTitle": "New line",
     "untitledLine": "Untitled line",
+    "sectionLabel": "Heading",
+    "save": "Save",
     "saveMeta": "Save details",
+    "saved": "Saved",
+    "savedJustNow": "Last saved: just now",
+    "unsaved": "Unsaved changes",
+    "unsavedLeave": "You have unsaved changes. Leave anyway?",
+    "totalsTitle": "Quote total",
     "acceptTitle": "Accept quote",
     "acceptDescription": "Choose which lines become work items. Nothing is created without confirmation.",
     "setProjectExecution": "Set project status to Execution",
     "confirmAccept": "Accept and create work items",
+    "tabs": {
+      "lines": "Lines",
+      "info": "Information",
+      "terms": "Terms",
+      "notes": "Notes"
+    },
+    "meta": {
+      "number": "Quote number",
+      "numberPending": "Not assigned yet",
+      "customer": "Customer",
+      "project": "Project"
+    },
+    "placeholders": {
+      "line": "Line description",
+      "section": "New section",
+      "description": "Optional details"
+    },
+    "stubs": {
+      "more": "More actions coming later",
+      "preview": "Preview coming later",
+      "textLine": "Text line",
+      "discount": "Discount",
+      "image": "Image",
+      "import": "Import",
+      "attachmentsTitle": "Drop files here or click to upload",
+      "attachmentsHint": "PDF, JPG, PNG, Excel · max 10MB — coming later",
+      "attachmentsList": "Attachments",
+      "attachmentsEmpty": "No attachments yet. Upload comes in a later version.",
+      "paymentTerm": "Payment term",
+      "paymentTermValue": "30 days",
+      "paymentTerms": "Payment terms",
+      "paymentTermsValue": "Standard terms"
+    },
+    "errors": {
+      "notEditable": "This quote can no longer be edited (draft only).",
+      "notFound": "Quote or line not found.",
+      "forbidden": "You do not have permission to do this."
+    },
     "columns": {
       "title": "Quote",
       "project": "Project",
@@ -344,24 +392,30 @@
       "send": "Send",
       "accept": "Accept",
       "reject": "Reject",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "preview": "Preview"
     },
     "fields": {
       "title": "Title",
       "validUntil": "Valid until",
-      "externalNotes": "External notes",
+      "externalNotes": "Customer-facing notes",
       "internalNotes": "Internal notes",
-      "lineTitle": "Line",
+      "lineTitle": "Description",
       "unit": "Unit",
       "quantity": "Quantity",
-      "unitPrice": "Price (€)",
-      "discount": "Discount (€)",
-      "lineTotal": "Subtotal"
+      "unitPrice": "Price",
+      "vat": "VAT %",
+      "discount": "Discount",
+      "lineTotal": "Total"
     },
     "totals": {
-      "net": "Net",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "net": "Total excl. VAT",
       "vat": "VAT",
-      "gross": "Total"
+      "gross": "Total incl. VAT",
+      "showExcl": "Excl. VAT",
+      "showIncl": "Incl. VAT"
     }
   },
   "platform": {

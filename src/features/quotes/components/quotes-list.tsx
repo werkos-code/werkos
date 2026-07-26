@@ -4,8 +4,10 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { QuoteListItem } from "@/features/quotes/quotes-actions";
+import { PageCard } from "@/features/shell/components/page-card";
 
 type QuotesListProps = {
   quotes: QuoteListItem[];
@@ -60,53 +62,63 @@ export function QuotesList({
       ) : null}
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       {quotes.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t("empty")}</p>
+        <PageCard className="px-5 py-8 text-sm text-muted-foreground">
+          {t("empty")}
+        </PageCard>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[32rem] text-left text-sm">
-            <thead>
-              <tr className="border-b border-border text-muted-foreground">
-                <th className="px-0 py-3 pr-4 font-medium">{t("columns.title")}</th>
-                {showProject ? (
-                  <th className="px-0 py-3 pr-4 font-medium">
-                    {t("columns.project")}
-                  </th>
-                ) : null}
-                <th className="px-0 py-3 font-medium">{t("columns.status")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {quotes.map((quote) => (
-                <tr
-                  key={quote.id}
-                  className="border-b border-border/70 last:border-0"
-                >
-                  <td className="py-3 pr-4">
-                    <Link
-                      href={`/werk/projecten/${quote.projectId}/offertes/${quote.id}`}
-                      className="font-medium text-foreground hover:underline"
-                    >
-                      {quote.title}
-                    </Link>
-                  </td>
+        <PageCard className="overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[32rem] text-left text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/40 text-muted-foreground">
+                  <th className="px-4 py-3 font-medium">{t("columns.title")}</th>
                   {showProject ? (
-                    <td className="py-3 pr-4 text-muted-foreground">
+                    <th className="px-4 py-3 font-medium">
+                      {t("columns.project")}
+                    </th>
+                  ) : null}
+                  <th className="px-4 py-3 font-medium">{t("columns.status")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {quotes.map((quote) => (
+                  <tr
+                    key={quote.id}
+                    className="border-b border-border/70 last:border-0 hover:bg-muted/30"
+                  >
+                    <td className="px-4 py-3">
                       <Link
-                        href={`/werk/projecten/${quote.projectId}`}
-                        className="hover:underline"
+                        href={`/werk/projecten/${quote.projectId}/offertes/${quote.id}`}
+                        className="font-medium text-foreground hover:text-primary hover:underline"
                       >
-                        {quote.projectName}
+                        {quote.title}
                       </Link>
                     </td>
-                  ) : null}
-                  <td className="py-3 text-muted-foreground">
-                    {t(`status.${quote.status}`)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                    {showProject ? (
+                      <td className="px-4 py-3 text-muted-foreground">
+                        <Link
+                          href={`/werk/projecten/${quote.projectId}`}
+                          className="hover:text-primary hover:underline"
+                        >
+                          {quote.projectName}
+                        </Link>
+                      </td>
+                    ) : null}
+                    <td className="px-4 py-3">
+                      <Badge
+                        variant={
+                          quote.status === "draft" ? "success" : "secondary"
+                        }
+                      >
+                        {t(`status.${quote.status}`)}
+                      </Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </PageCard>
       )}
     </div>
   );

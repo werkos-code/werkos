@@ -108,12 +108,15 @@ Hierdoor blijft blauw waardevol wanneer het daadwerkelijk gebruikt wordt.
 
 | Token / waarde | Gebruik |
 | --- | --- |
-| Sidebar-achtergrond `#09133A` | Alleen de sidebar |
-| Accentblauw (bijv. `#3B82F6`) | Primaire CTA's, focus, selectie |
-| App-achtergrond | Wit / lichte neutrals via design tokens |
+| Sidebar-achtergrond `#09133A` | Alleen de sidebar (niet wijzigen zonder apart besluit) |
+| Accentblauw (primary, bijv. `#2563EB` / `#3B82F6`) | Primaire CTA's, focus, actieve tabs/selectie |
+| App-canvas | Lichtgrijs (`--background`) — contentkaarten blijven wit (`--card`) |
 | Borders | Subtiel, lage contrast (`border`) |
 
 Exacte CSS-tokens leven in `src/app/globals.css` en het shadcn-thema. Wijzigingen aan kleuren gebeuren daar — niet ad hoc per pagina.
+
+**Workspace-pagina's** (zoals de offerte-editor) mogen een dichtere layout hebben (meta-kaarten, tabs, totals-rail) zolang de sidebar, Geist, en spaarzaam blauw intact blijven. Uitgestelde editor-features: zie [`QUOTE_EDITOR_BACKLOG.md`](./QUOTE_EDITOR_BACKLOG.md).
+
 
 ---
 
