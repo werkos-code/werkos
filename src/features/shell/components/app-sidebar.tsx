@@ -203,7 +203,7 @@ export function AppSidebar({
 
         <Button
           asChild
-          className="h-10 w-full justify-center gap-2 rounded-xl border-0 bg-linear-to-r from-[#13265f] to-[#3b82f6] text-sm font-medium text-white shadow-none hover:from-[#1a3178] hover:to-[#60a5fa]"
+          className="h-10 w-full justify-center gap-2 rounded-xl border-0 bg-linear-to-r from-[#00b09b] to-[#96c93d] text-sm font-medium text-white shadow-none hover:from-[#00a08c] hover:to-[#87b836]"
         >
           <Link href={NEW_REQUEST_HREF}>
             <Plus className="size-4" />
