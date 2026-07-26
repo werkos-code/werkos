@@ -1,389 +1,257 @@
 # WerkOS Design System
 
-> Version: 1.0
->
-> Dit document beschrijft de ontwerpfilosofie en vaste ontwerpregels van WerkOS.
-> Iedere nieuwe pagina, component of workflow moet voldoen aan deze richtlijnen.
->
-> WerkOS is één product. Niet een verzameling losse schermen.
-> Consistentie is belangrijker dan creativiteit.
+> Version: 2.0 — 2026-07-26  
+> Bron van waarheid voor UI. Nieuwe pagina’s volgen dit document — geen screenshots nodig.  
+> Tokens: `src/app/globals.css` · Surfaces: `PageCard` · Frame: `ShellPage`
+
+WerkOS is één product. Consistentie is belangrijker dan creativiteit.  
+Wanneer een scherm afwijkt: breid dit systeem uit, niet het scherm.
 
 ---
 
-# 1. Design Filosofie
+## 1. Filosofie
 
-WerkOS is gebouwd voor ondernemers in projectbedrijven.
+Gebouwd voor ondernemers in projectbedrijven die de app dagelijks uren gebruiken.
 
-Onze gebruikers brengen dagelijks vele uren door in de applicatie. Daarom staat rust, overzicht en betrouwbaarheid altijd boven visuele effecten.
+- Rust, overzicht, betrouwbaarheid boven visuele effecten
+- Professionele bedrijfssoftware zonder ERP-rommel
+- Minder is beter; kleur heeft betekenis, geen decoratie
+- Bestaande patronen hergebruiken; nieuwe patterns alleen als het écht nodig is
 
-WerkOS moet voelen als professionele bedrijfssoftware, zonder de complexiteit en rommeligheid van traditionele ERP-systemen.
-
-Het ontwerp straalt uit:
-
-- Rust
-- Vertrouwen
-- Professionaliteit
-- Overzicht
-- Focus
-
-WerkOS probeert nooit indruk te maken met design.
-
-WerkOS probeert het werk makkelijker te maken.
+**WerkOS is niet:** startup-dashboard, design-showcase, paarse marketing-UI, nep-KPI’s.
 
 ---
 
-# 2. Algemene Ontwerpprincipes
+## 2. Visuele identiteit (vast)
 
-## Minder is beter
+| Element | Waarde | Regel |
+| --- | --- | --- |
+| Lettertype | Geist (`--font-sans`) | Geen Inter/Roboto/Arial/system als UI-font |
+| Mono | Geist Mono | Geld, qty, technische velden |
+| Iconen | Lucide | Geen andere icon set; iconen vervangen geen tekst |
+| Primary | `#2563EB` (`--primary`) | Alleen CTA, focus, actieve selectie, soft chips |
+| Ring | `#3B82F6` | Focus |
+| Sidebar | `#09133A` (`--sidebar`) | Enige donkere chrome in de app |
+| Canvas | koel lichtgrijs (`--background`) | Content op wit (`--card`) |
+| Radius basis | `0.625rem` | Kaarten `rounded-xl`; pills `rounded-full` / badge `rounded-4xl` |
+| Schaduw | 1px soft op `PageCard` | Geen multi-layer glow |
 
-Iedere pagina toont alleen wat op dat moment relevant is.
+### Kleurgebruik
 
-Nieuwe functionaliteit wordt niet toegevoegd omdat het "handig" is, maar omdat het de dagelijkse operatie daadwerkelijk ondersteunt.
+- Interface = wit + lichte grijstinten + donkergrijze tekst + subtiele borders
+- Blauw spaarzaam: primaire knoppen, actieve tabs, focus, `bg-primary/10 text-primary` chips
+- Success / destructive / amber alleen voor status en waarschuwing
+- Geen gekleurde decoratieve kaarten of paarse/indigo gradients
+- Geen cream+serif of krantachtige layouts
 
----
-
-## Rust boven informatie
-
-Niet alle informatie hoeft direct zichtbaar te zijn.
-
-Gebruik:
-
-- uitklapbare secties
-- dropdowns
-- tooltips
-- modals
-- slide-overs
-
-om complexiteit te verbergen totdat deze nodig is.
-
----
-
-## Consistentie boven originaliteit
-
-Wanneer er al een bestaand patroon bestaat binnen WerkOS, moet dit opnieuw gebruikt worden.
-
-Nieuwe componenten of nieuwe interactiepatronen worden alleen geïntroduceerd wanneer bestaande patronen aantoonbaar niet voldoen.
+Wijzig kleuren alleen in `globals.css`, niet ad hoc per pagina.
 
 ---
 
-## Kleur heeft betekenis
+## 3. App-frame (altijd)
 
-Kleur wordt nooit gebruikt als decoratie.
+```
+AppShell (navy sidebar)
+  └─ ShellPage
+       ├─ AppPageHeader (titel · optional back · actions · zoek/bel/help)
+       └─ content: px-6 py-6 lg:px-8 → mx-auto w-[90%]
+```
 
-Kleur ondersteunt uitsluitend betekenis of focus.
-
----
-
-# 3. Kleurgebruik
-
-WerkOS gebruikt een rustige, lichte interface.
-
-Vrijwel de volledige applicatie heeft een lichte achtergrond.
-
-De donkere kleur wordt uitsluitend gebruikt voor de sidebar.
-
-Blauw is de accentkleur van WerkOS.
-
-Blauw wordt echter zeer spaarzaam gebruikt.
-
-Gebruik blauw uitsluitend voor:
-
-- primaire CTA's
-- actieve selectie
-- focus states
-- interactieve elementen waar extra nadruk gewenst is
-
-Gebruik géén gekleurde kaarten, achtergronden of decoratieve vlakken.
-
-De interface moet voornamelijk bestaan uit:
-
-- wit
-- lichte grijstinten
-- donkergrijze tekst
-- subtiele borders
-
-Hierdoor blijft blauw waardevol wanneer het daadwerkelijk gebruikt wordt.
-
-### Technische ankers (implementatie)
-
-| Token / waarde | Gebruik |
+| Regel | Detail |
 | --- | --- |
-| Sidebar-achtergrond `#09133A` | Alleen de sidebar (niet wijzigen zonder apart besluit) |
-| Accentblauw (primary, bijv. `#2563EB` / `#3B82F6`) | Primaire CTA's, focus, actieve tabs/selectie |
-| App-canvas | Lichtgrijs (`--background`) — contentkaarten blijven wit (`--card`) |
-| Borders | Subtiel, lage contrast (`border`) |
+| Header-titel | `text-base font-semibold tracking-tight` — geen grote hero in de chrome |
+| Geen page-description | `description` op `ShellPage` wordt niet gerenderd; uitleg via tooltip of weglaten |
+| Surfaces | Gebruik `PageCard` / `MetaStatCard` — niet shadcn `Card` in product-UI |
+| Secties | `space-y-5` of `space-y-6` |
+| Sidebar | Altijd zichtbaar; top-level nav mét iconen; subnav zonder iconen |
 
-Exacte CSS-tokens leven in `src/app/globals.css` en het shadcn-thema. Wijzigingen aan kleuren gebeuren daar — niet ad hoc per pagina.
-
-**Workspace-pagina's** (zoals de offerte-editor) mogen een dichtere layout hebben (meta-kaarten, tabs, totals-rail) zolang de sidebar, Geist, en spaarzaam blauw intact blijven. Uitgestelde editor-features: zie [`QUOTE_EDITOR_BACKLOG.md`](./QUOTE_EDITOR_BACKLOG.md). Uitgestelde projectenlijst-features: zie [`PROJECTS_PAGE_BACKLOG.md`](./PROJECTS_PAGE_BACKLOG.md). Projectdetail-stubs: [`PROJECT_DETAIL_BACKLOG.md`](./PROJECT_DETAIL_BACKLOG.md).
-
-
----
-
-# 4. Typografie
-
-WerkOS gebruikt **Geist** als primair UI-lettertype (`next/font`, CSS-variabele `--font-sans`).
-
-Voor code of technische weergave mag **Geist Mono** (`--font-geist-mono`) worden gebruikt.
-
-Dit lettertype vormt onderdeel van de identiteit van de applicatie.
-
-Typografie moet altijd rustig en goed leesbaar zijn.
-
-Gebruik een duidelijke hiërarchie.
-
-Voorkom overdreven grote titels of extreem kleine tekst.
+**Canonical:**  
+`src/features/shell/components/{app-shell,app-sidebar,shell-page,app-page-header,page-card}.tsx`
 
 ---
 
-# 5. Sidebar
+## 4. Paginarecepten
 
-De sidebar is het anker van WerkOS.
+Nieuwe pagina’s vallen in één type. Kopieer het recept; verzin geen nieuwe layout-taal.
 
-De sidebar is altijd zichtbaar.
+### 4.1 Lijstpagina
 
-Alleen de sidebar gebruikt een donkere achtergrond.
+1. Optionele actierij (primair `+ Nieuw …`)
+2. Optionele KPI-strip: grid van `PageCard p-4` (of `MetaStatCard`)
+3. Filterbalk in `PageCard p-3` (zoek + selects)
+4. Data in `PageCard overflow-hidden` + tabel/grid
 
-De rest van de applicatie blijft licht.
+**Voorbeeld:** `projects-workspace.tsx`, `customers-table.tsx`, `quotes-list.tsx`
 
-De sidebar bevat altijd:
+### 4.2 Detailpagina
 
-- WerkOS logo
-- Werk / Bedrijf switch
-- Primaire CTA
-- Navigatie
-- Gebruikersprofiel
+1. Hero `PageCard p-5` op één compositie:
+   - Links: cover/thumbnail · titel · status-badge · favoriet · meta-rij · labels
+   - Rechts (zelfde rij op `xl`): KPI’s (ring + metrics) — **niet** op een aparte regel onder de identity
+   - Acties (Delen / Bewerken) **in** de hero-card, rechtsboven — niet op een volle regel erboven
+2. Underline-tabs onder de hero
+3. Tab-body: `PageCard`-panelen; 1–2 kolommen waar nodig
+4. Optioneel: vaste bottom-composer (notities)
 
-Gebruik:
+**Voorbeeld:** `project-detail-workspace.tsx`
 
-- witte primaire tekst
-- subtiele lichtblauwe/grijze secundaire tekst
-- rustige hover states
+### 4.3 Operationele workspace (lijst in context)
 
-Gebruik uitsluitend iconen op hoofdniveau.
+1. Toolbar: segmented view · zoek · filters · split primary-add
+2. Hoofdlijst `PageCard p-0` (+ optionele rechterrail ~`17.5rem`)
+3. Rijen: CSS-grid of tabel met rustige hover; hiërarchie via indent/groepen
 
-Subnavigatie gebruikt geen iconen.
+**Voorbeeld:** `project-work-items-workspace.tsx`
 
-De sidebar krijgt afgeronde rechterhoeken.
+### 4.4 Editor / workspace-dicht
 
----
+1. Status + save/send-acties
+2. `MetaStatCard`-rij
+3. Hoofd `PageCard` (tabs + regels) + sticky totals-aside
 
-# 6. Header
+**Voorbeeld:** `quote-editor.tsx`
 
-Iedere pagina gebruikt exact dezelfde header.
+### 4.5 Coming soon / stub
 
-De header bevat:
-
-Links:
-
-- terugknop (indien relevant)
-- paginatitel
-- info-tooltip
-
-Rechts:
-
-- zoeken
-- notificaties
-- help
-
-Onder de header bevindt zich altijd een subtiele divider.
-
-Gebruik géén beschrijvende tekstblokken onder de paginatitel.
-
-Informatie over de pagina wordt getoond via de tooltip.
+`PageCard p-8` · icoon · `h3 text-sm font-medium` · één zin muted · optioneel outline-CTA.  
+Geen nepcijfers.
 
 ---
 
-# 7. Pagina-opbouw
+## 5. Typografie-schaal
 
-Iedere pagina volgt dezelfde basisstructuur.
-
-Header
-
-↓
-
-Divider
-
-↓
-
-Pagina-inhoud
-
-De inhoud van de pagina mag verschillen.
-
-De structuur van de pagina niet.
-
-Gebruik overal dezelfde marges, padding en witruimte.
+| Rol | Classes |
+| --- | --- |
+| Shell-titel | `text-base font-semibold tracking-tight` |
+| Entity-titel (detail) | `text-xl font-semibold tracking-tight sm:text-2xl` |
+| Sectietitel | `text-sm font-medium` |
+| KPI-waarde | `text-xl` / `text-2xl font-semibold tabular-nums` |
+| KPI- / meta-label | `text-[11px] font-medium tracking-wide text-muted-foreground uppercase` |
+| Body / tabel | `text-sm` |
+| Meta / timestamps | `text-xs text-muted-foreground` |
+| Tab-count pill | `text-[10px] font-medium` |
 
 ---
 
-# 8. Paginatypes
+## 6. Componentrecepten
 
-WerkOS kent een beperkt aantal paginatypen.
+### Buttons
 
-Nieuwe pagina's moeten binnen één van deze categorieën vallen.
+- shadcn `Button`: `default` (primary) · `outline` · `ghost` · `destructive`
+- Hoogtes: default `h-8`, `sm` `h-7`, icon `icon-sm`
+- Split-add: twee knoppen aan elkaar (`rounded-r-none` / `rounded-l-none`)
 
-- Dashboard
-- Lijstpagina
-- Detailpagina
-- Wizard
-- Workspace
-- Instellingen
+### Badges / status
 
-Nieuwe paginatypen alleen toevoegen wanneer dit echt noodzakelijk is.
+- Pill `Badge`; projectstatus: uitvoering/voltooid → `success`, voorbereiding → `default`, gearchiveerd → `outline`
+- Soft label-chips: `bg-primary/10 text-primary rounded-full px-2.5 py-1 text-xs font-medium`
 
----
+### Tabs
 
-# 9. Componenten
+| Variant | Gebruik | Patroon |
+| --- | --- | --- |
+| Underline | Pagina-secties (detail) | `border-b-2 border-primary text-primary` + count-pill |
+| Segmented | View-switch (lijst/boom/kanban) | `rounded-lg border bg-card p-0.5` · actief `bg-primary/10 text-primary` |
+| Card-top | Editor-secties | `border-b-2` op tab binnen card |
 
-WerkOS werkt met een vaste set componenten.
+### Tabellen / grid-lijsten
 
-Bij voorkeur worden bestaande componenten hergebruikt.
+- Header: `bg-muted/40`, vaak `text-[11px] uppercase tracking-wide text-muted-foreground`
+- Rijen: `border-b border-border/70`, `hover:bg-muted/30`, cellen `px-4 py-3 text-sm`
+- Geen zware rasterlijnen
 
-Basis: shadcn/ui in `src/components/ui/`, aangevuld met productcomponenten in `src/features/`.
+### Filters / toolbar
 
-Belangrijkste componenten:
+- Zoek: `Input h-9` + Lucide `Search` links
+- Native of shadcn select: `h-9 rounded-lg border … text-sm`
+- Toolbar in `PageCard p-3`
 
-- Buttons
-- Inputs
-- Selects
-- Tables
-- Cards
-- Tabs
-- Tooltips
-- Modals
-- Slide-overs
-- Empty States
-- Status badges
+### Overlays
 
-Nieuwe componenten alleen wanneer bestaande componenten niet voldoen.
+- Detail/side panel: Sheet rechts, korte fade/slide, lichte overlay
+- Bevestigen: Dialog
+- Geen grote entrance-animaties
 
----
+### Empty states
 
-# 10. Tabellen
+Minimaal: muted zin in de card.  
+Rijker: titel + korte uitleg + primaire actie. Nooit een “lege” dode pagina.
 
-Tabellen zijn een belangrijk onderdeel van WerkOS.
+### KPI’s / MetaStat
 
-Gebruik:
-
-- veel witruimte
-- rustige rijhoogtes
-- subtiele hover states
-- minimale borders
-
-Voorkom visuele drukte.
-
-Gebruik geen zware rasterlijnen.
+- `MetaStatCard` voor compacte meta
+- Hero-KPI’s: label uppercase 11px · grote `tabular-nums` waarde · hint 11px (danger = `text-destructive`)
+- Ontbrekende data: `—` of muted `opacity-70` — **nooit** verzonnen getallen
 
 ---
 
-# 11. Formulieren
+## 7. Data-eerlijkheid
 
-Formulieren moeten eenvoudig aanvoelen.
-
-Gebruik:
-
-Label
-
-Input
-
-Helpertekst (indien nodig)
-
-Validatie
-
-Plaats niet te veel velden naast elkaar.
-
-Gebruik voldoende witruimte.
+- Voortgang, uren, openstaand, financials: alleen echte data of lege state
+- Coming-soon modules: stub-copy, geen fake dashboards
+- Zie ook: `WORK_ITEMS_TAB_PLAN.md`, project-/quote-backlogs
 
 ---
 
-# 12. Tooltips
+## 8. Motion
 
-Tooltips worden gebruikt om extra uitleg te geven zonder ruimte op de pagina in te nemen.
-
-Tooltips zijn kort.
-
-Gebruik maximaal enkele zinnen.
+- Alleen `transition-colors` / `opacity` / korte sheet-slide (`duration-100`–`200`)
+- Header/composer: `backdrop-blur-sm` is ok
+- Geen springs, glow-pulses, of decorative motion
 
 ---
 
-# 13. Empty States
+## 9. Responsive
 
-Lege pagina's moeten nooit leeg aanvoelen.
-
-Iedere empty state bevat:
-
-- titel
-- korte uitleg
-- primaire actie
-
-Gebruik een rustige illustratie wanneer passend.
+- Desktop leidend; tablet zelfde recept
+- Detail-hero: identity + KPI’s stacken onder `xl`; op `xl` één rij
+- Functionaliteit blijft gelijk op kleinere breakpoints
 
 ---
 
-# 14. Iconen
+## 10. Do / Don’t
 
-Gebruik uitsluitend Lucide Icons.
+### Do
 
-Iconen ondersteunen de interface.
+- `ShellPage` + `PageCard` / `MetaStatCard`
+- Navy sidebar als enige dark chrome
+- Blauw spaarzaam; soft primary chips voor labels/actief
+- Recept 4.x volgen voor nieuwe schermen
+- i18n (`messages/{nl,en,de}.json`) voor alle user-facing strings
+- Canonical componenten hergebruiken vóór iets nieuws bouwen
 
-Iconen vervangen nooit tekst.
+### Don’t
 
----
-
-# 15. Animaties
-
-Animaties zijn subtiel.
-
-Gebruik uitsluitend kleine overgangen.
-
-Geen opvallende effecten.
-
-Geen springende elementen.
-
-Geen overbodige beweging.
-
----
-
-# 16. Responsive
-
-Desktop is leidend.
-
-Tablet ondersteunt dezelfde ervaring.
-
-Mobiel wordt aangepast waar nodig.
-
-Functionaliteit blijft gelijk.
+- Screenshot 1:1 nabootsen met een nieuw layout-idioom
+- Acties op een volle regel boven de hero als ze in de card horen
+- KPI’s onder de identity forceren terwijl ze naast elkaar horen
+- shadcn `Card` i.p.v. `PageCard`
+- Paars/indigo, cream+serif, emoji-decoratie, multi-shadow glow
+- Nep-KPI’s of marketing-stat strips
+- Nieuwe fonts of icon libraries
+- Page-description onder de shell-titel
 
 ---
 
-# 17. Ontwerpregel
+## 11. Canonical bestanden
 
-Iedere nieuwe pagina moet aanvoelen alsof deze altijd onderdeel van WerkOS is geweest.
-
-Wanneer een nieuwe pagina afwijkt van bestaande patronen, wordt eerst gekeken of het bestaande design system uitgebreid moet worden.
-
-Niet de pagina.
-
-Het design system is leidend.
+| Onderwerp | Pad |
+| --- | --- |
+| Tokens | `src/app/globals.css` |
+| Shell / header / breedte | `src/features/shell/components/` |
+| Surfaces | `page-card.tsx` |
+| UI primitives | `src/components/ui/` |
+| Lijst + KPI’s | `src/features/projects/components/projects-workspace.tsx` |
+| Detail + tabs + hero | `src/features/projects/components/project-detail-workspace.tsx` |
+| Workspace-lijst | `src/features/projects/components/project-work-items-workspace.tsx` |
+| Editor | `src/features/quotes/components/quote-editor.tsx` |
 
 ---
 
-# 18. Wat WerkOS niet is
+## 12. Uitbreiden van dit systeem
 
-WerkOS is geen ERP uit 2010.
+1. Zoek of een recept/component al bestaat.
+2. Zo niet: voeg het patroon hier toe (recept + canonical pad).
+3. Bouw daarna het scherm.
 
-WerkOS is geen startup-dashboard.
-
-WerkOS is geen verzameling losse modules.
-
-WerkOS is geen design showcase.
-
-WerkOS is software die ondernemers dagelijks vertrouwen om hun bedrijf te runnen.
-
-Iedere ontwerpbeslissing moet bijdragen aan:
-
-- meer rust
-- meer overzicht
-- minder frictie
-
-Wanneer een ontwerpkeuze hier niet aan bijdraagt, hoort deze niet thuis in WerkOS.
+Feature-backlogs (`*_BACKLOG.md`) beschrijven *wat* later komt; dit document beschrijft *hoe* het eruitziet.

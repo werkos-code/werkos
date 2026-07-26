@@ -1,0 +1,43 @@
+---
+description: WerkOS huisstijl — volg DESIGN_SYSTEM bij alle UI
+alwaysApply: true
+---
+
+# WerkOS Design System
+
+Bij elke nieuwe of gewijzigde UI: volg `docs/DESIGN_SYSTEM.md`. Geen screenshot nodig als het recept daar staat.
+
+## Verplicht frame
+
+- `ShellPage` + content `w-[90%]`
+- Surfaces: `PageCard` / `MetaStatCard` (niet shadcn `Card`)
+- Font: Geist · Icons: Lucide
+- Primary `#2563EB` spaarzaam · Sidebar navy `#09133A` = enige dark chrome
+- Geen page-description onder de shell-titel
+
+## Kies één recept
+
+| Type | Opbouw | Canonical |
+| --- | --- | --- |
+| Lijst | KPI-strip → filter `PageCard p-3` → tabel-card | `projects-workspace.tsx` |
+| Detail | Hero-card (identity + KPI’s één rij; acties in card) → underline tabs → panels | `project-detail-workspace.tsx` |
+| Workspace | Toolbar (segmented + filters + split-add) → list-card + optionele rail | `project-work-items-workspace.tsx` |
+| Editor | MetaStat-rij → main card + sticky totals | `quote-editor.tsx` |
+
+## Huisstijl-ankers
+
+- KPI-labels: `text-[11px] … uppercase text-muted-foreground`
+- Soft chips: `bg-primary/10 text-primary rounded-full`
+- Actieve underline-tab: `border-b-2 border-primary text-primary`
+- Segmented actief: `bg-primary/10 text-primary`
+- Tabelheader: `bg-muted/40` + uppercase 11px
+- Lege/ontbrekende data: `—` of muted — nooit nep-KPI’s
+- Motion: alleen subtiele color/opacity/short sheet — geen glow/springs
+
+## Don’t
+
+- Paars/indigo themes, cream+serif, emoji-decoratie, multi-shadow
+- Acties op een volle regel boven de hero; KPI’s op een aparte regel onder identity
+- Nieuwe layout-taal of fonts zonder `DESIGN_SYSTEM.md` eerst uit te breiden
+
+Twijfel → open canonical bestand uit het recept en kopieer het patroon.
