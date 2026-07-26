@@ -132,6 +132,10 @@
     "finance": "Finance",
     "reports": "Reports",
     "settings": "Settings",
+    "admin": "Admin",
+    "adminDashboard": "Dashboard",
+    "adminUsers": "Users",
+    "adminAdministration": "Administration",
     "newRequest": "New request",
     "accountMenu": "Account menu",
     "back": "Back",
@@ -214,6 +218,50 @@
       "settings": {
         "title": "Settings",
         "description": "Settings will be built in a later phase."
+      }
+    }
+  },
+  "platform": {
+    "dashboard": {
+      "title": "Admin",
+      "description": "Platform overview. Widgets come in a later phase."
+    },
+    "administration": {
+      "title": "Administration",
+      "description": "Platform administration comes in a later phase."
+    },
+    "users": {
+      "title": "Users",
+      "description": "All accounts on the WerkOS platform.",
+      "listTitle": "All users",
+      "empty": "No users found yet.",
+      "createTitle": "Create user",
+      "createDescription": "For testing: accounts without Stripe. Owners get an organization with trial status (no checkout).",
+      "fullName": "Name",
+      "email": "Email address",
+      "password": "Temporary password",
+      "passwordHint": "At least 8 characters",
+      "role": "Role",
+      "organization": "Organization",
+      "organizationPlaceholder": "Choose an organization",
+      "organizationName": "New company name",
+      "organizationNameHint": "A test organization is created without Stripe.",
+      "organizationRequired": "Choose an organization.",
+      "organizationNameRequired": "Enter a company name.",
+      "invalidInput": "Check name, email and password.",
+      "create": "Create user",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "platform": "Platform",
+        "memberships": "Organizations"
+      },
+      "roles": {
+        "super_admin": "Super admin",
+        "owner": "Owner",
+        "office_employee": "Office employee",
+        "field_employee": "Field employee",
+        "customer": "Customer"
       }
     }
   },

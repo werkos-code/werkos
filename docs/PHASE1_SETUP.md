@@ -60,6 +60,30 @@ Zet dezelfde keys als in `.env.example` voor **Production** én **Preview**, daa
 5. Wissel bewust naar **Bedrijf** en terug naar **Werk**
 6. Uitloggen / inloggen
 
+## 7. Super Admin (platform)
+
+Na de basis-migratie:
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run de inhoud van:  
+   `supabase/migrations/20260726170000_platform_super_admin.sql`
+3. Dit doet o.a.:
+   - kolom `profiles.platform_role`
+   - helper `is_super_admin()` + RLS-select voor platformdata
+   - promote van `e.jorissen@hotmail.nl` naar `super_admin` (als het account bestaat)
+4. Log in op `https://app.werkos.nl` → in de sidebar verschijnt **Admin** (Dashboard, Gebruikers, Administratie)
+5. Onder **Gebruikers** kun je testaccounts aanmaken zonder Stripe (owners krijgen een org met status `trialing`)
+
+Handmatig een andere gebruiker promoten:
+
+```sql
+update public.profiles p
+set platform_role = 'super_admin'
+from auth.users u
+where p.id = u.id
+  and lower(u.email) = lower('jouw@email.nl');
+```
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  

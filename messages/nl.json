@@ -132,6 +132,10 @@
     "finance": "Financiën",
     "reports": "Rapportages",
     "settings": "Instellingen",
+    "admin": "Admin",
+    "adminDashboard": "Dashboard",
+    "adminUsers": "Gebruikers",
+    "adminAdministration": "Administratie",
     "newRequest": "Nieuwe aanvraag",
     "accountMenu": "Accountmenu",
     "back": "Terug",
@@ -214,6 +218,50 @@
       "settings": {
         "title": "Instellingen",
         "description": "Instellingen worden gebouwd in een volgende fase."
+      }
+    }
+  },
+  "platform": {
+    "dashboard": {
+      "title": "Admin",
+      "description": "Platformoverzicht. Widgets volgen in een volgende fase."
+    },
+    "administration": {
+      "title": "Administratie",
+      "description": "Platformadministratie volgt in een volgende fase."
+    },
+    "users": {
+      "title": "Gebruikers",
+      "description": "Alle accounts op het WerkOS-platform.",
+      "listTitle": "Alle gebruikers",
+      "empty": "Nog geen gebruikers gevonden.",
+      "createTitle": "Gebruiker aanmaken",
+      "createDescription": "Voor tests: accounts zonder Stripe. Owners krijgen een organisatie met trial-status (geen checkout).",
+      "fullName": "Naam",
+      "email": "E-mailadres",
+      "password": "Tijdelijk wachtwoord",
+      "passwordHint": "Minimaal 8 tekens",
+      "role": "Rol",
+      "organization": "Organisatie",
+      "organizationPlaceholder": "Kies een organisatie",
+      "organizationName": "Nieuwe bedrijfsnaam",
+      "organizationNameHint": "Er wordt een testorganisatie aangemaakt zonder Stripe.",
+      "organizationRequired": "Kies een organisatie.",
+      "organizationNameRequired": "Vul een bedrijfsnaam in.",
+      "invalidInput": "Controleer naam, e-mail en wachtwoord.",
+      "create": "Gebruiker aanmaken",
+      "columns": {
+        "name": "Naam",
+        "email": "E-mail",
+        "platform": "Platform",
+        "memberships": "Organisaties"
+      },
+      "roles": {
+        "super_admin": "Super admin",
+        "owner": "Owner",
+        "office_employee": "Kantoormedewerker",
+        "field_employee": "Uitvoerend medewerker",
+        "customer": "Klant"
       }
     }
   },

@@ -17,6 +17,7 @@ import { ContextSwitch } from "@/features/shell/components/context-switch";
 import {
   BEDRIJF_NAV,
   NEW_REQUEST_HREF,
+  PLATFORM_ADMIN_NAV,
   WERK_NAV,
   type ShellContext,
   type ShellNavItem,
@@ -28,6 +29,7 @@ type AppSidebarProps = {
   context: ShellContext;
   userName: string;
   organizationName?: string | null;
+  isSuperAdmin?: boolean;
 };
 
 function isPathActive(pathname: string, href: string) {
@@ -123,12 +125,16 @@ export function AppSidebar({
   context,
   userName,
   organizationName,
+  isSuperAdmin = false,
 }: AppSidebarProps) {
   const t = useTranslations("shell");
   const tAuth = useTranslations("auth");
   const pathname = usePathname();
   const router = useRouter();
-  const sections = context === "werk" ? WERK_NAV : BEDRIJF_NAV;
+  const sections = [
+    ...(context === "werk" ? WERK_NAV : BEDRIJF_NAV),
+    ...(isSuperAdmin ? [PLATFORM_ADMIN_NAV] : []),
+  ];
 
   const initials = useMemo(() => {
     const parts = userName.trim().split(/\s+/).filter(Boolean);

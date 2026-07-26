@@ -6,6 +6,7 @@ type AppShellProps = {
   context: ShellContext;
   organizationName?: string | null;
   userName: string;
+  isSuperAdmin?: boolean;
 };
 
 export function AppShell({
@@ -13,6 +14,7 @@ export function AppShell({
   context,
   organizationName,
   userName,
+  isSuperAdmin = false,
 }: AppShellProps) {
   return (
     <div className="min-h-dvh bg-background">
@@ -20,6 +22,7 @@ export function AppShell({
         context={context}
         organizationName={organizationName}
         userName={userName}
+        isSuperAdmin={isSuperAdmin}
       />
       <div className="min-h-dvh pl-[calc(var(--sidebar-width)+1.5rem)]">
         {children}

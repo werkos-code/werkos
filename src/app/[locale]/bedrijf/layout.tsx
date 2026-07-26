@@ -18,6 +18,7 @@ export default async function BedrijfLayout({ children, params }: Props) {
       context="bedrijf"
       organizationName={session.organizationName}
       userName={session.userName}
+      isSuperAdmin={session.isSuperAdmin}
     >
       {children}
     </AppShell>

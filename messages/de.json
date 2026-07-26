@@ -132,6 +132,10 @@
     "finance": "Finanzen",
     "reports": "Berichte",
     "settings": "Einstellungen",
+    "admin": "Admin",
+    "adminDashboard": "Dashboard",
+    "adminUsers": "Benutzer",
+    "adminAdministration": "Administration",
     "newRequest": "Neue Anfrage",
     "accountMenu": "Konto-Menü",
     "back": "Zurück",
@@ -214,6 +218,50 @@
       "settings": {
         "title": "Einstellungen",
         "description": "Einstellungen werden in einer späteren Phase gebaut."
+      }
+    }
+  },
+  "platform": {
+    "dashboard": {
+      "title": "Admin",
+      "description": "Plattformübersicht. Widgets folgen in einer späteren Phase."
+    },
+    "administration": {
+      "title": "Administration",
+      "description": "Plattformadministration folgt in einer späteren Phase."
+    },
+    "users": {
+      "title": "Benutzer",
+      "description": "Alle Konten auf der WerkOS-Plattform.",
+      "listTitle": "Alle Benutzer",
+      "empty": "Noch keine Benutzer gefunden.",
+      "createTitle": "Benutzer anlegen",
+      "createDescription": "Für Tests: Konten ohne Stripe. Owner erhalten eine Organisation mit Trial-Status (kein Checkout).",
+      "fullName": "Name",
+      "email": "E-Mail-Adresse",
+      "password": "Temporäres Passwort",
+      "passwordHint": "Mindestens 8 Zeichen",
+      "role": "Rolle",
+      "organization": "Organisation",
+      "organizationPlaceholder": "Organisation wählen",
+      "organizationName": "Neuer Firmenname",
+      "organizationNameHint": "Es wird eine Testorganisation ohne Stripe angelegt.",
+      "organizationRequired": "Wähle eine Organisation.",
+      "organizationNameRequired": "Gib einen Firmennamen ein.",
+      "invalidInput": "Prüfe Name, E-Mail und Passwort.",
+      "create": "Benutzer anlegen",
+      "columns": {
+        "name": "Name",
+        "email": "E-Mail",
+        "platform": "Plattform",
+        "memberships": "Organisationen"
+      },
+      "roles": {
+        "super_admin": "Super-Admin",
+        "owner": "Owner",
+        "office_employee": "Büromitarbeiter",
+        "field_employee": "Außendienstmitarbeiter",
+        "customer": "Kunde"
       }
     }
   },

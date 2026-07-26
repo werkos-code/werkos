@@ -29,18 +29,21 @@ export type Database = {
         Row: {
           id: string;
           full_name: string | null;
+          platform_role: "super_admin" | null;
           created_at: string;
           updated_at: string;
         };
         Insert: {
           id: string;
           full_name?: string | null;
+          platform_role?: "super_admin" | null;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
           id?: string;
           full_name?: string | null;
+          platform_role?: "super_admin" | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -194,6 +197,10 @@ export type Database = {
         Returns: boolean;
       };
       user_has_organization: {
+        Args: Record<string, never>;
+        Returns: boolean;
+      };
+      is_super_admin: {
         Args: Record<string, never>;
         Returns: boolean;
       };

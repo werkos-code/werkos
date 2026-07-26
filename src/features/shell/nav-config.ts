@@ -7,6 +7,7 @@ import {
   Package,
   Receipt,
   Settings,
+  Shield,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -148,3 +149,24 @@ export const BEDRIJF_NAV: ShellNavSection[] = [
 ];
 
 export const NEW_REQUEST_HREF = "/werk/aanvragen/nieuw" as const;
+
+/** Platform Admin — shown only for super_admin, below a divider. */
+export const PLATFORM_ADMIN_NAV: ShellNavSection = {
+  id: "platform-admin",
+  items: [
+    {
+      id: "admin",
+      labelKey: "admin",
+      icon: Shield,
+      defaultOpen: true,
+      children: [
+        { href: "/platform/admin", labelKey: "adminDashboard" },
+        { href: "/platform/admin/gebruikers", labelKey: "adminUsers" },
+        {
+          href: "/platform/admin/administratie",
+          labelKey: "adminAdministration",
+        },
+      ],
+    },
+  ],
+};
