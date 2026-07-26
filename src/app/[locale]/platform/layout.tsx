@@ -15,7 +15,6 @@ export default async function PlatformLayout({ children, params }: Props) {
 
   return (
     <AppShell
-      context="werk"
       organizationName={session.organizationName}
       userName={session.userName}
       isSuperAdmin

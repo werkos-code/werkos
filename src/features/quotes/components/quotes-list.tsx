@@ -45,7 +45,7 @@ export function QuotesList({
         setError(result.error || tCommon("error"));
         return;
       }
-      router.push(`/werk/projecten/${projectId}/offertes/${result.quoteId}`);
+      router.push(`/projecten/${projectId}/offertes/${result.quoteId}`);
     } catch {
       setError(tCommon("error"));
     } finally {
@@ -88,7 +88,7 @@ export function QuotesList({
                   >
                     <td className="px-4 py-3">
                       <Link
-                        href={`/werk/projecten/${quote.projectId}/offertes/${quote.id}`}
+                        href={`/projecten/${quote.projectId}/offertes/${quote.id}`}
                         className="font-medium text-foreground hover:text-primary hover:underline"
                       >
                         {quote.title}
@@ -97,7 +97,7 @@ export function QuotesList({
                     {showProject ? (
                       <td className="px-4 py-3 text-muted-foreground">
                         <Link
-                          href={`/werk/projecten/${quote.projectId}`}
+                          href={`/projecten/${quote.projectId}`}
                           className="hover:text-primary hover:underline"
                         >
                           {quote.projectName}

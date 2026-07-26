@@ -22,7 +22,7 @@ export default async function OnboardingCompanyPage({ params }: Props) {
   if (!user) redirect({ href: "/onboarding/account", locale });
 
   if (await userHasOrganization()) {
-    redirect({ href: "/werk", locale });
+    redirect({ href: "/dashboard", locale });
   }
 
   const draft = await getOnboardingDraft();

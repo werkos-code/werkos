@@ -18,7 +18,7 @@ export default async function BedrijfKlantenPage({ params }: Props) {
     <ShellPage title={t("title")} description={t("description")}>
       <div className="mb-6">
         <Button asChild>
-          <Link href="/bedrijf/klanten/nieuw">{t("newCustomer")}</Link>
+          <Link href="/klanten/nieuw">{t("newCustomer")}</Link>
         </Button>
       </div>
       {result.error ? (

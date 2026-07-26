@@ -563,7 +563,7 @@ export function PlanningWorkspace({
                   {selected.assigneeName ?? t("noAssignee")}
                 </p>
                 {selected.projectId ? (
-                  <Link href={`/werk/projecten/${selected.projectId}`} className="text-primary inline-flex items-center gap-2 hover:underline">
+                  <Link href={`/projecten/${selected.projectId}`} className="text-primary inline-flex items-center gap-2 hover:underline">
                     <MapPin className="size-3.5" />
                     {selected.projectName}
                   </Link>

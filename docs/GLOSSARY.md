@@ -23,8 +23,7 @@ Korte definities zodat product, design en engineering dezelfde taal spreken.
 | Werkbon | Work order | Optioneel uitvoeringsdocument; ondersteunt werkzaamheden |
 | Afspraak | Appointment | Eigen object; mag met of zonder project |
 | Planning | Planning | Weergave van werkzaamheden + afspraken (geen dubbele admin) |
-| Werk | Werk context | Mentale context: dagelijkse operatie |
-| Bedrijf (context) | Bedrijf context | Mentale context: bedrijfsvoering |
+| Organisatie-switcher | Org switcher | Wisselen tussen organisaties (UI-klaar; multi-org later) |
 
 ## Bewust niet gebruiken
 
@@ -33,4 +32,5 @@ Korte definities zodat product, design en engineering dezelfde taal spreken.
 | Lead (als entiteit) | Project in Voorbereiding / filter “Nieuwe aanvraag” |
 | Werkplan (als entiteit of UI-label) | Werkzaamheden |
 | Task hierarchy / Service Order | Werkzaamheden / Werkbon |
-| Modules als navigatiemodel | Werkruimtes + context Werk/Bedrijf |
+| Gesplitste app-contexten | Eén navigatiestructuur |
+| Modules als navigatiemodel | Werkruimtes / bestemmingen |

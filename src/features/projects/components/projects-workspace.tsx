@@ -198,7 +198,7 @@ export function ProjectsWorkspace({
             {t("actions.saveFilters")}
           </Button>
           <Button type="button" size="sm" asChild>
-            <Link href="/werk/aanvragen/nieuw">
+            <Link href="/aanvragen/nieuw">
               <Plus className="size-3.5" />
               {t("newRequest")}
             </Link>
@@ -428,7 +428,7 @@ export function ProjectsWorkspace({
                         </div>
                         <div className="min-w-0">
                           <Link
-                            href={`/werk/projecten/${project.id}`}
+                            href={`/projecten/${project.id}`}
                             className="font-medium text-foreground hover:text-primary hover:underline"
                           >
                             {project.name}
@@ -443,7 +443,7 @@ export function ProjectsWorkspace({
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Building2 className="size-3.5 shrink-0" />
                         <Link
-                          href={`/bedrijf/klanten/${project.customerId}`}
+                          href={`/klanten/${project.customerId}`}
                           className="hover:text-primary hover:underline"
                         >
                           {project.customerName}

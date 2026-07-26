@@ -46,12 +46,14 @@ Niet de taal van ERP-systemen.
 
 Niet de taal van IT-afdelingen.
 
-Voorbeelden:
+Voorbeelden van taal:
 
-- “Werk” in plaats van “Operations”
-- “Bedrijf” in plaats van “Management”
 - “Werkzaamheden” in plaats van “Tasks” of “Task hierarchy”
 - “Werkbon” in plaats van “Service Order”
+- “Aanvraag” in plaats van “Lead”
+- “Project” in plaats van technische ERP-termen
+
+De software past zich aan de ondernemer aan — niet andersom.
 
 De software past zich aan de ondernemer aan.
 
@@ -187,29 +189,25 @@ WerkOS openen betekent beginnen met je werk.
 
 ---
 
-# Context boven modules
+# Eén Operating System
 
 WerkOS is niet georganiseerd rond softwaremodules.
 
-WerkOS is georganiseerd rond de mentale context van de ondernemer.
+WerkOS is niet gesplitst in twee werelden (“operatie” vs “management”).
+
+WerkOS is **één Operating System** met één navigatiestructuur.
 
 De productervaring moet altijd deze vraag beantwoorden:
 
-> **Wat wil ik nú doen?**
+> **Waar wil ik naartoe?**
 
 Niet:
 
-> Welke module moet ik openen?
+> Valt dit onder de ene of de andere “wereld”?
 
-Ondernemers denken niet in CRM, planning of facturatie.
+Ondernemers denken niet in CRM, planning of facturatie als losse silo's.
 
-Zij denken in werk dat gedaan moet worden en in het bedrijf dat georganiseerd moet blijven.
-
-Die contexten vormen de basis van WerkOS.
-
-Niet als menustructuur.
-
-Maar als manier van denken.
+Zij denken in werk dat gedaan moet worden — en vinden alles in één logische applicatie.
 
 ---
 

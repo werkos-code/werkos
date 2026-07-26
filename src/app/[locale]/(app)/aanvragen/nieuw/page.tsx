@@ -14,7 +14,7 @@ export default async function NieuweAanvraagPage({ params }: Props) {
   const customers = await listCustomerOptions();
 
   return (
-    <ShellPage title={t("newTitle")} backHref="/werk/projecten">
+    <ShellPage title={t("newTitle")} backHref="/projecten">
       <PageCard className="max-w-lg p-5">
         {customers.error ? (
           <p className="text-sm text-destructive">{customers.error}</p>

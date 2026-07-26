@@ -2,7 +2,7 @@
 
 > Laatst bijgewerkt: 2026-07-26  
 > SQL: `20260726260000_invoices.sql`  
-> UI: `/werk/projecten/facturen` · `src/features/invoices/`
+> UI: `/facturen` · `src/features/invoices/`
 
 ## Afgerond (v1)
 

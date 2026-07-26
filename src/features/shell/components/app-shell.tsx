@@ -1,9 +1,7 @@
 import { AppSidebar } from "@/features/shell/components/app-sidebar";
-import type { ShellContext } from "@/features/shell/nav-config";
 
 type AppShellProps = {
   children: React.ReactNode;
-  context: ShellContext;
   organizationName?: string | null;
   userName: string;
   isSuperAdmin?: boolean;
@@ -11,7 +9,6 @@ type AppShellProps = {
 
 export function AppShell({
   children,
-  context,
   organizationName,
   userName,
   isSuperAdmin = false,
@@ -19,7 +16,6 @@ export function AppShell({
   return (
     <div className="min-h-dvh bg-background">
       <AppSidebar
-        context={context}
         organizationName={organizationName}
         userName={userName}
         isSuperAdmin={isSuperAdmin}

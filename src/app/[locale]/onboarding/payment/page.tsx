@@ -20,7 +20,7 @@ export default async function OnboardingPaymentPage({ params }: Props) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect({ href: "/onboarding/account", locale });
-  if (await userHasOrganization()) redirect({ href: "/werk", locale });
+  if (await userHasOrganization()) redirect({ href: "/dashboard", locale });
 
   const draft = await getOnboardingDraft();
   if (!draft?.company_name) {

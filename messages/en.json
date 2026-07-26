@@ -109,9 +109,6 @@
     }
   },
   "shell": {
-    "werk": "Work",
-    "bedrijf": "Company",
-    "openInWerk": "Open in Work",
     "dashboard": "Dashboard",
     "projects": "Projects",
     "allProjects": "All projects",
@@ -124,7 +121,6 @@
     "articles": "Articles",
     "purchasing": "Purchasing",
     "installations": "Installations",
-    "people": "People",
     "customers": "Customers",
     "suppliers": "Suppliers",
     "subcontractors": "Subcontractors / freelancers",
@@ -204,10 +200,6 @@
         "title": "New request",
         "description": "Start a new project in preparation."
       },
-      "bedrijfDashboard": {
-        "title": "Dashboard",
-        "description": "Company operations and overview will follow in a later phase."
-      },
       "finance": {
         "title": "Finance",
         "description": "Finance will be built in a later phase."
@@ -219,7 +211,29 @@
       "settings": {
         "title": "Settings",
         "description": "Settings will be built in a later phase."
+      },
+      "workItems": {
+        "title": "Work items",
+        "description": "A central work-items overview comes later. For now, manage them inside projects."
+      },
+      "staff": {
+        "title": "Staff",
+        "description": "Staff management will be built in a later phase."
       }
+    },
+    "navLabel": "Main navigation",
+    "workItems": "Work items",
+    "staff": "Staff",
+    "organizationLabel": "Organization",
+    "organizationFallback": "Your organization",
+    "organizationCurrent": "Current organization",
+    "organizationSoon": "More organizations coming later",
+    "sections": {
+      "operations": "Operations",
+      "resources": "Relations & resources",
+      "communication": "Communication",
+      "insights": "Insights",
+      "platform": "Platform"
     }
   },
   "customers": {
@@ -238,7 +252,6 @@
     "hasProjects": "This customer still has projects and cannot be deleted.",
     "nameRequired": "Enter a name.",
     "projectCount": "{count, plural, =0 {No projects} one {1 project} other {# projects}}",
-    "openInWerk": "Open projects in Work",
     "fields": {
       "name": "Name",
       "email": "Email",
@@ -252,7 +265,8 @@
       "phone": "Phone",
       "projects": "Projects",
       "actions": "Actions"
-    }
+    },
+    "openProjects": "View projects"
   },
   "projects": {
     "title": "All projects",

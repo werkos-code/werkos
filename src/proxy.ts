@@ -1,6 +1,7 @@
 import createMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
 
+import { APP_HOME_HREF } from "@/features/shell/nav-config";
 import { routing } from "@/i18n/routing";
 import { updateSession } from "@/lib/supabase/middleware";
 
@@ -18,9 +19,53 @@ const PUBLIC_PATHS = [
   "/onboarding/complete",
 ];
 
+/** Flat app-shell route prefixes (single context). */
+const APP_SHELL_PREFIXES = [
+  "/dashboard",
+  "/projecten",
+  "/planning",
+  "/werkzaamheden",
+  "/werkbonnen",
+  "/facturen",
+  "/offertes",
+  "/klanten",
+  "/personeel",
+  "/leveranciers",
+  "/onderaannemers",
+  "/materiaal",
+  "/inbox",
+  "/rapportages",
+  "/financien",
+  "/instellingen",
+  "/aanvragen",
+  "/platform",
+] as const;
+
+/**
+ * Legacy path redirects → flat app paths (bookmarks / deep links).
+ */
+const LEGACY_REDIRECTS: Array<{ from: RegExp; to: string | ((match: RegExpMatchArray) => string) }> = [
+  { from: /^\/werk$/, to: APP_HOME_HREF },
+  { from: /^\/bedrijf$/, to: APP_HOME_HREF },
+  { from: /^\/werk\/projecten\/werkbonnen(.*)$/, to: "/werkbonnen$1" },
+  { from: /^\/werk\/projecten\/facturen(.*)$/, to: "/facturen$1" },
+  { from: /^\/werk\/projecten\/offertes(.*)$/, to: "/offertes$1" },
+  { from: /^\/werk\/projecten(.*)$/, to: "/projecten$1" },
+  { from: /^\/werk\/planning(.*)$/, to: "/planning$1" },
+  { from: /^\/werk\/aanvragen(.*)$/, to: "/aanvragen$1" },
+  { from: /^\/werk\/inbox(.*)$/, to: "/inbox$1" },
+  { from: /^\/werk\/materiaal(.*)$/, to: "/materiaal$1" },
+  { from: /^\/werk\/personen\/klanten(.*)$/, to: "/klanten$1" },
+  { from: /^\/werk\/personen\/leveranciers(.*)$/, to: "/leveranciers$1" },
+  { from: /^\/werk\/personen\/onderaannemers(.*)$/, to: "/onderaannemers$1" },
+  { from: /^\/bedrijf\/klanten(.*)$/, to: "/klanten$1" },
+  { from: /^\/bedrijf\/rapportages(.*)$/, to: "/rapportages$1" },
+  { from: /^\/bedrijf\/financien(.*)$/, to: "/financien$1" },
+  { from: /^\/bedrijf\/instellingen(.*)$/, to: "/instellingen$1" },
+];
+
 function stripLocale(pathname: string): string {
   const parts = pathname.split("/");
-  // "", "nl", "rest"...
   if (parts.length >= 2 && routing.locales.includes(parts[1] as never)) {
     const rest = "/" + parts.slice(2).join("/");
     return rest === "/" ? "/" : rest.replace(/\/$/, "") || "/";
@@ -28,15 +73,31 @@ function stripLocale(pathname: string): string {
   return pathname;
 }
 
+function isAppShellPath(pathWithoutLocale: string) {
+  return APP_SHELL_PREFIXES.some(
+    (prefix) =>
+      pathWithoutLocale === prefix ||
+      pathWithoutLocale.startsWith(`${prefix}/`),
+  );
+}
+
+function legacyRedirectTarget(pathWithoutLocale: string): string | null {
+  for (const rule of LEGACY_REDIRECTS) {
+    const match = pathWithoutLocale.match(rule.from);
+    if (!match) continue;
+    if (typeof rule.to === "function") return rule.to(match);
+    return pathWithoutLocale.replace(rule.from, rule.to);
+  }
+  return null;
+}
+
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // API routes must never get a locale redirect (Stripe webhooks cannot follow 307).
   if (pathname.startsWith("/api/")) {
     return NextResponse.next();
   }
 
-  // Server Actions: skip i18n rewrites to avoid action-forward loops / hangs.
   const isServerAction =
     request.method === "POST" &&
     (request.headers.has("next-action") ||
@@ -54,31 +115,35 @@ export async function proxy(request: NextRequest) {
     routing.locales.find((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`)) ??
     routing.defaultLocale;
 
+  const legacyTarget = legacyRedirectTarget(pathWithoutLocale);
+  if (legacyTarget) {
+    return NextResponse.redirect(
+      new URL(`/${locale}${legacyTarget}`, request.url),
+    );
+  }
+
   const isPublic = PUBLIC_PATHS.some(
     (p) => pathWithoutLocale === p || pathWithoutLocale.startsWith(`${p}/`),
   );
 
-  // Authenticated users hitting marketing home → app (org check happens in layouts)
   if (user && pathWithoutLocale === "/") {
-    return NextResponse.redirect(new URL(`/${locale}/werk`, request.url));
+    return NextResponse.redirect(
+      new URL(`/${locale}${APP_HOME_HREF}`, request.url),
+    );
   }
 
-  // Protected app areas
-  const isAppShell =
-    pathWithoutLocale.startsWith("/werk") ||
-    pathWithoutLocale.startsWith("/bedrijf") ||
-    pathWithoutLocale.startsWith("/platform");
+  const isAppShell = isAppShellPath(pathWithoutLocale);
 
   if (isAppShell && !user) {
     return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
   }
 
-  // Logged-in users should not stay on login
   if (user && pathWithoutLocale === "/login") {
-    return NextResponse.redirect(new URL(`/${locale}/werk`, request.url));
+    return NextResponse.redirect(
+      new URL(`/${locale}${APP_HOME_HREF}`, request.url),
+    );
   }
 
-  // Onboarding after account requires auth (except welcome + account)
   const onboardingNeedsAuth =
     pathWithoutLocale.startsWith("/onboarding/") &&
     pathWithoutLocale !== "/onboarding" &&

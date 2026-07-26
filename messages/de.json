@@ -109,9 +109,6 @@
     }
   },
   "shell": {
-    "werk": "Arbeit",
-    "bedrijf": "Unternehmen",
-    "openInWerk": "In Arbeit öffnen",
     "dashboard": "Dashboard",
     "projects": "Projekte",
     "allProjects": "Alle Projekte",
@@ -124,7 +121,6 @@
     "articles": "Artikel",
     "purchasing": "Einkauf",
     "installations": "Installationen",
-    "people": "Personen",
     "customers": "Kunden",
     "suppliers": "Lieferanten",
     "subcontractors": "Subunternehmer / Freelancer",
@@ -204,10 +200,6 @@
         "title": "Neue Anfrage",
         "description": "Starte ein neues Projekt in Vorbereitung."
       },
-      "bedrijfDashboard": {
-        "title": "Dashboard",
-        "description": "Unternehmensführung und Übersicht folgen in einer späteren Phase."
-      },
       "finance": {
         "title": "Finanzen",
         "description": "Finanzen werden in einer späteren Phase gebaut."
@@ -219,7 +211,29 @@
       "settings": {
         "title": "Einstellungen",
         "description": "Einstellungen werden in einer späteren Phase gebaut."
+      },
+      "workItems": {
+        "title": "Arbeitsposten",
+        "description": "Eine zentrale Übersicht folgt später. Verwalte Arbeitsposten vorerst in Projekten."
+      },
+      "staff": {
+        "title": "Personal",
+        "description": "Personalverwaltung folgt in einer späteren Phase."
       }
+    },
+    "navLabel": "Hauptnavigation",
+    "workItems": "Arbeitsposten",
+    "staff": "Personal",
+    "organizationLabel": "Organisation",
+    "organizationFallback": "Deine Organisation",
+    "organizationCurrent": "Aktuelle Organisation",
+    "organizationSoon": "Weitere Organisationen folgen später",
+    "sections": {
+      "operations": "Betrieb",
+      "resources": "Beziehungen & Ressourcen",
+      "communication": "Kommunikation",
+      "insights": "Einblicke",
+      "platform": "Plattform"
     }
   },
   "customers": {
@@ -238,7 +252,6 @@
     "hasProjects": "Dieser Kunde hat noch Projekte und kann nicht gelöscht werden.",
     "nameRequired": "Gib einen Namen ein.",
     "projectCount": "{count, plural, =0 {Keine Projekte} one {1 Projekt} other {# Projekte}}",
-    "openInWerk": "Projekte in Arbeit öffnen",
     "fields": {
       "name": "Name",
       "email": "E-Mail",
@@ -252,7 +265,8 @@
       "phone": "Telefon",
       "projects": "Projekte",
       "actions": "Aktionen"
-    }
+    },
+    "openProjects": "Projekte anzeigen"
   },
   "projects": {
     "title": "Alle Projekte",

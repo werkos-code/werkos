@@ -98,7 +98,7 @@ export async function requireOrganization(locale: string): Promise<AppSession> {
 export async function requireSuperAdmin(locale: string): Promise<AppSession> {
   const session = await requireOrganization(locale);
   if (!session.isSuperAdmin) {
-    redirect({ href: "/werk", locale });
+    redirect({ href: "/dashboard", locale });
   }
   return session;
 }

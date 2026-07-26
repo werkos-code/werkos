@@ -36,8 +36,8 @@ export function ProjectsFilterTabs({
           key={filter}
           href={
             filter === "all"
-              ? "/werk/projecten"
-              : `/werk/projecten?filter=${filter}`
+              ? "/projecten"
+              : `/projecten?filter=${filter}`
           }
           className={cn(
             "rounded-lg px-3 py-1.5 text-sm transition-colors",
@@ -85,7 +85,7 @@ export function ProjectsTable({ projects }: { projects: ProjectRow[] }) {
               >
                 <td className="px-4 py-3">
                   <Link
-                    href={`/werk/projecten/${project.id}`}
+                    href={`/projecten/${project.id}`}
                     className="font-medium text-foreground hover:text-primary hover:underline"
                   >
                     {project.name}

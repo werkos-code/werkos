@@ -8,14 +8,13 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
-export default async function WerkLayout({ children, params }: Props) {
+export default async function AppLayout({ children, params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const session = await requireOrganization(locale);
 
   return (
     <AppShell
-      context="werk"
       organizationName={session.organizationName}
       userName={session.userName}
       isSuperAdmin={session.isSuperAdmin}

@@ -109,9 +109,6 @@
     }
   },
   "shell": {
-    "werk": "Werk",
-    "bedrijf": "Bedrijf",
-    "openInWerk": "Open in Werk",
     "dashboard": "Dashboard",
     "projects": "Projecten",
     "allProjects": "Alle projecten",
@@ -124,7 +121,6 @@
     "articles": "Artikelen",
     "purchasing": "Inkoop",
     "installations": "Installaties",
-    "people": "Personen",
     "customers": "Klanten",
     "suppliers": "Leveranciers",
     "subcontractors": "Onderaannemers / ZZP'ers",
@@ -204,10 +200,6 @@
         "title": "Nieuwe aanvraag",
         "description": "Start een nieuw project in voorbereiding."
       },
-      "bedrijfDashboard": {
-        "title": "Dashboard",
-        "description": "Bedrijfsvoering en overzicht volgen in een volgende fase."
-      },
       "finance": {
         "title": "Financiën",
         "description": "Financiën worden gebouwd in een volgende fase."
@@ -219,7 +211,29 @@
       "settings": {
         "title": "Instellingen",
         "description": "Instellingen worden gebouwd in een volgende fase."
+      },
+      "workItems": {
+        "title": "Werkzaamheden",
+        "description": "Een centraal overzicht van werkzaamheden volgt in een volgende stap. Werk nu via projecten."
+      },
+      "staff": {
+        "title": "Personeel",
+        "description": "Personeelsbeheer volgt in een volgende fase."
       }
+    },
+    "navLabel": "Hoofdnavigatie",
+    "workItems": "Werkzaamheden",
+    "staff": "Personeel",
+    "organizationLabel": "Organisatie",
+    "organizationFallback": "Jouw organisatie",
+    "organizationCurrent": "Huidige organisatie",
+    "organizationSoon": "Meer organisaties volgen later",
+    "sections": {
+      "operations": "Operatie",
+      "resources": "Relaties & middelen",
+      "communication": "Communicatie",
+      "insights": "Inzicht",
+      "platform": "Platform"
     }
   },
   "customers": {
@@ -238,7 +252,6 @@
     "hasProjects": "Deze klant heeft nog projecten en kan niet worden verwijderd.",
     "nameRequired": "Vul een naam in.",
     "projectCount": "{count, plural, =0 {Geen projecten} one {1 project} other {# projecten}}",
-    "openInWerk": "Open projecten in Werk",
     "fields": {
       "name": "Naam",
       "email": "E-mail",
@@ -252,7 +265,8 @@
       "phone": "Telefoon",
       "projects": "Projecten",
       "actions": "Acties"
-    }
+    },
+    "openProjects": "Bekijk projecten"
   },
   "projects": {
     "title": "Alle projecten",

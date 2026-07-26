@@ -24,62 +24,44 @@ De gebruiker wisselt bewust tussen werkruimtes, maar blijft daarbinnen zoveel mo
 
 ---
 
-# Contexten
+# Navigatiestructuur
 
-WerkOS kent twee hoofdcontexten.
+WerkOS is **één Operating System**.
 
-## Werk
+Er is geen scheiding tussen “Werk” en “Bedrijf”.
 
-De context **Werk** ondersteunt de dagelijkse operatie.
+De gebruiker denkt alleen:
 
-Hier staat de vraag centraal:
+> Waar wil ik naartoe?
 
-> Wat moet ik vandaag doen om mijn projecten succesvol af te ronden?
-
-Voorbeelden:
+## Dagelijkse operatie
 
 - Dashboard
 - Projecten
 - Planning
-- Communicatie
+- Werkzaamheden
+- Werkbonnen
+- Facturen
 
----
+## Relaties & middelen
 
-## Bedrijf
-
-De context **Bedrijf** ondersteunt de bedrijfsvoering.
-
-Hier staat de vraag centraal:
-
-> Hoe presteert mijn bedrijf?
-
-Voorbeelden:
-
-- Dashboard
 - Klanten
-- Financiën
+- Personeel
+- Materiaal
+
+## Communicatie
+
+- Inbox
+
+## Inzicht
+
 - Rapportages
-- Instellingen
 
----
+## Platform
 
-# Bewuste contextwissel
+- Admin (alleen super admins)
 
-Werk en Bedrijf zijn twee verschillende manieren om hetzelfde bedrijf te bekijken.
-
-Een contextwissel gebeurt daarom altijd bewust.
-
-WerkOS wisselt nooit automatisch van context.
-
-Voorbeeld:
-
-Vanuit een klant in de context **Bedrijf** kan een project worden bekeken.
-
-Wanneer de gebruiker daadwerkelijk aan dat project wil werken, kiest hij bewust voor:
-
-**Open project in Werk**
-
-Hierdoor behoudt de gebruiker altijd zijn mentale model.
+Organisatiewissel gebeurt via de organisatie-switcher bovenin de sidebar — niet via een tweede app-context.
 
 ---
 
@@ -94,9 +76,12 @@ Voorbeelden:
 - Dashboard
 - Projecten
 - Planning
-- Communicatie
+- Werkzaamheden
+- Werkbonnen
+- Facturen
 - Klanten
-- Financiën
+- Inbox
+- Rapportages
 
 Een hoofdwerkruimte wordt altijd geopend als volledige pagina.
 
@@ -384,13 +369,17 @@ Focus op:
 
 WerkOS bestaat uit werkruimtes, niet uit losse modules.
 
+## Eén applicatie-context
+
+WerkOS heeft één navigatiestructuur. Geen dual-context switch.
+
 ## Context behouden
 
-De gebruiker blijft zoveel mogelijk binnen dezelfde context.
+De gebruiker blijft zoveel mogelijk binnen dezelfde werkruimte.
 
-## Bewuste contextwissels
+## Duidelijke bestemmingen
 
-Wisselen tussen Werk en Bedrijf gebeurt altijd bewust.
+Navigatie beantwoordt “waar wil ik naartoe?”, niet “in welke context zit ik?”.
 
 ## Eén bron van waarheid
 

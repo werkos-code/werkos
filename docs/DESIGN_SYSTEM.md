@@ -63,10 +63,11 @@ AppShell (navy sidebar)
 | Geen page-description | `description` op `ShellPage` wordt niet gerenderd; uitleg via tooltip of weglaten |
 | Surfaces | Gebruik `PageCard` / `MetaStatCard` — niet shadcn `Card` in product-UI |
 | Secties | `space-y-5` of `space-y-6` |
-| Sidebar | Altijd zichtbaar; top-level nav mét iconen; subnav zonder iconen |
+| Sidebar | Altijd zichtbaar; organisatie-switcher bovenaan; sectielabels i.p.v. harde separators; subtiele active state (blauwe strip + soft fill) |
+| Eén app-context | Geen dual-context switch — één navigatiestructuur |
 
 **Canonical:**  
-`src/features/shell/components/{app-shell,app-sidebar,shell-page,app-page-header,page-card}.tsx`
+`src/features/shell/components/{app-shell,app-sidebar,organization-switcher,shell-page,app-page-header,page-card}.tsx`
 
 ---
 

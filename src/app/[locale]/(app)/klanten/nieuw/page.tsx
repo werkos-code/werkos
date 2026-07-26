@@ -12,7 +12,7 @@ export default async function NewCustomerPage({ params }: Props) {
   const t = await getTranslations("customers");
 
   return (
-    <ShellPage title={t("newTitle")} backHref="/bedrijf/klanten">
+    <ShellPage title={t("newTitle")} backHref="/klanten">
       <PageCard className="max-w-lg p-5">
         <CustomerForm mode="create" />
       </PageCard>

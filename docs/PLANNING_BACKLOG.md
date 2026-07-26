@@ -2,7 +2,7 @@
 
 > Laatst bijgewerkt: 2026-07-26  
 > SQL: `20260726240000_appointments_planning.sql`  
-> UI: `/werk/planning` · `src/features/planning/`
+> UI: `/planning` · `src/features/planning/`
 
 ## Afgerond (v1)
 

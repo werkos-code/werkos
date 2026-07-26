@@ -57,7 +57,7 @@ export function NewProjectForm({ customers }: NewProjectFormProps) {
               return;
             }
 
-            router.replace(`/werk/projecten/${result.projectId}`);
+            router.replace(`/projecten/${result.projectId}`);
           } catch {
             setError(tCommon("error"));
           } finally {
@@ -77,7 +77,7 @@ export function NewProjectForm({ customers }: NewProjectFormProps) {
           <p className="text-sm text-muted-foreground">
             {t("noCustomers")}{" "}
             <Link
-              href="/bedrijf/klanten/nieuw"
+              href="/klanten/nieuw"
               className="text-foreground underline"
             >
               {t("createCustomerFirst")}
@@ -103,7 +103,7 @@ export function NewProjectForm({ customers }: NewProjectFormProps) {
         )}
         {customers.length > 0 ? (
           <p className="text-xs text-muted-foreground">
-            <Link href="/bedrijf/klanten/nieuw" className="underline">
+            <Link href="/klanten/nieuw" className="underline">
               {t("createCustomerFirst")}
             </Link>
           </p>
@@ -127,7 +127,7 @@ export function NewProjectForm({ customers }: NewProjectFormProps) {
           {pending ? tCommon("loading") : t("create")}
         </Button>
         <Button type="button" variant="ghost" asChild>
-          <Link href="/werk/projecten">{tCommon("cancel")}</Link>
+          <Link href="/projecten">{tCommon("cancel")}</Link>
         </Button>
       </div>
     </form>

@@ -73,7 +73,7 @@ Validated via `@t3-oss/env-nextjs` in `src/lib/env.ts`.
 
 ## Current status
 
-Phase 1 in progress: auth, multi-step onboarding, Stripe trial, Werk/Bedrijf shell.
+Phase 1+: auth, onboarding, Stripe trial, single-context app shell (flat routes).
 
 Setup instructions: [`docs/PHASE1_SETUP.md`](docs/PHASE1_SETUP.md).
 

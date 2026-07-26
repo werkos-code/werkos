@@ -2,7 +2,7 @@
 
 > Laatst bijgewerkt: 2026-07-26  
 > SQL: `20260726250000_work_orders.sql`  
-> UI: `/werk/projecten/werkbonnen` · `src/features/work-orders/`
+> UI: `/werkbonnen` · `src/features/work-orders/`
 
 ## Afgerond (v1)
 

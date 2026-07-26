@@ -26,7 +26,7 @@ export default async function QuoteDetailPage({ params }: Props) {
   return (
     <ShellPage
       title={t("editTitle")}
-      backHref={`/werk/projecten/${projectId}`}
+      backHref={`/projecten/${projectId}`}
       contentClassName="max-w-none w-[94%]"
     >
       <QuoteEditor quote={result.quote} />

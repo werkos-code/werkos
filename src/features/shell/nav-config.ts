@@ -1,18 +1,18 @@
 import {
+  BarChart3,
   CalendarDays,
   ClipboardList,
-  FileText,
   Inbox,
   LayoutDashboard,
+  ListTodo,
   Package,
   Receipt,
-  Settings,
   Shield,
+  UserRound,
   Users,
-  type LucideIcon,
+  Wrench,
 } from "lucide-react";
-
-export type ShellContext = "werk" | "bedrijf";
+import type { LucideIcon } from "lucide-react";
 
 export type ShellNavChild = {
   href: string;
@@ -29,125 +29,123 @@ export type ShellNavItem = {
 
 export type ShellNavSection = {
   id: string;
+  /** Optional quiet section label (i18n key under shell.sections.*) */
+  labelKey?: string;
   items: ShellNavItem[];
 };
 
-/** Primary Werk navigation — visual shell only for now. */
-export const WERK_NAV: ShellNavSection[] = [
+/**
+ * Single app navigation — one operating system.
+ */
+export const APP_NAV: ShellNavSection[] = [
   {
-    id: "main",
+    id: "daily",
     items: [
       {
         id: "dashboard",
-        href: "/werk",
+        href: "/dashboard",
         labelKey: "dashboard",
         icon: LayoutDashboard,
       },
+    ],
+  },
+  {
+    id: "operations",
+    labelKey: "operations",
+    items: [
       {
         id: "projects",
+        href: "/projecten",
         labelKey: "projects",
         icon: ClipboardList,
-        children: [
-          { href: "/werk/projecten", labelKey: "allProjects" },
-          { href: "/werk/projecten/offertes", labelKey: "quotes" },
-          { href: "/werk/projecten/werkbonnen", labelKey: "workOrders" },
-          { href: "/werk/projecten/facturen", labelKey: "invoices" },
-        ],
       },
       {
         id: "planning",
-        href: "/werk/planning",
+        href: "/planning",
         labelKey: "planning",
         icon: CalendarDays,
+      },
+      {
+        id: "workItems",
+        href: "/werkzaamheden",
+        labelKey: "workItems",
+        icon: ListTodo,
+      },
+      {
+        id: "workOrders",
+        href: "/werkbonnen",
+        labelKey: "workOrders",
+        icon: Wrench,
+      },
+      {
+        id: "invoices",
+        href: "/facturen",
+        labelKey: "invoices",
+        icon: Receipt,
       },
     ],
   },
   {
     id: "resources",
+    labelKey: "resources",
     items: [
+      {
+        id: "customers",
+        href: "/klanten",
+        labelKey: "customers",
+        icon: Users,
+      },
+      {
+        id: "staff",
+        href: "/personeel",
+        labelKey: "staff",
+        icon: UserRound,
+      },
       {
         id: "materials",
         labelKey: "materials",
         icon: Package,
         children: [
-          { href: "/werk/materiaal/voorraad", labelKey: "stock" },
-          { href: "/werk/materiaal/artikelen", labelKey: "articles" },
-          { href: "/werk/materiaal/inkoop", labelKey: "purchasing" },
-          { href: "/werk/materiaal/installaties", labelKey: "installations" },
-        ],
-      },
-      {
-        id: "people",
-        labelKey: "people",
-        icon: Users,
-        children: [
-          { href: "/werk/personen/klanten", labelKey: "customers" },
-          { href: "/werk/personen/leveranciers", labelKey: "suppliers" },
-          {
-            href: "/werk/personen/onderaannemers",
-            labelKey: "subcontractors",
-          },
+          { href: "/materiaal/voorraad", labelKey: "stock" },
+          { href: "/materiaal/artikelen", labelKey: "articles" },
+          { href: "/materiaal/inkoop", labelKey: "purchasing" },
+          { href: "/materiaal/installaties", labelKey: "installations" },
         ],
       },
     ],
   },
   {
-    id: "inbox",
+    id: "communication",
+    labelKey: "communication",
     items: [
       {
         id: "inbox",
-        href: "/werk/inbox",
+        href: "/inbox",
         labelKey: "inbox",
         icon: Inbox,
       },
     ],
   },
-];
-
-/** Bedrijf context — same chrome, quieter structure. */
-export const BEDRIJF_NAV: ShellNavSection[] = [
   {
-    id: "main",
+    id: "insights",
+    labelKey: "insights",
     items: [
       {
-        id: "dashboard",
-        href: "/bedrijf",
-        labelKey: "dashboard",
-        icon: LayoutDashboard,
-      },
-      {
-        id: "customers",
-        href: "/bedrijf/klanten",
-        labelKey: "customers",
-        icon: Users,
-      },
-      {
-        id: "finance",
-        href: "/bedrijf/financien",
-        labelKey: "finance",
-        icon: Receipt,
-      },
-      {
         id: "reports",
-        href: "/bedrijf/rapportages",
+        href: "/rapportages",
         labelKey: "reports",
-        icon: FileText,
-      },
-      {
-        id: "settings",
-        href: "/bedrijf/instellingen",
-        labelKey: "settings",
-        icon: Settings,
+        icon: BarChart3,
       },
     ],
   },
 ];
 
-export const NEW_REQUEST_HREF = "/werk/aanvragen/nieuw" as const;
+export const NEW_REQUEST_HREF = "/aanvragen/nieuw" as const;
 
-/** Platform Admin — shown only for super_admin, below a divider. */
+/** Platform Admin — shown only for super_admin. */
 export const PLATFORM_ADMIN_NAV: ShellNavSection = {
   id: "platform-admin",
+  labelKey: "platform",
   items: [
     {
       id: "admin",
@@ -164,3 +162,6 @@ export const PLATFORM_ADMIN_NAV: ShellNavSection = {
     },
   ],
 };
+
+/** Default post-login / home destination inside the app shell. */
+export const APP_HOME_HREF = "/dashboard" as const;

@@ -61,7 +61,7 @@ export function CustomerForm({ mode, initial }: CustomerFormProps) {
                 return;
               }
 
-              router.replace(`/bedrijf/klanten/${result.customerId}`);
+              router.replace(`/klanten/${result.customerId}`);
               return;
             }
 
@@ -151,7 +151,7 @@ export function CustomerForm({ mode, initial }: CustomerFormProps) {
         </Button>
         {mode === "create" ? (
           <Button type="button" variant="ghost" asChild>
-            <Link href="/bedrijf/klanten">{tCommon("cancel")}</Link>
+            <Link href="/klanten">{tCommon("cancel")}</Link>
           </Button>
         ) : null}
       </div>

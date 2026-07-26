@@ -53,7 +53,7 @@ export function CustomersTable({ customers }: CustomersTableProps) {
                 >
                   <td className="px-4 py-3">
                     <Link
-                      href={`/bedrijf/klanten/${customer.id}`}
+                      href={`/klanten/${customer.id}`}
                       className="font-medium text-foreground hover:text-primary hover:underline"
                     >
                       {customer.name}
@@ -71,7 +71,7 @@ export function CustomersTable({ customers }: CustomersTableProps) {
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">
                       <Button type="button" variant="ghost" size="sm" asChild>
-                        <Link href={`/bedrijf/klanten/${customer.id}`}>
+                        <Link href={`/klanten/${customer.id}`}>
                           {t("open")}
                         </Link>
                       </Button>

@@ -56,8 +56,8 @@ Zet dezelfde keys als in `.env.example` voor **Production** én **Preview**, daa
 1. Open `https://app.werkos.nl/nl/onboarding`
 2. Doorloop account → bedrijf → team → betaling
 3. Rond Stripe Checkout (testkaart `4242…`) af
-4. Je landt op provisioning → complete → Werk-shell
-5. Wissel bewust naar **Bedrijf** en terug naar **Werk**
+4. Je landt op provisioning → complete → `/dashboard`
+5. Controleer de sidebar: één navigatiestructuur + organisatie-switcher
 6. Uitloggen / inloggen
 
 ## 7. Super Admin (platform)
@@ -92,8 +92,8 @@ Na Phase 1 / Super Admin:
 2. Plak en run:  
    `supabase/migrations/20260726180000_phase2_customers_projects.sql`
 3. Test:
-   - Bedrijf → Klanten → nieuwe klant
-   - Werk → Nieuwe aanvraag → project in Voorbereiding
+   - Klanten → nieuwe klant
+   - Nieuwe aanvraag → project in Voorbereiding
    - Projectdetail openen en status wijzigen
 
 ## 9. Phase 3 — Offertes
@@ -167,7 +167,7 @@ Na Phase 1 / Super Admin:
 2. Plak en run:  
    `supabase/migrations/20260726240000_appointments_planning.sql`
 3. Test:
-   - `/werk/planning` weekweergave
+   - `/planning` weekweergave
    - + Nieuwe afspraak
    - Klik “Niet gepland” → werkzaamheid inplannen
    - Filters project / persoon
@@ -179,7 +179,7 @@ Na Phase 1 / Super Admin:
 2. Plak en run:  
    `supabase/migrations/20260726250000_work_orders.sql`
 3. Test:
-   - `/werk/projecten/werkbonnen` — KPI’s + tabel
+   - `/werkbonnen` — KPI’s + tabel
    - + Nieuwe werkbon (met project + subtaken)
    - Klik rij → detail sheet
    - Projectdetail → tab Werkbonnen
@@ -191,7 +191,7 @@ Na Phase 1 / Super Admin:
 2. Plak en run:  
    `supabase/migrations/20260726260000_invoices.sql`
 3. Test:
-   - `/werk/projecten/facturen` — KPI’s + tabel + widgets
+   - `/facturen` — KPI’s + tabel + widgets
    - + Nieuwe factuur (project + bedrag)
    - Tabs Concepten / Herinneringen / Verzonden / Betaald
    - Klik rij → detail sheet + status wijzigen

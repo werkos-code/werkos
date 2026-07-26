@@ -33,7 +33,7 @@ export function LoginForm() {
             setError(t("invalidCredentials"));
             return;
           }
-          router.replace("/werk");
+          router.replace("/dashboard");
           router.refresh();
         });
       }}

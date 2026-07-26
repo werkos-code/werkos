@@ -264,7 +264,7 @@ function ActivityFeed({
                 </span>
                 {quoteId ? (
                   <Link
-                    href={`/werk/projecten/${projectId}/offertes/${quoteId}`}
+                    href={`/projecten/${projectId}/offertes/${quoteId}`}
                     className="font-medium text-primary hover:underline"
                   >
                     {t("detail.openQuote")}
@@ -671,7 +671,7 @@ export function ProjectDetailWorkspace({
                   {project.projectNumber}
                 </span>
                 <Link
-                  href={`/bedrijf/klanten/${project.customerId}`}
+                  href={`/klanten/${project.customerId}`}
                   className="inline-flex items-center gap-1.5 hover:text-primary hover:underline"
                 >
                   <Building2 className="size-3.5" />
@@ -891,7 +891,7 @@ export function ProjectDetailWorkspace({
                       label={t("fields.customer")}
                       value={
                         <Link
-                          href={`/bedrijf/klanten/${project.customerId}`}
+                          href={`/klanten/${project.customerId}`}
                           className="hover:text-primary hover:underline"
                         >
                           {project.customerName}
@@ -1119,7 +1119,7 @@ export function ProjectDetailWorkspace({
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-sm font-medium">{t("detail.tabs.workOrders")}</h3>
             <Button type="button" size="sm" variant="outline" asChild>
-              <Link href="/werk/projecten/werkbonnen">{t("detail.viewAllWorkOrders")}</Link>
+              <Link href="/werkbonnen">{t("detail.viewAllWorkOrders")}</Link>
             </Button>
           </div>
           {workOrders.length === 0 ? (
@@ -1194,7 +1194,7 @@ export function ProjectDetailWorkspace({
             </Button>
           ) : tab === "planning" ? (
             <Button type="button" variant="outline" size="sm" asChild>
-              <Link href="/werk/planning">{t("detail.openPlanning")}</Link>
+              <Link href="/planning">{t("detail.openPlanning")}</Link>
             </Button>
           ) : null}
         </PageCard>

@@ -848,7 +848,7 @@ function InvoiceDetailSheet({
 
           <div>
             <Link
-              href={`/werk/projecten/${invoice.projectId}`}
+              href={`/projecten/${invoice.projectId}`}
               className="text-primary inline-flex items-center gap-1.5 font-medium hover:underline"
             >
               {invoice.projectName}

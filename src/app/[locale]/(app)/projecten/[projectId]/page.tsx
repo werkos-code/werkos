@@ -58,7 +58,7 @@ export default async function ProjectDetailPage({
   return (
     <ShellPage
       title={project.name}
-      backHref="/werk/projecten"
+      backHref="/projecten"
       contentClassName="max-w-none w-[94%]"
     >
       <ProjectDetailWorkspace

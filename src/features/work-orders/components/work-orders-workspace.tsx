@@ -532,7 +532,7 @@ function WorkOrderDetailSheet({
 
           <div>
             <Link
-              href={`/werk/projecten/${order.projectId}`}
+              href={`/projecten/${order.projectId}`}
               className="text-primary inline-flex items-center gap-1.5 font-medium hover:underline"
             >
               {order.projectName}

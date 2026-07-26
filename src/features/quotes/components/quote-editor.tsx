@@ -799,7 +799,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
           value={
             quote.customerId ? (
               <Link
-                href={`/bedrijf/klanten/${quote.customerId}`}
+                href={`/klanten/${quote.customerId}`}
                 className="hover:text-primary hover:underline"
               >
                 {quote.customerName ?? "—"}
@@ -814,7 +814,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
           label={t("meta.project")}
           value={
             <Link
-              href={`/werk/projecten/${quote.projectId}`}
+              href={`/projecten/${quote.projectId}`}
               className="hover:text-primary hover:underline"
             >
               {quote.projectName}
