@@ -142,6 +142,7 @@ export function ProjectWorkItemsWorkspace({
   const [inlineParent, setInlineParent] = useState<string | null | undefined>(
     undefined,
   );
+  const [inlineKind, setInlineKind] = useState<"item" | "group">("item");
   const [inlineTitle, setInlineTitle] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -271,6 +272,7 @@ export function ProjectWorkItemsWorkspace({
           }
           setInlineTitle("");
           setInlineParent(undefined);
+          setInlineKind("item");
           if (input.parentId) {
             setExpanded((prev) => ({ ...prev, [input.parentId!]: true }));
           }
@@ -508,6 +510,7 @@ export function ProjectWorkItemsWorkspace({
             disabled={isPending}
             className="rounded-r-none"
             onClick={() => {
+              setInlineKind("item");
               setInlineParent(null);
               setInlineTitle("");
             }}
@@ -530,6 +533,7 @@ export function ProjectWorkItemsWorkspace({
             <DropdownMenuContent align="end" className="min-w-44">
               <DropdownMenuItem
                 onClick={() => {
+                  setInlineKind("item");
                   setInlineParent(null);
                   setInlineTitle("");
                 }}
@@ -538,10 +542,9 @@ export function ProjectWorkItemsWorkspace({
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  const title = window.prompt(t("promptGroup"));
-                  if (title?.trim()) {
-                    createItem({ title, asGroup: true });
-                  }
+                  setInlineKind("group");
+                  setInlineParent(null);
+                  setInlineTitle("");
                 }}
               >
                 {t("addGroup")}
@@ -657,6 +660,7 @@ export function ProjectWorkItemsWorkspace({
                                     disabled={isPending}
                                     placeholder={t("inlinePlaceholder")}
                                     onActivate={() => {
+                                      setInlineKind("item");
                                       setInlineParent(group.id);
                                       setInlineTitle("");
                                     }}
@@ -697,17 +701,35 @@ export function ProjectWorkItemsWorkspace({
                       active={inlineParent === null}
                       value={inlineTitle}
                       disabled={isPending}
-                      placeholder={t("inlinePlaceholder")}
+                      placeholder={
+                        inlineKind === "group"
+                          ? t("inlineGroupPlaceholder")
+                          : t("inlinePlaceholder")
+                      }
                       onActivate={() => {
+                        setInlineKind("item");
                         setInlineParent(null);
                         setInlineTitle("");
                       }}
                       onChange={setInlineTitle}
-                      onCancel={() => setInlineParent(undefined)}
+                      onCancel={() => {
+                        setInlineParent(undefined);
+                        setInlineKind("item");
+                      }}
                       onSubmit={() =>
-                        createItem({ title: inlineTitle, parentId: null })
+                        createItem({
+                          title: inlineTitle,
+                          parentId: null,
+                          asGroup: inlineKind === "group",
+                        })
                       }
                       label={t("addInRoot")}
+                      secondaryLabel={t("addGroupInRoot")}
+                      onSecondaryActivate={() => {
+                        setInlineKind("group");
+                        setInlineParent(null);
+                        setInlineTitle("");
+                      }}
                     />
                   </div>
                 </SortableContext>
@@ -1109,7 +1131,9 @@ function InlineComposer({
   disabled,
   placeholder,
   label,
+  secondaryLabel,
   onActivate,
+  onSecondaryActivate,
   onChange,
   onCancel,
   onSubmit,
@@ -1119,22 +1143,37 @@ function InlineComposer({
   disabled: boolean;
   placeholder: string;
   label: string;
+  secondaryLabel?: string;
   onActivate: () => void;
+  onSecondaryActivate?: () => void;
   onChange: (value: string) => void;
   onCancel: () => void;
   onSubmit: () => void;
 }) {
   if (!active) {
     return (
-      <button
-        type="button"
-        disabled={disabled}
-        onClick={onActivate}
-        className="flex w-full items-center gap-2 px-3 py-2.5 pl-12 text-left text-sm font-medium text-primary hover:bg-primary/5"
-      >
-        <Plus className="size-3.5" />
-        {label}
-      </button>
+      <div className="flex flex-wrap items-center gap-1 px-3 py-2 pl-12">
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={onActivate}
+          className="inline-flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-primary hover:bg-primary/5"
+        >
+          <Plus className="size-3.5" />
+          {label}
+        </button>
+        {secondaryLabel && onSecondaryActivate ? (
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={onSecondaryActivate}
+            className="inline-flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-primary hover:bg-primary/5"
+          >
+            <Plus className="size-3.5" />
+            {secondaryLabel}
+          </button>
+        ) : null}
+      </div>
     );
   }
 
@@ -1155,10 +1194,21 @@ function InlineComposer({
           if (event.key === "Escape") onCancel();
         }}
       />
-      <Button type="button" size="sm" disabled={disabled || !value.trim()} onClick={onSubmit}>
+      <Button
+        type="button"
+        size="sm"
+        disabled={disabled || !value.trim()}
+        onClick={onSubmit}
+      >
         <Plus className="size-3.5" />
       </Button>
-      <Button type="button" size="sm" variant="ghost" disabled={disabled} onClick={onCancel}>
+      <Button
+        type="button"
+        size="sm"
+        variant="ghost"
+        disabled={disabled}
+        onClick={onCancel}
+      >
         Esc
       </Button>
     </div>
