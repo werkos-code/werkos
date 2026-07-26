@@ -13,12 +13,15 @@ export function getStripe(): Stripe {
 }
 
 export function assertStripePricesConfigured() {
-  if (
-    !env.STRIPE_PRICE_BASE ||
-    !env.STRIPE_PRICE_SEAT_OFFICE ||
-    !env.STRIPE_PRICE_SEAT_FIELD
-  ) {
-    throw new Error("Stripe price IDs are not configured");
+  const missing = [
+    !env.STRIPE_PRICE_BASE ? "STRIPE_PRICE_BASE" : null,
+    !env.STRIPE_PRICE_SEAT_OFFICE ? "STRIPE_PRICE_SEAT_OFFICE" : null,
+    !env.STRIPE_PRICE_SEAT_FIELD ? "STRIPE_PRICE_SEAT_FIELD" : null,
+    !env.STRIPE_SECRET_KEY ? "STRIPE_SECRET_KEY" : null,
+  ].filter(Boolean);
+
+  if (missing.length > 0) {
+    throw new Error(`Stripe not configured: missing ${missing.join(", ")}`);
   }
 }
 

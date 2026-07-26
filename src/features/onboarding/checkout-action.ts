@@ -8,11 +8,14 @@ import { assertStripePricesConfigured, getStripe } from "@/lib/stripe";
 export async function createCheckoutSessionAction(): Promise<{
   url?: string;
   error?: string;
+  detail?: string;
 }> {
   try {
     assertStripePricesConfigured();
-  } catch {
-    return { error: "stripe_missing" };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Stripe not configured";
+    return { error: "stripe_missing", detail: message };
   }
 
   const supabase = await createClient();

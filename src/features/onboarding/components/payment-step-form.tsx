@@ -68,7 +68,7 @@ export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
             try {
               const result = await createCheckoutSessionAction();
               if (result.error === "stripe_missing") {
-                setError(t("stripeMissing"));
+                setError(result.detail ?? t("stripeMissing"));
                 setPending(false);
                 return;
               }
