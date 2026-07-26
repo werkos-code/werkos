@@ -563,185 +563,188 @@ export function ProjectDetailWorkspace({
       ) : null}
 
       <PageCard className="p-5">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex min-w-0 flex-1 gap-4">
-          <div className="relative shrink-0">
-            <input
-              ref={coverInputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              className="hidden"
-              onChange={(event) => {
-                uploadCover(event.target.files?.[0]);
-                event.target.value = "";
-              }}
-            />
-            <button
-              type="button"
-              disabled={isCoverPending}
-              onClick={() => coverInputRef.current?.click()}
-              className="group bg-muted text-muted-foreground relative flex size-16 items-center justify-center overflow-hidden rounded-xl sm:size-20"
-              aria-label={t("detail.changeCover")}
-            >
-              {project.coverUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={project.coverUrl}
-                  alt=""
-                  className="size-full object-cover"
-                />
-              ) : (
-                <Building2 className="size-7" />
-              )}
-              <span className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                <Camera className="size-5 text-white" />
-              </span>
-            </button>
-            {project.coverUrl ? (
+        <div className="flex flex-col gap-5">
+          <div className="flex gap-4">
+            <div className="relative shrink-0">
+              <input
+                ref={coverInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                className="hidden"
+                onChange={(event) => {
+                  uploadCover(event.target.files?.[0]);
+                  event.target.value = "";
+                }}
+              />
               <button
                 type="button"
                 disabled={isCoverPending}
-                onClick={removeCover}
-                className="bg-background absolute -top-1 -right-1 rounded-full border border-border p-0.5 shadow-sm"
-                aria-label={t("detail.removeCover")}
+                onClick={() => coverInputRef.current?.click()}
+                className="group bg-muted text-muted-foreground relative flex size-16 items-center justify-center overflow-hidden rounded-xl sm:size-20"
+                aria-label={t("detail.changeCover")}
               >
-                <X className="size-3" />
-              </button>
-            ) : null}
-          </div>
-
-          <div className="min-w-0 space-y-3">
-            <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                {project.name}
-              </h2>
-              <Badge variant={statusBadgeVariant(project.status)}>
-                {t(`status.${project.status}`)}
-              </Badge>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                disabled={isFavoritePending}
-                onClick={toggleFavorite}
-                className={cn(
-                  favorited ? "text-amber-500" : "text-muted-foreground",
-                )}
-                aria-label={
-                  favorited
-                    ? t("detail.unfavorite")
-                    : t("detail.favorite")
-                }
-              >
-                <Star
-                  className={cn("size-4", favorited && "fill-current")}
-                />
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5">
-                <FileText className="size-3.5" />
-                {project.projectNumber}
-              </span>
-              <Link
-                href={`/bedrijf/klanten/${project.customerId}`}
-                className="inline-flex items-center gap-1.5 hover:text-primary hover:underline"
-              >
-                <Building2 className="size-3.5" />
-                {project.customerName}
-              </Link>
-              <span className="inline-flex items-center gap-1.5">
-                <Calendar className="size-3.5" />
-                {formatDate(project.startDate)} – {formatDate(project.endDate)}
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <User className="size-3.5" />
-                {project.leadName || "—"}
-              </span>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              {project.labels.length === 0 && !addingLabel ? (
-                <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
-                  {t("detail.noLabels")}
-                </span>
-              ) : (
-                project.labels.map((label) => (
-                  <span
-                    key={label.id}
-                    className="bg-primary/10 text-primary inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium"
-                  >
-                    {label.name}
-                    <button
-                      type="button"
-                      className="rounded-full p-0.5 hover:bg-primary/15"
-                      disabled={isLabelPending}
-                      onClick={() => removeLabel(label.id)}
-                      aria-label={t("detail.removeLabel")}
-                    >
-                      <X className="size-3" />
-                    </button>
-                  </span>
-                ))
-              )}
-              {addingLabel ? (
-                <div className="flex flex-wrap items-center gap-2">
-                  <input
-                    value={labelDraft}
-                    onChange={(event) => setLabelDraft(event.target.value)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        event.preventDefault();
-                        addLabel();
-                      }
-                    }}
-                    disabled={isLabelPending}
-                    placeholder={t("detail.labelPlaceholder")}
-                    className="border-input bg-background h-8 w-40 rounded-lg border px-2.5 text-sm outline-none"
+                {project.coverUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={project.coverUrl}
+                    alt=""
+                    className="size-full object-cover"
                   />
-                  <Button
-                    type="button"
-                    size="sm"
-                    disabled={isLabelPending}
-                    onClick={addLabel}
-                  >
-                    {isLabelPending ? tCommon("loading") : t("detail.saveLabel")}
-                  </Button>
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    disabled={isLabelPending}
-                    onClick={() => {
-                      setAddingLabel(false);
-                      setLabelDraft("");
-                      setLabelError(null);
-                    }}
-                  >
-                    {tCommon("cancel")}
-                  </Button>
-                </div>
-              ) : (
+                ) : (
+                  <Building2 className="size-7" />
+                )}
+                <span className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                  <Camera className="size-5 text-white" />
+                </span>
+              </button>
+              {project.coverUrl ? (
+                <button
+                  type="button"
+                  disabled={isCoverPending}
+                  onClick={removeCover}
+                  className="bg-background absolute -top-1 -right-1 rounded-full border border-border p-0.5 shadow-sm"
+                  aria-label={t("detail.removeCover")}
+                >
+                  <X className="size-3" />
+                </button>
+              ) : null}
+            </div>
+
+            <div className="min-w-0 flex-1 space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+                  {project.name}
+                </h2>
+                <Badge variant={statusBadgeVariant(project.status)}>
+                  {t(`status.${project.status}`)}
+                </Badge>
                 <Button
                   type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setAddingLabel(true)}
+                  variant="ghost"
+                  size="icon-sm"
+                  disabled={isFavoritePending}
+                  onClick={toggleFavorite}
+                  className={cn(
+                    favorited ? "text-amber-500" : "text-muted-foreground",
+                  )}
+                  aria-label={
+                    favorited
+                      ? t("detail.unfavorite")
+                      : t("detail.favorite")
+                  }
                 >
-                  <Plus className="size-3.5" />
-                  {t("detail.addLabel")}
+                  <Star
+                    className={cn("size-4", favorited && "fill-current")}
+                  />
                 </Button>
-              )}
+              </div>
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5">
+                  <FileText className="size-3.5" />
+                  {project.projectNumber}
+                </span>
+                <Link
+                  href={`/bedrijf/klanten/${project.customerId}`}
+                  className="inline-flex items-center gap-1.5 hover:text-primary hover:underline"
+                >
+                  <Building2 className="size-3.5" />
+                  {project.customerName}
+                </Link>
+                <span className="inline-flex items-center gap-1.5">
+                  <Calendar className="size-3.5" />
+                  {formatDate(project.startDate)} –{" "}
+                  {formatDate(project.endDate)}
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <User className="size-3.5" />
+                  {project.leadName || "—"}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {project.labels.length === 0 && !addingLabel ? (
+                  <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
+                    {t("detail.noLabels")}
+                  </span>
+                ) : (
+                  project.labels.map((label) => (
+                    <span
+                      key={label.id}
+                      className="bg-primary/10 text-primary inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium"
+                    >
+                      {label.name}
+                      <button
+                        type="button"
+                        className="rounded-full p-0.5 hover:bg-primary/15"
+                        disabled={isLabelPending}
+                        onClick={() => removeLabel(label.id)}
+                        aria-label={t("detail.removeLabel")}
+                      >
+                        <X className="size-3" />
+                      </button>
+                    </span>
+                  ))
+                )}
+                {addingLabel ? (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <input
+                      value={labelDraft}
+                      onChange={(event) => setLabelDraft(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.preventDefault();
+                          addLabel();
+                        }
+                      }}
+                      disabled={isLabelPending}
+                      placeholder={t("detail.labelPlaceholder")}
+                      className="border-input bg-background h-8 w-40 rounded-lg border px-2.5 text-sm outline-none"
+                    />
+                    <Button
+                      type="button"
+                      size="sm"
+                      disabled={isLabelPending}
+                      onClick={addLabel}
+                    >
+                      {isLabelPending
+                        ? tCommon("loading")
+                        : t("detail.saveLabel")}
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      disabled={isLabelPending}
+                      onClick={() => {
+                        setAddingLabel(false);
+                        setLabelDraft("");
+                        setLabelError(null);
+                      }}
+                    >
+                      {tCommon("cancel")}
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setAddingLabel(true)}
+                  >
+                    <Plus className="size-3.5" />
+                    {t("detail.addLabel")}
+                  </Button>
+                )}
+              </div>
+              {labelError ? (
+                <p className="text-sm text-destructive">{labelError}</p>
+              ) : null}
+              {coverError ? (
+                <p className="text-sm text-destructive">{coverError}</p>
+              ) : null}
             </div>
-            {labelError ? (
-              <p className="text-sm text-destructive">{labelError}</p>
-            ) : null}
-            {coverError ? (
-              <p className="text-sm text-destructive">{coverError}</p>
-            ) : null}
-          </div>
           </div>
 
-          <div className="grid w-full grid-cols-2 gap-3 sm:grid-cols-4 lg:w-auto lg:min-w-[28rem] lg:shrink-0">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             <HeroMetric
               label={t("detail.kpiProgress")}
               value={
