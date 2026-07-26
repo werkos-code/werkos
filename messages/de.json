@@ -394,20 +394,49 @@
         "communication": "Kommunikation",
         "activity": "Aktivität"
       },
-      "activityTypes": {
-        "project_created": "Erstellt",
-        "project_updated": "Aktualisiert",
-        "status_changed": "Status",
-        "quote_created": "Angebot",
-        "quote_updated": "Angebot",
-        "quote_sent": "Gesendet",
-        "quote_accepted": "Akzeptiert",
-        "quote_rejected": "Abgelehnt",
-        "quote_cancelled": "Storniert",
-        "work_item_created": "Aufgaben",
-        "note": "Notiz"
-      }
-    }
+          "activityTypes": {
+            "project_created": "Erstellt",
+            "project_updated": "Aktualisiert",
+            "status_changed": "Status",
+            "quote_created": "Angebot",
+            "quote_updated": "Angebot",
+            "quote_sent": "Gesendet",
+            "quote_accepted": "Akzeptiert",
+            "quote_rejected": "Abgelehnt",
+            "quote_cancelled": "Storniert",
+            "work_item_created": "Aufgaben",
+            "work_item_updated": "Aufgaben",
+            "work_item_completed": "Erledigt",
+            "cover_updated": "Bild",
+            "note": "Notiz"
+          },
+          "activityFilters": {
+            "all": "Alles",
+            "notes": "Notizen",
+            "quotes": "Angebote",
+            "tasks": "Aufgaben",
+            "project": "Projekt"
+          },
+          "share": "Teilen",
+          "shareCopied": "Link kopiert",
+          "favorite": "Favorit setzen",
+          "unfavorite": "Favorit entfernen",
+          "changeCover": "Bild hinzufügen",
+          "removeCover": "Bild entfernen",
+          "coverInvalidType": "Verwende JPG, PNG, WebP oder GIF.",
+          "coverTooLarge": "Bild darf maximal 5 MB groß sein.",
+          "filesCoverHint": "Die vollständige Dateibibliothek kommt später. Du kannst jetzt schon ein Projektbild hochladen.",
+          "openQuote": "Angebot öffnen",
+          "addTask": "Hinzufügen",
+          "taskPlaceholder": "Neue Arbeit…",
+          "taskTitleRequired": "Titel eingeben.",
+          "taskDeleteConfirm": "Diese Arbeit löschen?",
+          "editTask": "Aufgabe bearbeiten",
+          "deleteTask": "Aufgabe löschen",
+          "completeTask": "Als erledigt markieren",
+          "reopenTask": "Wieder öffnen",
+          "dateRangeInvalid": "Enddatum darf nicht vor dem Startdatum liegen."
+        }
   },
   "quotes": {
     "listTitle": "Angebote",

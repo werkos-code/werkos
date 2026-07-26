@@ -414,8 +414,17 @@ export function ProjectsWorkspace({
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="bg-muted text-muted-foreground flex size-9 shrink-0 items-center justify-center rounded-lg">
-                          <Building2 className="size-4" />
+                        <div className="bg-muted text-muted-foreground flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg">
+                          {project.coverUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={project.coverUrl}
+                              alt=""
+                              className="size-full object-cover"
+                            />
+                          ) : (
+                            <Building2 className="size-4" />
+                          )}
                         </div>
                         <div className="min-w-0">
                           <Link

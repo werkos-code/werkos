@@ -394,20 +394,49 @@
         "communication": "Communicatie",
         "activity": "Activiteit"
       },
-      "activityTypes": {
-        "project_created": "Aangemaakt",
-        "project_updated": "Bijgewerkt",
-        "status_changed": "Status",
-        "quote_created": "Offerte",
-        "quote_updated": "Offerte",
-        "quote_sent": "Verzonden",
-        "quote_accepted": "Geaccepteerd",
-        "quote_rejected": "Afgewezen",
-        "quote_cancelled": "Geannuleerd",
-        "work_item_created": "Taken",
-        "note": "Notitie"
-      }
-    }
+          "activityTypes": {
+            "project_created": "Aangemaakt",
+            "project_updated": "Bijgewerkt",
+            "status_changed": "Status",
+            "quote_created": "Offerte",
+            "quote_updated": "Offerte",
+            "quote_sent": "Verzonden",
+            "quote_accepted": "Geaccepteerd",
+            "quote_rejected": "Afgewezen",
+            "quote_cancelled": "Geannuleerd",
+            "work_item_created": "Taken",
+            "work_item_updated": "Taken",
+            "work_item_completed": "Voltooid",
+            "cover_updated": "Afbeelding",
+            "note": "Notitie"
+          },
+          "activityFilters": {
+            "all": "Alles",
+            "notes": "Notities",
+            "quotes": "Offertes",
+            "tasks": "Taken",
+            "project": "Project"
+          },
+          "share": "Delen",
+          "shareCopied": "Link gekopieerd",
+          "favorite": "Favoriet maken",
+          "unfavorite": "Favoriet verwijderen",
+          "changeCover": "Afbeelding toevoegen",
+          "removeCover": "Afbeelding verwijderen",
+          "coverInvalidType": "Gebruik JPG, PNG, WebP of GIF.",
+          "coverTooLarge": "Afbeelding mag maximaal 5 MB zijn.",
+          "filesCoverHint": "De volledige bestandenbibliotheek volgt later. Je kunt nu wel een projectafbeelding uploaden.",
+          "openQuote": "Open offerte",
+          "addTask": "Toevoegen",
+          "taskPlaceholder": "Nieuwe werkzaamheid…",
+          "taskTitleRequired": "Vul een titel in.",
+          "taskDeleteConfirm": "Deze werkzaamheid verwijderen?",
+          "editTask": "Bewerk taak",
+          "deleteTask": "Verwijder taak",
+          "completeTask": "Markeer als voltooid",
+          "reopenTask": "Heropen taak",
+          "dateRangeInvalid": "Einddatum mag niet vóór startdatum liggen."
+        }
   },
   "quotes": {
     "listTitle": "Offertes",

@@ -4,8 +4,9 @@ import {
   PROJECT_FILTER_STATUSES,
   type ProjectListFilter,
 } from "@/features/projects/lib/project-status";
+import { projectCoverPublicUrl } from "@/features/projects/lib/project-cover";
 import { getStaffOrgContext } from "@/features/shell/lib/staff-org-context";
-import type { ProjectActivityType, ProjectStatus } from "@/types/database";
+import type { Json, ProjectActivityType, ProjectStatus } from "@/types/database";
 
 export type ProjectLabel = {
   id: string;
@@ -17,6 +18,7 @@ export type ProjectActivityRow = {
   type: ProjectActivityType;
   title: string;
   body: string | null;
+  metadata: Record<string, unknown>;
   createdBy: string | null;
   createdByName: string | null;
   createdAt: string;
@@ -42,6 +44,9 @@ export type ProjectRow = {
   contactName: string | null;
   contactEmail: string | null;
   contactPhone: string | null;
+  coverPath: string | null;
+  coverUrl: string | null;
+  isFavorite: boolean;
   labels: ProjectLabel[];
   createdAt: string;
   updatedAt: string;
@@ -61,12 +66,14 @@ function mapProjectBase(
     contact_name: string | null;
     contact_email: string | null;
     contact_phone: string | null;
+    cover_path: string | null;
     created_at: string;
     updated_at: string;
   },
   customerName: string,
   leadName: string | null,
   labels: ProjectLabel[] = [],
+  isFavorite = false,
 ): ProjectRow {
   return {
     id: row.id,
@@ -83,6 +90,9 @@ function mapProjectBase(
     contactName: row.contact_name,
     contactEmail: row.contact_email,
     contactPhone: row.contact_phone,
+    coverPath: row.cover_path,
+    coverUrl: projectCoverPublicUrl(row.cover_path),
+    isFavorite,
     labels,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -90,7 +100,14 @@ function mapProjectBase(
 }
 
 const PROJECT_SELECT =
-  "id, name, status, notes, customer_id, project_number, start_date, end_date, lead_user_id, contact_name, contact_email, contact_phone, created_at, updated_at";
+  "id, name, status, notes, customer_id, project_number, start_date, end_date, lead_user_id, contact_name, contact_email, contact_phone, cover_path, created_at, updated_at";
+
+function asMetadata(value: Json | null | undefined): Record<string, unknown> {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+  return {};
+}
 
 export async function listProjects(
   filter: ProjectListFilter = "all",
@@ -124,6 +141,7 @@ export async function listProjects(
   const nameById = new Map<string, string>();
   const leadNameById = new Map<string, string>();
   const labelsByProject = new Map<string, ProjectLabel[]>();
+  const favoriteIds = new Set<string>();
 
   if (customerIds.length > 0) {
     const { data: customers } = await ctx.supabase
@@ -149,17 +167,28 @@ export async function listProjects(
   }
 
   if (projectIds.length > 0) {
-    const { data: labels } = await ctx.supabase
-      .from("project_labels")
-      .select("id, name, project_id")
-      .eq("organization_id", ctx.organizationId)
-      .in("project_id", projectIds)
-      .order("name");
+    const [{ data: labels }, { data: favorites }] = await Promise.all([
+      ctx.supabase
+        .from("project_labels")
+        .select("id, name, project_id")
+        .eq("organization_id", ctx.organizationId)
+        .in("project_id", projectIds)
+        .order("name"),
+      ctx.supabase
+        .from("project_favorites")
+        .select("project_id")
+        .eq("organization_id", ctx.organizationId)
+        .eq("user_id", ctx.userId)
+        .in("project_id", projectIds),
+    ]);
 
     for (const label of labels ?? []) {
       const list = labelsByProject.get(label.project_id) ?? [];
       list.push({ id: label.id, name: label.name });
       labelsByProject.set(label.project_id, list);
+    }
+    for (const favorite of favorites ?? []) {
+      favoriteIds.add(favorite.project_id);
     }
   }
 
@@ -172,6 +201,7 @@ export async function listProjects(
           ? (leadNameById.get(row.lead_user_id) ?? "—")
           : null,
         labelsByProject.get(row.id) ?? [],
+        favoriteIds.has(row.id),
       ),
     ),
   };
@@ -194,27 +224,35 @@ export async function getProject(projectId: string): Promise<{
   if (error) return { error: error.message };
   if (!data) return { error: "not_found" };
 
-  const [{ data: customer }, { data: labels }, leadProfile] = await Promise.all([
-    ctx.supabase
-      .from("customers")
-      .select("id, name")
-      .eq("organization_id", ctx.organizationId)
-      .eq("id", data.customer_id)
-      .maybeSingle(),
-    ctx.supabase
-      .from("project_labels")
-      .select("id, name")
-      .eq("organization_id", ctx.organizationId)
-      .eq("project_id", projectId)
-      .order("name"),
-    data.lead_user_id
-      ? ctx.supabase
-          .from("profiles")
-          .select("id, full_name")
-          .eq("id", data.lead_user_id)
-          .maybeSingle()
-      : Promise.resolve({ data: null }),
-  ]);
+  const [{ data: customer }, { data: labels }, leadProfile, { data: favorite }] =
+    await Promise.all([
+      ctx.supabase
+        .from("customers")
+        .select("id, name")
+        .eq("organization_id", ctx.organizationId)
+        .eq("id", data.customer_id)
+        .maybeSingle(),
+      ctx.supabase
+        .from("project_labels")
+        .select("id, name")
+        .eq("organization_id", ctx.organizationId)
+        .eq("project_id", projectId)
+        .order("name"),
+      data.lead_user_id
+        ? ctx.supabase
+            .from("profiles")
+            .select("id, full_name")
+            .eq("id", data.lead_user_id)
+            .maybeSingle()
+        : Promise.resolve({ data: null }),
+      ctx.supabase
+        .from("project_favorites")
+        .select("project_id")
+        .eq("organization_id", ctx.organizationId)
+        .eq("project_id", projectId)
+        .eq("user_id", ctx.userId)
+        .maybeSingle(),
+    ]);
 
   return {
     project: mapProjectBase(
@@ -224,6 +262,7 @@ export async function getProject(projectId: string): Promise<{
         ? (leadProfile.data?.full_name?.trim() || "—")
         : null,
       (labels ?? []).map((label) => ({ id: label.id, name: label.name })),
+      Boolean(favorite),
     ),
   };
 }
@@ -246,11 +285,11 @@ export async function listProjectActivities(projectId: string): Promise<{
 
   const { data, error } = await ctx.supabase
     .from("project_activities")
-    .select("id, type, title, body, created_by, created_at")
+    .select("id, type, title, body, metadata, created_by, created_at")
     .eq("organization_id", ctx.organizationId)
     .eq("project_id", projectId)
     .order("created_at", { ascending: false })
-    .limit(100);
+    .limit(150);
 
   if (error) return { error: error.message };
 
@@ -278,6 +317,7 @@ export async function listProjectActivities(projectId: string): Promise<{
       type: row.type,
       title: row.title,
       body: row.body,
+      metadata: asMetadata(row.metadata),
       createdBy: row.created_by,
       createdByName: row.created_by
         ? (nameById.get(row.created_by) ?? null)

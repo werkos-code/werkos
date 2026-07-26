@@ -26,10 +26,10 @@
 | Filter Periode | Disabled | Start/einddatums op project |
 | Meer filters | Disabled | Extra velden |
 | Grid-weergave | Disabled toggle | Card-grid layout |
-| Projectthumbnail | Placeholder icoon | Media/storage |
-| Projectnummer `PRJ-…` | Korte id-weergave uit uuid | Echte `project_number` |
-| Projectleider + avatar | “—” | Assignment + profiel |
-| Startdatum / einddatum | “—” of createdAt alleen als startdatum-hint | Schema-velden |
+| Projectthumbnail | Cover op detail + list | Klaar op detail; list toont cover indien aanwezig |
+| Projectnummer `PRJ-…` | Echte `project_number` | Klaar |
+| Projectleider + avatar | Naam in kolom | Klaar (zonder avatar) |
+| Startdatum / einddatum | Echte velden | Klaar |
 | Omzet per rij | “—” | Financiële aggregatie |
 | Voortgang % + balk | Stub / verborgen of “—” | Werkzaamheden-progress |
 | Bulk checkbox-acties | Selectie UI zonder acties | Bulk API |

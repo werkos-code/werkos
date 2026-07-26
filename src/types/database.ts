@@ -50,6 +50,9 @@ export type ProjectActivityType =
   | "quote_rejected"
   | "quote_cancelled"
   | "work_item_created"
+  | "work_item_updated"
+  | "work_item_completed"
+  | "cover_updated"
   | "note";
 
 export type Database = {
@@ -279,6 +282,7 @@ export type Database = {
           contact_name: string | null;
           contact_email: string | null;
           contact_phone: string | null;
+          cover_path: string | null;
           created_by: string | null;
           created_at: string;
           updated_at: string;
@@ -297,6 +301,7 @@ export type Database = {
           contact_name?: string | null;
           contact_email?: string | null;
           contact_phone?: string | null;
+          cover_path?: string | null;
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -315,6 +320,7 @@ export type Database = {
           contact_name?: string | null;
           contact_email?: string | null;
           contact_phone?: string | null;
+          cover_path?: string | null;
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -392,6 +398,27 @@ export type Database = {
           body?: string | null;
           metadata?: Json;
           created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      project_favorites: {
+        Row: {
+          organization_id: string;
+          project_id: string;
+          user_id: string;
+          created_at: string;
+        };
+        Insert: {
+          organization_id: string;
+          project_id: string;
+          user_id: string;
+          created_at?: string;
+        };
+        Update: {
+          organization_id?: string;
+          project_id?: string;
+          user_id?: string;
           created_at?: string;
         };
         Relationships: [];

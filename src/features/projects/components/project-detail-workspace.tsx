@@ -3,11 +3,13 @@
 import {
   Building2,
   Calendar,
+  Camera,
   CheckCircle2,
   Circle,
   ClipboardList,
   FileText,
   FolderOpen,
+  ImageIcon,
   Mail,
   MapPin,
   MessageSquare,
@@ -15,17 +17,20 @@ import {
   Phone,
   Plus,
   Send,
+  Share2,
+  Star,
   StickyNote,
   User,
   X,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { CustomerRow } from "@/features/customers/customers-actions";
 import { ProjectDetailForm } from "@/features/projects/components/project-detail-form";
+import { ProjectWorkItemsPanel } from "@/features/projects/components/project-work-items-panel";
 import type {
   ProjectActivityRow,
   ProjectRow,
@@ -62,11 +67,13 @@ type TabId =
   | "communication"
   | "activity";
 
-function formatDate(iso: string | null | undefined, locale = "nl-NL") {
+type ActivityFilter = "all" | "notes" | "quotes" | "tasks" | "project";
+
+function formatDate(iso: string | null | undefined) {
   if (!iso) return "—";
   try {
     const value = iso.length === 10 ? `${iso}T12:00:00` : iso;
-    return new Intl.DateTimeFormat(locale, {
+    return new Intl.DateTimeFormat("nl-NL", {
       day: "numeric",
       month: "long",
       year: "numeric",
@@ -76,9 +83,9 @@ function formatDate(iso: string | null | undefined, locale = "nl-NL") {
   }
 }
 
-function formatDateTime(iso: string, locale = "nl-NL") {
+function formatDateTime(iso: string) {
   try {
-    return new Intl.DateTimeFormat(locale, {
+    return new Intl.DateTimeFormat("nl-NL", {
       day: "numeric",
       month: "short",
       year: "numeric",
@@ -105,11 +112,17 @@ function activityTone(
   if (
     type === "quote_accepted" ||
     type === "project_created" ||
-    type === "work_item_created"
+    type === "work_item_created" ||
+    type === "work_item_completed"
   ) {
     return "success";
   }
-  if (type === "quote_sent" || type === "status_changed" || type === "note") {
+  if (
+    type === "quote_sent" ||
+    type === "status_changed" ||
+    type === "note" ||
+    type === "cover_updated"
+  ) {
     return "primary";
   }
   if (type === "quote_rejected" || type === "quote_cancelled") {
@@ -118,10 +131,25 @@ function activityTone(
   return "muted";
 }
 
+function matchesActivityFilter(
+  type: ProjectActivityType,
+  filter: ActivityFilter,
+) {
+  if (filter === "all") return true;
+  if (filter === "notes") return type === "note";
+  if (filter === "quotes") return type.startsWith("quote_");
+  if (filter === "tasks") return type.startsWith("work_item_");
+  return (
+    type.startsWith("project_") ||
+    type === "status_changed" ||
+    type === "cover_updated"
+  );
+}
+
 function ActivityIcon({ type }: { type: ProjectActivityType }) {
   if (type === "note") return <StickyNote className="size-3.5" />;
-  if (type === "quote_created" || type === "quote_updated" || type === "quote_sent")
-    return <FileText className="size-3.5" />;
+  if (type === "cover_updated") return <ImageIcon className="size-3.5" />;
+  if (type.startsWith("quote_")) return <FileText className="size-3.5" />;
   if (type === "status_changed") return <Circle className="size-3.5" />;
   return <CheckCircle2 className="size-3.5" />;
 }
@@ -135,8 +163,7 @@ function ProgressRing({
   label: string;
   empty?: boolean;
 }) {
-  const clamped =
-    percent === null ? 0 : Math.max(0, Math.min(100, percent));
+  const clamped = percent === null ? 0 : Math.max(0, Math.min(100, percent));
   return (
     <div
       className="relative size-28 shrink-0 rounded-full"
@@ -160,10 +187,12 @@ function ActivityFeed({
   activities,
   emptyLabel,
   limit,
+  projectId,
 }: {
   activities: ProjectActivityRow[];
   emptyLabel: string;
   limit?: number;
+  projectId: string;
 }) {
   const t = useTranslations("projects");
   const items = limit ? activities.slice(0, limit) : activities;
@@ -176,6 +205,10 @@ function ActivityFeed({
     <ul className="space-y-3">
       {items.map((event) => {
         const tone = activityTone(event.type);
+        const quoteId =
+          typeof event.metadata.quote_id === "string"
+            ? event.metadata.quote_id
+            : null;
         return (
           <li key={event.id} className="flex gap-3">
             <div
@@ -201,10 +234,20 @@ function ActivityFeed({
                   {event.body}
                 </p>
               ) : null}
-              <p className="mt-1 text-xs text-muted-foreground">
-                {formatDateTime(event.createdAt)}
-                {event.createdByName ? ` · ${event.createdByName}` : ""}
-              </p>
+              <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                <span>
+                  {formatDateTime(event.createdAt)}
+                  {event.createdByName ? ` · ${event.createdByName}` : ""}
+                </span>
+                {quoteId ? (
+                  <Link
+                    href={`/werk/projecten/${projectId}/offertes/${quoteId}`}
+                    className="font-medium text-primary hover:underline"
+                  >
+                    {t("detail.openQuote")}
+                  </Link>
+                ) : null}
+              </div>
             </div>
           </li>
         );
@@ -224,9 +267,9 @@ export function ProjectDetailWorkspace({
   initialTab = "overview",
 }: ProjectDetailWorkspaceProps) {
   const t = useTranslations("projects");
-  const tQuotes = useTranslations("quotes");
   const tCommon = useTranslations("common");
   const router = useRouter();
+  const coverInputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<TabId>(
     ([
       "overview",
@@ -248,8 +291,18 @@ export function ProjectDetailWorkspace({
   const [labelDraft, setLabelDraft] = useState("");
   const [labelError, setLabelError] = useState<string | null>(null);
   const [addingLabel, setAddingLabel] = useState(false);
+  const [favorited, setFavorited] = useState(project.isFavorite);
+  const [shareMessage, setShareMessage] = useState<string | null>(null);
+  const [coverError, setCoverError] = useState<string | null>(null);
+  const [activityFilter, setActivityFilter] = useState<ActivityFilter>("all");
   const [isNotePending, startNoteTransition] = useTransition();
   const [isLabelPending, startLabelTransition] = useTransition();
+  const [isFavoritePending, startFavoriteTransition] = useTransition();
+  const [isCoverPending, startCoverTransition] = useTransition();
+
+  useEffect(() => {
+    setFavorited(project.isFavorite);
+  }, [project.isFavorite]);
 
   const doneItems = workItems.filter((w) => w.status === "done").length;
   const openItems = workItems.filter((w) => w.status !== "done");
@@ -257,12 +310,19 @@ export function ProjectDetailWorkspace({
   const progressPercent = hasWorkItems
     ? Math.round((doneItems / workItems.length) * 100)
     : null;
-
   const acceptedQuotes = quotes.filter((q) => q.status === "accepted").length;
   const contactDisplay =
     [project.contactName, project.contactPhone, project.contactEmail]
       .filter(Boolean)
       .join(" · ") || "—";
+
+  const filteredActivities = useMemo(
+    () =>
+      activities.filter((item) =>
+        matchesActivityFilter(item.type, activityFilter),
+      ),
+    [activities, activityFilter],
+  );
 
   const tabs: Array<{ id: TabId; label: string; count?: number }> = [
     { id: "overview", label: t("detail.tabs.overview") },
@@ -304,6 +364,89 @@ export function ProjectDetailWorkspace({
         </div>
       </div>
     );
+  }
+
+  function toggleFavorite() {
+    startFavoriteTransition(() => {
+      void (async () => {
+        const next = !favorited;
+        setFavorited(next);
+        try {
+          const response = await fetch(
+            `/api/projects/${project.id}/favorite`,
+            {
+              method: next ? "POST" : "DELETE",
+              signal: AbortSignal.timeout(20_000),
+            },
+          );
+          if (!response.ok) {
+            setFavorited(!next);
+          } else {
+            router.refresh();
+          }
+        } catch {
+          setFavorited(!next);
+        }
+      })();
+    });
+  }
+
+  async function copyShareLink() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShareMessage(t("detail.shareCopied"));
+      window.setTimeout(() => setShareMessage(null), 2000);
+    } catch {
+      setShareMessage(tCommon("error"));
+    }
+  }
+
+  function uploadCover(file: File | undefined) {
+    if (!file) return;
+    setCoverError(null);
+    startCoverTransition(() => {
+      void (async () => {
+        try {
+          const form = new FormData();
+          form.append("file", file);
+          const response = await fetch(`/api/projects/${project.id}/cover`, {
+            method: "POST",
+            body: form,
+            signal: AbortSignal.timeout(30_000),
+          });
+          const result = (await response.json()) as { error?: string };
+          if (!response.ok || result.error) {
+            setCoverError(
+              result.error === "invalid_type"
+                ? t("detail.coverInvalidType")
+                : result.error === "file_too_large"
+                  ? t("detail.coverTooLarge")
+                  : result.error || tCommon("error"),
+            );
+            return;
+          }
+          router.refresh();
+        } catch {
+          setCoverError(tCommon("error"));
+        }
+      })();
+    });
+  }
+
+  function removeCover() {
+    startCoverTransition(() => {
+      void (async () => {
+        try {
+          await fetch(`/api/projects/${project.id}/cover`, {
+            method: "DELETE",
+            signal: AbortSignal.timeout(20_000),
+          });
+          router.refresh();
+        } catch {
+          setCoverError(tCommon("error"));
+        }
+      })();
+    });
   }
 
   function submitNote() {
@@ -394,6 +537,10 @@ export function ProjectDetailWorkspace({
   return (
     <div className="space-y-5 pb-24">
       <div className="flex flex-wrap items-center justify-end gap-2">
+        <Button type="button" variant="outline" size="sm" onClick={copyShareLink}>
+          <Share2 className="size-3.5" />
+          {t("detail.share")}
+        </Button>
         <Button
           type="button"
           size="sm"
@@ -407,12 +554,57 @@ export function ProjectDetailWorkspace({
           {editing ? t("detail.cancelEdit") : t("detail.edit")}
         </Button>
       </div>
+      {shareMessage ? (
+        <p className="text-right text-sm text-muted-foreground">{shareMessage}</p>
+      ) : null}
 
       <PageCard className="p-5">
         <div className="flex min-w-0 flex-1 gap-4">
-          <div className="bg-muted text-muted-foreground flex size-16 shrink-0 items-center justify-center rounded-xl sm:size-20">
-            <Building2 className="size-7" />
+          <div className="relative shrink-0">
+            <input
+              ref={coverInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              className="hidden"
+              onChange={(event) => {
+                uploadCover(event.target.files?.[0]);
+                event.target.value = "";
+              }}
+            />
+            <button
+              type="button"
+              disabled={isCoverPending}
+              onClick={() => coverInputRef.current?.click()}
+              className="group bg-muted text-muted-foreground relative flex size-16 items-center justify-center overflow-hidden rounded-xl sm:size-20"
+              aria-label={t("detail.changeCover")}
+            >
+              {project.coverUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={project.coverUrl}
+                  alt=""
+                  className="size-full object-cover"
+                />
+              ) : (
+                <Building2 className="size-7" />
+              )}
+              <span className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                <Camera className="size-5 text-white" />
+              </span>
+            </button>
+            {project.coverUrl ? (
+              <button
+                type="button"
+                disabled={isCoverPending}
+                onClick={removeCover}
+                className="bg-background absolute -top-1 -right-1 rounded-full border border-border p-0.5 shadow-sm"
+                aria-label={t("detail.removeCover")}
+              >
+                <X className="size-3" />
+              </button>
+            ) : null}
           </div>
+
           <div className="min-w-0 space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
@@ -421,6 +613,25 @@ export function ProjectDetailWorkspace({
               <Badge variant={statusBadgeVariant(project.status)}>
                 {t(`status.${project.status}`)}
               </Badge>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                disabled={isFavoritePending}
+                onClick={toggleFavorite}
+                className={cn(
+                  favorited ? "text-amber-500" : "text-muted-foreground",
+                )}
+                aria-label={
+                  favorited
+                    ? t("detail.unfavorite")
+                    : t("detail.favorite")
+                }
+              >
+                <Star
+                  className={cn("size-4", favorited && "fill-current")}
+                />
+              </Button>
             </div>
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
               <span className="inline-flex items-center gap-1.5">
@@ -469,12 +680,18 @@ export function ProjectDetailWorkspace({
               )}
               {addingLabel ? (
                 <div className="flex flex-wrap items-center gap-2">
-                  <InputLike
+                  <input
                     value={labelDraft}
-                    onChange={setLabelDraft}
-                    placeholder={t("detail.labelPlaceholder")}
+                    onChange={(event) => setLabelDraft(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        addLabel();
+                      }
+                    }}
                     disabled={isLabelPending}
-                    onSubmit={addLabel}
+                    placeholder={t("detail.labelPlaceholder")}
+                    className="border-input bg-background h-8 w-40 rounded-lg border px-2.5 text-sm outline-none"
                   />
                   <Button
                     type="button"
@@ -512,6 +729,9 @@ export function ProjectDetailWorkspace({
             </div>
             {labelError ? (
               <p className="text-sm text-destructive">{labelError}</p>
+            ) : null}
+            {coverError ? (
+              <p className="text-sm text-destructive">{coverError}</p>
             ) : null}
           </div>
         </div>
@@ -716,6 +936,7 @@ export function ProjectDetailWorkspace({
                 activities={activities}
                 emptyLabel={t("detail.activityEmpty")}
                 limit={8}
+                projectId={project.id}
               />
               <button
                 type="button"
@@ -726,37 +947,33 @@ export function ProjectDetailWorkspace({
               </button>
             </PageCard>
 
-            <PageCard className="p-5">
-              <h3 className="mb-4 text-sm font-medium">
-                {t("detail.openTasksTitle")}
-              </h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-2 px-1">
+                <h3 className="text-sm font-medium">
+                  {t("detail.openTasksTitle")}
+                </h3>
+                <button
+                  type="button"
+                  className="text-sm font-medium text-primary hover:underline"
+                  onClick={() => setTab("tasks")}
+                >
+                  {t("detail.viewAllTasks")}
+                </button>
+              </div>
               {openItems.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  {t("detail.upcomingEmpty")}
-                </p>
+                <PageCard className="p-5">
+                  <p className="text-sm text-muted-foreground">
+                    {t("detail.upcomingEmpty")}
+                  </p>
+                </PageCard>
               ) : (
-                <ul className="space-y-3">
-                  {openItems.slice(0, 6).map((item) => (
-                    <li
-                      key={item.id}
-                      className="flex items-center justify-between gap-3 rounded-lg border border-border/80 px-3 py-2"
-                    >
-                      <p className="truncate text-sm font-medium">
-                        {item.title}
-                      </p>
-                      <Badge variant="secondary">{t("detail.open")}</Badge>
-                    </li>
-                  ))}
-                </ul>
+                <ProjectWorkItemsPanel
+                  projectId={project.id}
+                  workItems={openItems}
+                  compact
+                />
               )}
-              <button
-                type="button"
-                className="mt-4 text-sm font-medium text-primary hover:underline"
-                onClick={() => setTab("tasks")}
-              >
-                {t("detail.viewAllTasks")}
-              </button>
-            </PageCard>
+            </div>
           </div>
         </div>
       ) : null}
@@ -766,40 +983,46 @@ export function ProjectDetailWorkspace({
       ) : null}
 
       {tab === "tasks" ? (
-        <PageCard className="p-5">
-          <h3 className="mb-4 text-sm font-medium">{t("sections.workItems")}</h3>
-          {workItems.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              {tQuotes("noWorkItems")}
-            </p>
-          ) : (
-            <ul className="space-y-2">
-              {workItems.map((item) => (
-                <li
-                  key={item.id}
-                  className="flex items-center justify-between gap-3 rounded-lg border border-border/80 px-3 py-2 text-sm"
-                >
-                  <span>{item.title}</span>
-                  <Badge variant="secondary">
-                    {item.status === "done"
-                      ? t("detail.done")
-                      : t("detail.open")}
-                  </Badge>
-                </li>
-              ))}
-            </ul>
-          )}
-        </PageCard>
+        <ProjectWorkItemsPanel
+          projectId={project.id}
+          workItems={workItems}
+        />
       ) : null}
 
       {tab === "activity" ? (
         <PageCard className="p-5">
-          <h3 className="mb-4 text-sm font-medium">
-            {t("detail.tabs.activity")}
-          </h3>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <h3 className="text-sm font-medium">{t("detail.tabs.activity")}</h3>
+            <div className="flex flex-wrap gap-1">
+              {(
+                [
+                  "all",
+                  "notes",
+                  "quotes",
+                  "tasks",
+                  "project",
+                ] as ActivityFilter[]
+              ).map((filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  onClick={() => setActivityFilter(filter)}
+                  className={cn(
+                    "rounded-lg px-2.5 py-1 text-xs transition-colors",
+                    activityFilter === filter
+                      ? "bg-primary/10 font-medium text-primary"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {t(`detail.activityFilters.${filter}`)}
+                </button>
+              ))}
+            </div>
+          </div>
           <ActivityFeed
-            activities={activities}
+            activities={filteredActivities}
             emptyLabel={t("detail.activityEmpty")}
+            projectId={project.id}
           />
         </PageCard>
       ) : null}
@@ -823,8 +1046,22 @@ export function ProjectDetailWorkspace({
           </div>
           <h3 className="text-sm font-medium">{t(`detail.tabs.${tab}`)}</h3>
           <p className="max-w-md text-sm text-muted-foreground">
-            {t("detail.tabComingSoon")}
+            {tab === "files"
+              ? t("detail.filesCoverHint")
+              : t("detail.tabComingSoon")}
           </p>
+          {tab === "files" ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={isCoverPending}
+              onClick={() => coverInputRef.current?.click()}
+            >
+              <Camera className="size-3.5" />
+              {t("detail.changeCover")}
+            </Button>
+          ) : null}
         </PageCard>
       ) : null}
 
@@ -861,35 +1098,5 @@ export function ProjectDetailWorkspace({
         ) : null}
       </div>
     </div>
-  );
-}
-
-function InputLike({
-  value,
-  onChange,
-  placeholder,
-  disabled,
-  onSubmit,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-  disabled?: boolean;
-  onSubmit: () => void;
-}) {
-  return (
-    <input
-      value={value}
-      onChange={(event) => onChange(event.target.value)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          onSubmit();
-        }
-      }}
-      disabled={disabled}
-      placeholder={placeholder}
-      className="border-input bg-background h-8 w-40 rounded-lg border px-2.5 text-sm outline-none"
-    />
   );
 }

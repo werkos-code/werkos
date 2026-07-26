@@ -394,20 +394,49 @@
         "communication": "Communication",
         "activity": "Activity"
       },
-      "activityTypes": {
-        "project_created": "Created",
-        "project_updated": "Updated",
-        "status_changed": "Status",
-        "quote_created": "Quote",
-        "quote_updated": "Quote",
-        "quote_sent": "Sent",
-        "quote_accepted": "Accepted",
-        "quote_rejected": "Rejected",
-        "quote_cancelled": "Cancelled",
-        "work_item_created": "Tasks",
-        "note": "Note"
-      }
-    }
+          "activityTypes": {
+            "project_created": "Created",
+            "project_updated": "Updated",
+            "status_changed": "Status",
+            "quote_created": "Quote",
+            "quote_updated": "Quote",
+            "quote_sent": "Sent",
+            "quote_accepted": "Accepted",
+            "quote_rejected": "Rejected",
+            "quote_cancelled": "Cancelled",
+            "work_item_created": "Tasks",
+            "work_item_updated": "Tasks",
+            "work_item_completed": "Done",
+            "cover_updated": "Image",
+            "note": "Note"
+          },
+          "activityFilters": {
+            "all": "All",
+            "notes": "Notes",
+            "quotes": "Quotes",
+            "tasks": "Tasks",
+            "project": "Project"
+          },
+          "share": "Share",
+          "shareCopied": "Link copied",
+          "favorite": "Add favorite",
+          "unfavorite": "Remove favorite",
+          "changeCover": "Add image",
+          "removeCover": "Remove image",
+          "coverInvalidType": "Use JPG, PNG, WebP or GIF.",
+          "coverTooLarge": "Image may be at most 5 MB.",
+          "filesCoverHint": "The full file library comes later. You can already upload a project image.",
+          "openQuote": "Open quote",
+          "addTask": "Add",
+          "taskPlaceholder": "New work item…",
+          "taskTitleRequired": "Enter a title.",
+          "taskDeleteConfirm": "Delete this work item?",
+          "editTask": "Edit task",
+          "deleteTask": "Delete task",
+          "completeTask": "Mark as done",
+          "reopenTask": "Reopen task",
+          "dateRangeInvalid": "End date cannot be before start date."
+        }
   },
   "quotes": {
     "listTitle": "Quotes",

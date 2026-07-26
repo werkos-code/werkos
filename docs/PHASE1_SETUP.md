@@ -116,6 +116,18 @@ Na Phase 1 / Super Admin:
    - Offerte aanmaken/wijzigen/accepteren → events in de feed
    - Voortgang alleen zichtbaar als er werkzaamheden zijn
 
+## 11. Projectdetail polish — favoriet, cover, taken
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260726200000_project_detail_polish.sql`
+3. Test:
+   - Ster favoriet toggelen
+   - Delen → link kopiëren
+   - Cover klikken → afbeelding uploaden
+   - Taken toevoegen / afronden / bewerken
+   - Activiteit filteren
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  

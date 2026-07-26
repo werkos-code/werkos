@@ -2,45 +2,42 @@
 
 > Laatst bijgewerkt: 2026-07-26  
 > Context: MVP-werkruimte voor één project. Design language (PageCards, blauw primary) intact.  
-> **Niet vergeten:** stub activeren → hier afvinken. SQL: `20260726195000_project_detail_mvp.sql`
+> SQL: `20260726195000_project_detail_mvp.sql` + `20260726200000_project_detail_polish.sql`
 
-## Afgerond in MVP
+## Afgerond
 
 - [x] Projectnummer (`PRJ-YYYY-NNNN`, auto)
 - [x] Start-/einddatum (bewerkbaar)
 - [x] Projectleider (staff-picker)
 - [x] Contactpersoon (naam / e-mail / telefoon, bewerkbaar)
 - [x] Labels/tags (toevoegen + verwijderen)
-- [x] Alle projectgegevens bewerkbaar (edit state + form)
-- [x] Uniforme activiteitfeed (`project_activities`)
+- [x] Alle projectgegevens bewerkbaar
+- [x] Uniforme activiteitfeed
 - [x] Notitiecomposer → note in dezelfde feed
-- [x] Voortgang alleen op basis van werkzaamheden (geen fictieve %)
-- [x] UX: empty/loading/edit states; stubs zonder fake data verwijderd uit overzicht
-- [x] Tabs klaar voor toekomstige modules (Werkbonnen, Planning, Bestanden, Financieel, Communicatie = coming soon)
+- [x] Voortgang op basis van werkzaamheden
+- [x] Favoriet (ster) per gebruiker
+- [x] Delen (projectlink kopiëren)
+- [x] Projectthumbnail / cover (klik → upload)
+- [x] Interactieve werkzaamheden (toevoegen, bewerken, open/done)
+- [x] Activiteitfeed filteren
+- [x] Tabs klaar voor toekomstige modules (coming soon)
 
-## Bewust stubs / latere fases
+## Bewust later (eigen modules)
 
 | Feature | Status |
 | --- | --- |
-| Delen | Niet gebouwd |
-| Favoriet (ster) | Niet gebouwd |
-| Projectthumbnail | Niet gebouwd |
-| Omzet / winstmarge / facturatiegraad | Niet gebouwd |
 | Tab Werkbonnen | Coming soon |
 | Tab Planning | Coming soon |
-| Tab Bestanden | Coming soon |
+| Tab Bestanden (volledige bibliotheek) | Coming soon — cover is apart afgerond |
 | Tab Financieel | Coming soon |
 | Tab Communicatie | Coming soon |
-| Kans % | Niet gebouwd |
+| Omzet / winstmarge / facturatiegraad | Facturen / kostprijs |
 
 ## Afvinklijst (toekomst)
 
-- [ ] Delen + favoriet
-- [ ] Thumbnail
-- [ ] Omzet / marge / facturatiegraad
 - [ ] Werkbonnen-tab
 - [ ] Planning-tab
-- [ ] Bestanden
+- [ ] Bestanden-bibliotheek
 - [ ] Financieel echt
 - [ ] Communicatie
-- [ ] Kans %
+- [ ] Omzet / marge / facturatiegraad

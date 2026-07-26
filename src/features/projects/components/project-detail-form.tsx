@@ -41,6 +41,12 @@ export function ProjectDetailForm({
         event.preventDefault();
         const form = new FormData(event.currentTarget);
         setError(null);
+        const startDate = String(form.get("startDate") ?? "") || null;
+        const endDate = String(form.get("endDate") ?? "") || null;
+        if (startDate && endDate && endDate < startDate) {
+          setError(t("detail.dateRangeInvalid"));
+          return;
+        }
         startTransition(() => {
           void (async () => {
             try {
@@ -53,8 +59,8 @@ export function ProjectDetailForm({
                   customerId: String(form.get("customerId") ?? ""),
                   status: String(form.get("status") ?? ""),
                   notes: String(form.get("notes") ?? "") || null,
-                  startDate: String(form.get("startDate") ?? "") || null,
-                  endDate: String(form.get("endDate") ?? "") || null,
+                  startDate,
+                  endDate,
                   leadUserId: String(form.get("leadUserId") ?? "") || null,
                   contactName: String(form.get("contactName") ?? "") || null,
                   contactEmail: String(form.get("contactEmail") ?? "") || null,
