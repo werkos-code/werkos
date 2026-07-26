@@ -482,6 +482,7 @@
       "kpiOverdueHint": "{count} overdue",
       "kpiHours": "Estimated hours",
       "kpiHoursHint": "{remaining} left",
+      "kpiHoursActualHint": "Actual {actual} · {remaining} left",
       "kpiHoursEmpty": "No hours yet",
       "viewAllWorkOrders": "All work orders",
       "workOrdersEmpty": "No work orders on this project yet.",
@@ -515,7 +516,7 @@
         "assignee": "Assignee",
         "status": "Status",
         "planning": "Schedule",
-        "hours": "Estimated hours"
+        "hours": "Expected / actual"
       },
       "add": "Add",
       "addMenu": "More add options",
@@ -539,7 +540,8 @@
       "uncategorized": "Uncategorized",
       "footer": {
         "count": "{count} work items",
-        "hours": "{hours} estimated hours"
+        "hours": "{hours} estimated hours",
+        "hoursPair": "{expected} expected · {actual} actual"
       },
       "sidebar": {
         "overview": "Work items overview",
@@ -606,9 +608,29 @@
           "activity": "Activity"
         },
         "soon": {
-          "hours": "Time tracking comes in a later module. Estimated hours can already be edited in Overview.",
           "files": "Files & photos per work item come with the Files module.",
           "communication": "Communication threads come with the Communication module."
+        },
+        "time": {
+          "expected": "Expected",
+          "actual": "Actual",
+          "addTitle": "Log hours",
+          "date": "Date",
+          "hours": "Hours",
+          "hoursPlaceholder": "e.g. 1.5",
+          "person": "Person",
+          "personSelf": "Me (current user)",
+          "notes": "Note",
+          "notesPlaceholder": "Optional",
+          "add": "Log",
+          "entriesTitle": "Entries",
+          "loading": "Loading…",
+          "empty": "No hours logged yet.",
+          "groupHint": "You can’t log hours on groups. Log on the work items below; this view shows the rollup.",
+          "groupEntriesHint": "Entries live on the underlying work items.",
+          "groupBlocked": "Logging hours on a group is not allowed.",
+          "invalidHours": "Enter a valid number of hours (greater than 0).",
+          "delete": "Delete"
         }
       }
     }
@@ -710,6 +732,7 @@
       "lineTitle": "Description",
       "unit": "Unit",
       "quantity": "Quantity",
+      "hours": "Hours",
       "unitPrice": "Price",
       "vat": "VAT %",
       "discount": "Discount",

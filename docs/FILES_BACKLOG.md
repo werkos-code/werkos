@@ -1,7 +1,7 @@
 # Documenten — backlog
 
 > Laatst bijgewerkt: 2026-07-26  
-> SQL: `supabase/migrations/20260726270000_project_files.sql`  
+> SQL: `docs/sql-applied/20260726270000_project_files.sql`  
 > UI: `/documenten` · projecttab Bestanden · `src/features/files/`
 
 ## Afgerond (v1)
@@ -25,8 +25,8 @@
 
 ## Migratie
 
-Run in Supabase SQL Editor:
+Al toegepast (archief):
 
-`supabase/migrations/20260726270000_project_files.sql`
+`docs/sql-applied/20260726270000_project_files.sql`
 
 Eerdere migraties staan gearchiveerd in `docs/sql-applied/` (reeds op productie gedraaid).

@@ -546,6 +546,7 @@ Een offerteregel kan onder andere bevatten:
 - prijs
 - btw
 - korting
+- verwachte uren
 - notities
 - subtotaal
 - subregels
@@ -609,6 +610,8 @@ Bijvoorbeeld met:
 - documenten
 - deadline
 - locatie
+
+**Uren:** een werkzaamheid kan een verwachting (begroot) dragen. Werkelijke uren zijn geen overschrijving van dat veld, maar een reeks boekingen (wie, welke dag, hoeveel). Groepen tonen alleen de som van hun kinderen.
 
 ---
 

@@ -14,13 +14,14 @@
 - [x] Subtaken toevoegen / status cyclen (child `work_items`)
 - [x] Enkele assignee + activiteitfeed gefilterd op `work_item_id`
 - [x] Placeholders voor modules die nog niet bestaan
+- [x] Tab Tijd & uren: boekingen + verwacht vs werkelijk (zie TIME_BACKLOG)
 
 ## Wacht op andere modules
 
 | Onderdeel | Afhankelijk van | Status |
 | --- | --- | --- |
-| Gerealiseerde uren + tab Tijd & uren | Urenregistratie / tijdmodule | Placeholder |
-| Bestanden & foto’s op werkzaamheid | Bestanden-module | Placeholder |
+| Gerealiseerde uren + tab Tijd & uren | Urenregistratie / tijdmodule | **v1 klaar** — zie [`TIME_BACKLOG.md`](./TIME_BACKLOG.md) |
+| Bestanden & foto’s op werkzaamheid | Bestanden-module | Placeholder (projectbestanden elders) |
 | Communicatie-thread / berichten | Communicatie-module | Placeholder |
 | Afspraken koppelen in Planning | Planning-module | Placeholder-tekst; datums werken al |
 | Materiaalregistratie | Materiaal-module | Nog niet in mock-tabs; later |

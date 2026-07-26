@@ -482,6 +482,7 @@
       "kpiOverdueHint": "{count} te laat",
       "kpiHours": "Geschatte uren",
       "kpiHoursHint": "Nog {remaining}",
+      "kpiHoursActualHint": "Werkelijk {actual} · nog {remaining}",
       "kpiHoursEmpty": "Nog geen uren",
       "viewAllWorkOrders": "Alle werkbonnen",
       "workOrdersEmpty": "Nog geen werkbonnen op dit project.",
@@ -515,7 +516,7 @@
         "assignee": "Toegewezen",
         "status": "Status",
         "planning": "Planning",
-        "hours": "Geschatte uren"
+        "hours": "Verwacht / werkelijk"
       },
       "add": "Toevoegen",
       "addMenu": "Meer toevoegen",
@@ -539,7 +540,8 @@
       "uncategorized": "Zonder categorie",
       "footer": {
         "count": "{count} werkzaamheden",
-        "hours": "{hours} geschatte uren"
+        "hours": "{hours} geschatte uren",
+        "hoursPair": "{expected} verwacht · {actual} werkelijk"
       },
       "sidebar": {
         "overview": "Werkzaamheden overzicht",
@@ -606,9 +608,29 @@
           "activity": "Activiteit"
         },
         "soon": {
-          "hours": "Urenregistratie volgt in een latere module. Geschatte uren kun je al bewerken in Overzicht.",
           "files": "Bestanden & foto’s per werkzaamheid volgen bij de Bestanden-module.",
           "communication": "Communicatie-threads volgen bij de Communicatie-module."
+        },
+        "time": {
+          "expected": "Verwacht",
+          "actual": "Werkelijk",
+          "addTitle": "Uren boeken",
+          "date": "Datum",
+          "hours": "Uren",
+          "hoursPlaceholder": "bijv. 1,5",
+          "person": "Persoon",
+          "personSelf": "Ik (huidige gebruiker)",
+          "notes": "Notitie",
+          "notesPlaceholder": "Optioneel",
+          "add": "Boeken",
+          "entriesTitle": "Boekingen",
+          "loading": "Laden…",
+          "empty": "Nog geen uren geboekt.",
+          "groupHint": "Op groepen kun je geen uren boeken. Boek op de werkzaamheden eronder; hier zie je het rollup.",
+          "groupEntriesHint": "Boekingen staan op de onderliggende werkzaamheden.",
+          "groupBlocked": "Uren boeken op een groep is niet mogelijk.",
+          "invalidHours": "Vul een geldig aantal uren in (groter dan 0).",
+          "delete": "Verwijderen"
         }
       }
     }
@@ -710,6 +732,7 @@
       "lineTitle": "Omschrijving",
       "unit": "Eenheid",
       "quantity": "Hoeveelheid",
+      "hours": "Uren",
       "unitPrice": "Prijs",
       "vat": "BTW %",
       "discount": "Korting",

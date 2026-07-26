@@ -50,7 +50,10 @@ import type {
   StaffOption,
 } from "@/features/projects/projects-actions";
 import {
+  actualMinutesForItem,
+  estimatedMinutesForItem,
   formatEstimatedHours,
+  formatHoursPair,
   isWorkItemOverdue,
   workItemStats,
   type WorkItemRow,
@@ -67,6 +70,7 @@ type ProjectWorkItemsWorkspaceProps = {
   workItems: WorkItemRow[];
   staff: StaffOption[];
   activities: ProjectActivityRow[];
+  minutesByWorkItem?: Record<string, number>;
 };
 
 type ContainerId = "root" | `group:${string}`;
@@ -130,6 +134,7 @@ export function ProjectWorkItemsWorkspace({
   workItems,
   staff,
   activities,
+  minutesByWorkItem = {},
 }: ProjectWorkItemsWorkspaceProps) {
   const t = useTranslations("projects.workItems");
   const tCommon = useTranslations("common");
@@ -160,7 +165,10 @@ export function ProjectWorkItemsWorkspace({
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
 
-  const stats = useMemo(() => workItemStats(items), [items]);
+  const stats = useMemo(
+    () => workItemStats(items, minutesByWorkItem),
+    [items, minutesByWorkItem],
+  );
   const categories = useMemo(() => {
     const set = new Set<string>();
     for (const item of items) {
@@ -649,6 +657,8 @@ export function ProjectWorkItemsWorkspace({
                                     <SortableTaskRow
                                       key={item.id}
                                       item={item}
+                                      items={items}
+                                      minutesByWorkItem={minutesByWorkItem}
                                       disabled={isPending}
                                       onOpen={() => {
                                         setSelectedId(item.id);
@@ -691,6 +701,8 @@ export function ProjectWorkItemsWorkspace({
                       <SortableTaskRow
                         key={item.id}
                         item={item}
+                        items={items}
+                        minutesByWorkItem={minutesByWorkItem}
                         disabled={isPending}
                         onOpen={() => {
                           setSelectedId(item.id);
@@ -752,8 +764,11 @@ export function ProjectWorkItemsWorkspace({
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-3 text-sm text-muted-foreground">
               <span>{t("footer.count", { count: stats.total })}</span>
               <span>
-                {t("footer.hours", {
-                  hours: formatEstimatedHours(stats.estimatedMinutes),
+                {t("footer.hoursPair", {
+                  expected: formatEstimatedHours(stats.estimatedMinutes),
+                  actual: formatEstimatedHours(
+                    stats.actualMinutes > 0 ? stats.actualMinutes : null,
+                  ),
                 })}
               </span>
             </div>
@@ -851,6 +866,7 @@ export function ProjectWorkItemsWorkspace({
         staff={staff}
         activities={activities}
         projectId={projectId}
+        minutesByWorkItem={minutesByWorkItem}
         open={sheetOpen}
         onOpenChange={setSheetOpen}
         onChanged={() => router.refresh()}
@@ -1022,6 +1038,8 @@ function SortableGroupHeader({
 
 function SortableTaskRow({
   item,
+  items,
+  minutesByWorkItem,
   disabled,
   onOpen,
   onCycleStatus,
@@ -1029,6 +1047,8 @@ function SortableTaskRow({
   t,
 }: {
   item: WorkItemRow;
+  items: WorkItemRow[];
+  minutesByWorkItem: Record<string, number>;
   disabled: boolean;
   onOpen: () => void;
   onCycleStatus: () => void;
@@ -1044,6 +1064,10 @@ function SortableTaskRow({
     isDragging,
   } = useSortable({ id: item.id });
   const overdue = isWorkItemOverdue(item);
+  const hoursLabel = formatHoursPair(
+    estimatedMinutesForItem(item, items) || null,
+    actualMinutesForItem(item, items, minutesByWorkItem) || null,
+  );
 
   return (
     <div
@@ -1118,7 +1142,7 @@ function SortableTaskRow({
         {formatPlan(item.plannedStart, item.plannedEnd)}
       </span>
       <span className="hidden text-right text-sm tabular-nums text-muted-foreground sm:block">
-        {formatEstimatedHours(item.estimatedMinutes)}
+        {hoursLabel}
       </span>
       <Button
         type="button"

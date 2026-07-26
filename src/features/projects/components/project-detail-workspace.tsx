@@ -59,6 +59,7 @@ type ProjectDetailWorkspaceProps = {
   workItems: WorkItemRow[];
   workOrders: WorkOrderRow[];
   activities: ProjectActivityRow[];
+  minutesByWorkItem?: Record<string, number>;
   initialTab?: string;
 };
 
@@ -288,6 +289,7 @@ export function ProjectDetailWorkspace({
   workItems,
   workOrders,
   activities,
+  minutesByWorkItem = {},
   initialTab = "overview",
 }: ProjectDetailWorkspaceProps) {
   const t = useTranslations("projects");
@@ -329,7 +331,10 @@ export function ProjectDetailWorkspace({
     setFavorited(project.isFavorite);
   }, [project.isFavorite]);
 
-  const taskStats = useMemo(() => workItemStats(workItems), [workItems]);
+  const taskStats = useMemo(
+    () => workItemStats(workItems, minutesByWorkItem),
+    [workItems, minutesByWorkItem],
+  );
   const openItems = workItems.filter(
     (w) => !w.isGroup && w.status !== "done",
   );
@@ -809,8 +814,13 @@ export function ProjectDetailWorkspace({
               label={t("detail.kpiHours")}
               value={formatEstimatedHours(taskStats.estimatedMinutes)}
               hint={
-                taskStats.estimatedMinutes > 0
-                  ? t("detail.kpiHoursHint", {
+                taskStats.actualMinutes > 0 || taskStats.estimatedMinutes > 0
+                  ? t("detail.kpiHoursActualHint", {
+                      actual: formatEstimatedHours(
+                        taskStats.actualMinutes > 0
+                          ? taskStats.actualMinutes
+                          : null,
+                      ),
                       remaining: formatEstimatedHours(
                         taskStats.remainingMinutes,
                       ),
@@ -1073,6 +1083,7 @@ export function ProjectDetailWorkspace({
           workItems={workItems}
           staff={staff}
           activities={activities}
+          minutesByWorkItem={minutesByWorkItem}
         />
       ) : null}
 

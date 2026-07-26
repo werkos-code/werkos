@@ -201,12 +201,23 @@ Na Phase 1 / Super Admin:
 
 1. Open **SQL Editor** in Supabase
 2. Plak en run:  
-   `supabase/migrations/20260726270000_project_files.sql`
+   `docs/sql-applied/20260726270000_project_files.sql`
 3. Test:
    - `/documenten` — projectmappen → upload / submap
    - Projectdetail → tab Bestanden
 4. Eerdere SQL staat in [`sql-applied/`](./sql-applied/) (niet opnieuw draaien op productie)
 5. Rest: [`FILES_BACKLOG.md`](./FILES_BACKLOG.md)
+
+## 19. Uren (verwacht vs werkelijk)
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `docs/sql-applied/20260726280000_time_entries.sql`
+3. Test:
+   - Project → Taken → open blad-werkzaamheid → tab **Tijd & uren** → boek uren
+   - Taken-lijst + project-KPI tonen verwacht / werkelijk
+   - Offerte-editor: kolom **Uren** op regels; bij acceptatie kopie naar werkzaamheid
+4. Rest: [`TIME_BACKLOG.md`](./TIME_BACKLOG.md)
 
 ## Prijsformule
 

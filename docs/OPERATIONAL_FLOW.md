@@ -292,6 +292,8 @@ Bijvoorbeeld:
 
 WerkOS maakt deze verschillen inzichtelijk zonder extra administratie te creëren.
 
+**Uren (fase 1):** verwachte uren leven als veld op offerte / werkzaamheid / werkbon; werkelijke uren zijn losse boekingen op blad-werkzaamheden (geen enkel overschrijfbaar “actual”-getal).
+
 ---
 
 # Operationeel afgerond

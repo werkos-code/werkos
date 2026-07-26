@@ -24,6 +24,7 @@ export type QuoteLineRow = {
   unitPriceCents: number | null;
   vatRateBps: number;
   discountCents: number;
+  estimatedMinutes: number | null;
 };
 
 export type QuoteDetail = {
@@ -152,7 +153,7 @@ export async function getQuote(quoteId: string): Promise<{
       ctx.supabase
         .from("quote_lines")
         .select(
-          "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents",
+          "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, estimated_minutes",
         )
         .eq("organization_id", ctx.organizationId)
         .eq("quote_id", quoteId)
@@ -197,6 +198,7 @@ export async function getQuote(quoteId: string): Promise<{
         unitPriceCents: line.unit_price_cents,
         vatRateBps: line.vat_rate_bps,
         discountCents: line.discount_cents,
+        estimatedMinutes: line.estimated_minutes,
       })),
     },
   };

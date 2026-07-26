@@ -37,6 +37,10 @@ import {
 } from "@/features/quotes/lib/quote-status";
 import type { QuoteDetail, QuoteLineRow } from "@/features/quotes/quotes-actions";
 import {
+  hoursInputToMinutes,
+  minutesToHoursInput,
+} from "@/features/time/lib/time-entry";
+import {
   MetaStatCard,
   PageCard,
 } from "@/features/shell/components/page-card";
@@ -51,7 +55,7 @@ type EditorTab = "lines" | "info" | "terms" | "notes";
 
 /** Shared line table grid — header and rows must use the exact same template. */
 const LINE_GRID_CLASS =
-  "lg:grid-cols-[1.75rem_minmax(0,1fr)_4.5rem_7rem_6rem_6.5rem_7rem]";
+  "lg:grid-cols-[1.75rem_minmax(0,1fr)_4.5rem_5.5rem_4.5rem_6rem_6.5rem_7rem]";
 
 
 function formatEuro(cents: number) {
@@ -150,6 +154,42 @@ function QuantityField({
       onBlur={() => {
         setFocused(false);
         onCommit(parseQuantity(draft));
+      }}
+    />
+  );
+}
+
+function HoursField({
+  minutes,
+  disabled,
+  onCommit,
+}: {
+  minutes: number | null;
+  disabled?: boolean;
+  onCommit: (minutes: number | null) => void;
+}) {
+  const display = minutesToHoursInput(minutes).replace(".", ",");
+  const [focused, setFocused] = useState(false);
+  const [draft, setDraft] = useState(display);
+
+  useEffect(() => {
+    if (!focused) setDraft(display);
+  }, [display, focused]);
+
+  return (
+    <Input
+      inputMode="decimal"
+      disabled={disabled}
+      value={focused ? draft : display}
+      className="h-8 border-border/70 bg-background font-mono text-right tabular-nums"
+      onFocus={() => {
+        setFocused(true);
+        setDraft(display);
+      }}
+      onChange={(e) => setDraft(e.target.value)}
+      onBlur={() => {
+        setFocused(false);
+        onCommit(hoursInputToMinutes(draft.replace(",", ".")));
       }}
     />
   );
@@ -363,6 +403,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
               unitPriceCents: line.unitPriceCents,
               vatRateBps: line.vatRateBps,
               discountCents: line.discountCents,
+              estimatedMinutes: line.estimatedMinutes,
               sortOrder: line.sortOrder,
             }),
             signal: AbortSignal.timeout(20_000),
@@ -660,6 +701,13 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
             disabled={!editable}
             onCommit={(quantity) => updateLocalLine(line.id, { quantity })}
           />
+          <HoursField
+            minutes={line.estimatedMinutes}
+            disabled={!editable}
+            onCommit={(estimatedMinutes) =>
+              updateLocalLine(line.id, { estimatedMinutes })
+            }
+          />
           <MoneyField
             cents={line.unitPriceCents}
             disabled={!editable}
@@ -921,6 +969,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
                   <span>{t("fields.lineTitle")}</span>
                   <span className="text-center">{t("fields.unit")}</span>
                   <span className="text-right">{t("fields.quantity")}</span>
+                  <span className="text-right">{t("fields.hours")}</span>
                   <span className="text-right">{t("fields.unitPrice")}</span>
                   <span className="text-right">{t("fields.lineTotal")}</span>
                   <span aria-hidden className="block" />

@@ -509,6 +509,7 @@ export type Database = {
           unit_price_cents: number | null;
           vat_rate_bps: number;
           discount_cents: number;
+          estimated_minutes: number | null;
           created_at: string;
           updated_at: string;
         };
@@ -525,6 +526,7 @@ export type Database = {
           unit_price_cents?: number | null;
           vat_rate_bps?: number;
           discount_cents?: number;
+          estimated_minutes?: number | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -541,6 +543,7 @@ export type Database = {
           unit_price_cents?: number | null;
           vat_rate_bps?: number;
           discount_cents?: number;
+          estimated_minutes?: number | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -982,6 +985,73 @@ export type Database = {
             columns: ["project_id"];
             isOneToOne: false;
             referencedRelation: "projects";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      time_entries: {
+        Row: {
+          id: string;
+          organization_id: string;
+          project_id: string;
+          work_item_id: string;
+          work_order_id: string | null;
+          user_id: string;
+          work_date: string;
+          minutes: number;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          project_id: string;
+          work_item_id: string;
+          work_order_id?: string | null;
+          user_id: string;
+          work_date?: string;
+          minutes: number;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          project_id?: string;
+          work_item_id?: string;
+          work_order_id?: string | null;
+          user_id?: string;
+          work_date?: string;
+          minutes?: number;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "time_entries_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "time_entries_project_id_fkey";
+            columns: ["project_id"];
+            isOneToOne: false;
+            referencedRelation: "projects";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "time_entries_work_item_id_fkey";
+            columns: ["work_item_id"];
+            isOneToOne: false;
+            referencedRelation: "work_items";
             referencedColumns: ["id"];
           },
         ];

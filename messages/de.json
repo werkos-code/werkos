@@ -482,6 +482,7 @@
       "kpiOverdueHint": "{count} überfällig",
       "kpiHours": "Geschätzte Stunden",
       "kpiHoursHint": "Noch {remaining}",
+      "kpiHoursActualHint": "Tatsächlich {actual} · noch {remaining}",
       "kpiHoursEmpty": "Noch keine Stunden",
       "viewAllWorkOrders": "Alle Arbeitsaufträge",
       "workOrdersEmpty": "Noch keine Arbeitsaufträge in diesem Projekt.",
@@ -515,7 +516,7 @@
         "assignee": "Zugewiesen",
         "status": "Status",
         "planning": "Planung",
-        "hours": "Geschätzte Stunden"
+        "hours": "Erwartet / tatsächlich"
       },
       "add": "Hinzufügen",
       "addMenu": "Weitere Optionen",
@@ -539,7 +540,8 @@
       "uncategorized": "Ohne Kategorie",
       "footer": {
         "count": "{count} Arbeiten",
-        "hours": "{hours} geschätzte Stunden"
+        "hours": "{hours} geschätzte Stunden",
+        "hoursPair": "{expected} erwartet · {actual} tatsächlich"
       },
       "sidebar": {
         "overview": "Arbeiten Übersicht",
@@ -606,9 +608,29 @@
           "activity": "Aktivität"
         },
         "soon": {
-          "hours": "Zeiterfassung folgt in einem späteren Modul. Geschätzte Stunden kannst du bereits in der Übersicht bearbeiten.",
           "files": "Dateien & Fotos pro Arbeitsposten folgen mit dem Dateien-Modul.",
           "communication": "Kommunikations-Threads folgen mit dem Kommunikationsmodul."
+        },
+        "time": {
+          "expected": "Erwartet",
+          "actual": "Tatsächlich",
+          "addTitle": "Stunden buchen",
+          "date": "Datum",
+          "hours": "Stunden",
+          "hoursPlaceholder": "z. B. 1,5",
+          "person": "Person",
+          "personSelf": "Ich (aktueller Benutzer)",
+          "notes": "Notiz",
+          "notesPlaceholder": "Optional",
+          "add": "Buchen",
+          "entriesTitle": "Buchungen",
+          "loading": "Laden…",
+          "empty": "Noch keine Stunden gebucht.",
+          "groupHint": "Auf Gruppen kannst du keine Stunden buchen. Buche auf die Arbeitsposten darunter; hier siehst du das Rollup.",
+          "groupEntriesHint": "Buchungen liegen auf den darunterliegenden Arbeitsposten.",
+          "groupBlocked": "Stunden auf einer Gruppe buchen ist nicht möglich.",
+          "invalidHours": "Gib eine gültige Stundenzahl ein (größer als 0).",
+          "delete": "Löschen"
         }
       }
     }
@@ -710,6 +732,7 @@
       "lineTitle": "Beschreibung",
       "unit": "Einheit",
       "quantity": "Menge",
+      "hours": "Stunden",
       "unitPrice": "Preis",
       "vat": "MwSt. %",
       "discount": "Rabatt",

@@ -36,12 +36,14 @@ import type { StaffOption } from "@/features/projects/projects-actions";
 import {
   WORK_ITEM_PRIORITIES,
   WORK_ITEM_STATUSES,
+  actualMinutesForItem,
   formatEstimatedHours,
   plannedDurationDays,
   workItemProgressPercent,
   type WorkItemPriority,
   type WorkItemRow,
 } from "@/features/projects/lib/work-item";
+import { WorkItemHoursPanel } from "@/features/time/components/work-item-hours-panel";
 import { cn } from "@/lib/utils";
 import type { WorkItemStatus } from "@/types/database";
 
@@ -60,6 +62,7 @@ type WorkItemDetailSheetProps = {
   staff: StaffOption[];
   activities: ProjectActivityRow[];
   projectId: string;
+  minutesByWorkItem?: Record<string, number>;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onChanged: () => void;
@@ -121,6 +124,7 @@ export function WorkItemDetailSheet({
   staff,
   activities,
   projectId,
+  minutesByWorkItem = {},
   open,
   onOpenChange,
   onChanged,
@@ -167,6 +171,9 @@ export function WorkItemDetailSheet({
   const durationDays = draft
     ? plannedDurationDays(draft.plannedStart, draft.plannedEnd)
     : null;
+  const actualMinutes = draft
+    ? actualMinutesForItem(draft, items, minutesByWorkItem)
+    : 0;
 
   const linkedActivities = useMemo(() => {
     if (!draft) return [];
@@ -647,9 +654,10 @@ export function WorkItemDetailSheet({
                         />
                       </DetailRow>
                       <DetailRow label={t("detail.realizedHours")}>
-                        <span className="text-sm text-muted-foreground">—</span>
-                        <span className="text-xs text-muted-foreground">
-                          {t("detail.realizedHoursSoon")}
+                        <span className="text-sm tabular-nums">
+                          {formatEstimatedHours(
+                            actualMinutes > 0 ? actualMinutes : null,
+                          )}
                         </span>
                       </DetailRow>
                       <DetailRow label={t("detail.progress")}>
@@ -1010,9 +1018,28 @@ export function WorkItemDetailSheet({
                 </PageCard>
               ) : null}
 
-              {tab === "hours" ||
-              tab === "files" ||
-              tab === "communication" ? (
+              {tab === "hours" && draft ? (
+                <WorkItemHoursPanel
+                  workItemId={draft.id}
+                  isGroup={draft.isGroup}
+                  estimatedMinutes={
+                    draft.isGroup
+                      ? children.reduce(
+                          (sum, child) =>
+                            sum + (child.estimatedMinutes ?? 0),
+                          0,
+                        )
+                      : draft.estimatedMinutes
+                  }
+                  actualMinutesOverride={
+                    draft.isGroup ? actualMinutes : undefined
+                  }
+                  staff={staff}
+                  onChanged={onChanged}
+                />
+              ) : null}
+
+              {tab === "files" || tab === "communication" ? (
                 <ComingSoonCard
                   title={t(`detail.tabs.${tab}`)}
                   body={t(`detail.soon.${tab}`)}

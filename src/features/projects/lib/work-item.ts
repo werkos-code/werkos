@@ -70,7 +70,10 @@ export function formatEstimatedHours(minutes: number | null | undefined) {
   return `${Math.round(hours * 10) / 10}u`;
 }
 
-export function workItemStats(items: WorkItemRow[]) {
+export function workItemStats(
+  items: WorkItemRow[],
+  minutesByWorkItem: Record<string, number> = {},
+) {
   const leaves = items.filter((item) => !item.isGroup);
   const total = leaves.length;
   const done = leaves.filter((i) => i.status === "done").length;
@@ -79,6 +82,10 @@ export function workItemStats(items: WorkItemRow[]) {
   const overdue = leaves.filter((i) => isWorkItemOverdue(i)).length;
   const estimatedMinutes = leaves.reduce(
     (sum, item) => sum + (item.estimatedMinutes ?? 0),
+    0,
+  );
+  const actualMinutes = leaves.reduce(
+    (sum, item) => sum + (minutesByWorkItem[item.id] ?? 0),
     0,
   );
   const remainingMinutes = leaves
@@ -94,7 +101,42 @@ export function workItemStats(items: WorkItemRow[]) {
     open,
     overdue,
     estimatedMinutes,
+    actualMinutes,
     remainingMinutes,
     progressPercent,
   };
+}
+
+export function estimatedMinutesForItem(
+  item: WorkItemRow,
+  items: WorkItemRow[],
+) {
+  if (!item.isGroup) return item.estimatedMinutes ?? 0;
+  return items
+    .filter((child) => child.parentId === item.id && !child.isGroup)
+    .reduce((sum, child) => sum + (child.estimatedMinutes ?? 0), 0);
+}
+
+export function actualMinutesForItem(
+  item: WorkItemRow,
+  items: WorkItemRow[],
+  minutesByWorkItem: Record<string, number>,
+) {
+  if (!item.isGroup) return minutesByWorkItem[item.id] ?? 0;
+  return items
+    .filter((child) => child.parentId === item.id && !child.isGroup)
+    .reduce((sum, child) => sum + (minutesByWorkItem[child.id] ?? 0), 0);
+}
+
+/** Expected / actual, e.g. `2u / 1,5u`. */
+export function formatHoursPair(
+  estimatedMinutes: number | null | undefined,
+  actualMinutes: number | null | undefined,
+) {
+  const expected = formatEstimatedHours(estimatedMinutes);
+  const actual =
+    actualMinutes && actualMinutes > 0
+      ? formatEstimatedHours(actualMinutes)
+      : "—";
+  return `${expected} / ${actual}`;
 }

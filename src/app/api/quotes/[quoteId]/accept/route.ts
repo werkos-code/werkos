@@ -38,7 +38,7 @@ export async function POST(request: Request, { params }: RouteParams) {
 
     const { data: lines } = await admin
       .from("quote_lines")
-      .select("id, title, parent_id")
+      .select("id, title, parent_id, estimated_minutes")
       .eq("organization_id", gate.organizationId)
       .eq("quote_id", quoteId);
 
@@ -72,6 +72,7 @@ export async function POST(request: Request, { params }: RouteParams) {
           title: line.title.trim() || "Werkzaamheid",
           status: "open" as const,
           quote_line_id: line.id,
+          estimated_minutes: line.estimated_minutes,
           sort_order: index,
           created_by: gate.userId,
         })),

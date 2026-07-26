@@ -35,6 +35,7 @@ function mapLineRow(row: {
   unit_price_cents: number | null;
   vat_rate_bps: number;
   discount_cents: number;
+  estimated_minutes: number | null;
 }) {
   return {
     id: row.id,
@@ -47,6 +48,7 @@ function mapLineRow(row: {
     unitPriceCents: row.unit_price_cents,
     vatRateBps: row.vat_rate_bps,
     discountCents: row.discount_cents,
+    estimatedMinutes: row.estimated_minutes,
   };
 }
 
@@ -71,6 +73,7 @@ export async function POST(request: Request, { params }: RouteParams) {
       unitPriceCents?: number | null;
       vatRateBps?: number;
       discountCents?: number;
+      estimatedMinutes?: number | null;
       sortOrder?: number;
     };
 
@@ -96,13 +99,20 @@ export async function POST(request: Request, { params }: RouteParams) {
         body.unitPriceCents === undefined ? 0 : body.unitPriceCents,
       vat_rate_bps: body.vatRateBps ?? 2100,
       discount_cents: body.discountCents ?? 0,
+      estimated_minutes:
+        body.estimatedMinutes === undefined
+          ? null
+          : body.estimatedMinutes === null ||
+              Number.isNaN(body.estimatedMinutes)
+            ? null
+            : Math.round(body.estimatedMinutes),
     };
 
     const { data, error } = await draft.admin
       .from("quote_lines")
       .insert(insert)
       .select(
-        "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents",
+        "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, estimated_minutes",
       )
       .single();
 
@@ -142,6 +152,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       unitPriceCents?: number | null;
       vatRateBps?: number;
       discountCents?: number;
+      estimatedMinutes?: number | null;
       sortOrder?: number;
     };
 
@@ -188,6 +199,15 @@ export async function PATCH(request: Request, { params }: RouteParams) {
               discount_cents: Number.isNaN(body.discountCents)
                 ? 0
                 : Math.round(body.discountCents),
+            }
+          : {}),
+        ...(body.estimatedMinutes !== undefined
+          ? {
+              estimated_minutes:
+                body.estimatedMinutes === null ||
+                Number.isNaN(body.estimatedMinutes)
+                  ? null
+                  : Math.max(0, Math.round(body.estimatedMinutes)),
             }
           : {}),
         ...(body.sortOrder !== undefined ? { sort_order: body.sortOrder } : {}),
