@@ -37,17 +37,15 @@ type ProjectsWorkspaceProps = {
 
 const PAGE_SIZE_OPTIONS = [8, 16, 32] as const;
 
-function shortProjectRef(id: string) {
-  return `PRJ-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
-}
-
-function formatDate(iso: string, locale: string) {
+function formatDate(iso: string | null | undefined, locale: string) {
+  if (!iso) return "—";
   try {
+    const value = iso.length === 10 ? `${iso}T12:00:00` : iso;
     return new Intl.DateTimeFormat(locale, {
       day: "numeric",
       month: "short",
       year: "numeric",
-    }).format(new Date(iso));
+    }).format(new Date(value));
   } catch {
     return iso.slice(0, 10);
   }
@@ -147,7 +145,7 @@ export function ProjectsWorkspace({
       return (
         p.name.toLowerCase().includes(q) ||
         p.customerName.toLowerCase().includes(q) ||
-        shortProjectRef(p.id).toLowerCase().includes(q)
+        p.projectNumber.toLowerCase().includes(q)
       );
     });
   }, [projects, query, filterKey, customerId]);
@@ -427,7 +425,7 @@ export function ProjectsWorkspace({
                             {project.name}
                           </Link>
                           <p className="text-xs text-muted-foreground">
-                            {shortProjectRef(project.id)}
+                            {project.projectNumber}
                           </p>
                         </div>
                       </div>
@@ -448,11 +446,15 @@ export function ProjectsWorkspace({
                         {t(`status.${project.status}`)}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">—</td>
                     <td className="px-4 py-3 text-muted-foreground">
-                      {formatDate(project.createdAt, "nl-NL")}
+                      {project.leadName || "—"}
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">—</td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {formatDate(project.startDate, "nl-NL")}
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {formatDate(project.endDate, "nl-NL")}
+                    </td>
                     <td className="px-4 py-3 text-right text-muted-foreground">
                       —
                     </td>

@@ -105,6 +105,17 @@ Na Phase 1 / Super Admin:
    - Projectdetail → nieuwe offerte → regels (incl. subregel)
    - Versturen → Accepteren → werkzaamheden laten aanmaken
 
+## 10. Projectdetail MVP — metadata + activiteit
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260726195000_project_detail_mvp.sql`
+3. Test:
+   - Projectdetail: nummer, data, leider, contact, labels bewerken
+   - Notitie plaatsen → verschijnt in Activiteit
+   - Offerte aanmaken/wijzigen/accepteren → events in de feed
+   - Voortgang alleen zichtbaar als er werkzaamheden zijn
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  

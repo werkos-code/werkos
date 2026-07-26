@@ -11,28 +11,31 @@ import {
   Mail,
   MapPin,
   MessageSquare,
-  MoreHorizontal,
   Pencil,
   Phone,
   Plus,
   Send,
-  Share2,
-  Star,
+  StickyNote,
   User,
+  X,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useState, useTransition } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { CustomerRow } from "@/features/customers/customers-actions";
 import { ProjectDetailForm } from "@/features/projects/components/project-detail-form";
-import type { ProjectRow } from "@/features/projects/projects-actions";
+import type {
+  ProjectActivityRow,
+  ProjectRow,
+  StaffOption,
+} from "@/features/projects/projects-actions";
 import { QuotesList } from "@/features/quotes/components/quotes-list";
 import type { QuoteListItem } from "@/features/quotes/quotes-actions";
 import { PageCard } from "@/features/shell/components/page-card";
-import { Link } from "@/i18n/navigation";
-import type { ProjectStatus } from "@/types/database";
+import { Link, useRouter } from "@/i18n/navigation";
+import type { ProjectActivityType, ProjectStatus } from "@/types/database";
 import { cn } from "@/lib/utils";
 
 type WorkItem = { id: string; title: string; status: string };
@@ -41,8 +44,10 @@ type ProjectDetailWorkspaceProps = {
   project: ProjectRow;
   customer: CustomerRow | null;
   customers: Array<{ id: string; name: string }>;
+  staff: StaffOption[];
   quotes: QuoteListItem[];
   workItems: WorkItem[];
+  activities: ProjectActivityRow[];
   initialTab?: string;
 };
 
@@ -57,34 +62,31 @@ type TabId =
   | "communication"
   | "activity";
 
-function shortProjectRef(id: string) {
-  return `PRJ-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
-}
-
-function formatDate(iso: string) {
+function formatDate(iso: string | null | undefined, locale = "nl-NL") {
+  if (!iso) return "—";
   try {
-    return new Intl.DateTimeFormat("nl-NL", {
+    const value = iso.length === 10 ? `${iso}T12:00:00` : iso;
+    return new Intl.DateTimeFormat(locale, {
       day: "numeric",
       month: "long",
       year: "numeric",
-    }).format(new Date(iso));
+    }).format(new Date(value));
   } catch {
     return iso.slice(0, 10);
   }
 }
 
-function formatShortDay(iso: string) {
+function formatDateTime(iso: string, locale = "nl-NL") {
   try {
-    const d = new Date(iso);
-    const weekday = new Intl.DateTimeFormat("nl-NL", { weekday: "short" })
-      .format(d)
-      .replace(".", "")
-      .toUpperCase()
-      .slice(0, 2);
-    const day = d.getDate();
-    return { weekday, day };
+    return new Intl.DateTimeFormat(locale, {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(new Date(iso));
   } catch {
-    return { weekday: "—", day: "—" as const };
+    return iso;
   }
 }
 
@@ -97,26 +99,117 @@ function statusBadgeVariant(
   return "secondary";
 }
 
+function activityTone(
+  type: ProjectActivityType,
+): "success" | "primary" | "muted" | "warning" {
+  if (
+    type === "quote_accepted" ||
+    type === "project_created" ||
+    type === "work_item_created"
+  ) {
+    return "success";
+  }
+  if (type === "quote_sent" || type === "status_changed" || type === "note") {
+    return "primary";
+  }
+  if (type === "quote_rejected" || type === "quote_cancelled") {
+    return "warning";
+  }
+  return "muted";
+}
+
+function ActivityIcon({ type }: { type: ProjectActivityType }) {
+  if (type === "note") return <StickyNote className="size-3.5" />;
+  if (type === "quote_created" || type === "quote_updated" || type === "quote_sent")
+    return <FileText className="size-3.5" />;
+  if (type === "status_changed") return <Circle className="size-3.5" />;
+  return <CheckCircle2 className="size-3.5" />;
+}
+
 function ProgressRing({
   percent,
   label,
+  empty,
 }: {
-  percent: number;
+  percent: number | null;
   label: string;
+  empty?: boolean;
 }) {
-  const clamped = Math.max(0, Math.min(100, percent));
+  const clamped =
+    percent === null ? 0 : Math.max(0, Math.min(100, percent));
   return (
     <div
       className="relative size-28 shrink-0 rounded-full"
       style={{
-        background: `conic-gradient(var(--primary) ${clamped}%, color-mix(in oklab, var(--muted) 80%, transparent) 0)`,
+        background: empty
+          ? `conic-gradient(color-mix(in oklab, var(--muted) 80%, transparent) 100%, transparent 0)`
+          : `conic-gradient(var(--primary) ${clamped}%, color-mix(in oklab, var(--muted) 80%, transparent) 0)`,
       }}
     >
       <div className="absolute inset-2 flex flex-col items-center justify-center rounded-full bg-card text-center">
-        <span className="text-xl font-semibold tabular-nums">{clamped}%</span>
+        <span className="text-xl font-semibold tabular-nums">
+          {empty ? "—" : `${clamped}%`}
+        </span>
         <span className="text-[10px] text-muted-foreground">{label}</span>
       </div>
     </div>
+  );
+}
+
+function ActivityFeed({
+  activities,
+  emptyLabel,
+  limit,
+}: {
+  activities: ProjectActivityRow[];
+  emptyLabel: string;
+  limit?: number;
+}) {
+  const t = useTranslations("projects");
+  const items = limit ? activities.slice(0, limit) : activities;
+
+  if (items.length === 0) {
+    return <p className="text-sm text-muted-foreground">{emptyLabel}</p>;
+  }
+
+  return (
+    <ul className="space-y-3">
+      {items.map((event) => {
+        const tone = activityTone(event.type);
+        return (
+          <li key={event.id} className="flex gap-3">
+            <div
+              className={cn(
+                "mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full",
+                tone === "success" && "bg-success text-success-foreground",
+                tone === "primary" && "bg-primary/10 text-primary",
+                tone === "warning" && "bg-amber-100 text-amber-800",
+                tone === "muted" && "bg-muted text-muted-foreground",
+              )}
+            >
+              <ActivityIcon type={event.type} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-sm font-medium">{event.title}</p>
+                <Badge variant="secondary" className="shrink-0">
+                  {t(`detail.activityTypes.${event.type}`)}
+                </Badge>
+              </div>
+              {event.body ? (
+                <p className="mt-0.5 whitespace-pre-wrap text-sm text-foreground/90">
+                  {event.body}
+                </p>
+              ) : null}
+              <p className="mt-1 text-xs text-muted-foreground">
+                {formatDateTime(event.createdAt)}
+                {event.createdByName ? ` · ${event.createdByName}` : ""}
+              </p>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -124,83 +217,52 @@ export function ProjectDetailWorkspace({
   project,
   customer,
   customers,
+  staff,
   quotes,
   workItems,
+  activities,
   initialTab = "overview",
 }: ProjectDetailWorkspaceProps) {
   const t = useTranslations("projects");
   const tQuotes = useTranslations("quotes");
+  const tCommon = useTranslations("common");
+  const router = useRouter();
   const [tab, setTab] = useState<TabId>(
-    (["overview", "quotes", "tasks", "workOrders", "planning", "files", "financial", "communication", "activity"].includes(
-      initialTab,
-    )
+    ([
+      "overview",
+      "quotes",
+      "tasks",
+      "workOrders",
+      "planning",
+      "files",
+      "financial",
+      "communication",
+      "activity",
+    ].includes(initialTab)
       ? initialTab
       : "overview") as TabId,
   );
   const [editing, setEditing] = useState(false);
+  const [note, setNote] = useState("");
+  const [noteError, setNoteError] = useState<string | null>(null);
+  const [labelDraft, setLabelDraft] = useState("");
+  const [labelError, setLabelError] = useState<string | null>(null);
+  const [addingLabel, setAddingLabel] = useState(false);
+  const [isNotePending, startNoteTransition] = useTransition();
+  const [isLabelPending, startLabelTransition] = useTransition();
 
   const doneItems = workItems.filter((w) => w.status === "done").length;
   const openItems = workItems.filter((w) => w.status !== "done");
-  const progressPercent =
-    workItems.length === 0
-      ? 0
-      : Math.round((doneItems / workItems.length) * 100);
+  const hasWorkItems = workItems.length > 0;
+  const progressPercent = hasWorkItems
+    ? Math.round((doneItems / workItems.length) * 100)
+    : null;
 
   const acceptedQuotes = quotes.filter((q) => q.status === "accepted").length;
-
-  const timeline = useMemo(() => {
-    const events: Array<{
-      id: string;
-      title: string;
-      subtitle: string;
-      badge: string;
-      tone: "success" | "primary" | "muted" | "warning";
-      at: string;
-    }> = [];
-
-    events.push({
-      id: `created-${project.id}`,
-      title: t("detail.timeline.created"),
-      subtitle: formatDate(project.createdAt),
-      badge: t("detail.timeline.badges.done"),
-      tone: "success",
-      at: project.createdAt,
-    });
-
-    for (const quote of quotes) {
-      events.push({
-        id: `quote-${quote.id}`,
-        title: quote.title,
-        subtitle: `${tQuotes(`status.${quote.status}`)} · ${formatDate(quote.updatedAt)}`,
-        badge: tQuotes(`status.${quote.status}`),
-        tone:
-          quote.status === "accepted"
-            ? "success"
-            : quote.status === "sent"
-              ? "primary"
-              : "muted",
-        at: quote.updatedAt,
-      });
-    }
-
-    for (const item of workItems.slice(0, 5)) {
-      events.push({
-        id: `wi-${item.id}`,
-        title: item.title,
-        subtitle: t(`detail.timeline.workItem`, {
-          status: item.status === "done" ? t("detail.done") : t("detail.open"),
-        }),
-        badge:
-          item.status === "done" ? t("detail.done") : t("detail.open"),
-        tone: item.status === "done" ? "success" : "warning",
-        at: project.updatedAt,
-      });
-    }
-
-    return events
-      .sort((a, b) => +new Date(b.at) - +new Date(a.at))
-      .slice(0, 6);
-  }, [project, quotes, workItems, t, tQuotes]);
+  const contactDisplay =
+    [project.contactName, project.contactPhone, project.contactEmail]
+      .filter(Boolean)
+      .join(" · ") || "—";
 
   const tabs: Array<{ id: TabId; label: string; count?: number }> = [
     { id: "overview", label: t("detail.tabs.overview") },
@@ -215,7 +277,11 @@ export function ProjectDetailWorkspace({
     { id: "files", label: t("detail.tabs.files") },
     { id: "financial", label: t("detail.tabs.financial") },
     { id: "communication", label: t("detail.tabs.communication") },
-    { id: "activity", label: t("detail.tabs.activity") },
+    {
+      id: "activity",
+      label: t("detail.tabs.activity"),
+      count: activities.length || undefined,
+    },
   ];
 
   function InfoRow({
@@ -240,111 +306,213 @@ export function ProjectDetailWorkspace({
     );
   }
 
+  function submitNote() {
+    const body = note.trim();
+    if (!body) {
+      setNoteError(t("detail.noteRequired"));
+      return;
+    }
+    setNoteError(null);
+    startNoteTransition(() => {
+      void (async () => {
+        try {
+          const response = await fetch(
+            `/api/projects/${project.id}/activities`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ body }),
+              signal: AbortSignal.timeout(20_000),
+            },
+          );
+          const result = (await response.json()) as { error?: string };
+          if (!response.ok || result.error) {
+            setNoteError(result.error || tCommon("error"));
+            return;
+          }
+          setNote("");
+          setTab("activity");
+          router.refresh();
+        } catch {
+          setNoteError(tCommon("error"));
+        }
+      })();
+    });
+  }
+
+  function addLabel() {
+    const name = labelDraft.trim();
+    if (!name) {
+      setLabelError(t("detail.labelRequired"));
+      return;
+    }
+    setLabelError(null);
+    startLabelTransition(() => {
+      void (async () => {
+        try {
+          const response = await fetch(`/api/projects/${project.id}/labels`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name }),
+            signal: AbortSignal.timeout(20_000),
+          });
+          const result = (await response.json()) as { error?: string };
+          if (!response.ok || result.error) {
+            setLabelError(
+              result.error === "duplicate_label"
+                ? t("detail.labelDuplicate")
+                : result.error || tCommon("error"),
+            );
+            return;
+          }
+          setLabelDraft("");
+          setAddingLabel(false);
+          router.refresh();
+        } catch {
+          setLabelError(tCommon("error"));
+        }
+      })();
+    });
+  }
+
+  function removeLabel(labelId: string) {
+    startLabelTransition(() => {
+      void (async () => {
+        try {
+          await fetch(`/api/projects/${project.id}/labels/${labelId}`, {
+            method: "DELETE",
+            signal: AbortSignal.timeout(20_000),
+          });
+          router.refresh();
+        } catch {
+          /* ignore */
+        }
+      })();
+    });
+  }
+
   return (
     <div className="space-y-5 pb-24">
       <div className="flex flex-wrap items-center justify-end gap-2">
-        <Button type="button" variant="outline" size="sm" disabled>
-          <Share2 className="size-3.5" />
-          {t("detail.share")}
-        </Button>
         <Button
           type="button"
           size="sm"
+          variant={editing ? "outline" : "default"}
           onClick={() => {
             setTab("overview");
-            setEditing(true);
+            setEditing((v) => !v);
           }}
         >
           <Pencil className="size-3.5" />
-          {t("detail.edit")}
+          {editing ? t("detail.cancelEdit") : t("detail.edit")}
         </Button>
       </div>
 
       <PageCard className="p-5">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex min-w-0 flex-1 gap-4">
-            <div className="bg-muted text-muted-foreground flex size-20 shrink-0 items-center justify-center rounded-xl sm:size-24">
-              <Building2 className="size-8" />
+        <div className="flex min-w-0 flex-1 gap-4">
+          <div className="bg-muted text-muted-foreground flex size-16 shrink-0 items-center justify-center rounded-xl sm:size-20">
+            <Building2 className="size-7" />
+          </div>
+          <div className="min-w-0 space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+                {project.name}
+              </h2>
+              <Badge variant={statusBadgeVariant(project.status)}>
+                {t(`status.${project.status}`)}
+              </Badge>
             </div>
-            <div className="min-w-0 space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                  {project.name}
-                </h2>
-                <Badge variant={statusBadgeVariant(project.status)}>
-                  {t(`status.${project.status}`)}
-                </Badge>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  disabled
-                  className="text-muted-foreground"
-                >
-                  <Star className="size-4" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  disabled
-                  className="text-muted-foreground"
-                >
-                  <MoreHorizontal className="size-4" />
-                </Button>
-              </div>
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5">
-                  <FileText className="size-3.5" />
-                  {shortProjectRef(project.id)}
-                </span>
-                <Link
-                  href={`/bedrijf/klanten/${project.customerId}`}
-                  className="inline-flex items-center gap-1.5 hover:text-primary hover:underline"
-                >
-                  <Building2 className="size-3.5" />
-                  {project.customerName}
-                </Link>
-                <span className="inline-flex items-center gap-1.5">
-                  <Calendar className="size-3.5" />
-                  {formatDate(project.createdAt)} – —
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <User className="size-3.5" />—
-                </span>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5">
+                <FileText className="size-3.5" />
+                {project.projectNumber}
+              </span>
+              <Link
+                href={`/bedrijf/klanten/${project.customerId}`}
+                className="inline-flex items-center gap-1.5 hover:text-primary hover:underline"
+              >
+                <Building2 className="size-3.5" />
+                {project.customerName}
+              </Link>
+              <span className="inline-flex items-center gap-1.5">
+                <Calendar className="size-3.5" />
+                {formatDate(project.startDate)} – {formatDate(project.endDate)}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <User className="size-3.5" />
+                {project.leadName || "—"}
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {project.labels.length === 0 && !addingLabel ? (
                 <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
-                  {t("detail.labelsStub")}
+                  {t("detail.noLabels")}
                 </span>
-                <Button type="button" variant="outline" size="sm" disabled>
+              ) : (
+                project.labels.map((label) => (
+                  <span
+                    key={label.id}
+                    className="bg-primary/10 text-primary inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium"
+                  >
+                    {label.name}
+                    <button
+                      type="button"
+                      className="rounded-full p-0.5 hover:bg-primary/15"
+                      disabled={isLabelPending}
+                      onClick={() => removeLabel(label.id)}
+                      aria-label={t("detail.removeLabel")}
+                    >
+                      <X className="size-3" />
+                    </button>
+                  </span>
+                ))
+              )}
+              {addingLabel ? (
+                <div className="flex flex-wrap items-center gap-2">
+                  <InputLike
+                    value={labelDraft}
+                    onChange={setLabelDraft}
+                    placeholder={t("detail.labelPlaceholder")}
+                    disabled={isLabelPending}
+                    onSubmit={addLabel}
+                  />
+                  <Button
+                    type="button"
+                    size="sm"
+                    disabled={isLabelPending}
+                    onClick={addLabel}
+                  >
+                    {isLabelPending ? tCommon("loading") : t("detail.saveLabel")}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={isLabelPending}
+                    onClick={() => {
+                      setAddingLabel(false);
+                      setLabelDraft("");
+                      setLabelError(null);
+                    }}
+                  >
+                    {tCommon("cancel")}
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setAddingLabel(true)}
+                >
                   <Plus className="size-3.5" />
                   {t("detail.addLabel")}
                 </Button>
-              </div>
+              )}
             </div>
-          </div>
-
-          <div className="grid w-full gap-3 sm:grid-cols-2 lg:w-[22rem] lg:shrink-0">
-            <div className="rounded-xl border border-border/80 bg-muted/20 p-3">
-              <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                {t("detail.revenue")}
-              </p>
-              <p className="mt-1 text-lg font-semibold">—</p>
-              <div className="bg-muted mt-2 h-1.5 rounded-full">
-                <div className="bg-primary/40 h-1.5 w-0 rounded-full" />
-              </div>
-              <p className="mt-1 text-[11px] text-muted-foreground">
-                {t("detail.invoicedStub")}
-              </p>
-            </div>
-            <div className="rounded-xl border border-border/80 bg-muted/20 p-3">
-              <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                {t("detail.margin")}
-              </p>
-              <p className="mt-1 text-lg font-semibold">—</p>
-              <p className="mt-1 text-[11px] text-muted-foreground">—</p>
-            </div>
+            {labelError ? (
+              <p className="text-sm text-destructive">{labelError}</p>
+            ) : null}
           </div>
         </div>
       </PageCard>
@@ -386,14 +554,13 @@ export function ProjectDetailWorkspace({
           <div className="grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(16rem,0.9fr)]">
             <PageCard className="p-5">
               <div className="mb-3 flex items-center justify-between gap-2">
-                <h3 className="text-sm font-medium">
-                  {t("detail.infoTitle")}
-                </h3>
+                <h3 className="text-sm font-medium">{t("detail.infoTitle")}</h3>
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon-sm"
                   onClick={() => setEditing((v) => !v)}
+                  aria-label={t("detail.edit")}
                 >
                   <Pencil className="size-3.5" />
                 </Button>
@@ -402,10 +569,18 @@ export function ProjectDetailWorkspace({
                 <ProjectDetailForm
                   project={project}
                   customers={customers}
+                  staff={staff}
+                  onCancel={() => setEditing(false)}
+                  onSaved={() => setEditing(false)}
                 />
               ) : (
                 <div className="grid gap-2 sm:grid-cols-2">
                   <div>
+                    <InfoRow
+                      icon={<FileText className="size-3.5" />}
+                      label={t("fields.projectNumber")}
+                      value={project.projectNumber}
+                    />
                     <InfoRow
                       icon={<Building2 className="size-3.5" />}
                       label={t("fields.customer")}
@@ -421,7 +596,7 @@ export function ProjectDetailWorkspace({
                     <InfoRow
                       icon={<User className="size-3.5" />}
                       label={t("detail.contact")}
-                      value="—"
+                      value={contactDisplay}
                     />
                     <InfoRow
                       icon={<MapPin className="size-3.5" />}
@@ -443,17 +618,17 @@ export function ProjectDetailWorkspace({
                     <InfoRow
                       icon={<User className="size-3.5" />}
                       label={t("detail.leader")}
-                      value="—"
+                      value={project.leadName || "—"}
                     />
                     <InfoRow
                       icon={<Calendar className="size-3.5" />}
                       label={t("detail.startDate")}
-                      value={formatDate(project.createdAt)}
+                      value={formatDate(project.startDate)}
                     />
                     <InfoRow
                       icon={<Calendar className="size-3.5" />}
                       label={t("detail.endDate")}
-                      value="—"
+                      value={formatDate(project.endDate)}
                     />
                     <InfoRow
                       icon={<Circle className="size-3.5" />}
@@ -463,11 +638,6 @@ export function ProjectDetailWorkspace({
                           {t(`status.${project.status}`)}
                         </Badge>
                       }
-                    />
-                    <InfoRow
-                      icon={<CheckCircle2 className="size-3.5" />}
-                      label={t("detail.chance")}
-                      value="—"
                     />
                   </div>
                 </div>
@@ -488,89 +658,65 @@ export function ProjectDetailWorkspace({
               <h3 className="mb-4 text-sm font-medium">
                 {t("detail.progressTitle")}
               </h3>
-              <div className="flex items-center gap-4">
-                <ProgressRing
-                  percent={progressPercent}
-                  label={t("detail.completedLabel")}
-                />
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-center justify-between gap-4">
-                    <span className="text-muted-foreground">
-                      {t("detail.tabs.quotes")}
-                    </span>
-                    <span className="tabular-nums">
-                      {acceptedQuotes}/{quotes.length || 0}
-                    </span>
-                  </li>
-                  <li className="flex items-center justify-between gap-4 opacity-60">
-                    <span className="text-muted-foreground">
-                      {t("detail.tabs.workOrders")}
-                    </span>
-                    <span className="tabular-nums">—/—</span>
-                  </li>
-                  <li className="flex items-center justify-between gap-4">
-                    <span className="text-muted-foreground">
-                      {t("detail.tabs.tasks")}
-                    </span>
-                    <span className="tabular-nums">
-                      {doneItems}/{workItems.length}
-                    </span>
-                  </li>
-                  <li className="flex items-center justify-between gap-4 opacity-60">
-                    <span className="text-muted-foreground">
-                      {t("detail.tabs.files")}
-                    </span>
-                    <span className="tabular-nums">—/—</span>
-                  </li>
-                </ul>
-              </div>
-              <button
-                type="button"
-                className="mt-4 text-sm font-medium text-primary hover:underline"
-                onClick={() => setTab("tasks")}
-              >
-                {t("detail.viewProgress")}
-              </button>
+              {hasWorkItems ? (
+                <>
+                  <div className="flex items-center gap-4">
+                    <ProgressRing
+                      percent={progressPercent}
+                      label={t("detail.completedLabel")}
+                    />
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center justify-between gap-4">
+                        <span className="text-muted-foreground">
+                          {t("detail.tabs.tasks")}
+                        </span>
+                        <span className="tabular-nums">
+                          {doneItems}/{workItems.length}
+                        </span>
+                      </li>
+                      <li className="flex items-center justify-between gap-4">
+                        <span className="text-muted-foreground">
+                          {t("detail.tabs.quotes")}
+                        </span>
+                        <span className="tabular-nums">
+                          {acceptedQuotes}/{quotes.length}
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                  <button
+                    type="button"
+                    className="mt-4 text-sm font-medium text-primary hover:underline"
+                    onClick={() => setTab("tasks")}
+                  >
+                    {t("detail.viewProgress")}
+                  </button>
+                </>
+              ) : (
+                <div className="space-y-3">
+                  <ProgressRing
+                    percent={null}
+                    label={t("detail.completedLabel")}
+                    empty
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    {t("detail.progressEmpty")}
+                  </p>
+                </div>
+              )}
             </PageCard>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
-            <PageCard className="p-5 lg:col-span-1 xl:col-span-1">
+          <div className="grid gap-5 lg:grid-cols-2">
+            <PageCard className="p-5">
               <h3 className="mb-4 text-sm font-medium">
                 {t("detail.timelineTitle")}
               </h3>
-              <ul className="space-y-3">
-                {timeline.map((event) => (
-                  <li key={event.id} className="flex gap-3">
-                    <div
-                      className={cn(
-                        "mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full",
-                        event.tone === "success" &&
-                          "bg-success text-success-foreground",
-                        event.tone === "primary" &&
-                          "bg-primary/10 text-primary",
-                        event.tone === "warning" &&
-                          "bg-amber-100 text-amber-800",
-                        event.tone === "muted" &&
-                          "bg-muted text-muted-foreground",
-                      )}
-                    >
-                      <CheckCircle2 className="size-3.5" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="text-sm font-medium">{event.title}</p>
-                        <Badge variant="secondary" className="shrink-0">
-                          {event.badge}
-                        </Badge>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {event.subtitle}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              <ActivityFeed
+                activities={activities}
+                emptyLabel={t("detail.activityEmpty")}
+                limit={8}
+              />
               <button
                 type="button"
                 className="mt-4 text-sm font-medium text-primary hover:underline"
@@ -582,7 +728,7 @@ export function ProjectDetailWorkspace({
 
             <PageCard className="p-5">
               <h3 className="mb-4 text-sm font-medium">
-                {t("detail.upcomingTitle")}
+                {t("detail.openTasksTitle")}
               </h3>
               {openItems.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
@@ -590,94 +736,27 @@ export function ProjectDetailWorkspace({
                 </p>
               ) : (
                 <ul className="space-y-3">
-                  {openItems.slice(0, 5).map((item) => {
-                    const day = formatShortDay(project.updatedAt);
-                    return (
-                      <li key={item.id} className="flex items-center gap-3">
-                        <div className="bg-muted flex size-11 shrink-0 flex-col items-center justify-center rounded-lg text-[10px] font-medium">
-                          <span>{day.weekday}</span>
-                          <span className="text-sm">{day.day}</span>
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-medium">
-                            {item.title}
-                          </p>
-                          <Badge variant="secondary" className="mt-1">
-                            {t("detail.open")}
-                          </Badge>
-                        </div>
-                      </li>
-                    );
-                  })}
+                  {openItems.slice(0, 6).map((item) => (
+                    <li
+                      key={item.id}
+                      className="flex items-center justify-between gap-3 rounded-lg border border-border/80 px-3 py-2"
+                    >
+                      <p className="truncate text-sm font-medium">
+                        {item.title}
+                      </p>
+                      <Badge variant="secondary">{t("detail.open")}</Badge>
+                    </li>
+                  ))}
                 </ul>
               )}
               <button
                 type="button"
                 className="mt-4 text-sm font-medium text-primary hover:underline"
-                disabled
+                onClick={() => setTab("tasks")}
               >
-                {t("detail.viewPlanning")}
+                {t("detail.viewAllTasks")}
               </button>
             </PageCard>
-
-            <div className="space-y-5">
-              <PageCard className="p-5">
-                <h3 className="mb-3 text-sm font-medium">
-                  {t("detail.financialTitle")}
-                </h3>
-                <dl className="space-y-2 text-sm">
-                  <div className="flex justify-between gap-3">
-                    <dt className="text-muted-foreground">
-                      {t("detail.quotesTotal")}
-                    </dt>
-                    <dd className="tabular-nums">{quotes.length}</dd>
-                  </div>
-                  <div className="flex justify-between gap-3 opacity-60">
-                    <dt className="text-muted-foreground">
-                      {t("detail.invoicesTotal")}
-                    </dt>
-                    <dd>—</dd>
-                  </div>
-                  <div className="flex justify-between gap-3 opacity-60">
-                    <dt className="text-muted-foreground">
-                      {t("detail.paid")}
-                    </dt>
-                    <dd className="text-emerald-700">—</dd>
-                  </div>
-                  <div className="flex justify-between gap-3 opacity-60">
-                    <dt className="text-muted-foreground">
-                      {t("detail.openAmount")}
-                    </dt>
-                    <dd className="text-destructive">—</dd>
-                  </div>
-                </dl>
-                <button
-                  type="button"
-                  className="mt-4 text-sm font-medium text-primary hover:underline"
-                  onClick={() => setTab("financial")}
-                >
-                  {t("detail.viewFinancial")}
-                </button>
-              </PageCard>
-
-              <PageCard className="p-5 opacity-80">
-                <div className="mb-3 flex items-center justify-between">
-                  <h3 className="text-sm font-medium">
-                    {t("detail.filesTitle")}
-                  </h3>
-                  <button
-                    type="button"
-                    className="text-sm font-medium text-primary hover:underline"
-                    disabled
-                  >
-                    {t("detail.viewAll")}
-                  </button>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {t("detail.filesEmpty")}
-                </p>
-              </PageCard>
-            </div>
           </div>
         </div>
       ) : null}
@@ -702,7 +781,9 @@ export function ProjectDetailWorkspace({
                 >
                   <span>{item.title}</span>
                   <Badge variant="secondary">
-                    {item.status === "done" ? t("detail.done") : t("detail.open")}
+                    {item.status === "done"
+                      ? t("detail.done")
+                      : t("detail.open")}
                   </Badge>
                 </li>
               ))}
@@ -711,12 +792,23 @@ export function ProjectDetailWorkspace({
         </PageCard>
       ) : null}
 
+      {tab === "activity" ? (
+        <PageCard className="p-5">
+          <h3 className="mb-4 text-sm font-medium">
+            {t("detail.tabs.activity")}
+          </h3>
+          <ActivityFeed
+            activities={activities}
+            emptyLabel={t("detail.activityEmpty")}
+          />
+        </PageCard>
+      ) : null}
+
       {tab === "workOrders" ||
       tab === "planning" ||
       tab === "files" ||
       tab === "financial" ||
-      tab === "communication" ||
-      tab === "activity" ? (
+      tab === "communication" ? (
         <PageCard className="flex flex-col items-start gap-3 p-8">
           <div className="text-muted-foreground">
             {tab === "workOrders" ? (
@@ -737,18 +829,67 @@ export function ProjectDetailWorkspace({
       ) : null}
 
       <div className="fixed right-0 bottom-0 left-0 z-10 border-t border-border bg-background/95 p-3 backdrop-blur-sm md:left-[calc(var(--sidebar-width)+1.5rem)]">
-        <div className="mx-auto flex w-[90%] items-center gap-2">
-          <Pencil className="size-4 shrink-0 text-muted-foreground" />
+        <div className="mx-auto flex w-[90%] max-w-5xl items-center gap-2">
+          <StickyNote className="size-4 shrink-0 text-muted-foreground" />
           <input
-            disabled
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                submitNote();
+              }
+            }}
+            disabled={isNotePending}
             placeholder={t("detail.notePlaceholder")}
-            className="h-10 flex-1 rounded-lg border border-border bg-card px-3 text-sm outline-none"
+            className="h-10 flex-1 rounded-lg border border-border bg-card px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
           />
-          <Button type="button" size="icon" disabled>
+          <Button
+            type="button"
+            size="icon"
+            disabled={isNotePending || !note.trim()}
+            onClick={submitNote}
+            aria-label={t("detail.postNote")}
+          >
             <Send className="size-4" />
           </Button>
         </div>
+        {noteError ? (
+          <p className="mx-auto mt-2 w-[90%] max-w-5xl text-sm text-destructive">
+            {noteError}
+          </p>
+        ) : null}
       </div>
     </div>
+  );
+}
+
+function InputLike({
+  value,
+  onChange,
+  placeholder,
+  disabled,
+  onSubmit,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  disabled?: boolean;
+  onSubmit: () => void;
+}) {
+  return (
+    <input
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          onSubmit();
+        }
+      }}
+      disabled={disabled}
+      placeholder={placeholder}
+      className="border-input bg-background h-8 w-40 rounded-lg border px-2.5 text-sm outline-none"
+    />
   );
 }

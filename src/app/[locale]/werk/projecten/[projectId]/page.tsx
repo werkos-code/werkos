@@ -6,7 +6,11 @@ import {
   listCustomerOptions,
 } from "@/features/customers/customers-actions";
 import { ProjectDetailWorkspace } from "@/features/projects/components/project-detail-workspace";
-import { getProject } from "@/features/projects/projects-actions";
+import {
+  getProject,
+  listOrgStaffOptions,
+  listProjectActivities,
+} from "@/features/projects/projects-actions";
 import {
   listQuotesForProject,
   listWorkItemsForProject,
@@ -25,13 +29,21 @@ export default async function ProjectDetailPage({
   const { locale, projectId } = await params;
   const { tab } = await searchParams;
   setRequestLocale(locale);
-  const [projectResult, customersResult, quotesResult, workItemsResult] =
-    await Promise.all([
-      getProject(projectId),
-      listCustomerOptions(),
-      listQuotesForProject(projectId),
-      listWorkItemsForProject(projectId),
-    ]);
+  const [
+    projectResult,
+    customersResult,
+    staffResult,
+    quotesResult,
+    workItemsResult,
+    activitiesResult,
+  ] = await Promise.all([
+    getProject(projectId),
+    listCustomerOptions(),
+    listOrgStaffOptions(),
+    listQuotesForProject(projectId),
+    listWorkItemsForProject(projectId),
+    listProjectActivities(projectId),
+  ]);
 
   if (projectResult.error === "not_found" || !projectResult.project) {
     notFound();
@@ -50,8 +62,10 @@ export default async function ProjectDetailPage({
         project={project}
         customer={customerResult.customer ?? null}
         customers={customersResult.customers ?? []}
+        staff={staffResult.staff ?? []}
         quotes={quotesResult.quotes ?? []}
         workItems={workItemsResult.workItems ?? []}
+        activities={activitiesResult.activities ?? []}
         initialTab={tab}
       />
     </ShellPage>

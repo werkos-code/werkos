@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 
+import {
+  logProjectActivity,
+  quoteStatusActivityType,
+} from "@/features/projects/lib/project-activity";
 import { QUOTE_STATUSES } from "@/features/quotes/lib/quote-status";
 import { requireApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -63,6 +67,16 @@ export async function POST(request: Request) {
       discount_cents: 0,
     });
 
+    await logProjectActivity(admin, {
+      organizationId: gate.organizationId,
+      projectId,
+      type: "quote_created",
+      title: "Offerte aangemaakt",
+      body: title,
+      metadata: { quote_id: quoteId, status: "draft" },
+      createdBy: gate.userId,
+    });
+
     return NextResponse.json({ quoteId });
   } catch (error) {
     const message = error instanceof Error ? error.message : "create_failed";
@@ -103,7 +117,7 @@ export async function PATCH(request: Request) {
     const admin = createAdminClient();
     const { data: existing } = await admin
       .from("quotes")
-      .select("id, status")
+      .select("id, status, title, project_id")
       .eq("organization_id", gate.organizationId)
       .eq("id", id)
       .maybeSingle();
@@ -112,12 +126,14 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "not_found" }, { status: 404 });
     }
 
+    const nextTitle =
+      body.title !== undefined ? body.title.trim() || "Offerte" : existing.title;
+    const nextStatus = body.status ?? existing.status;
+
     const { error } = await admin
       .from("quotes")
       .update({
-        ...(body.title !== undefined
-          ? { title: body.title.trim() || "Offerte" }
-          : {}),
+        ...(body.title !== undefined ? { title: nextTitle } : {}),
         ...(body.status !== undefined ? { status: body.status } : {}),
         ...(body.validUntil !== undefined
           ? { valid_until: body.validUntil?.trim() || null }
@@ -134,6 +150,45 @@ export async function PATCH(request: Request) {
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    if (body.status !== undefined && body.status !== existing.status) {
+      const type = quoteStatusActivityType(body.status) ?? "quote_updated";
+      await logProjectActivity(admin, {
+        organizationId: gate.organizationId,
+        projectId: existing.project_id,
+        type,
+        title:
+          type === "quote_sent"
+            ? "Offerte verzonden"
+            : type === "quote_rejected"
+              ? "Offerte afgewezen"
+              : type === "quote_cancelled"
+                ? "Offerte geannuleerd"
+                : "Offerte gewijzigd",
+        body: nextTitle,
+        metadata: {
+          quote_id: id,
+          from: existing.status,
+          to: body.status,
+        },
+        createdBy: gate.userId,
+      });
+    } else if (
+      body.title !== undefined ||
+      body.validUntil !== undefined ||
+      body.internalNotes !== undefined ||
+      body.externalNotes !== undefined
+    ) {
+      await logProjectActivity(admin, {
+        organizationId: gate.organizationId,
+        projectId: existing.project_id,
+        type: "quote_updated",
+        title: "Offerte gewijzigd",
+        body: nextTitle,
+        metadata: { quote_id: id, status: nextStatus },
+        createdBy: gate.userId,
+      });
     }
 
     return NextResponse.json({ success: true });

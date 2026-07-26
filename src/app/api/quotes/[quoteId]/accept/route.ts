@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { logProjectActivity } from "@/features/projects/lib/project-activity";
 import { requireApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -22,7 +23,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     const admin = createAdminClient();
     const { data: quote } = await admin
       .from("quotes")
-      .select("id, status, project_id, organization_id")
+      .select("id, status, title, project_id, organization_id")
       .eq("organization_id", gate.organizationId)
       .eq("id", quoteId)
       .maybeSingle();
@@ -82,6 +83,13 @@ export async function POST(request: Request, { params }: RouteParams) {
     }
 
     if (setProjectExecution) {
+      const { data: project } = await admin
+        .from("projects")
+        .select("status")
+        .eq("organization_id", gate.organizationId)
+        .eq("id", quote.project_id)
+        .maybeSingle();
+
       const { error: projectError } = await admin
         .from("projects")
         .update({ status: "execution" })
@@ -94,6 +102,46 @@ export async function POST(request: Request, { params }: RouteParams) {
           { status: 500 },
         );
       }
+
+      if (project && project.status !== "execution") {
+        await logProjectActivity(admin, {
+          organizationId: gate.organizationId,
+          projectId: quote.project_id,
+          type: "status_changed",
+          title: "Status gewijzigd",
+          body: `${project.status} → execution`,
+          metadata: { from: project.status, to: "execution" },
+          createdBy: gate.userId,
+        });
+      }
+    }
+
+    await logProjectActivity(admin, {
+      organizationId: gate.organizationId,
+      projectId: quote.project_id,
+      type: "quote_accepted",
+      title: "Offerte geaccepteerd",
+      body: quote.title,
+      metadata: {
+        quote_id: quoteId,
+        work_item_count: selected.length,
+      },
+      createdBy: gate.userId,
+    });
+
+    if (selected.length > 0) {
+      await logProjectActivity(admin, {
+        organizationId: gate.organizationId,
+        projectId: quote.project_id,
+        type: "work_item_created",
+        title: "Werkzaamheden aangemaakt",
+        body: `${selected.length} werkzaamheden`,
+        metadata: {
+          quote_id: quoteId,
+          count: selected.length,
+        },
+        createdBy: gate.userId,
+      });
     }
 
     return NextResponse.json({

@@ -1,57 +1,46 @@
-# Projectdetailpagina — uitgesteld (stubs)
+# Projectdetailpagina — backlog
 
 > Laatst bijgewerkt: 2026-07-26  
-> Context: UI naar mock projectdetail (belangrijkste pagina). Sidebar blijft.  
-> **Niet vergeten:** stub activeren → hier afvinken.
+> Context: MVP-werkruimte voor één project. Design language (PageCards, blauw primary) intact.  
+> **Niet vergeten:** stub activeren → hier afvinken. SQL: `20260726195000_project_detail_mvp.sql`
 
-## Bewust wél in v1
+## Afgerond in MVP
 
-- Hero: naam, status, korte projectref, klantlink, aangemaakt
-- Tabs: Overzicht, Offertes (echt), Taken/werkzaamheden (echt), overige tabs zichtbaar
-- Projectinformatie: klantgegevens + projectvelden (bewerken via formulier)
-- Voortgang: % op basis van werkzaamheden done/open (+ offerteteller)
-- Tijdlijn: afgeleid uit project + offertes + werkzaamheden
-- Binnenkort: open werkzaamheden
-- Financieel / bestanden / notitiecomposer: zichtbaar als stub
-- Blauw accent, PageCards
+- [x] Projectnummer (`PRJ-YYYY-NNNN`, auto)
+- [x] Start-/einddatum (bewerkbaar)
+- [x] Projectleider (staff-picker)
+- [x] Contactpersoon (naam / e-mail / telefoon, bewerkbaar)
+- [x] Labels/tags (toevoegen + verwijderen)
+- [x] Alle projectgegevens bewerkbaar (edit state + form)
+- [x] Uniforme activiteitfeed (`project_activities`)
+- [x] Notitiecomposer → note in dezelfde feed
+- [x] Voortgang alleen op basis van werkzaamheden (geen fictieve %)
+- [x] UX: empty/loading/edit states; stubs zonder fake data verwijderd uit overzicht
+- [x] Tabs klaar voor toekomstige modules (Werkbonnen, Planning, Bestanden, Financieel, Communicatie = coming soon)
 
-## Stubs / later
+## Bewust stubs / latere fases
 
-| Feature | UI nu | Nodig |
-| --- | --- | --- |
-| Delen | Disabled | Deellinks / rechten |
-| Favoriet (ster) | Disabled | User preferences |
-| Rij-menu `⋯` in hero | Disabled | Snelacties |
-| Projectthumbnail | Placeholder | Media upload |
-| Echte `PRJ-…` nummer | Afgeleid van uuid | `project_number` |
-| Start-/einddatum | Start ≈ createdAt; eind “—” | Schema-velden |
-| Projectleider | “—” | Assignment |
-| Labels / tags | Stub pills + disabled toevoegen | `project_labels` |
-| Omzet + % gefactureerd | “—” | Facturen |
-| Winstmarge | “—” | Kostprijs |
-| Tab Werkbonnen | Empty stub | Work orders Phase |
-| Tab Planning | Empty stub | Planning |
-| Tab Bestanden | Empty stub + laatste bestanden | Storage |
-| Tab Financieel | Stub totalen | Invoices |
-| Tab Communicatie | Empty stub | Inbox/comms |
-| Tab Activiteit | Gedeeltelijk via tijdlijn | Event log |
-| Contactpersoon | “—” | Customer contacts |
-| Kans % | “—” | Pipeline field |
-| Notitiecomposer onderaan | Disabled | Activity notes API |
-| Circular progress “echte” modules | Deels werkzaamheden | Work orders/files counts |
+| Feature | Status |
+| --- | --- |
+| Delen | Niet gebouwd |
+| Favoriet (ster) | Niet gebouwd |
+| Projectthumbnail | Niet gebouwd |
+| Omzet / winstmarge / facturatiegraad | Niet gebouwd |
+| Tab Werkbonnen | Coming soon |
+| Tab Planning | Coming soon |
+| Tab Bestanden | Coming soon |
+| Tab Financieel | Coming soon |
+| Tab Communicatie | Coming soon |
+| Kans % | Niet gebouwd |
 
-## Afvinklijst
+## Afvinklijst (toekomst)
 
 - [ ] Delen + favoriet
-- [ ] Thumbnail + projectnummer
-- [ ] Start/eind + projectleider
-- [ ] Labels
+- [ ] Thumbnail
 - [ ] Omzet / marge / facturatiegraad
 - [ ] Werkbonnen-tab
-- [ ] Planning-tab + Binnenkort uit planning
+- [ ] Planning-tab
 - [ ] Bestanden
 - [ ] Financieel echt
 - [ ] Communicatie
-- [ ] Volledige activiteitfeed
-- [ ] Contactpersoon + kans
-- [ ] Notitiecomposer
+- [ ] Kans %

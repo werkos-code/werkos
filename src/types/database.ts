@@ -39,6 +39,19 @@ export type QuoteStatus =
 
 export type WorkItemStatus = "open" | "done";
 
+export type ProjectActivityType =
+  | "project_created"
+  | "project_updated"
+  | "status_changed"
+  | "quote_created"
+  | "quote_updated"
+  | "quote_sent"
+  | "quote_accepted"
+  | "quote_rejected"
+  | "quote_cancelled"
+  | "work_item_created"
+  | "note";
+
 export type Database = {
   public: {
     Tables: {
@@ -259,6 +272,13 @@ export type Database = {
           name: string;
           status: ProjectStatus;
           notes: string | null;
+          project_number: string;
+          start_date: string | null;
+          end_date: string | null;
+          lead_user_id: string | null;
+          contact_name: string | null;
+          contact_email: string | null;
+          contact_phone: string | null;
           created_by: string | null;
           created_at: string;
           updated_at: string;
@@ -270,6 +290,13 @@ export type Database = {
           name: string;
           status?: ProjectStatus;
           notes?: string | null;
+          project_number?: string;
+          start_date?: string | null;
+          end_date?: string | null;
+          lead_user_id?: string | null;
+          contact_name?: string | null;
+          contact_email?: string | null;
+          contact_phone?: string | null;
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -281,6 +308,13 @@ export type Database = {
           name?: string;
           status?: ProjectStatus;
           notes?: string | null;
+          project_number?: string;
+          start_date?: string | null;
+          end_date?: string | null;
+          lead_user_id?: string | null;
+          contact_name?: string | null;
+          contact_email?: string | null;
+          contact_phone?: string | null;
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -301,6 +335,66 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      project_labels: {
+        Row: {
+          id: string;
+          organization_id: string;
+          project_id: string;
+          name: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          project_id: string;
+          name: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          project_id?: string;
+          name?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      project_activities: {
+        Row: {
+          id: string;
+          organization_id: string;
+          project_id: string;
+          type: ProjectActivityType;
+          title: string;
+          body: string | null;
+          metadata: Json;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          project_id: string;
+          type: ProjectActivityType;
+          title: string;
+          body?: string | null;
+          metadata?: Json;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          project_id?: string;
+          type?: ProjectActivityType;
+          title?: string;
+          body?: string | null;
+          metadata?: Json;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
       };
       quotes: {
         Row: {
