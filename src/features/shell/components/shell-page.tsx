@@ -20,9 +20,9 @@ export function ShellPage({
     <div className="flex min-h-dvh flex-col">
       <AppPageHeader title={title} backHref={backHref} />
       <div className="flex-1 px-6 py-8 lg:px-8 lg:py-10">
-        <div className="mx-auto w-full max-w-3xl">
+        <div className="mx-auto w-[90%]">
           {description ? (
-            <p className="max-w-xl text-[15px] leading-relaxed text-muted-foreground">
+            <p className="max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
               {description}
             </p>
           ) : null}
