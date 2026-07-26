@@ -162,26 +162,43 @@ function ProgressRing({
   percent,
   label,
   empty,
+  size = "md",
 }: {
   percent: number | null;
   label: string;
   empty?: boolean;
+  size?: "sm" | "md";
 }) {
   const clamped = percent === null ? 0 : Math.max(0, Math.min(100, percent));
   return (
     <div
-      className="relative size-28 shrink-0 rounded-full"
+      className={cn(
+        "relative shrink-0 rounded-full",
+        size === "sm" ? "size-20" : "size-28",
+      )}
       style={{
         background: empty
           ? `conic-gradient(color-mix(in oklab, var(--muted) 80%, transparent) 100%, transparent 0)`
           : `conic-gradient(var(--primary) ${clamped}%, color-mix(in oklab, var(--muted) 80%, transparent) 0)`,
       }}
     >
-      <div className="absolute inset-2 flex flex-col items-center justify-center rounded-full bg-card text-center">
-        <span className="text-xl font-semibold tabular-nums">
+      <div
+        className={cn(
+          "absolute flex flex-col items-center justify-center rounded-full bg-card text-center",
+          size === "sm" ? "inset-1.5" : "inset-2",
+        )}
+      >
+        <span
+          className={cn(
+            "font-semibold tabular-nums",
+            size === "sm" ? "text-base" : "text-xl",
+          )}
+        >
           {empty ? "—" : `${clamped}%`}
         </span>
-        <span className="text-[10px] text-muted-foreground">{label}</span>
+        <span className="max-w-[4.5rem] truncate text-[9px] text-muted-foreground">
+          {label}
+        </span>
       </div>
     </div>
   );
@@ -540,31 +557,37 @@ export function ProjectDetailWorkspace({
 
   return (
     <div className="space-y-5 pb-24">
-      <div className="flex flex-wrap items-center justify-end gap-2">
-        <Button type="button" variant="outline" size="sm" onClick={copyShareLink}>
-          <Share2 className="size-3.5" />
-          {t("detail.share")}
-        </Button>
-        <Button
-          type="button"
-          size="sm"
-          variant={editing ? "outline" : "default"}
-          onClick={() => {
-            setTab("overview");
-            setEditing((v) => !v);
-          }}
-        >
-          <Pencil className="size-3.5" />
-          {editing ? t("detail.cancelEdit") : t("detail.edit")}
-        </Button>
-      </div>
       {shareMessage ? (
         <p className="text-right text-sm text-muted-foreground">{shareMessage}</p>
       ) : null}
 
-      <PageCard className="p-5">
-        <div className="flex flex-col gap-5">
-          <div className="flex gap-4">
+      <PageCard className="relative p-5">
+        <div className="absolute top-5 right-5 z-10 flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={copyShareLink}
+          >
+            <Share2 className="size-3.5" />
+            {t("detail.share")}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant={editing ? "outline" : "default"}
+            onClick={() => {
+              setTab("overview");
+              setEditing((v) => !v);
+            }}
+          >
+            <Pencil className="size-3.5" />
+            {editing ? t("detail.cancelEdit") : t("detail.edit")}
+          </Button>
+        </div>
+
+        <div className="flex flex-col gap-6 pt-10 xl:flex-row xl:items-center xl:justify-between xl:gap-8 xl:pt-0">
+          <div className="flex min-w-0 flex-1 gap-4 xl:pr-4">
             <div className="relative shrink-0">
               <input
                 ref={coverInputRef}
@@ -744,21 +767,25 @@ export function ProjectDetailWorkspace({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <HeroMetric
-              label={t("detail.kpiProgress")}
-              value={
-                progressPercent == null ? "—" : `${progressPercent}%`
-              }
-              hint={
-                hasWorkItems
-                  ? t("detail.kpiProgressHint", {
-                      done: taskStats.done,
-                      total: taskStats.total,
-                    })
-                  : t("detail.progressEmpty")
-              }
-            />
+          <div className="grid w-full shrink-0 grid-cols-2 gap-x-4 gap-y-4 border-t border-border pt-4 sm:grid-cols-4 xl:w-auto xl:min-w-[26rem] xl:border-t-0 xl:border-l xl:pt-0 xl:pl-6">
+            <div className="flex flex-col items-start gap-1.5">
+              <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                {t("detail.kpiProgress")}
+              </p>
+              <ProgressRing
+                percent={progressPercent}
+                label={
+                  hasWorkItems
+                    ? t("detail.kpiProgressHint", {
+                        done: taskStats.done,
+                        total: taskStats.total,
+                      })
+                    : t("detail.completedLabel")
+                }
+                empty={!hasWorkItems}
+                size="sm"
+              />
+            </div>
             <HeroMetric
               label={t("detail.kpiTasks")}
               value={String(taskStats.total)}
@@ -1168,11 +1195,11 @@ function HeroMetric({
   hintDanger?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-border/80 bg-muted/20 px-3 py-2.5">
+    <div className="min-w-0">
       <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
         {label}
       </p>
-      <p className="mt-1 text-lg font-semibold tabular-nums">{value}</p>
+      <p className="mt-1 text-xl font-semibold tabular-nums">{value}</p>
       <p
         className={cn(
           "mt-0.5 text-[11px]",
