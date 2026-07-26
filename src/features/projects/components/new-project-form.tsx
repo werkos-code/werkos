@@ -30,27 +30,31 @@ export function NewProjectForm({ customers }: NewProjectFormProps) {
         setPending(true);
 
         void (async () => {
-          const result = await createProject({
-            name: String(form.get("name") ?? ""),
-            customerId: String(form.get("customerId") ?? ""),
-            notes: String(form.get("notes") ?? "") || undefined,
-          });
+          try {
+            const result = await createProject({
+              name: String(form.get("name") ?? ""),
+              customerId: String(form.get("customerId") ?? ""),
+              notes: String(form.get("notes") ?? "") || undefined,
+            });
 
-          if (result.error) {
-            setError(
-              result.error === "name_required"
-                ? t("nameRequired")
-                : result.error === "customer_required" ||
-                    result.error === "customer_not_found"
-                  ? t("customerRequired")
-                  : result.error,
-            );
+            if (result.error || !result.projectId) {
+              setError(
+                result.error === "name_required"
+                  ? t("nameRequired")
+                  : result.error === "customer_required" ||
+                      result.error === "customer_not_found"
+                    ? t("customerRequired")
+                    : result.error || tCommon("error"),
+              );
+              return;
+            }
+
+            router.replace(`/werk/projecten/${result.projectId}`);
+          } catch {
+            setError(tCommon("error"));
+          } finally {
             setPending(false);
-            return;
           }
-
-          router.push(`/werk/projecten/${result.projectId}`);
-          router.refresh();
         })();
       }}
     >
