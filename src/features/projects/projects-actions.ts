@@ -44,34 +44,6 @@ async function getStaffOrgContext() {
   };
 }
 
-function mapProject(row: {
-  id: string;
-  name: string;
-  status: ProjectStatus;
-  notes: string | null;
-  customer_id: string;
-  created_at: string;
-  updated_at: string;
-  customers:
-    | { id: string; name: string }
-    | { id: string; name: string }[]
-    | null;
-}): ProjectRow {
-  const customer = Array.isArray(row.customers)
-    ? row.customers[0]
-    : row.customers;
-  return {
-    id: row.id,
-    name: row.name,
-    status: row.status,
-    notes: row.notes,
-    customerId: row.customer_id,
-    customerName: customer?.name ?? "—",
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-  };
-}
-
 export async function listProjects(
   filter: ProjectListFilter = "all",
 ): Promise<{ projects?: ProjectRow[]; error?: string }> {
@@ -80,9 +52,7 @@ export async function listProjects(
 
   let query = ctx.supabase
     .from("projects")
-    .select(
-      "id, name, status, notes, customer_id, created_at, updated_at, customers(id, name)",
-    )
+    .select("id, name, status, notes, customer_id, created_at, updated_at")
     .eq("organization_id", ctx.organizationId)
     .order("updated_at", { ascending: false });
 
@@ -94,10 +64,34 @@ export async function listProjects(
   const { data, error } = await query;
   if (error) return { error: error.message };
 
+  const customerIds = [
+    ...new Set((data ?? []).map((row) => row.customer_id)),
+  ];
+  const nameById = new Map<string, string>();
+
+  if (customerIds.length > 0) {
+    const { data: customers } = await ctx.supabase
+      .from("customers")
+      .select("id, name")
+      .eq("organization_id", ctx.organizationId)
+      .in("id", customerIds);
+
+    for (const customer of customers ?? []) {
+      nameById.set(customer.id, customer.name);
+    }
+  }
+
   return {
-    projects: (data ?? []).map((row) =>
-      mapProject(row as Parameters<typeof mapProject>[0]),
-    ),
+    projects: (data ?? []).map((row) => ({
+      id: row.id,
+      name: row.name,
+      status: row.status,
+      notes: row.notes,
+      customerId: row.customer_id,
+      customerName: nameById.get(row.customer_id) ?? "—",
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+    })),
   };
 }
 
@@ -110,9 +104,7 @@ export async function getProject(projectId: string): Promise<{
 
   const { data, error } = await ctx.supabase
     .from("projects")
-    .select(
-      "id, name, status, notes, customer_id, created_at, updated_at, customers(id, name)",
-    )
+    .select("id, name, status, notes, customer_id, created_at, updated_at")
     .eq("organization_id", ctx.organizationId)
     .eq("id", projectId)
     .maybeSingle();
@@ -120,7 +112,25 @@ export async function getProject(projectId: string): Promise<{
   if (error) return { error: error.message };
   if (!data) return { error: "not_found" };
 
-  return { project: mapProject(data as Parameters<typeof mapProject>[0]) };
+  const { data: customer } = await ctx.supabase
+    .from("customers")
+    .select("id, name")
+    .eq("organization_id", ctx.organizationId)
+    .eq("id", data.customer_id)
+    .maybeSingle();
+
+  return {
+    project: {
+      id: data.id,
+      name: data.name,
+      status: data.status,
+      notes: data.notes,
+      customerId: data.customer_id,
+      customerName: customer?.name ?? "—",
+      createdAt: data.created_at,
+      updatedAt: data.updated_at,
+    },
+  };
 }
 
 export async function createProject(input: {
@@ -159,6 +169,7 @@ export async function createProject(input: {
     .single();
 
   if (error) return { error: error.message };
+  if (!data?.id) return { error: "create_failed" };
   return { projectId: data.id };
 }
 

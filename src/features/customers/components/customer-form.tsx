@@ -43,39 +43,41 @@ export function CustomerForm({ mode, initial }: CustomerFormProps) {
         };
 
         void (async () => {
-          if (mode === "create") {
-            const result = await createCustomer(payload);
+          try {
+            if (mode === "create") {
+              const result = await createCustomer(payload);
+              if (result.error || !result.customerId) {
+                setError(
+                  result.error === "name_required"
+                    ? t("nameRequired")
+                    : result.error || tCommon("error"),
+                );
+                return;
+              }
+              router.replace(`/bedrijf/klanten/${result.customerId}`);
+              return;
+            }
+
+            if (!initial) return;
+
+            const result = await updateCustomer({
+              id: initial.id,
+              ...payload,
+            });
             if (result.error) {
               setError(
                 result.error === "name_required"
                   ? t("nameRequired")
                   : result.error,
               );
-              setPending(false);
               return;
             }
-            router.push(`/bedrijf/klanten/${result.customerId}`);
             router.refresh();
-            return;
-          }
-
-          if (!initial) {
+          } catch {
+            setError(tCommon("error"));
+          } finally {
             setPending(false);
-            return;
           }
-
-          const result = await updateCustomer({ id: initial.id, ...payload });
-          if (result.error) {
-            setError(
-              result.error === "name_required"
-                ? t("nameRequired")
-                : result.error,
-            );
-            setPending(false);
-            return;
-          }
-          setPending(false);
-          router.refresh();
         })();
       }}
     >

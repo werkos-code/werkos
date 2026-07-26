@@ -38,6 +38,21 @@ async function getStaffOrgContext() {
   };
 }
 
+async function projectCountForCustomer(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  organizationId: string,
+  customerId: string,
+) {
+  const { count, error } = await supabase
+    .from("projects")
+    .select("id", { count: "exact", head: true })
+    .eq("organization_id", organizationId)
+    .eq("customer_id", customerId);
+
+  if (error) return 0;
+  return count ?? 0;
+}
+
 export async function listCustomers(): Promise<{
   customers?: CustomerRow[];
   error?: string;
@@ -47,17 +62,14 @@ export async function listCustomers(): Promise<{
 
   const { data, error } = await ctx.supabase
     .from("customers")
-    .select(
-      "id, name, email, phone, address, notes, created_at, projects(count)",
-    )
+    .select("id, name, email, phone, address, notes, created_at")
     .eq("organization_id", ctx.organizationId)
     .order("name");
 
   if (error) return { error: error.message };
 
-  const customers: CustomerRow[] = (data ?? []).map((row) => {
-    const countRaw = row.projects as { count: number }[] | null;
-    return {
+  const customers: CustomerRow[] = await Promise.all(
+    (data ?? []).map(async (row) => ({
       id: row.id,
       name: row.name,
       email: row.email,
@@ -65,9 +77,13 @@ export async function listCustomers(): Promise<{
       address: row.address,
       notes: row.notes,
       createdAt: row.created_at,
-      projectCount: countRaw?.[0]?.count ?? 0,
-    };
-  });
+      projectCount: await projectCountForCustomer(
+        ctx.supabase,
+        ctx.organizationId,
+        row.id,
+      ),
+    })),
+  );
 
   return { customers };
 }
@@ -98,9 +114,7 @@ export async function getCustomer(customerId: string): Promise<{
 
   const { data, error } = await ctx.supabase
     .from("customers")
-    .select(
-      "id, name, email, phone, address, notes, created_at, projects(count)",
-    )
+    .select("id, name, email, phone, address, notes, created_at")
     .eq("organization_id", ctx.organizationId)
     .eq("id", customerId)
     .maybeSingle();
@@ -108,7 +122,6 @@ export async function getCustomer(customerId: string): Promise<{
   if (error) return { error: error.message };
   if (!data) return { error: "not_found" };
 
-  const countRaw = data.projects as { count: number }[] | null;
   return {
     customer: {
       id: data.id,
@@ -118,7 +131,11 @@ export async function getCustomer(customerId: string): Promise<{
       address: data.address,
       notes: data.notes,
       createdAt: data.created_at,
-      projectCount: countRaw?.[0]?.count ?? 0,
+      projectCount: await projectCountForCustomer(
+        ctx.supabase,
+        ctx.organizationId,
+        data.id,
+      ),
     },
   };
 }
@@ -151,6 +168,7 @@ export async function createCustomer(input: {
     .single();
 
   if (error) return { error: error.message };
+  if (!data?.id) return { error: "create_failed" };
   return { customerId: data.id };
 }
 
