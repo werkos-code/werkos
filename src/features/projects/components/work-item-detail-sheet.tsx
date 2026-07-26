@@ -324,7 +324,7 @@ export function WorkItemDetailSheet({
       <SheetContent
         side="right"
         showCloseButton={false}
-        className="h-full w-full gap-0 overflow-hidden p-0 sm:max-w-none md:w-[min(100%,72rem)]"
+        className="h-full w-[min(100%,70vw)] gap-0 overflow-hidden p-0 data-[side=right]:w-[min(100%,70vw)] data-[side=right]:sm:max-w-[70vw]"
       >
         <SheetHeader className="flex-row items-center justify-between space-y-0 border-b border-border px-5 py-3">
           <SheetTitle className="text-sm font-medium">
