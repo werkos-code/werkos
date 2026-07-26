@@ -1,14 +1,9 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import { Button } from "@/components/ui/button";
-import {
-  ProjectsFilterTabs,
-  ProjectsTable,
-} from "@/features/projects/components/projects-table";
+import { ProjectsWorkspace } from "@/features/projects/components/projects-workspace";
 import type { ProjectListFilter } from "@/features/projects/lib/project-status";
 import { listProjects } from "@/features/projects/projects-actions";
 import { ShellPage } from "@/features/shell/components/shell-page";
-import { Link } from "@/i18n/navigation";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -34,23 +29,18 @@ export default async function ProjectenPage({ params, searchParams }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("projects");
   const filter = parseFilter(filterParam);
-  const result = await listProjects(filter);
+  const result = await listProjects("all");
 
   return (
-    <ShellPage title={t("title")} description={t("description")}>
-      <div className="mb-6 flex flex-wrap items-center gap-3">
-        <Button asChild>
-          <Link href="/werk/aanvragen/nieuw">{t("newRequest")}</Link>
-        </Button>
-      </div>
-      <ProjectsFilterTabs activeFilter={filter} />
-      <div className="mt-6">
-        {result.error ? (
-          <p className="text-sm text-destructive">{result.error}</p>
-        ) : (
-          <ProjectsTable projects={result.projects ?? []} />
-        )}
-      </div>
+    <ShellPage title={t("title")}>
+      {result.error ? (
+        <p className="text-sm text-destructive">{result.error}</p>
+      ) : (
+        <ProjectsWorkspace
+          projects={result.projects ?? []}
+          initialFilter={filter}
+        />
+      )}
     </ShellPage>
   );
 }

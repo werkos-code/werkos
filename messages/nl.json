@@ -254,7 +254,7 @@
     }
   },
   "projects": {
-    "title": "Projecten",
+    "title": "Alle projecten",
     "description": "Aan welke projecten werk je?",
     "newRequest": "Nieuwe aanvraag",
     "newTitle": "Nieuwe aanvraag",
@@ -273,7 +273,12 @@
       "active": "Lopend",
       "completed": "Afgerond",
       "archived": "Archief",
-      "all": "Alles"
+      "all": "Alles",
+      "statusAll": "Status: Alle",
+      "customerAll": "Klant: Alle",
+      "leaderAll": "Projectleider: Alle",
+      "periodAll": "Periode: Alle",
+      "more": "Meer filters"
     },
     "status": {
       "preparation": "Voorbereiding",
@@ -291,8 +296,13 @@
     },
     "columns": {
       "name": "Project",
-      "customer": "Opdrachtgever",
-      "status": "Status"
+      "customer": "Klant",
+      "status": "Status",
+      "leader": "Projectleider",
+      "startDate": "Startdatum",
+      "endDate": "Einddatum",
+      "revenue": "Omzet",
+      "progress": "Voortgang"
     },
     "sections": {
       "overview": "Overzicht",
@@ -304,6 +314,32 @@
       "hoursMaterials": "Uren & materialen",
       "quotes": "Offertes",
       "invoices": "Facturen"
+    },
+    "pageSubtitle": "Overzicht van al je projecten en aanvragen",
+    "searchPlaceholder": "Zoek op projectnaam, klant of referentie...",
+    "selectPage": "Selecteer alle op deze pagina",
+    "selectedCount": "{count} geselecteerd",
+    "bulkSoon": "Bulkacties volgen later",
+    "actions": {
+      "import": "Importeren",
+      "saveFilters": "Filters opslaan",
+      "rowMenu": "Meer acties"
+    },
+    "stats": {
+      "total": "Totaal projecten",
+      "totalHint": "In je bedrijf",
+      "newRequests": "Nieuwe aanvragen",
+      "newRequestsHint": "In voorbereiding",
+      "active": "Lopende projecten",
+      "activeHint": "In uitvoering",
+      "completedMonth": "Afgerond deze maand",
+      "completedMonthHint": "Status afgerond",
+      "revenue": "Totaal omzet (looptijd)",
+      "revenueHint": "Volgt later · excl. btw"
+    },
+    "pagination": {
+      "range": "{start} – {end} van {total} projecten",
+      "perPage": "{count} per pagina"
     }
   },
   "quotes": {

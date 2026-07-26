@@ -254,7 +254,7 @@
     }
   },
   "projects": {
-    "title": "Projekte",
+    "title": "Alle Projekte",
     "description": "An welchen Projekten arbeitest du?",
     "newRequest": "Neue Anfrage",
     "newTitle": "Neue Anfrage",
@@ -273,7 +273,12 @@
       "active": "Laufend",
       "completed": "Abgeschlossen",
       "archived": "Archiv",
-      "all": "Alle"
+      "all": "Alle",
+      "statusAll": "Status: Alle",
+      "customerAll": "Kunde: Alle",
+      "leaderAll": "Projektleiter: Alle",
+      "periodAll": "Zeitraum: Alle",
+      "more": "Mehr Filter"
     },
     "status": {
       "preparation": "Vorbereitung",
@@ -291,8 +296,13 @@
     },
     "columns": {
       "name": "Projekt",
-      "customer": "Auftraggeber",
-      "status": "Status"
+      "customer": "Kunde",
+      "status": "Status",
+      "leader": "Projektleiter",
+      "startDate": "Startdatum",
+      "endDate": "Enddatum",
+      "revenue": "Umsatz",
+      "progress": "Fortschritt"
     },
     "sections": {
       "overview": "Übersicht",
@@ -304,6 +314,32 @@
       "hoursMaterials": "Stunden & Materialien",
       "quotes": "Angebote",
       "invoices": "Rechnungen"
+    },
+    "pageSubtitle": "Übersicht aller Projekte und Anfragen",
+    "searchPlaceholder": "Suche nach Projektname, Kunde oder Referenz...",
+    "selectPage": "Alle auf dieser Seite auswählen",
+    "selectedCount": "{count} ausgewählt",
+    "bulkSoon": "Massenaktionen folgen später",
+    "actions": {
+      "import": "Importieren",
+      "saveFilters": "Filter speichern",
+      "rowMenu": "Weitere Aktionen"
+    },
+    "stats": {
+      "total": "Projekte gesamt",
+      "totalHint": "In deinem Unternehmen",
+      "newRequests": "Neue Anfragen",
+      "newRequestsHint": "In Vorbereitung",
+      "active": "Laufende Projekte",
+      "activeHint": "In Ausführung",
+      "completedMonth": "Diesen Monat abgeschlossen",
+      "completedMonthHint": "Status abgeschlossen",
+      "revenue": "Umsatz gesamt (Laufzeit)",
+      "revenueHint": "Folgt später · excl. MwSt."
+    },
+    "pagination": {
+      "range": "{start} – {end} von {total} Projekten",
+      "perPage": "{count} pro Seite"
     }
   },
   "quotes": {

@@ -115,7 +115,7 @@ Hierdoor blijft blauw waardevol wanneer het daadwerkelijk gebruikt wordt.
 
 Exacte CSS-tokens leven in `src/app/globals.css` en het shadcn-thema. Wijzigingen aan kleuren gebeuren daar — niet ad hoc per pagina.
 
-**Workspace-pagina's** (zoals de offerte-editor) mogen een dichtere layout hebben (meta-kaarten, tabs, totals-rail) zolang de sidebar, Geist, en spaarzaam blauw intact blijven. Uitgestelde editor-features: zie [`QUOTE_EDITOR_BACKLOG.md`](./QUOTE_EDITOR_BACKLOG.md).
+**Workspace-pagina's** (zoals de offerte-editor) mogen een dichtere layout hebben (meta-kaarten, tabs, totals-rail) zolang de sidebar, Geist, en spaarzaam blauw intact blijven. Uitgestelde editor-features: zie [`QUOTE_EDITOR_BACKLOG.md`](./QUOTE_EDITOR_BACKLOG.md). Uitgestelde projectenlijst-features: zie [`PROJECTS_PAGE_BACKLOG.md`](./PROJECTS_PAGE_BACKLOG.md).
 
 
 ---

@@ -254,7 +254,7 @@
     }
   },
   "projects": {
-    "title": "Projects",
+    "title": "All projects",
     "description": "Which projects are you working on?",
     "newRequest": "New request",
     "newTitle": "New request",
@@ -273,7 +273,12 @@
       "active": "Active",
       "completed": "Completed",
       "archived": "Archive",
-      "all": "All"
+      "all": "All",
+      "statusAll": "Status: All",
+      "customerAll": "Customer: All",
+      "leaderAll": "Project lead: All",
+      "periodAll": "Period: All",
+      "more": "More filters"
     },
     "status": {
       "preparation": "Preparation",
@@ -291,8 +296,13 @@
     },
     "columns": {
       "name": "Project",
-      "customer": "Client",
-      "status": "Status"
+      "customer": "Customer",
+      "status": "Status",
+      "leader": "Project lead",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "revenue": "Revenue",
+      "progress": "Progress"
     },
     "sections": {
       "overview": "Overview",
@@ -304,6 +314,32 @@
       "hoursMaterials": "Hours & materials",
       "quotes": "Quotes",
       "invoices": "Invoices"
+    },
+    "pageSubtitle": "Overview of all your projects and requests",
+    "searchPlaceholder": "Search by project name, customer or reference...",
+    "selectPage": "Select all on this page",
+    "selectedCount": "{count} selected",
+    "bulkSoon": "Bulk actions coming later",
+    "actions": {
+      "import": "Import",
+      "saveFilters": "Save filters",
+      "rowMenu": "More actions"
+    },
+    "stats": {
+      "total": "Total projects",
+      "totalHint": "In your company",
+      "newRequests": "New requests",
+      "newRequestsHint": "In preparation",
+      "active": "Active projects",
+      "activeHint": "In execution",
+      "completedMonth": "Completed this month",
+      "completedMonthHint": "Status completed",
+      "revenue": "Total revenue (lifetime)",
+      "revenueHint": "Coming later · excl. VAT"
+    },
+    "pagination": {
+      "range": "{start} – {end} of {total} projects",
+      "perPage": "{count} per page"
     }
   },
   "quotes": {
