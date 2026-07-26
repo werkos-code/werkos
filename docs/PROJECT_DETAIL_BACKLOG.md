@@ -19,6 +19,7 @@
 - [x] Delen (projectlink kopiëren)
 - [x] Projectthumbnail / cover (klik → upload)
 - [x] Interactieve werkzaamheden (toevoegen, bewerken, open/done)
+- [x] Taken-tab als PM-werkruimte (lijst, groepen, filters, widgets, overlay-placeholder)
 - [x] Activiteitfeed filteren
 - [x] Tabs klaar voor toekomstige modules (coming soon)
 
