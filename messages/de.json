@@ -158,7 +158,7 @@
       },
       "workOrders": {
         "title": "Arbeitsaufträge",
-        "description": "Arbeitsaufträge werden in einer späteren Phase gebaut."
+        "description": "Übersicht der Arbeitsaufträge für die Feldarbeit."
       },
       "invoices": {
         "title": "Rechnungen",
@@ -446,7 +446,11 @@
       "kpiOverdueHint": "{count} überfällig",
       "kpiHours": "Geschätzte Stunden",
       "kpiHoursHint": "Noch {remaining}",
-      "kpiHoursEmpty": "Noch keine Stunden"
+      "kpiHoursEmpty": "Noch keine Stunden",
+      "viewAllWorkOrders": "Alle Arbeitsaufträge",
+      "workOrdersEmpty": "Noch keine Arbeitsaufträge in diesem Projekt.",
+      "planningModuleHint": "Zentrale Planung ansehen und verwalten.",
+      "openPlanning": "Planung öffnen"
     },
     "workItems": {
       "views": {
@@ -805,6 +809,93 @@
       "noProject": "Kein Projekt",
       "assignee": "Person",
       "required": "Titel, Start und Ende sind Pflicht."
+    }
+  },
+  "workOrders": {
+    "title": "Arbeitsaufträge",
+    "export": "Exportieren",
+    "newWorkOrder": "Neuer Arbeitsauftrag",
+    "searchPlaceholder": "Arbeitsaufträge suchen…",
+    "empty": "Noch keine Arbeitsaufträge. Erstelle einen, um Feldarbeit zu organisieren.",
+    "rowMenu": "Mehr Aktionen",
+    "tabComingSoon": "Diese Ansicht folgt später.",
+    "backToOverview": "Zur Übersicht",
+    "detailTitle": "Arbeitsauftrag {number}",
+    "tabs": {
+      "overview": "Übersicht",
+      "kanban": "Kanban",
+      "planning": "Planung",
+      "mine": "Meine Aufträge"
+    },
+    "filters": {
+      "allProjects": "Alle Projekte",
+      "allStatuses": "Alle Status",
+      "allTypes": "Alle Typen",
+      "allAssignees": "Alle Ausführende"
+    },
+    "columns": {
+      "workOrder": "Auftrag",
+      "project": "Projekt",
+      "type": "Typ",
+      "assignee": "Ausführender",
+      "planning": "Planung",
+      "status": "Status",
+      "priority": "Priorität"
+    },
+    "status": {
+      "open": "Offen",
+      "planned": "Geplant",
+      "in_progress": "In Ausführung",
+      "done": "Fertig",
+      "cancelled": "Abgebrochen"
+    },
+    "priority": {
+      "low": "Niedrig",
+      "normal": "Normal",
+      "high": "Hoch"
+    },
+    "kpi": {
+      "total": "Gesamt",
+      "totalHint": "Alle Arbeitsaufträge",
+      "open": "Offen",
+      "openHint": "Noch zu planen",
+      "planned": "Geplant",
+      "plannedHint": "In der Planung",
+      "inProgress": "In Ausführung",
+      "inProgressHint": "Aktiv",
+      "done": "Fertig",
+      "doneHint": "Abgeschlossen",
+      "cancelled": "Abgebrochen",
+      "cancelledHint": "Abgebrochen"
+    },
+    "planningToday": "Heute um {time}",
+    "pagination": {
+      "range": "{from}-{to} von {total} Aufträgen",
+      "perPage": "{count} pro Seite",
+      "prev": "Zurück",
+      "next": "Weiter"
+    },
+    "detail": {
+      "description": "Beschreibung",
+      "descriptionEmpty": "Noch keine Beschreibung.",
+      "start": "Start",
+      "duration": "Erwartete Dauer",
+      "subtasks": "Unteraufgaben",
+      "subtasksEmpty": "Noch keine Unteraufgaben.",
+      "attachments": "Anhänge",
+      "attachmentsSoon": "Dateien folgen mit dem Dateien-Modul.",
+      "openFull": "Auftrag öffnen"
+    },
+    "form": {
+      "createTitle": "Neuer Arbeitsauftrag",
+      "title": "Titel",
+      "project": "Projekt",
+      "selectProject": "Projekt wählen",
+      "typePlaceholder": "z. B. Malerarbeit",
+      "unassigned": "Nicht zugewiesen",
+      "checklist": "Unteraufgaben (eine pro Zeile)",
+      "checklistPlaceholder": "Vorbereitung…\nAbschluss…",
+      "required": "Titel und Projekt sind Pflicht."
     }
   }
 }

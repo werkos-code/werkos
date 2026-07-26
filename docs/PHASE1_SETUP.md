@@ -173,6 +173,18 @@ Na Phase 1 / Super Admin:
    - Filters project / persoon
 4. Rest: [`PLANNING_BACKLOG.md`](./PLANNING_BACKLOG.md)
 
+## 16. Werkbonnen
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260726250000_work_orders.sql`
+3. Test:
+   - `/werk/projecten/werkbonnen` — KPI’s + tabel
+   - + Nieuwe werkbon (met project + subtaken)
+   - Klik rij → detail sheet
+   - Projectdetail → tab Werkbonnen
+4. Rest: [`WORK_ORDERS_BACKLOG.md`](./WORK_ORDERS_BACKLOG.md)
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  

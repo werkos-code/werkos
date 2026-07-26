@@ -158,7 +158,7 @@
       },
       "workOrders": {
         "title": "Work orders",
-        "description": "Work orders will be built in a later phase."
+        "description": "Overview of work orders for field work."
       },
       "invoices": {
         "title": "Invoices",
@@ -446,7 +446,11 @@
       "kpiOverdueHint": "{count} overdue",
       "kpiHours": "Estimated hours",
       "kpiHoursHint": "{remaining} left",
-      "kpiHoursEmpty": "No hours yet"
+      "kpiHoursEmpty": "No hours yet",
+      "viewAllWorkOrders": "All work orders",
+      "workOrdersEmpty": "No work orders on this project yet.",
+      "planningModuleHint": "View and manage the central schedule.",
+      "openPlanning": "Open planning"
     },
     "workItems": {
       "views": {
@@ -805,6 +809,93 @@
       "noProject": "No project",
       "assignee": "Person",
       "required": "Title, start and end are required."
+    }
+  },
+  "workOrders": {
+    "title": "Work orders",
+    "export": "Export",
+    "newWorkOrder": "New work order",
+    "searchPlaceholder": "Search work orders…",
+    "empty": "No work orders yet. Create one to organise field work.",
+    "rowMenu": "More actions",
+    "tabComingSoon": "This view comes in a next step.",
+    "backToOverview": "Back to overview",
+    "detailTitle": "Work order {number}",
+    "tabs": {
+      "overview": "Overview",
+      "kanban": "Kanban",
+      "planning": "Schedule",
+      "mine": "My work orders"
+    },
+    "filters": {
+      "allProjects": "All projects",
+      "allStatuses": "All statuses",
+      "allTypes": "All types",
+      "allAssignees": "All assignees"
+    },
+    "columns": {
+      "workOrder": "Work order",
+      "project": "Project",
+      "type": "Type",
+      "assignee": "Assignee",
+      "planning": "Schedule",
+      "status": "Status",
+      "priority": "Priority"
+    },
+    "status": {
+      "open": "Open",
+      "planned": "Scheduled",
+      "in_progress": "In progress",
+      "done": "Done",
+      "cancelled": "Cancelled"
+    },
+    "priority": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High"
+    },
+    "kpi": {
+      "total": "Total",
+      "totalHint": "All work orders",
+      "open": "Open",
+      "openHint": "Still to schedule",
+      "planned": "Scheduled",
+      "plannedHint": "On the calendar",
+      "inProgress": "In progress",
+      "inProgressHint": "Active",
+      "done": "Done",
+      "doneHint": "Completed",
+      "cancelled": "Cancelled",
+      "cancelledHint": "Cancelled"
+    },
+    "planningToday": "Today at {time}",
+    "pagination": {
+      "range": "{from}-{to} of {total} work orders",
+      "perPage": "{count} per page",
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "detail": {
+      "description": "Description",
+      "descriptionEmpty": "No description yet.",
+      "start": "Start",
+      "duration": "Expected duration",
+      "subtasks": "Subtasks",
+      "subtasksEmpty": "No subtasks yet.",
+      "attachments": "Attachments",
+      "attachmentsSoon": "Files come with the Files module.",
+      "openFull": "Open work order"
+    },
+    "form": {
+      "createTitle": "New work order",
+      "title": "Title",
+      "project": "Project",
+      "selectProject": "Choose a project",
+      "typePlaceholder": "e.g. Painting",
+      "unassigned": "Unassigned",
+      "checklist": "Subtasks (one per line)",
+      "checklistPlaceholder": "Preparation…\nFinishing…",
+      "required": "Title and project are required."
     }
   }
 }

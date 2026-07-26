@@ -15,6 +15,7 @@ import {
   listQuotesForProject,
   listWorkItemsForProject,
 } from "@/features/quotes/quotes-actions";
+import { listWorkOrders } from "@/features/work-orders/work-orders-actions";
 import { ShellPage } from "@/features/shell/components/shell-page";
 
 type Props = {
@@ -36,6 +37,7 @@ export default async function ProjectDetailPage({
     quotesResult,
     workItemsResult,
     activitiesResult,
+    workOrdersResult,
   ] = await Promise.all([
     getProject(projectId),
     listCustomerOptions(),
@@ -43,6 +45,7 @@ export default async function ProjectDetailPage({
     listQuotesForProject(projectId),
     listWorkItemsForProject(projectId),
     listProjectActivities(projectId),
+    listWorkOrders({ projectId }),
   ]);
 
   if (projectResult.error === "not_found" || !projectResult.project) {
@@ -65,6 +68,7 @@ export default async function ProjectDetailPage({
         staff={staffResult.staff ?? []}
         quotes={quotesResult.quotes ?? []}
         workItems={workItemsResult.workItems ?? []}
+        workOrders={workOrdersResult.workOrders ?? []}
         activities={activitiesResult.activities ?? []}
         initialTab={tab}
       />

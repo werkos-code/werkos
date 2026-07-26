@@ -158,7 +158,7 @@
       },
       "workOrders": {
         "title": "Werkbonnen",
-        "description": "Werkbonnen worden gebouwd in een volgende fase."
+        "description": "Overzicht van werkbonnen voor veldwerk."
       },
       "invoices": {
         "title": "Facturen",
@@ -446,7 +446,11 @@
       "kpiOverdueHint": "{count} te laat",
       "kpiHours": "Geschatte uren",
       "kpiHoursHint": "Nog {remaining}",
-      "kpiHoursEmpty": "Nog geen uren"
+      "kpiHoursEmpty": "Nog geen uren",
+      "viewAllWorkOrders": "Alle werkbonnen",
+      "workOrdersEmpty": "Nog geen werkbonnen op dit project.",
+      "planningModuleHint": "Bekijk en beheer de centrale planning.",
+      "openPlanning": "Open planning"
     },
     "workItems": {
       "views": {
@@ -805,6 +809,93 @@
       "noProject": "Geen project",
       "assignee": "Persoon",
       "required": "Titel, start en einde zijn verplicht."
+    }
+  },
+  "workOrders": {
+    "title": "Werkbonnen",
+    "export": "Exporteren",
+    "newWorkOrder": "Nieuwe werkbon",
+    "searchPlaceholder": "Zoek werkbonnen…",
+    "empty": "Nog geen werkbonnen. Maak er een aan om veldwerk te organiseren.",
+    "rowMenu": "Meer acties",
+    "tabComingSoon": "Deze weergave volgt in een volgende stap.",
+    "backToOverview": "Naar overzicht",
+    "detailTitle": "Werkbon {number}",
+    "tabs": {
+      "overview": "Overzicht",
+      "kanban": "Kanban",
+      "planning": "Planning",
+      "mine": "Mijn werkbonnen"
+    },
+    "filters": {
+      "allProjects": "Alle projecten",
+      "allStatuses": "Alle statussen",
+      "allTypes": "Alle types",
+      "allAssignees": "Alle uitvoerders"
+    },
+    "columns": {
+      "workOrder": "Werkbon",
+      "project": "Project",
+      "type": "Type",
+      "assignee": "Uitvoerder",
+      "planning": "Planning",
+      "status": "Status",
+      "priority": "Prioriteit"
+    },
+    "status": {
+      "open": "Open",
+      "planned": "Gepland",
+      "in_progress": "In uitvoering",
+      "done": "Gereed",
+      "cancelled": "Geannuleerd"
+    },
+    "priority": {
+      "low": "Laag",
+      "normal": "Normaal",
+      "high": "Hoog"
+    },
+    "kpi": {
+      "total": "Totaal",
+      "totalHint": "Alle werkbonnen",
+      "open": "Open",
+      "openHint": "Nog in te plannen",
+      "planned": "Gepland",
+      "plannedHint": "In de planning",
+      "inProgress": "In uitvoering",
+      "inProgressHint": "Actief",
+      "done": "Gereed",
+      "doneHint": "Afgerond",
+      "cancelled": "Geannuleerd",
+      "cancelledHint": "Geannuleerd"
+    },
+    "planningToday": "Vandaag om {time}",
+    "pagination": {
+      "range": "{from}-{to} van {total} werkbonnen",
+      "perPage": "{count} per pagina",
+      "prev": "Vorige",
+      "next": "Volgende"
+    },
+    "detail": {
+      "description": "Omschrijving",
+      "descriptionEmpty": "Nog geen omschrijving.",
+      "start": "Start",
+      "duration": "Verwachte duur",
+      "subtasks": "Subtaken",
+      "subtasksEmpty": "Nog geen subtaken.",
+      "attachments": "Bijlagen",
+      "attachmentsSoon": "Bestanden volgen bij de Bestanden-module.",
+      "openFull": "Werkbon openen"
+    },
+    "form": {
+      "createTitle": "Nieuwe werkbon",
+      "title": "Titel",
+      "project": "Project",
+      "selectProject": "Kies een project",
+      "typePlaceholder": "Bijv. Schilderwerk",
+      "unassigned": "Niet toegewezen",
+      "checklist": "Subtaken (één per regel)",
+      "checklistPlaceholder": "Voorbereiding…\nAfwerking…",
+      "required": "Titel en project zijn verplicht."
     }
   }
 }

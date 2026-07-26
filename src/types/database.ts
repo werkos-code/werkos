@@ -45,6 +45,13 @@ export type AppointmentStatus =
   | "done"
   | "cancelled";
 export type AppointmentType = "work" | "meeting" | "delivery" | "other";
+export type WorkOrderStatus =
+  | "open"
+  | "planned"
+  | "in_progress"
+  | "done"
+  | "cancelled";
+export type WorkOrderPriority = "low" | "normal" | "high";
 
 export type ProjectActivityType =
   | "project_created"
@@ -669,6 +676,7 @@ export type Database = {
           created_by: string | null;
           created_at: string;
           updated_at: string;
+          work_order_id?: string | null;
         };
         Insert: {
           id?: string;
@@ -687,6 +695,7 @@ export type Database = {
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
+          work_order_id?: string | null;
         };
         Update: {
           id?: string;
@@ -705,6 +714,7 @@ export type Database = {
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
+          work_order_id?: string | null;
         };
         Relationships: [
           {
@@ -723,6 +733,146 @@ export type Database = {
           },
           {
             foreignKeyName: "appointments_work_item_id_fkey";
+            columns: ["work_item_id"];
+            isOneToOne: false;
+            referencedRelation: "work_items";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      work_orders: {
+        Row: {
+          id: string;
+          organization_id: string;
+          project_id: string;
+          work_order_number: string;
+          title: string;
+          description: string | null;
+          status: WorkOrderStatus;
+          priority: WorkOrderPriority;
+          work_type: string | null;
+          assignee_user_id: string | null;
+          planned_start: string | null;
+          estimated_minutes: number | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          project_id: string;
+          work_order_number?: string;
+          title: string;
+          description?: string | null;
+          status?: WorkOrderStatus;
+          priority?: WorkOrderPriority;
+          work_type?: string | null;
+          assignee_user_id?: string | null;
+          planned_start?: string | null;
+          estimated_minutes?: number | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          project_id?: string;
+          work_order_number?: string;
+          title?: string;
+          description?: string | null;
+          status?: WorkOrderStatus;
+          priority?: WorkOrderPriority;
+          work_type?: string | null;
+          assignee_user_id?: string | null;
+          planned_start?: string | null;
+          estimated_minutes?: number | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "work_orders_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "work_orders_project_id_fkey";
+            columns: ["project_id"];
+            isOneToOne: false;
+            referencedRelation: "projects";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      work_order_checklist_items: {
+        Row: {
+          id: string;
+          organization_id: string;
+          work_order_id: string;
+          title: string;
+          done: boolean;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          work_order_id: string;
+          title: string;
+          done?: boolean;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          work_order_id?: string;
+          title?: string;
+          done?: boolean;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "work_order_checklist_items_work_order_id_fkey";
+            columns: ["work_order_id"];
+            isOneToOne: false;
+            referencedRelation: "work_orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      work_order_work_items: {
+        Row: {
+          organization_id: string;
+          work_order_id: string;
+          work_item_id: string;
+        };
+        Insert: {
+          organization_id: string;
+          work_order_id: string;
+          work_item_id: string;
+        };
+        Update: {
+          organization_id?: string;
+          work_order_id?: string;
+          work_item_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "work_order_work_items_work_order_id_fkey";
+            columns: ["work_order_id"];
+            isOneToOne: false;
+            referencedRelation: "work_orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "work_order_work_items_work_item_id_fkey";
             columns: ["work_item_id"];
             isOneToOne: false;
             referencedRelation: "work_items";
@@ -761,6 +911,8 @@ export type Database = {
       work_item_status: WorkItemStatus;
       appointment_status: AppointmentStatus;
       appointment_type: AppointmentType;
+      work_order_status: WorkOrderStatus;
+      work_order_priority: WorkOrderPriority;
     };
     CompositeTypes: {
       [_ in never]: never;

@@ -44,6 +44,7 @@ import {
 } from "@/features/projects/lib/work-item";
 import { QuotesList } from "@/features/quotes/components/quotes-list";
 import type { QuoteListItem } from "@/features/quotes/quotes-actions";
+import type { WorkOrderRow } from "@/features/work-orders/lib/work-order";
 import { PageCard } from "@/features/shell/components/page-card";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { ProjectActivityType, ProjectStatus } from "@/types/database";
@@ -56,6 +57,7 @@ type ProjectDetailWorkspaceProps = {
   staff: StaffOption[];
   quotes: QuoteListItem[];
   workItems: WorkItemRow[];
+  workOrders: WorkOrderRow[];
   activities: ProjectActivityRow[];
   initialTab?: string;
 };
@@ -284,11 +286,13 @@ export function ProjectDetailWorkspace({
   staff,
   quotes,
   workItems,
+  workOrders,
   activities,
   initialTab = "overview",
 }: ProjectDetailWorkspaceProps) {
   const t = useTranslations("projects");
   const tCommon = useTranslations("common");
+  const tWorkOrders = useTranslations("workOrders");
   const router = useRouter();
   const coverInputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<TabId>(
@@ -348,7 +352,7 @@ export function ProjectDetailWorkspace({
   const tabs: Array<{ id: TabId; label: string; count?: number }> = [
     { id: "overview", label: t("detail.tabs.overview") },
     { id: "quotes", label: t("detail.tabs.quotes"), count: quotes.length },
-    { id: "workOrders", label: t("detail.tabs.workOrders") },
+    { id: "workOrders", label: t("detail.tabs.workOrders"), count: workOrders.length || undefined },
     { id: "planning", label: t("detail.tabs.planning") },
     {
       id: "tasks",
@@ -1110,16 +1114,58 @@ export function ProjectDetailWorkspace({
         </PageCard>
       ) : null}
 
-      {tab === "workOrders" ||
-      tab === "planning" ||
+      {tab === "workOrders" ? (
+        <PageCard className="space-y-4 p-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h3 className="text-sm font-medium">{t("detail.tabs.workOrders")}</h3>
+            <Button type="button" size="sm" variant="outline" asChild>
+              <Link href="/werk/projecten/werkbonnen">{t("detail.viewAllWorkOrders")}</Link>
+            </Button>
+          </div>
+          {workOrders.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {t("detail.workOrdersEmpty")}
+            </p>
+          ) : (
+            <ul className="divide-y divide-border/80">
+              {workOrders.map((order) => (
+                <li
+                  key={order.id}
+                  className="flex flex-wrap items-center justify-between gap-2 py-3 first:pt-0 last:pb-0"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-primary">
+                      {order.workOrderNumber}
+                    </p>
+                    <p className="truncate text-sm text-muted-foreground">
+                      {order.title}
+                    </p>
+                  </div>
+                  <Badge
+                    variant={
+                      order.status === "done"
+                        ? "success"
+                        : order.status === "in_progress"
+                          ? "default"
+                          : "secondary"
+                    }
+                  >
+                    {tWorkOrders(`status.${order.status}`)}
+                  </Badge>
+                </li>
+              ))}
+            </ul>
+          )}
+        </PageCard>
+      ) : null}
+
+      {tab === "planning" ||
       tab === "files" ||
       tab === "financial" ||
       tab === "communication" ? (
         <PageCard className="flex flex-col items-start gap-3 p-8">
           <div className="text-muted-foreground">
-            {tab === "workOrders" ? (
-              <ClipboardList className="size-6" />
-            ) : tab === "files" ? (
+            {tab === "files" ? (
               <FolderOpen className="size-6" />
             ) : tab === "communication" ? (
               <MessageSquare className="size-6" />
@@ -1131,7 +1177,9 @@ export function ProjectDetailWorkspace({
           <p className="max-w-md text-sm text-muted-foreground">
             {tab === "files"
               ? t("detail.filesCoverHint")
-              : t("detail.tabComingSoon")}
+              : tab === "planning"
+                ? t("detail.planningModuleHint")
+                : t("detail.tabComingSoon")}
           </p>
           {tab === "files" ? (
             <Button
@@ -1143,6 +1191,10 @@ export function ProjectDetailWorkspace({
             >
               <Camera className="size-3.5" />
               {t("detail.changeCover")}
+            </Button>
+          ) : tab === "planning" ? (
+            <Button type="button" variant="outline" size="sm" asChild>
+              <Link href="/werk/planning">{t("detail.openPlanning")}</Link>
             </Button>
           ) : null}
         </PageCard>

@@ -27,8 +27,8 @@
 
 | Feature | Status |
 | --- | --- |
-| Tab Werkbonnen | Coming soon |
-| Tab Planning | Coming soon |
+| Tab Werkbonnen | Lijst + link naar module (v1) |
+| Tab Planning | Link naar centrale Planning |
 | Tab Bestanden (volledige bibliotheek) | Coming soon — cover is apart afgerond |
 | Tab Financieel | Coming soon |
 | Tab Communicatie | Coming soon |
@@ -36,8 +36,8 @@
 
 ## Afvinklijst (toekomst)
 
-- [ ] Werkbonnen-tab
-- [ ] Planning-tab
+- [x] Werkbonnen-tab (compacte lijst v1)
+- [x] Planning-tab (link naar module)
 - [ ] Bestanden-bibliotheek
 - [ ] Financieel echt
 - [ ] Communicatie
