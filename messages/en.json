@@ -90,8 +90,7 @@
       "trial": "14 dagen gratis proefperiode",
       "trialNote": "Je voert een betaalmethode in. Tijdens de trial wordt niets afgeschreven.",
       "cta": "Start gratis proefperiode",
-      "stripeMissing": "Betalingen zijn nog niet geconfigureerd. Voeg Stripe-keys toe.",
-      "bypassCta": "Tijdelijk: ga door zonder betaling"
+      "stripeMissing": "Betalingen zijn nog niet geconfigureerd. Voeg Stripe-keys toe."
     },
     "provisioning": {
       "title": "WerkOS wordt ingericht…",

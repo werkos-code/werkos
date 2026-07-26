@@ -197,11 +197,6 @@ export type Database = {
         Args: Record<string, never>;
         Returns: boolean;
       };
-      /** TEMPORARY — remove with onboarding bypass */
-      temp_provision_organization_from_draft: {
-        Args: Record<string, never>;
-        Returns: string;
-      };
     };
     Enums: {
       organization_role: OrganizationRole;

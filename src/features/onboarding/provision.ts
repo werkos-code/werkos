@@ -21,7 +21,7 @@ export type ProvisionInput = {
 
 /**
  * Creates organization + owner membership + subscription row.
- * Used by Stripe webhook and the temporary onboarding bypass.
+ * Used by the Stripe checkout webhook (and session_id recovery).
  */
 export async function provisionOrganization(input: ProvisionInput) {
   const admin = createAdminClient();

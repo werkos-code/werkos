@@ -18,7 +18,5 @@ grant all on table public.organization_memberships to service_role;
 grant all on table public.subscriptions to service_role;
 grant all on table public.onboarding_drafts to service_role;
 
--- Bypass RPC used during temporary onboarding skip
-grant execute on function public.temp_provision_organization_from_draft() to authenticated;
 grant execute on function public.is_org_member(uuid) to authenticated;
 grant execute on function public.user_has_organization() to authenticated;

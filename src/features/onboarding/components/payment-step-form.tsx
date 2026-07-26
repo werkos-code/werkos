@@ -9,22 +9,16 @@ import {
   formatEurFromCents,
 } from "@/config/pricing";
 import { createCheckoutSessionAction } from "@/features/onboarding/checkout-action";
-import { temporarySkipPaymentAction } from "@/features/onboarding/temporary-bypass-action";
-import { useRouter } from "@/i18n/navigation";
 
 type PaymentStepProps = {
   officeSeats: number;
   fieldSeats: number;
 };
 
-/** TEMPORARY — always on until Stripe is live; then delete bypass entirely. */
-const BYPASS_ENABLED = true;
-
 export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
   const t = useTranslations("onboarding.payment");
   const tCommon = useTranslations("common");
   const locale = useLocale();
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -87,36 +81,6 @@ export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
       >
         {pending ? tCommon("loading") : t("cta")}
       </Button>
-
-      {/* TEMPORARY — remove when Stripe is live */}
-      {BYPASS_ENABLED ? (
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full border-dashed"
-          disabled={pending}
-          onClick={() => {
-            setError(null);
-            setPending(true);
-            void (async () => {
-              try {
-                const result = await temporarySkipPaymentAction();
-                if (result.error || !result.success) {
-                  setError(result.error ?? tCommon("error"));
-                  setPending(false);
-                  return;
-                }
-                router.push("/onboarding/complete");
-              } catch (err) {
-                setError(err instanceof Error ? err.message : tCommon("error"));
-                setPending(false);
-              }
-            })();
-          }}
-        >
-          {pending ? tCommon("loading") : t("bypassCta")}
-        </Button>
-      ) : null}
     </div>
   );
 }
