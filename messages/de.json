@@ -233,8 +233,7 @@
     "users": {
       "title": "Benutzer",
       "description": "Alle Konten auf der WerkOS-Plattform.",
-      "listTitle": "Alle Benutzer",
-      "empty": "Noch keine Benutzer gefunden.",
+      "empty": "Noch keine Benutzer in dieser Gruppe.",
       "createTitle": "Benutzer anlegen",
       "createDescription": "Für Tests: Konten ohne Stripe. Owner erhalten eine Organisation mit Trial-Status (kein Checkout).",
       "fullName": "Name",
@@ -250,11 +249,18 @@
       "organizationNameRequired": "Gib einen Firmennamen ein.",
       "invalidInput": "Prüfe Name, E-Mail und Passwort.",
       "create": "Benutzer anlegen",
+      "delete": "Löschen",
+      "deleteConfirm": "Möchtest du {email} wirklich löschen? Das kann nicht rückgängig gemacht werden.",
+      "cannotDeleteSuperAdmin": "Super-Admins können nicht gelöscht werden.",
+      "cannotDeleteSelf": "Du kannst dein eigenes Konto nicht löschen.",
+      "sections": {
+        "unassigned": "Ohne Organisation"
+      },
       "columns": {
         "name": "Name",
         "email": "E-Mail",
-        "platform": "Plattform",
-        "memberships": "Organisationen"
+        "memberships": "Organisationen",
+        "actions": "Aktionen"
       },
       "roles": {
         "super_admin": "Super-Admin",

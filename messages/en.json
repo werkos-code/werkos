@@ -233,8 +233,7 @@
     "users": {
       "title": "Users",
       "description": "All accounts on the WerkOS platform.",
-      "listTitle": "All users",
-      "empty": "No users found yet.",
+      "empty": "No users in this group yet.",
       "createTitle": "Create user",
       "createDescription": "For testing: accounts without Stripe. Owners get an organization with trial status (no checkout).",
       "fullName": "Name",
@@ -250,11 +249,18 @@
       "organizationNameRequired": "Enter a company name.",
       "invalidInput": "Check name, email and password.",
       "create": "Create user",
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure you want to delete {email}? This cannot be undone.",
+      "cannotDeleteSuperAdmin": "Super admins cannot be deleted.",
+      "cannotDeleteSelf": "You cannot delete your own account.",
+      "sections": {
+        "unassigned": "Without organization"
+      },
       "columns": {
         "name": "Name",
         "email": "Email",
-        "platform": "Platform",
-        "memberships": "Organizations"
+        "memberships": "Organizations",
+        "actions": "Actions"
       },
       "roles": {
         "super_admin": "Super admin",

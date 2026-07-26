@@ -233,8 +233,7 @@
     "users": {
       "title": "Gebruikers",
       "description": "Alle accounts op het WerkOS-platform.",
-      "listTitle": "Alle gebruikers",
-      "empty": "Nog geen gebruikers gevonden.",
+      "empty": "Nog geen gebruikers in deze groep.",
       "createTitle": "Gebruiker aanmaken",
       "createDescription": "Voor tests: accounts zonder Stripe. Owners krijgen een organisatie met trial-status (geen checkout).",
       "fullName": "Naam",
@@ -250,11 +249,18 @@
       "organizationNameRequired": "Vul een bedrijfsnaam in.",
       "invalidInput": "Controleer naam, e-mail en wachtwoord.",
       "create": "Gebruiker aanmaken",
+      "delete": "Verwijderen",
+      "deleteConfirm": "Weet je zeker dat je {email} wilt verwijderen? Dit kan niet ongedaan worden gemaakt.",
+      "cannotDeleteSuperAdmin": "Super admins kunnen niet worden verwijderd.",
+      "cannotDeleteSelf": "Je kunt je eigen account niet verwijderen.",
+      "sections": {
+        "unassigned": "Zonder organisatie"
+      },
       "columns": {
         "name": "Naam",
         "email": "E-mail",
-        "platform": "Platform",
-        "memberships": "Organisaties"
+        "memberships": "Organisaties",
+        "actions": "Acties"
       },
       "roles": {
         "super_admin": "Super admin",

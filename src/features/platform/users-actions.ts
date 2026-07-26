@@ -237,3 +237,32 @@ export async function createPlatformUser(input: {
 
   return { success: true };
 }
+
+export async function deletePlatformUser(
+  userId: string,
+): Promise<{ error?: string; success?: boolean }> {
+  const gate = await assertCallerIsSuperAdmin();
+  if ("error" in gate && gate.error) return { error: gate.error };
+
+  if (!userId.trim()) return { error: "invalid_input" };
+
+  if (gate.user.id === userId) {
+    return { error: "cannot_delete_self" };
+  }
+
+  const admin = createAdminClient();
+  const { data: profile } = await admin
+    .from("profiles")
+    .select("platform_role")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (profile?.platform_role === USER_ROLES.SUPER_ADMIN) {
+    return { error: "cannot_delete_super_admin" };
+  }
+
+  const { error } = await admin.auth.admin.deleteUser(userId);
+  if (error) return { error: error.message };
+
+  return { success: true };
+}
