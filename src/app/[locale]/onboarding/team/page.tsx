@@ -35,6 +35,7 @@ export default async function OnboardingTeamPage({ params }: Props) {
       title={t("title")}
       description={t("description")}
       align="start"
+      backHref="/onboarding/company"
     >
       <TeamStepForm
         initialOfficeSeats={draft!.office_seats}

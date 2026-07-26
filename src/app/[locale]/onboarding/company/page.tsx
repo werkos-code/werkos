@@ -34,6 +34,7 @@ export default async function OnboardingCompanyPage({ params }: Props) {
       title={t("title")}
       description={t("description")}
       align="start"
+      backHref="/onboarding/account"
     >
       <CompanyStepForm
         initialCompanyName={draft?.company_name ?? ""}

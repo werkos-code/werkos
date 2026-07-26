@@ -16,6 +16,7 @@ export default async function OnboardingAccountPage({ params }: Props) {
       title={t("title")}
       description={t("description")}
       align="start"
+      backHref="/onboarding"
     >
       <AccountStepForm />
     </OnboardingStepFrame>

@@ -1,4 +1,7 @@
+import { getTranslations } from "next-intl/server";
+
 import { OnboardingProgress } from "@/features/onboarding/components/onboarding-progress";
+import { Link } from "@/i18n/navigation";
 
 type OnboardingStepFrameProps = {
   step: number;
@@ -8,20 +11,25 @@ type OnboardingStepFrameProps = {
   children: React.ReactNode;
   /** Prefer center for short steps (welcome); start for taller forms */
   align?: "center" | "start";
+  /** Previous step in the flow */
+  backHref?: string;
 };
 
 /**
  * Left-column step content: progress, heading, copy, form/actions.
  * Max content width ~540px, vertically centered by default.
  */
-export function OnboardingStepFrame({
+export async function OnboardingStepFrame({
   step,
   total = 7,
   title,
   description,
   children,
   align = "center",
+  backHref,
 }: OnboardingStepFrameProps) {
+  const t = await getTranslations("common");
+
   return (
     <div
       className={`flex flex-1 flex-col px-6 py-12 sm:px-10 lg:px-16 xl:px-20 ${
@@ -29,6 +37,15 @@ export function OnboardingStepFrame({
       }`}
     >
       <div className="mx-auto w-full max-w-[34rem]">
+        {backHref ? (
+          <Link
+            href={backHref}
+            className="mb-6 inline-flex text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            ← {t("back")}
+          </Link>
+        ) : null}
+
         <OnboardingProgress current={step} total={total} />
 
         {title ? (
