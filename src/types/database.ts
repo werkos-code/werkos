@@ -568,6 +568,7 @@ export type Database = {
           planned_start: string | null;
           planned_end: string | null;
           estimated_minutes: number | null;
+          is_group: boolean;
           sort_order: number;
           created_by: string | null;
           created_at: string;
@@ -587,6 +588,7 @@ export type Database = {
           planned_start?: string | null;
           planned_end?: string | null;
           estimated_minutes?: number | null;
+          is_group?: boolean;
           sort_order?: number;
           created_by?: string | null;
           created_at?: string;
@@ -606,6 +608,7 @@ export type Database = {
           planned_start?: string | null;
           planned_end?: string | null;
           estimated_minutes?: number | null;
+          is_group?: boolean;
           sort_order?: number;
           created_by?: string | null;
           created_at?: string;

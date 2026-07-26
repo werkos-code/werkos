@@ -309,10 +309,9 @@ export function ProjectDetailWorkspace({
   }, [project.isFavorite]);
 
   const taskStats = useMemo(() => workItemStats(workItems), [workItems]);
-  const openItems = workItems.filter((w) => {
-    const isParent = workItems.some((other) => other.parentId === w.id);
-    return !isParent && w.status !== "done";
-  });
+  const openItems = workItems.filter(
+    (w) => !w.isGroup && w.status !== "done",
+  );
   const hasWorkItems = taskStats.total > 0;
   const progressPercent = taskStats.progressPercent;
   const acceptedQuotes = quotes.filter((q) => q.status === "accepted").length;

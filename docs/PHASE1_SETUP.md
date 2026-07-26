@@ -139,6 +139,17 @@ Na Phase 1 / Super Admin:
    - Klik rij → rechter overlay (placeholder)
    - Status klikken (open → in uitvoering → voltooid)
 
+## 13. Werkzaamheden interactief — groepen + drag-and-drop
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260726220000_work_items_is_group.sql`
+3. Test:
+   - + Toevoegen (hoofd) / dropdown → Groep
+   - Inline “+ Werkzaamheid toevoegen” in een groep
+   - Sleep items tussen groepen en herorden
+   - Verwijderknop op rij
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  

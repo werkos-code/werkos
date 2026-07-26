@@ -215,7 +215,7 @@ export async function listWorkItemsForProject(projectId: string): Promise<{
   const { data, error } = await ctx.supabase
     .from("work_items")
     .select(
-      "id, title, status, parent_id, description, category, assignee_user_id, planned_start, planned_end, estimated_minutes, sort_order",
+      "id, title, status, parent_id, description, category, assignee_user_id, planned_start, planned_end, estimated_minutes, is_group, sort_order",
     )
     .eq("organization_id", ctx.organizationId)
     .eq("project_id", projectId)
@@ -257,6 +257,7 @@ export async function listWorkItemsForProject(projectId: string): Promise<{
       plannedStart: row.planned_start,
       plannedEnd: row.planned_end,
       estimatedMinutes: row.estimated_minutes,
+      isGroup: Boolean(row.is_group),
       sortOrder: row.sort_order,
     })),
   };

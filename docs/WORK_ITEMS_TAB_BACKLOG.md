@@ -16,10 +16,10 @@
 
 ## Werkzaamheid-data
 
+- [x] Drag-and-drop sorteren / verplaatsen tussen groepen (v1)
 - [ ] Meerdere assignees per werkzaamheid
 - [ ] Rijkere statusset uit domeinmodel (gepland, gepauzeerd, wacht op klant, …)
-- [ ] Drag-and-drop sorteren / verplaatsen tussen groepen
-- [ ] Inline bewerken van alle kolommen in de rij
+- [ ] Inline bewerken van alle kolommen in de rij (categorie, uren, planning, assignee)
 - [ ] Sub-sub niveaus UI (diepere boom dan 1 groepniveau)
 - [ ] Categorie als beheerde taxonomie i.p.v. vrije tekst
 
@@ -42,5 +42,5 @@
 
 ## Header / shell op mock
 
+- [x] Split-button op “+ Toevoegen” (groep vs item)
 - [ ] Hero `⋯` meer-menu met snelacties
-- [ ] Split-button op “+ Toevoegen” (groep vs item vs template)

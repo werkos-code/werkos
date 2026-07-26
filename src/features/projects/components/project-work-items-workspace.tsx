@@ -1,21 +1,48 @@
 "use client";
 
 import {
+  closestCenter,
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragOverEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import {
   ChevronDown,
   ChevronRight,
+  FileText,
+  GripVertical,
   LayoutGrid,
   List,
-  MoreHorizontal,
   Network,
   Plus,
   Search,
+  Trash2,
   UserRound,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { WorkItemDetailSheet } from "@/features/projects/components/work-item-detail-sheet";
 import type { StaffOption } from "@/features/projects/projects-actions";
@@ -38,19 +65,20 @@ type ProjectWorkItemsWorkspaceProps = {
   staff: StaffOption[];
 };
 
+type ContainerId = "root" | `group:${string}`;
+
 function formatPlan(start: string | null, end: string | null) {
   const fmt = (iso: string) => {
     try {
       return new Intl.DateTimeFormat("nl-NL", {
         day: "numeric",
         month: "short",
-        year: "numeric",
       }).format(new Date(`${iso}T12:00:00`));
     } catch {
       return iso;
     }
   };
-  if (start && end && start !== end) return `${fmt(start)} – ${fmt(end)}`;
+  if (start && end && start !== end) return `${fmt(start)}–${fmt(end)}`;
   if (end) return fmt(end);
   if (start) return fmt(start);
   return "—";
@@ -64,37 +92,6 @@ function statusVariant(
   return "secondary";
 }
 
-function CategoryDonut({
-  slices,
-}: {
-  slices: Array<{ name: string; count: number; color: string }>;
-}) {
-  const total = slices.reduce((sum, s) => sum + s.count, 0) || 1;
-  let cursor = 0;
-  const gradient = slices
-    .map((slice) => {
-      const start = (cursor / total) * 100;
-      cursor += slice.count;
-      const end = (cursor / total) * 100;
-      return `${slice.color} ${start}% ${end}%`;
-    })
-    .join(", ");
-
-  return (
-    <div
-      className="mx-auto size-28 rounded-full"
-      style={{
-        background:
-          slices.length === 0
-            ? "color-mix(in oklab, var(--muted) 80%, transparent)"
-            : `conic-gradient(${gradient})`,
-      }}
-    >
-      <div className="absolute" />
-    </div>
-  );
-}
-
 const CATEGORY_COLORS = [
   "var(--primary)",
   "#64748b",
@@ -104,6 +101,26 @@ const CATEGORY_COLORS = [
   "#db2777",
 ];
 
+function applySortOrders(items: WorkItemRow[]): WorkItemRow[] {
+  const byParent = new Map<string | null, WorkItemRow[]>();
+  for (const item of items) {
+    const key = item.parentId;
+    const list = byParent.get(key) ?? [];
+    list.push(item);
+    byParent.set(key, list);
+  }
+  const next = [...items];
+  for (const [, list] of byParent) {
+    list
+      .sort((a, b) => a.sortOrder - b.sortOrder)
+      .forEach((item, index) => {
+        const row = next.find((candidate) => candidate.id === item.id);
+        if (row) row.sortOrder = index;
+      });
+  }
+  return next;
+}
+
 export function ProjectWorkItemsWorkspace({
   projectId,
   workItems,
@@ -112,31 +129,42 @@ export function ProjectWorkItemsWorkspace({
   const t = useTranslations("projects.workItems");
   const tCommon = useTranslations("common");
   const router = useRouter();
+  const [items, setItems] = useState(workItems);
   const [view, setView] = useState<ViewMode>("list");
   const [query, setQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [assigneeFilter, setAssigneeFilter] = useState<string>("all");
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [assigneeFilter, setAssigneeFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [inlineParent, setInlineParent] = useState<string | null | undefined>(
+    undefined,
+  );
+  const [inlineTitle, setInlineTitle] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const stats = useMemo(() => workItemStats(workItems), [workItems]);
+  useEffect(() => {
+    setItems(workItems);
+  }, [workItems]);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+  );
+
+  const stats = useMemo(() => workItemStats(items), [items]);
   const categories = useMemo(() => {
     const set = new Set<string>();
-    for (const item of workItems) {
+    for (const item of items) {
       if (item.category) set.add(item.category);
     }
     return [...set].sort((a, b) => a.localeCompare(b, "nl"));
-  }, [workItems]);
+  }, [items]);
 
   const categorySlices = useMemo(() => {
-    const leaves = workItems.filter(
-      (item) => !workItems.some((other) => other.parentId === item.id),
-    );
+    const leaves = items.filter((item) => !item.isGroup);
     const counts = new Map<string, number>();
     for (const item of leaves) {
       const key = item.category?.trim() || t("uncategorized");
@@ -146,90 +174,81 @@ export function ProjectWorkItemsWorkspace({
       name,
       count,
       color: CATEGORY_COLORS[index % CATEGORY_COLORS.length]!,
-      percent: leaves.length
-        ? Math.round((count / leaves.length) * 100)
-        : 0,
+      percent: leaves.length ? Math.round((count / leaves.length) * 100) : 0,
     }));
-  }, [workItems, t]);
+  }, [items, t]);
 
-  const groups = useMemo(() => {
-    const parents = workItems.filter((item) => item.parentId == null);
-    const childrenByParent = new Map<string, WorkItemRow[]>();
-    for (const item of workItems) {
-      if (!item.parentId) continue;
-      const list = childrenByParent.get(item.parentId) ?? [];
-      list.push(item);
-      childrenByParent.set(item.parentId, list);
-    }
+  const groups = useMemo(
+    () =>
+      items
+        .filter((item) => item.isGroup && item.parentId == null)
+        .sort((a, b) => a.sortOrder - b.sortOrder),
+    [items],
+  );
 
+  const rootLeaves = useMemo(
+    () =>
+      items
+        .filter((item) => !item.isGroup && item.parentId == null)
+        .sort((a, b) => a.sortOrder - b.sortOrder),
+    [items],
+  );
+
+  function childrenOf(groupId: string) {
+    return items
+      .filter((item) => !item.isGroup && item.parentId === groupId)
+      .sort((a, b) => a.sortOrder - b.sortOrder);
+  }
+
+  function matches(item: WorkItemRow) {
+    if (statusFilter !== "all" && item.status !== statusFilter) return false;
+    if (assigneeFilter !== "all" && item.assigneeUserId !== assigneeFilter)
+      return false;
+    if (categoryFilter !== "all" && (item.category ?? "") !== categoryFilter)
+      return false;
     const q = query.trim().toLowerCase();
-    function matches(item: WorkItemRow) {
-      if (statusFilter !== "all" && item.status !== statusFilter) return false;
-      if (assigneeFilter !== "all" && item.assigneeUserId !== assigneeFilter)
-        return false;
-      if (categoryFilter !== "all" && (item.category ?? "") !== categoryFilter)
-        return false;
-      if (!q) return true;
-      return (
-        item.title.toLowerCase().includes(q) ||
-        (item.description ?? "").toLowerCase().includes(q) ||
-        (item.category ?? "").toLowerCase().includes(q)
-      );
-    }
+    if (!q) return true;
+    return (
+      item.title.toLowerCase().includes(q) ||
+      (item.description ?? "").toLowerCase().includes(q) ||
+      (item.category ?? "").toLowerCase().includes(q)
+    );
+  }
 
-    const result: Array<{
-      group: WorkItemRow | null;
-      children: WorkItemRow[];
-    }> = [];
+  const selectedItem = items.find((item) => item.id === selectedId) ?? null;
+  const activeItem = items.find((item) => item.id === activeId) ?? null;
 
-    for (const parent of parents) {
-      const kids = childrenByParent.get(parent.id) ?? [];
-      if (kids.length > 0) {
-        const filteredKids = kids.filter(matches);
-        if (
-          filteredKids.length > 0 ||
-          (!q && statusFilter === "all" && assigneeFilter === "all" && categoryFilter === "all")
-        ) {
-          result.push({
-            group: parent,
-            children:
-              q || statusFilter !== "all" || assigneeFilter !== "all" || categoryFilter !== "all"
-                ? filteredKids
-                : kids,
+  function persistReorder(nextItems: WorkItemRow[]) {
+    const payload = nextItems.map((item) => ({
+      id: item.id,
+      parentId: item.parentId,
+      sortOrder: item.sortOrder,
+    }));
+    startTransition(() => {
+      void (async () => {
+        try {
+          await fetch("/api/work-items/reorder", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ projectId, items: payload }),
+            signal: AbortSignal.timeout(20_000),
           });
+          router.refresh();
+        } catch {
+          setError(tCommon("error"));
+          setItems(workItems);
         }
-      } else if (matches(parent)) {
-        // leaf at root → collect later
-      }
-    }
-
-    const rootLeaves = parents.filter(
-      (p) => (childrenByParent.get(p.id) ?? []).length === 0 && matches(p),
-    );
-    if (rootLeaves.length > 0) {
-      result.unshift({ group: null, children: rootLeaves });
-    }
-
-    return result;
-  }, [workItems, query, statusFilter, assigneeFilter, categoryFilter]);
-
-  const selectedItem =
-    workItems.find((item) => item.id === selectedId) ?? null;
-
-  function refresh() {
-    router.refresh();
+      })();
+    });
   }
 
-  function openItem(item: WorkItemRow) {
-    setSelectedId(item.id);
-    setSheetOpen(true);
-  }
-
-  function createItem(input?: { parentId?: string | null; asGroup?: boolean }) {
-    const title = window.prompt(
-      input?.asGroup ? t("promptGroup") : t("promptItem"),
-    );
-    if (!title?.trim()) return;
+  function createItem(input: {
+    title: string;
+    parentId?: string | null;
+    asGroup?: boolean;
+  }) {
+    const title = input.title.trim();
+    if (!title) return;
     setError(null);
     startTransition(() => {
       void (async () => {
@@ -239,9 +258,9 @@ export function ProjectWorkItemsWorkspace({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               projectId,
-              title: title.trim(),
-              parentId: input?.parentId ?? null,
-              asGroup: Boolean(input?.asGroup),
+              title,
+              parentId: input.parentId ?? null,
+              asGroup: Boolean(input.asGroup),
             }),
             signal: AbortSignal.timeout(20_000),
           });
@@ -250,33 +269,15 @@ export function ProjectWorkItemsWorkspace({
             setError(result.error || tCommon("error"));
             return;
           }
-          if (input?.parentId) {
+          setInlineTitle("");
+          setInlineParent(undefined);
+          if (input.parentId) {
             setExpanded((prev) => ({ ...prev, [input.parentId!]: true }));
           }
-          refresh();
+          router.refresh();
         } catch {
           setError(tCommon("error"));
         }
-      })();
-    });
-  }
-
-  function cycleStatus(item: WorkItemRow) {
-    const next: WorkItemStatus =
-      item.status === "open"
-        ? "in_progress"
-        : item.status === "in_progress"
-          ? "done"
-          : "open";
-    startTransition(() => {
-      void (async () => {
-        await fetch("/api/work-items", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: item.id, status: next }),
-          signal: AbortSignal.timeout(20_000),
-        });
-        refresh();
       })();
     });
   }
@@ -291,14 +292,134 @@ export function ProjectWorkItemsWorkspace({
           body: JSON.stringify({ id: item.id }),
           signal: AbortSignal.timeout(20_000),
         });
-        refresh();
+        router.refresh();
       })();
     });
   }
 
-  function isGroupExpanded(groupId: string) {
-    return expanded[groupId] ?? true;
+  function cycleStatus(item: WorkItemRow) {
+    if (item.isGroup) return;
+    const next: WorkItemStatus =
+      item.status === "open"
+        ? "in_progress"
+        : item.status === "in_progress"
+          ? "done"
+          : "open";
+    setItems((prev) =>
+      prev.map((row) => (row.id === item.id ? { ...row, status: next } : row)),
+    );
+    startTransition(() => {
+      void (async () => {
+        await fetch("/api/work-items", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: item.id, status: next }),
+          signal: AbortSignal.timeout(20_000),
+        });
+        router.refresh();
+      })();
+    });
   }
+
+  function findContainer(id: string): ContainerId | null {
+    if (id === "root" || id.startsWith("group:")) return id as ContainerId;
+    const item = items.find((row) => row.id === id);
+    if (!item) return null;
+    if (item.isGroup) return "root";
+    if (item.parentId) return `group:${item.parentId}`;
+    return "root";
+  }
+
+  function idsInContainer(container: ContainerId): string[] {
+    if (container === "root") {
+      return [
+        ...groups.map((g) => g.id),
+        ...rootLeaves.map((l) => l.id),
+      ];
+    }
+    const groupId = container.slice("group:".length);
+    return childrenOf(groupId).map((c) => c.id);
+  }
+
+  function onDragStart(event: DragStartEvent) {
+    setActiveId(String(event.active.id));
+  }
+
+  function onDragOver(event: DragOverEvent) {
+    const { active, over } = event;
+    if (!over) return;
+    const activeItemId = String(active.id);
+    const overId = String(over.id);
+    const activeContainer = findContainer(activeItemId);
+    const overContainer = findContainer(overId);
+    if (!activeContainer || !overContainer) return;
+    if (activeContainer === overContainer) return;
+
+    const moving = items.find((item) => item.id === activeItemId);
+    if (!moving || moving.isGroup) return;
+
+    const nextParent =
+      overContainer === "root" ? null : overContainer.slice("group:".length);
+
+    setItems((prev) => {
+      const without = prev.map((item) =>
+        item.id === activeItemId
+          ? { ...item, parentId: nextParent }
+          : item,
+      );
+      return applySortOrders(without);
+    });
+  }
+
+  function onDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    setActiveId(null);
+    if (!over) return;
+
+    const activeItemId = String(active.id);
+    const overId = String(over.id);
+    const container = findContainer(overId) ?? findContainer(activeItemId);
+    if (!container) return;
+
+    const ids = idsInContainer(container);
+    const oldIndex = ids.indexOf(activeItemId);
+    let newIndex = ids.indexOf(overId);
+    if (overId.startsWith("group:") || overId === "root") {
+      newIndex = ids.length - 1;
+    }
+    if (oldIndex < 0 || newIndex < 0) {
+      persistReorder(items);
+      return;
+    }
+
+    const reorderedIds = arrayMove(ids, oldIndex, newIndex);
+    const nextParent =
+      container === "root" ? null : container.slice("group:".length);
+
+    const next = items.map((item) => {
+      const index = reorderedIds.indexOf(item.id);
+      if (index === -1) {
+        if (item.id === activeItemId) {
+          return { ...item, parentId: nextParent };
+        }
+        return item;
+      }
+      return {
+        ...item,
+        parentId: item.isGroup ? null : nextParent ?? item.parentId,
+        sortOrder: index,
+      };
+    });
+
+    const normalized = applySortOrders(next);
+    setItems(normalized);
+    persistReorder(normalized);
+  }
+
+  const rootSortableIds = [
+    ...groups.map((g) => g.id),
+    ...rootLeaves.filter(matches).map((l) => l.id),
+  ];
 
   return (
     <div className="space-y-4">
@@ -308,7 +429,11 @@ export function ProjectWorkItemsWorkspace({
             [
               { id: "list" as const, icon: List, label: t("views.list") },
               { id: "tree" as const, icon: Network, label: t("views.tree") },
-              { id: "kanban" as const, icon: LayoutGrid, label: t("views.kanban") },
+              {
+                id: "kanban" as const,
+                icon: LayoutGrid,
+                label: t("views.kanban"),
+              },
             ] as const
           ).map((item) => (
             <button
@@ -348,7 +473,6 @@ export function ProjectWorkItemsWorkspace({
           <option value="in_progress">{t("status.in_progress")}</option>
           <option value="done">{t("status.done")}</option>
         </select>
-
         <select
           value={assigneeFilter}
           onChange={(event) => setAssigneeFilter(event.target.value)}
@@ -361,7 +485,6 @@ export function ProjectWorkItemsWorkspace({
             </option>
           ))}
         </select>
-
         <select
           value={categoryFilter}
           onChange={(event) => setCategoryFilter(event.target.value)}
@@ -374,30 +497,57 @@ export function ProjectWorkItemsWorkspace({
             </option>
           ))}
         </select>
-
         <Button type="button" size="sm" variant="outline" disabled>
           {t("filters.more")}
         </Button>
 
-        <div className="ml-auto flex gap-2">
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            disabled={isPending}
-            onClick={() => createItem({ asGroup: true })}
-          >
-            {t("addGroup")}
-          </Button>
+        <div className="ml-auto flex">
           <Button
             type="button"
             size="sm"
             disabled={isPending}
-            onClick={() => createItem()}
+            className="rounded-r-none"
+            onClick={() => {
+              setInlineParent(null);
+              setInlineTitle("");
+            }}
           >
             <Plus className="size-3.5" />
             {t("add")}
           </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                size="sm"
+                disabled={isPending}
+                className="rounded-l-none border-l border-primary-foreground/20 px-2"
+                aria-label={t("addMenu")}
+              >
+                <ChevronDown className="size-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-44">
+              <DropdownMenuItem
+                onClick={() => {
+                  setInlineParent(null);
+                  setInlineTitle("");
+                }}
+              >
+                {t("addItem")}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  const title = window.prompt(t("promptGroup"));
+                  if (title?.trim()) {
+                    createItem({ title, asGroup: true });
+                  }
+                }}
+              >
+                {t("addGroup")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -410,82 +560,170 @@ export function ProjectWorkItemsWorkspace({
           </p>
         </PageCard>
       ) : (
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_18rem]">
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_17.5rem]">
           <PageCard className="overflow-hidden p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[52rem] text-left text-sm">
-                <thead>
-                  <tr className="border-b border-border bg-muted/40 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                    <th className="w-10 px-3 py-2.5" />
-                    <th className="px-3 py-2.5">{t("columns.title")}</th>
-                    <th className="px-3 py-2.5">{t("columns.category")}</th>
-                    <th className="px-3 py-2.5">{t("columns.assignee")}</th>
-                    <th className="px-3 py-2.5">{t("columns.status")}</th>
-                    <th className="px-3 py-2.5">{t("columns.planning")}</th>
-                    <th className="px-3 py-2.5 text-right">
-                      {t("columns.hours")}
-                    </th>
-                    <th className="w-10 px-3 py-2.5" />
-                  </tr>
-                </thead>
-                <tbody>
-                  {groups.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan={8}
-                        className="px-4 py-10 text-center text-muted-foreground"
-                      >
+            <div className="text-muted-foreground grid grid-cols-[1.5rem_1.5rem_minmax(10rem,1.6fr)_7rem_8rem_7rem_7rem_4rem_2rem] items-center gap-2 border-b border-border bg-muted/30 px-3 py-2 text-[11px] font-medium tracking-wide uppercase max-xl:hidden">
+              <span />
+              <span />
+              <span>{t("columns.title")}</span>
+              <span>{t("columns.category")}</span>
+              <span>{t("columns.assignee")}</span>
+              <span>{t("columns.status")}</span>
+              <span>{t("columns.planning")}</span>
+              <span className="text-right">{t("columns.hours")}</span>
+              <span />
+            </div>
+
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={onDragStart}
+              onDragOver={onDragOver}
+              onDragEnd={onDragEnd}
+            >
+              <RootDropZone>
+                <SortableContext
+                  items={rootSortableIds}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="divide-y divide-border/70">
+                    {groups.length === 0 &&
+                    rootLeaves.length === 0 &&
+                    inlineParent === undefined ? (
+                      <div className="px-4 py-12 text-center text-sm text-muted-foreground">
                         {t("empty")}
-                      </td>
-                    </tr>
-                  ) : (
-                    groups.map(({ group, children }) => {
-                      const groupKey = group?.id ?? "root";
-                      const open = group ? isGroupExpanded(group.id) : true;
-                      const doneCount = children.filter(
+                      </div>
+                    ) : null}
+
+                    {groups.map((group, index) => {
+                      const kids = childrenOf(group.id).filter(matches);
+                      const allKids = childrenOf(group.id);
+                      const open = expanded[group.id] ?? true;
+                      const doneCount = allKids.filter(
                         (c) => c.status === "done",
                       ).length;
                       const progress =
-                        children.length === 0
+                        allKids.length === 0
                           ? 0
-                          : Math.round((doneCount / children.length) * 100);
+                          : Math.round((doneCount / allKids.length) * 100);
 
                       return (
-                        <GroupRows
-                          key={groupKey}
-                          group={group}
-                          childrenItems={children}
-                          open={open}
-                          progress={progress}
-                          doneCount={doneCount}
-                          disabled={isPending}
-                          onToggle={() =>
-                            group &&
-                            setExpanded((prev) => ({
-                              ...prev,
-                              [group.id]: !isGroupExpanded(group.id),
-                            }))
-                          }
-                          onOpen={openItem}
-                          onCycleStatus={cycleStatus}
-                          onDelete={deleteItem}
-                          onAddChild={() =>
-                            createItem({ parentId: group?.id ?? null })
-                          }
-                          t={(key, values) =>
-                            t(key as Parameters<typeof t>[0], values)
-                          }
-                        />
+                        <div key={group.id}>
+                          <SortableGroupHeader
+                            group={group}
+                            index={index + 1}
+                            open={open}
+                            progress={progress}
+                            doneCount={doneCount}
+                            total={allKids.length}
+                            disabled={isPending}
+                            onToggle={() =>
+                              setExpanded((prev) => ({
+                                ...prev,
+                                [group.id]: !open,
+                              }))
+                            }
+                            onOpen={() => {
+                              setSelectedId(group.id);
+                              setSheetOpen(true);
+                            }}
+                            onDelete={() => deleteItem(group)}
+                            t={t}
+                          />
+                          {open ? (
+                            <GroupDropZone groupId={group.id}>
+                              <SortableContext
+                                items={kids.map((k) => k.id)}
+                                strategy={verticalListSortingStrategy}
+                              >
+                                <div className="bg-card">
+                                  {kids.map((item) => (
+                                    <SortableTaskRow
+                                      key={item.id}
+                                      item={item}
+                                      disabled={isPending}
+                                      onOpen={() => {
+                                        setSelectedId(item.id);
+                                        setSheetOpen(true);
+                                      }}
+                                      onCycleStatus={() => cycleStatus(item)}
+                                      onDelete={() => deleteItem(item)}
+                                      t={t}
+                                    />
+                                  ))}
+                                  <InlineComposer
+                                    active={inlineParent === group.id}
+                                    value={inlineTitle}
+                                    disabled={isPending}
+                                    placeholder={t("inlinePlaceholder")}
+                                    onActivate={() => {
+                                      setInlineParent(group.id);
+                                      setInlineTitle("");
+                                    }}
+                                    onChange={setInlineTitle}
+                                    onCancel={() => setInlineParent(undefined)}
+                                    onSubmit={() =>
+                                      createItem({
+                                        title: inlineTitle,
+                                        parentId: group.id,
+                                      })
+                                    }
+                                    label={t("addInGroup")}
+                                  />
+                                </div>
+                              </SortableContext>
+                            </GroupDropZone>
+                          ) : null}
+                        </div>
                       );
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
+                    })}
+
+                    {rootLeaves.filter(matches).map((item) => (
+                      <SortableTaskRow
+                        key={item.id}
+                        item={item}
+                        disabled={isPending}
+                        onOpen={() => {
+                          setSelectedId(item.id);
+                          setSheetOpen(true);
+                        }}
+                        onCycleStatus={() => cycleStatus(item)}
+                        onDelete={() => deleteItem(item)}
+                        t={t}
+                      />
+                    ))}
+
+                    <InlineComposer
+                      active={inlineParent === null}
+                      value={inlineTitle}
+                      disabled={isPending}
+                      placeholder={t("inlinePlaceholder")}
+                      onActivate={() => {
+                        setInlineParent(null);
+                        setInlineTitle("");
+                      }}
+                      onChange={setInlineTitle}
+                      onCancel={() => setInlineParent(undefined)}
+                      onSubmit={() =>
+                        createItem({ title: inlineTitle, parentId: null })
+                      }
+                      label={t("addInRoot")}
+                    />
+                  </div>
+                </SortableContext>
+              </RootDropZone>
+
+              <DragOverlay>
+                {activeItem ? (
+                  <div className="rounded-lg border border-border bg-card px-3 py-2 text-sm shadow-lg">
+                    {activeItem.title}
+                  </div>
+                ) : null}
+              </DragOverlay>
+            </DndContext>
+
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-3 text-sm text-muted-foreground">
-              <span>
-                {t("footer.count", { count: stats.total })}
-              </span>
+              <span>{t("footer.count", { count: stats.total })}</span>
               <span>
                 {t("footer.hours", {
                   hours: formatEstimatedHours(stats.estimatedMinutes),
@@ -494,7 +732,7 @@ export function ProjectWorkItemsWorkspace({
             </div>
           </PageCard>
 
-          <div className="space-y-4">
+          <aside className="space-y-4">
             <PageCard className="p-4">
               <h3 className="mb-3 text-sm font-medium">{t("sidebar.overview")}</h3>
               <dl className="space-y-2 text-sm">
@@ -512,7 +750,6 @@ export function ProjectWorkItemsWorkspace({
                 />
               </dl>
             </PageCard>
-
             <PageCard className="p-4">
               <h3 className="mb-3 text-sm font-medium">
                 {t("sidebar.categories")}
@@ -523,9 +760,29 @@ export function ProjectWorkItemsWorkspace({
                 </p>
               ) : (
                 <>
-                  <div className="relative mx-auto mb-4 w-fit">
-                    <CategoryDonut slices={categorySlices} />
-                  </div>
+                  <div
+                    className="mx-auto mb-4 size-28 rounded-full"
+                    style={{
+                      background: `conic-gradient(${categorySlices
+                        .map((slice, index, all) => {
+                          const total = all.reduce((s, x) => s + x.count, 0) || 1;
+                          const start =
+                            (all
+                              .slice(0, index)
+                              .reduce((s, x) => s + x.count, 0) /
+                              total) *
+                            100;
+                          const end =
+                            (all
+                              .slice(0, index + 1)
+                              .reduce((s, x) => s + x.count, 0) /
+                              total) *
+                            100;
+                          return `${slice.color} ${start}% ${end}%`;
+                        })
+                        .join(", ")})`,
+                    }}
+                  />
                   <ul className="space-y-1.5 text-sm">
                     {categorySlices.map((slice) => (
                       <li
@@ -548,7 +805,6 @@ export function ProjectWorkItemsWorkspace({
                 </>
               )}
             </PageCard>
-
             <PageCard className="bg-muted/30 p-4">
               <h3 className="text-sm font-medium">{t("sidebar.templatesTitle")}</h3>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -558,7 +814,7 @@ export function ProjectWorkItemsWorkspace({
                 {t("sidebar.templatesCta")}
               </Button>
             </PageCard>
-          </div>
+          </aside>
         </div>
       )}
 
@@ -595,179 +851,316 @@ function StatRow({
   );
 }
 
-function GroupRows({
+function RootDropZone({ children }: { children: React.ReactNode }) {
+  const { setNodeRef, isOver } = useDroppable({ id: "root" });
+  return (
+    <div
+      ref={setNodeRef}
+      className={cn(isOver && "bg-primary/5")}
+    >
+      {children}
+    </div>
+  );
+}
+
+function GroupDropZone({
+  groupId,
+  children,
+}: {
+  groupId: string;
+  children: React.ReactNode;
+}) {
+  const { setNodeRef, isOver } = useDroppable({ id: `group:${groupId}` });
+  return (
+    <div
+      ref={setNodeRef}
+      className={cn(
+        "border-l-2 border-transparent pl-1 transition-colors",
+        isOver && "border-primary bg-primary/5",
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+function SortableGroupHeader({
   group,
-  childrenItems,
+  index,
   open,
   progress,
   doneCount,
+  total,
   disabled,
   onToggle,
   onOpen,
-  onCycleStatus,
   onDelete,
-  onAddChild,
   t,
 }: {
-  group: WorkItemRow | null;
-  childrenItems: WorkItemRow[];
+  group: WorkItemRow;
+  index: number;
   open: boolean;
   progress: number;
   doneCount: number;
+  total: number;
   disabled: boolean;
   onToggle: () => void;
-  onOpen: (item: WorkItemRow) => void;
-  onCycleStatus: (item: WorkItemRow) => void;
-  onDelete: (item: WorkItemRow) => void;
-  onAddChild: () => void;
+  onOpen: () => void;
+  onDelete: () => void;
   t: (key: string, values?: Record<string, string | number>) => string;
 }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: group.id });
+
   return (
-    <>
-      {group ? (
-        <tr className="border-b border-border/80 bg-muted/20">
-          <td className="px-3 py-2.5">
-            <button
-              type="button"
-              onClick={onToggle}
-              className="text-muted-foreground"
-              aria-label={open ? t("collapse") : t("expand")}
-            >
-              {open ? (
-                <ChevronDown className="size-4" />
-              ) : (
-                <ChevronRight className="size-4" />
-              )}
-            </button>
-          </td>
-          <td className="px-3 py-2.5" colSpan={2}>
-            <button
-              type="button"
-              className="text-left font-medium hover:text-primary"
-              onClick={() => onOpen(group)}
-            >
-              {group.title}
-            </button>
-            <p className="text-xs text-muted-foreground">
-              {t("groupCount", { count: childrenItems.length })}
-            </p>
-          </td>
-          <td className="px-3 py-2.5" colSpan={3}>
-            <div className="flex items-center gap-3">
-              <div className="bg-muted h-1.5 w-32 rounded-full">
-                <div
-                  className="bg-primary h-1.5 rounded-full"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-              <span className="text-xs tabular-nums text-muted-foreground">
-                {doneCount}/{childrenItems.length}
-              </span>
-            </div>
-          </td>
-          <td className="px-3 py-2.5" />
-        </tr>
-      ) : null}
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+      }}
+      className={cn(
+        "flex items-center gap-2 bg-muted/25 px-3 py-2.5",
+        isDragging && "opacity-60",
+      )}
+    >
+      <button
+        type="button"
+        className="text-muted-foreground cursor-grab touch-none active:cursor-grabbing"
+        {...attributes}
+        {...listeners}
+        aria-label={t("dragHandle")}
+      >
+        <GripVertical className="size-4" />
+      </button>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="text-muted-foreground"
+        aria-label={open ? t("collapse") : t("expand")}
+      >
+        {open ? (
+          <ChevronDown className="size-4" />
+        ) : (
+          <ChevronRight className="size-4" />
+        )}
+      </button>
+      <button
+        type="button"
+        onClick={onOpen}
+        className="min-w-0 flex-1 text-left"
+      >
+        <span className="font-medium">
+          {index}. {group.title}
+        </span>
+        <span className="ml-2 text-xs text-muted-foreground">
+          {t("groupCount", { count: total })}
+        </span>
+      </button>
+      <div className="hidden items-center gap-2 sm:flex">
+        <div className="bg-muted h-1.5 w-28 rounded-full">
+          <div
+            className="bg-primary h-1.5 rounded-full transition-all"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <span className="text-xs tabular-nums text-muted-foreground">
+          {doneCount}/{total}
+        </span>
+      </div>
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon-sm"
+        disabled={disabled}
+        onClick={onDelete}
+        aria-label={t("delete")}
+      >
+        <Trash2 className="size-3.5" />
+      </Button>
+    </div>
+  );
+}
 
-      {open
-        ? childrenItems.map((item) => {
-            const overdue = isWorkItemOverdue(item);
-            return (
-              <tr
-                key={item.id}
-                className="border-b border-border/70 last:border-0 hover:bg-muted/30"
-              >
-                <td className="px-3 py-2.5">
-                  <input type="checkbox" aria-label={item.title} disabled />
-                </td>
-                <td className="px-3 py-2.5">
-                  <button
-                    type="button"
-                    className="text-left"
-                    onClick={() => onOpen(item)}
-                  >
-                    <span className="font-medium hover:text-primary">
-                      {item.title}
-                    </span>
-                    {item.description ? (
-                      <span className="mt-0.5 block text-xs text-muted-foreground">
-                        {item.description}
-                      </span>
-                    ) : null}
-                  </button>
-                </td>
-                <td className="px-3 py-2.5 text-muted-foreground">
-                  {item.category || "—"}
-                </td>
-                <td className="px-3 py-2.5">
-                  {item.assigneeName ? (
-                    <span className="inline-flex items-center gap-1.5">
-                      <span className="bg-muted flex size-6 items-center justify-center rounded-full">
-                        <UserRound className="size-3.5 text-muted-foreground" />
-                      </span>
-                      {item.assigneeName}
-                    </span>
-                  ) : (
-                    <span className="text-muted-foreground">—</span>
-                  )}
-                </td>
-                <td className="px-3 py-2.5">
-                  <button
-                    type="button"
-                    disabled={disabled}
-                    onClick={() => onCycleStatus(item)}
-                  >
-                    <Badge
-                      variant={
-                        overdue && item.status !== "done"
-                          ? "destructive"
-                          : statusVariant(item.status)
-                      }
-                    >
-                      {overdue && item.status !== "done"
-                        ? t("status.overdue")
-                        : t(`status.${item.status}`)}
-                    </Badge>
-                  </button>
-                </td>
-                <td className="px-3 py-2.5 text-muted-foreground">
-                  {formatPlan(item.plannedStart, item.plannedEnd)}
-                </td>
-                <td className="px-3 py-2.5 text-right tabular-nums text-muted-foreground">
-                  {formatEstimatedHours(item.estimatedMinutes)}
-                </td>
-                <td className="px-3 py-2.5">
-                  <button
-                    type="button"
-                    className="text-muted-foreground hover:text-foreground"
-                    disabled={disabled}
-                    onClick={() => onDelete(item)}
-                    aria-label={t("rowMenu")}
-                  >
-                    <MoreHorizontal className="size-4" />
-                  </button>
-                </td>
-              </tr>
-            );
-          })
-        : null}
+function SortableTaskRow({
+  item,
+  disabled,
+  onOpen,
+  onCycleStatus,
+  onDelete,
+  t,
+}: {
+  item: WorkItemRow;
+  disabled: boolean;
+  onOpen: () => void;
+  onCycleStatus: () => void;
+  onDelete: () => void;
+  t: (key: string, values?: Record<string, string | number>) => string;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: item.id });
+  const overdue = isWorkItemOverdue(item);
 
-      {group && open ? (
-        <tr className="border-b border-border/70">
-          <td />
-          <td className="px-3 py-2" colSpan={7}>
-            <button
-              type="button"
-              disabled={disabled}
-              onClick={onAddChild}
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-            >
-              <Plus className="size-3.5" />
-              {t("addInGroup")}
-            </button>
-          </td>
-        </tr>
-      ) : null}
-    </>
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+      }}
+      className={cn(
+        "group grid grid-cols-[1.5rem_1.5rem_minmax(0,1fr)] items-center gap-2 px-3 py-2.5 transition-colors hover:bg-muted/40 sm:grid-cols-[1.5rem_1.5rem_minmax(10rem,1.6fr)_7rem_8rem_7rem_7rem_4rem_2rem]",
+        isDragging && "bg-card opacity-70 shadow-md",
+        item.parentId && "sm:pl-8",
+      )}
+    >
+      <button
+        type="button"
+        className="text-muted-foreground cursor-grab touch-none opacity-60 group-hover:opacity-100 active:cursor-grabbing"
+        {...attributes}
+        {...listeners}
+        aria-label={t("dragHandle")}
+      >
+        <GripVertical className="size-4" />
+      </button>
+      <input type="checkbox" aria-label={item.title} disabled className="size-3.5" />
+      <button type="button" onClick={onOpen} className="min-w-0 text-left">
+        <span className="inline-flex max-w-full items-center gap-2">
+          <FileText className="size-3.5 shrink-0 text-muted-foreground" />
+          <span className="truncate font-medium hover:text-primary">
+            {item.title}
+          </span>
+        </span>
+        {item.description ? (
+          <span className="mt-0.5 block truncate pl-5 text-xs text-muted-foreground">
+            {item.description}
+          </span>
+        ) : null}
+      </button>
+      <span className="hidden truncate text-sm text-muted-foreground sm:block">
+        {item.category || "—"}
+      </span>
+      <span className="hidden sm:block">
+        {item.assigneeName ? (
+          <span className="inline-flex items-center gap-1.5 truncate text-sm">
+            <span className="bg-muted flex size-6 items-center justify-center rounded-full">
+              <UserRound className="size-3.5 text-muted-foreground" />
+            </span>
+            <span className="truncate">{item.assigneeName}</span>
+          </span>
+        ) : (
+          <span className="text-sm text-muted-foreground">—</span>
+        )}
+      </span>
+      <button
+        type="button"
+        className="hidden justify-self-start sm:inline-flex"
+        disabled={disabled}
+        onClick={onCycleStatus}
+      >
+        <Badge
+          variant={
+            overdue && item.status !== "done"
+              ? "destructive"
+              : statusVariant(item.status)
+          }
+        >
+          {overdue && item.status !== "done"
+            ? t("status.overdue")
+            : t(`status.${item.status}`)}
+        </Badge>
+      </button>
+      <span className="hidden text-sm text-muted-foreground sm:block">
+        {formatPlan(item.plannedStart, item.plannedEnd)}
+      </span>
+      <span className="hidden text-right text-sm tabular-nums text-muted-foreground sm:block">
+        {formatEstimatedHours(item.estimatedMinutes)}
+      </span>
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon-sm"
+        disabled={disabled}
+        className="opacity-70 group-hover:opacity-100"
+        onClick={onDelete}
+        aria-label={t("delete")}
+      >
+        <Trash2 className="size-3.5" />
+      </Button>
+    </div>
+  );
+}
+
+function InlineComposer({
+  active,
+  value,
+  disabled,
+  placeholder,
+  label,
+  onActivate,
+  onChange,
+  onCancel,
+  onSubmit,
+}: {
+  active: boolean;
+  value: string;
+  disabled: boolean;
+  placeholder: string;
+  label: string;
+  onActivate: () => void;
+  onChange: (value: string) => void;
+  onCancel: () => void;
+  onSubmit: () => void;
+}) {
+  if (!active) {
+    return (
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={onActivate}
+        className="flex w-full items-center gap-2 px-3 py-2.5 pl-12 text-left text-sm font-medium text-primary hover:bg-primary/5"
+      >
+        <Plus className="size-3.5" />
+        {label}
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2 bg-primary/5 px-3 py-2 pl-12">
+      <Input
+        autoFocus
+        value={value}
+        disabled={disabled}
+        placeholder={placeholder}
+        className="h-8"
+        onChange={(event) => onChange(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            onSubmit();
+          }
+          if (event.key === "Escape") onCancel();
+        }}
+      />
+      <Button type="button" size="sm" disabled={disabled || !value.trim()} onClick={onSubmit}>
+        <Plus className="size-3.5" />
+      </Button>
+      <Button type="button" size="sm" variant="ghost" disabled={disabled} onClick={onCancel}>
+        Esc
+      </Button>
+    </div>
   );
 }

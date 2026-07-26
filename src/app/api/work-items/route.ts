@@ -105,11 +105,12 @@ export async function POST(request: Request) {
         planned_start: emptyToNull(body.plannedStart),
         planned_end: emptyToNull(body.plannedEnd),
         estimated_minutes: parseMinutes(body.estimatedMinutes),
+        is_group: Boolean(body.asGroup),
         sort_order: (maxSort?.sort_order ?? -1) + 1,
         created_by: gate.userId,
       })
       .select(
-        "id, title, status, parent_id, description, category, assignee_user_id, planned_start, planned_end, estimated_minutes, sort_order",
+        "id, title, status, parent_id, description, category, assignee_user_id, planned_start, planned_end, estimated_minutes, is_group, sort_order",
       )
       .single();
 
@@ -150,6 +151,7 @@ export async function PATCH(request: Request) {
       plannedEnd?: string | null;
       estimatedMinutes?: number | null;
       parentId?: string | null;
+      sortOrder?: number;
     };
 
     const id = body.id?.trim() ?? "";
@@ -206,6 +208,9 @@ export async function PATCH(request: Request) {
           : {}),
         ...(body.parentId !== undefined
           ? { parent_id: emptyToNull(body.parentId) }
+          : {}),
+        ...(body.sortOrder !== undefined
+          ? { sort_order: Math.max(0, Math.round(body.sortOrder)) }
           : {}),
       })
       .eq("organization_id", gate.organizationId)

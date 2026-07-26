@@ -18,6 +18,7 @@ export type WorkItemRow = {
   plannedStart: string | null;
   plannedEnd: string | null;
   estimatedMinutes: number | null;
+  isGroup: boolean;
   sortOrder: number;
 };
 
@@ -38,9 +39,7 @@ export function formatEstimatedHours(minutes: number | null | undefined) {
 }
 
 export function workItemStats(items: WorkItemRow[]) {
-  const leaves = items.filter(
-    (item) => !items.some((other) => other.parentId === item.id),
-  );
+  const leaves = items.filter((item) => !item.isGroup);
   const total = leaves.length;
   const done = leaves.filter((i) => i.status === "done").length;
   const inProgress = leaves.filter((i) => i.status === "in_progress").length;
