@@ -149,7 +149,7 @@
       },
       "allProjects": {
         "title": "Alle projecten",
-        "description": "Projecten worden gebouwd in een volgende fase."
+        "description": "Overzicht van je projecten en nieuwe aanvragen."
       },
       "quotes": {
         "title": "Offertes",
@@ -185,7 +185,7 @@
       },
       "customers": {
         "title": "Klanten",
-        "description": "Klanten worden gebouwd in een volgende fase."
+        "description": "Beheer opdrachtgevers van je bedrijf."
       },
       "suppliers": {
         "title": "Leveranciers",
@@ -201,7 +201,7 @@
       },
       "newRequest": {
         "title": "Nieuwe aanvraag",
-        "description": "Nieuwe aanvragen worden gebouwd in een volgende fase."
+        "description": "Start een nieuw project in voorbereiding."
       },
       "bedrijfDashboard": {
         "title": "Dashboard",
@@ -219,6 +219,91 @@
         "title": "Instellingen",
         "description": "Instellingen worden gebouwd in een volgende fase."
       }
+    }
+  },
+  "customers": {
+    "title": "Klanten",
+    "description": "Opdrachtgevers van je bedrijf.",
+    "newCustomer": "Nieuwe klant",
+    "newTitle": "Nieuwe klant",
+    "newDescription": "Minimaal een naam. De rest vul je in wanneer nodig.",
+    "detailDescription": "Klantgegevens bewerken.",
+    "empty": "Nog geen klanten. Voeg je eerste opdrachtgever toe.",
+    "create": "Klant opslaan",
+    "save": "Wijzigingen opslaan",
+    "open": "Openen",
+    "delete": "Verwijderen",
+    "deleteConfirm": "Weet je zeker dat je {name} wilt verwijderen?",
+    "hasProjects": "Deze klant heeft nog projecten en kan niet worden verwijderd.",
+    "nameRequired": "Vul een naam in.",
+    "projectCount": "{count, plural, =0 {Geen projecten} one {1 project} other {# projecten}}",
+    "openInWerk": "Open projecten in Werk",
+    "fields": {
+      "name": "Naam",
+      "email": "E-mail",
+      "phone": "Telefoon",
+      "address": "Adres",
+      "notes": "Notities"
+    },
+    "columns": {
+      "name": "Naam",
+      "email": "E-mail",
+      "phone": "Telefoon",
+      "projects": "Projecten",
+      "actions": "Acties"
+    }
+  },
+  "projects": {
+    "title": "Projecten",
+    "description": "Aan welke projecten werk je?",
+    "newRequest": "Nieuwe aanvraag",
+    "newTitle": "Nieuwe aanvraag",
+    "newDescription": "Maakt een project aan in Voorbereiding.",
+    "detailDescription": "Hoofdwerkruimte van dit project.",
+    "empty": "Geen projecten in deze weergave.",
+    "create": "Aanvraag starten",
+    "save": "Opslaan",
+    "nameRequired": "Vul een projectnaam in.",
+    "customerRequired": "Kies een opdrachtgever.",
+    "noCustomers": "Je hebt nog geen klanten.",
+    "createCustomerFirst": "Nieuwe klant aanmaken",
+    "customerPlaceholder": "Kies een opdrachtgever",
+    "filters": {
+      "new_requests": "Nieuwe aanvragen",
+      "active": "Lopend",
+      "completed": "Afgerond",
+      "archived": "Archief",
+      "all": "Alles"
+    },
+    "status": {
+      "preparation": "Voorbereiding",
+      "execution": "Uitvoering",
+      "operationally_completed": "Operationeel afgerond",
+      "administratively_completed": "Administratief afgerond",
+      "completed": "Afgerond",
+      "archived": "Archief"
+    },
+    "fields": {
+      "name": "Projectnaam",
+      "customer": "Opdrachtgever",
+      "status": "Status",
+      "notes": "Notities"
+    },
+    "columns": {
+      "name": "Project",
+      "customer": "Opdrachtgever",
+      "status": "Status"
+    },
+    "sections": {
+      "overview": "Overzicht",
+      "workspace": "Werkruimte",
+      "workspaceHint": "Deze onderdelen volgen in latere fases. Het project is al de ruggengraat.",
+      "workItems": "Werkzaamheden",
+      "planning": "Planning",
+      "files": "Bestanden",
+      "hoursMaterials": "Uren & materialen",
+      "quotes": "Offertes",
+      "invoices": "Facturen"
     }
   },
   "platform": {

@@ -149,7 +149,7 @@
       },
       "allProjects": {
         "title": "All projects",
-        "description": "Projects will be built in a later phase."
+        "description": "Overview of your projects and new requests."
       },
       "quotes": {
         "title": "Quotes",
@@ -185,7 +185,7 @@
       },
       "customers": {
         "title": "Customers",
-        "description": "Customers will be built in a later phase."
+        "description": "Manage your company's clients."
       },
       "suppliers": {
         "title": "Suppliers",
@@ -201,7 +201,7 @@
       },
       "newRequest": {
         "title": "New request",
-        "description": "New requests will be built in a later phase."
+        "description": "Start a new project in preparation."
       },
       "bedrijfDashboard": {
         "title": "Dashboard",
@@ -219,6 +219,91 @@
         "title": "Settings",
         "description": "Settings will be built in a later phase."
       }
+    }
+  },
+  "customers": {
+    "title": "Customers",
+    "description": "Clients of your company.",
+    "newCustomer": "New customer",
+    "newTitle": "New customer",
+    "newDescription": "A name is enough. Add more details when needed.",
+    "detailDescription": "Edit customer details.",
+    "empty": "No customers yet. Add your first client.",
+    "create": "Save customer",
+    "save": "Save changes",
+    "open": "Open",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete {name}?",
+    "hasProjects": "This customer still has projects and cannot be deleted.",
+    "nameRequired": "Enter a name.",
+    "projectCount": "{count, plural, =0 {No projects} one {1 project} other {# projects}}",
+    "openInWerk": "Open projects in Work",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "notes": "Notes"
+    },
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "projects": "Projects",
+      "actions": "Actions"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "Which projects are you working on?",
+    "newRequest": "New request",
+    "newTitle": "New request",
+    "newDescription": "Creates a project in Preparation.",
+    "detailDescription": "Main workspace for this project.",
+    "empty": "No projects in this view.",
+    "create": "Start request",
+    "save": "Save",
+    "nameRequired": "Enter a project name.",
+    "customerRequired": "Choose a client.",
+    "noCustomers": "You have no customers yet.",
+    "createCustomerFirst": "Create a new customer",
+    "customerPlaceholder": "Choose a client",
+    "filters": {
+      "new_requests": "New requests",
+      "active": "Active",
+      "completed": "Completed",
+      "archived": "Archive",
+      "all": "All"
+    },
+    "status": {
+      "preparation": "Preparation",
+      "execution": "Execution",
+      "operationally_completed": "Operationally completed",
+      "administratively_completed": "Administratively completed",
+      "completed": "Completed",
+      "archived": "Archive"
+    },
+    "fields": {
+      "name": "Project name",
+      "customer": "Client",
+      "status": "Status",
+      "notes": "Notes"
+    },
+    "columns": {
+      "name": "Project",
+      "customer": "Client",
+      "status": "Status"
+    },
+    "sections": {
+      "overview": "Overview",
+      "workspace": "Workspace",
+      "workspaceHint": "These sections come in later phases. The project is already the spine.",
+      "workItems": "Work items",
+      "planning": "Planning",
+      "files": "Files",
+      "hoursMaterials": "Hours & materials",
+      "quotes": "Quotes",
+      "invoices": "Invoices"
     }
   },
   "platform": {

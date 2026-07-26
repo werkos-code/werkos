@@ -149,7 +149,7 @@
       },
       "allProjects": {
         "title": "Alle Projekte",
-        "description": "Projekte werden in einer späteren Phase gebaut."
+        "description": "Übersicht deiner Projekte und neuen Anfragen."
       },
       "quotes": {
         "title": "Angebote",
@@ -185,7 +185,7 @@
       },
       "customers": {
         "title": "Kunden",
-        "description": "Kunden werden in einer späteren Phase gebaut."
+        "description": "Auftraggeber deines Unternehmens verwalten."
       },
       "suppliers": {
         "title": "Lieferanten",
@@ -201,7 +201,7 @@
       },
       "newRequest": {
         "title": "Neue Anfrage",
-        "description": "Neue Anfragen werden in einer späteren Phase gebaut."
+        "description": "Starte ein neues Projekt in Vorbereitung."
       },
       "bedrijfDashboard": {
         "title": "Dashboard",
@@ -219,6 +219,91 @@
         "title": "Einstellungen",
         "description": "Einstellungen werden in einer späteren Phase gebaut."
       }
+    }
+  },
+  "customers": {
+    "title": "Kunden",
+    "description": "Auftraggeber deines Unternehmens.",
+    "newCustomer": "Neuer Kunde",
+    "newTitle": "Neuer Kunde",
+    "newDescription": "Ein Name reicht. Weitere Details bei Bedarf.",
+    "detailDescription": "Kundendaten bearbeiten.",
+    "empty": "Noch keine Kunden. Füge den ersten Auftraggeber hinzu.",
+    "create": "Kunde speichern",
+    "save": "Änderungen speichern",
+    "open": "Öffnen",
+    "delete": "Löschen",
+    "deleteConfirm": "Möchtest du {name} wirklich löschen?",
+    "hasProjects": "Dieser Kunde hat noch Projekte und kann nicht gelöscht werden.",
+    "nameRequired": "Gib einen Namen ein.",
+    "projectCount": "{count, plural, =0 {Keine Projekte} one {1 Projekt} other {# Projekte}}",
+    "openInWerk": "Projekte in Arbeit öffnen",
+    "fields": {
+      "name": "Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "address": "Adresse",
+      "notes": "Notizen"
+    },
+    "columns": {
+      "name": "Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "projects": "Projekte",
+      "actions": "Aktionen"
+    }
+  },
+  "projects": {
+    "title": "Projekte",
+    "description": "An welchen Projekten arbeitest du?",
+    "newRequest": "Neue Anfrage",
+    "newTitle": "Neue Anfrage",
+    "newDescription": "Erstellt ein Projekt in Vorbereitung.",
+    "detailDescription": "Hauptarbeitsbereich dieses Projekts.",
+    "empty": "Keine Projekte in dieser Ansicht.",
+    "create": "Anfrage starten",
+    "save": "Speichern",
+    "nameRequired": "Gib einen Projektnamen ein.",
+    "customerRequired": "Wähle einen Auftraggeber.",
+    "noCustomers": "Du hast noch keine Kunden.",
+    "createCustomerFirst": "Neuen Kunden anlegen",
+    "customerPlaceholder": "Auftraggeber wählen",
+    "filters": {
+      "new_requests": "Neue Anfragen",
+      "active": "Laufend",
+      "completed": "Abgeschlossen",
+      "archived": "Archiv",
+      "all": "Alle"
+    },
+    "status": {
+      "preparation": "Vorbereitung",
+      "execution": "Ausführung",
+      "operationally_completed": "Operativ abgeschlossen",
+      "administratively_completed": "Administrativ abgeschlossen",
+      "completed": "Abgeschlossen",
+      "archived": "Archiv"
+    },
+    "fields": {
+      "name": "Projektname",
+      "customer": "Auftraggeber",
+      "status": "Status",
+      "notes": "Notizen"
+    },
+    "columns": {
+      "name": "Projekt",
+      "customer": "Auftraggeber",
+      "status": "Status"
+    },
+    "sections": {
+      "overview": "Übersicht",
+      "workspace": "Arbeitsbereich",
+      "workspaceHint": "Diese Bereiche folgen in späteren Phasen. Das Projekt ist bereits das Rückgrat.",
+      "workItems": "Arbeiten",
+      "planning": "Planung",
+      "files": "Dateien",
+      "hoursMaterials": "Stunden & Materialien",
+      "quotes": "Angebote",
+      "invoices": "Rechnungen"
     }
   },
   "platform": {

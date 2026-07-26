@@ -87,3 +87,14 @@ export async function requireSuperAdmin(locale: string): Promise<AppSession> {
   }
   return session;
 }
+
+/** Requires an organization membership (not super-admin-only). */
+export async function requireTenantOrganization(
+  locale: string,
+): Promise<AppSession & { organizationId: string }> {
+  const session = await requireOrganization(locale);
+  if (!session.organizationId) {
+    redirect({ href: "/onboarding/company", locale });
+  }
+  return session as AppSession & { organizationId: string };
+}

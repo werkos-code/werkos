@@ -22,6 +22,14 @@ export type SubscriptionStatus =
   | "unpaid"
   | "paused";
 
+export type ProjectStatus =
+  | "preparation"
+  | "execution"
+  | "operationally_completed"
+  | "administratively_completed"
+  | "completed"
+  | "archived";
+
 export type Database = {
   public: {
     Tables: {
@@ -187,6 +195,104 @@ export type Database = {
         };
         Relationships: [];
       };
+      customers: {
+        Row: {
+          id: string;
+          organization_id: string;
+          name: string;
+          email: string | null;
+          phone: string | null;
+          address: string | null;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          name: string;
+          email?: string | null;
+          phone?: string | null;
+          address?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          name?: string;
+          email?: string | null;
+          phone?: string | null;
+          address?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "customers_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      projects: {
+        Row: {
+          id: string;
+          organization_id: string;
+          customer_id: string;
+          name: string;
+          status: ProjectStatus;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          customer_id: string;
+          name: string;
+          status?: ProjectStatus;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          customer_id?: string;
+          name?: string;
+          status?: ProjectStatus;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "projects_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "projects_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -200,6 +306,10 @@ export type Database = {
         Args: Record<string, never>;
         Returns: boolean;
       };
+      is_org_staff: {
+        Args: { org_id: string };
+        Returns: boolean;
+      };
       is_super_admin: {
         Args: Record<string, never>;
         Returns: boolean;
@@ -209,6 +319,7 @@ export type Database = {
       organization_role: OrganizationRole;
       subscription_status: SubscriptionStatus;
       platform_role: "super_admin";
+      project_status: ProjectStatus;
     };
     CompositeTypes: {
       [_ in never]: never;

@@ -1,13 +1,9 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-
-import { ShellPage } from "@/features/shell/components/shell-page";
+import { redirect } from "@/i18n/navigation";
 
 type Props = { params: Promise<{ locale: string }> };
 
-export default async function KlantenPage({ params }: Props) {
+/** Canonical customers live under Bedrijf. */
+export default async function WerkKlantenRedirect({ params }: Props) {
   const { locale } = await params;
-  setRequestLocale(locale);
-  const t = await getTranslations("shell.pages.customers");
-
-  return <ShellPage title={t("title")} description={t("description")} />;
+  redirect({ href: "/bedrijf/klanten", locale });
 }

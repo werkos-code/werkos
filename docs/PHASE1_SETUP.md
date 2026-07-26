@@ -84,6 +84,18 @@ where p.id = u.id
   and lower(u.email) = lower('jouw@email.nl');
 ```
 
+## 8. Phase 2 — Klanten + Projecten
+
+Na Phase 1 / Super Admin:
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260726180000_phase2_customers_projects.sql`
+3. Test:
+   - Bedrijf → Klanten → nieuwe klant
+   - Werk → Nieuwe aanvraag → project in Voorbereiding
+   - Projectdetail openen en status wijzigen
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  
