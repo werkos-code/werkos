@@ -166,7 +166,7 @@
       },
       "planning": {
         "title": "Planung",
-        "description": "Planung wird in einer späteren Phase gebaut."
+        "description": "Zentrale Kalender für Termine und Arbeitsposten."
       },
       "stock": {
         "title": "Bestand",
@@ -741,5 +741,70 @@
     "officeSeatCents": 2500,
     "fieldSeatCents": 1500,
     "trialDays": 14
+  },
+  "planning": {
+    "title": "Planung",
+    "today": "Heute",
+    "prev": "Vorherige Woche",
+    "next": "Nächste Woche",
+    "filtersButton": "Filter",
+    "newAppointment": "Neuer Termin",
+    "searchPlaceholder": "Projekte, Aufgaben oder Personen suchen…",
+    "unplanned": "Nicht geplant",
+    "unplannedEmpty": "Keine offenen Arbeitsposten ohne Planung.",
+    "allDay": "Ganztägig",
+    "noAssignee": "Nicht zugewiesen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "deleteConfirm": "Diesen Termin löschen?",
+    "viewComingSoon": "Diese Ansicht folgt später. Nutze vorerst Woche.",
+    "backToWeek": "Zur Wochenansicht",
+    "views": {
+      "day": "Tag",
+      "week": "Woche",
+      "month": "Monat",
+      "agenda": "Agenda"
+    },
+    "filters": {
+      "allProjects": "Alle Projekte",
+      "allPeople": "Alle Personen",
+      "allTypes": "Alle Typen",
+      "allStatuses": "Alle Status"
+    },
+    "types": {
+      "work": "Arbeit",
+      "meeting": "Besprechung",
+      "delivery": "Lieferung",
+      "other": "Sonstiges"
+    },
+    "statuses": {
+      "planned": "Geplant",
+      "in_progress": "In Ausführung",
+      "done": "Erledigt",
+      "cancelled": "Abgebrochen"
+    },
+    "detail": {
+      "description": "Beschreibung",
+      "descriptionEmpty": "Noch keine Beschreibung.",
+      "location": "Standort",
+      "type": "Typ",
+      "status": "Status",
+      "participants": "Teilnehmer",
+      "assigneeRole": "Zugewiesen",
+      "multiParticipantSoon": "Mehrere Teilnehmer folgen später."
+    },
+    "form": {
+      "createTitle": "Neuer Termin",
+      "editTitle": "Termin bearbeiten",
+      "scheduleTitle": "Arbeitsposten planen",
+      "schedulingWorkItem": "Plant “{title}” für {project}.",
+      "title": "Titel",
+      "startsAt": "Start",
+      "endsAt": "Ende",
+      "project": "Projekt",
+      "noProject": "Kein Projekt",
+      "assignee": "Person",
+      "required": "Titel, Start und Ende sind Pflicht."
+    }
   }
 }

@@ -161,6 +161,18 @@ Na Phase 1 / Super Admin:
    - Tabs Tijd/Bestanden/Communicatie = placeholders
 4. Rest: [`WORK_ITEM_DETAIL_BACKLOG.md`](./WORK_ITEM_DETAIL_BACKLOG.md)
 
+## 15. Planning — centrale kalender
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260726240000_appointments_planning.sql`
+3. Test:
+   - `/werk/planning` weekweergave
+   - + Nieuwe afspraak
+   - Klik “Niet gepland” → werkzaamheid inplannen
+   - Filters project / persoon
+4. Rest: [`PLANNING_BACKLOG.md`](./PLANNING_BACKLOG.md)
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  

@@ -166,7 +166,7 @@
       },
       "planning": {
         "title": "Planning",
-        "description": "Planning will be built in a later phase."
+        "description": "Central calendar for appointments and work items."
       },
       "stock": {
         "title": "Stock",
@@ -741,5 +741,70 @@
     "officeSeatCents": 2500,
     "fieldSeatCents": 1500,
     "trialDays": 14
+  },
+  "planning": {
+    "title": "Planning",
+    "today": "Today",
+    "prev": "Previous week",
+    "next": "Next week",
+    "filtersButton": "Filters",
+    "newAppointment": "New appointment",
+    "searchPlaceholder": "Search projects, tasks or people…",
+    "unplanned": "Unplanned",
+    "unplannedEmpty": "No open work items without a schedule.",
+    "allDay": "All day",
+    "noAssignee": "Unassigned",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this appointment?",
+    "viewComingSoon": "This view comes in a next step. Use Week for now.",
+    "backToWeek": "Back to week view",
+    "views": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "agenda": "Agenda"
+    },
+    "filters": {
+      "allProjects": "All projects",
+      "allPeople": "All people",
+      "allTypes": "All types",
+      "allStatuses": "All statuses"
+    },
+    "types": {
+      "work": "Work",
+      "meeting": "Meeting",
+      "delivery": "Delivery",
+      "other": "Other"
+    },
+    "statuses": {
+      "planned": "Planned",
+      "in_progress": "In progress",
+      "done": "Done",
+      "cancelled": "Cancelled"
+    },
+    "detail": {
+      "description": "Description",
+      "descriptionEmpty": "No description yet.",
+      "location": "Location",
+      "type": "Type",
+      "status": "Status",
+      "participants": "Participants",
+      "assigneeRole": "Assignee",
+      "multiParticipantSoon": "Multiple participants come later."
+    },
+    "form": {
+      "createTitle": "New appointment",
+      "editTitle": "Edit appointment",
+      "scheduleTitle": "Schedule work item",
+      "schedulingWorkItem": "Scheduling “{title}” for {project}.",
+      "title": "Title",
+      "startsAt": "Start",
+      "endsAt": "End",
+      "project": "Project",
+      "noProject": "No project",
+      "assignee": "Person",
+      "required": "Title, start and end are required."
+    }
   }
 }

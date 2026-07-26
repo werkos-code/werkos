@@ -100,12 +100,24 @@ Nieuwe pagina’s vallen in één type. Kopieer het recept; verzin geen nieuwe l
 1. Toolbar: segmented view · zoek · filters · split primary-add
 2. Hoofdlijst `PageCard p-0` (+ optionele rechterrail ~`17.5rem`)
 3. Rijen: CSS-grid of tabel met rustige hover; hiërarchie via indent/groepen
-4. Klik rij → **brede Sheet** (subwerkruimte, ~`min(100%, 72rem)`): hero + underline-tabs + 2-koloms overzicht
+4. Klik rij → **brede Sheet** (subwerkruimte, ~70vw): hero + underline-tabs + 2-koloms overzicht
 
 **Voorbeeld:** `project-work-items-workspace.tsx`, `work-item-detail-sheet.tsx`  
 Detail-rest: [`WORK_ITEM_DETAIL_BACKLOG.md`](./WORK_ITEM_DETAIL_BACKLOG.md)
 
-### 4.4 Editor / workspace-dicht
+### 4.4 Kalender / Planning workspace
+
+1. View-tabs (Dag/Week/Maand/Agenda) + datum-nav + primary “+ Nieuwe afspraak”
+2. Filterbalk `PageCard p-3` (zoek + project/persoon/type/status)
+3. Hoofdvlak: optionele “Niet gepland”-rail + week/tijdgrid in `PageCard p-0`
+4. Eventblokken: zachte pastel (`planningColorForKey`), geen harde neon
+5. Selectie → detailpaneel rechts (~22rem) met meta + bewerken
+6. Planning is een **weergave** van `appointments` + geplande `work_items` — geen gedupliceerde administratie
+
+**Voorbeeld:** `src/features/planning/components/planning-workspace.tsx`  
+Rest: [`PLANNING_BACKLOG.md`](./PLANNING_BACKLOG.md)
+
+### 4.5 Editor / workspace-dicht
 
 1. Status + save/send-acties
 2. `MetaStatCard`-rij

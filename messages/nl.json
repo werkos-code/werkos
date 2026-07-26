@@ -166,7 +166,7 @@
       },
       "planning": {
         "title": "Planning",
-        "description": "Planning wordt gebouwd in een volgende fase."
+        "description": "Centrale kalender voor afspraken en werkzaamheden."
       },
       "stock": {
         "title": "Voorraad",
@@ -741,5 +741,70 @@
     "officeSeatCents": 2500,
     "fieldSeatCents": 1500,
     "trialDays": 14
+  },
+  "planning": {
+    "title": "Planning",
+    "today": "Vandaag",
+    "prev": "Vorige week",
+    "next": "Volgende week",
+    "filtersButton": "Filters",
+    "newAppointment": "Nieuwe afspraak",
+    "searchPlaceholder": "Zoek projecten, taken of personen…",
+    "unplanned": "Niet gepland",
+    "unplannedEmpty": "Geen openstaande werkzaamheden zonder planning.",
+    "allDay": "Hele dag",
+    "noAssignee": "Niemand toegewezen",
+    "edit": "Bewerken",
+    "delete": "Verwijderen",
+    "deleteConfirm": "Deze afspraak verwijderen?",
+    "viewComingSoon": "Deze weergave volgt in een volgende stap. Gebruik voor nu Week.",
+    "backToWeek": "Naar weekweergave",
+    "views": {
+      "day": "Dag",
+      "week": "Week",
+      "month": "Maand",
+      "agenda": "Agenda"
+    },
+    "filters": {
+      "allProjects": "Alle projecten",
+      "allPeople": "Alle personen",
+      "allTypes": "Alle typen",
+      "allStatuses": "Alle statussen"
+    },
+    "types": {
+      "work": "Werk",
+      "meeting": "Overleg",
+      "delivery": "Levering",
+      "other": "Overig"
+    },
+    "statuses": {
+      "planned": "Gepland",
+      "in_progress": "In uitvoering",
+      "done": "Voltooid",
+      "cancelled": "Geannuleerd"
+    },
+    "detail": {
+      "description": "Omschrijving",
+      "descriptionEmpty": "Nog geen omschrijving.",
+      "location": "Locatie",
+      "type": "Type",
+      "status": "Status",
+      "participants": "Deelnemers",
+      "assigneeRole": "Toegewezen",
+      "multiParticipantSoon": "Meerdere deelnemers volgt later."
+    },
+    "form": {
+      "createTitle": "Nieuwe afspraak",
+      "editTitle": "Afspraak bewerken",
+      "scheduleTitle": "Werkzaamheid inplannen",
+      "schedulingWorkItem": "Plant “{title}” in voor {project}.",
+      "title": "Titel",
+      "startsAt": "Start",
+      "endsAt": "Einde",
+      "project": "Project",
+      "noProject": "Geen project",
+      "assignee": "Persoon",
+      "required": "Titel, start en einde zijn verplicht."
+    }
   }
 }

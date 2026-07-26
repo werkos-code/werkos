@@ -39,6 +39,12 @@ export type QuoteStatus =
 
 export type WorkItemStatus = "open" | "in_progress" | "done";
 export type WorkItemPriority = "low" | "normal" | "high";
+export type AppointmentStatus =
+  | "planned"
+  | "in_progress"
+  | "done"
+  | "cancelled";
+export type AppointmentType = "work" | "meeting" | "delivery" | "other";
 
 export type ProjectActivityType =
   | "project_created"
@@ -645,6 +651,85 @@ export type Database = {
           },
         ];
       };
+      appointments: {
+        Row: {
+          id: string;
+          organization_id: string;
+          title: string;
+          starts_at: string;
+          ends_at: string;
+          all_day: boolean;
+          status: AppointmentStatus;
+          type: AppointmentType;
+          project_id: string | null;
+          work_item_id: string | null;
+          assignee_user_id: string | null;
+          location: string | null;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          title: string;
+          starts_at: string;
+          ends_at: string;
+          all_day?: boolean;
+          status?: AppointmentStatus;
+          type?: AppointmentType;
+          project_id?: string | null;
+          work_item_id?: string | null;
+          assignee_user_id?: string | null;
+          location?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          title?: string;
+          starts_at?: string;
+          ends_at?: string;
+          all_day?: boolean;
+          status?: AppointmentStatus;
+          type?: AppointmentType;
+          project_id?: string | null;
+          work_item_id?: string | null;
+          assignee_user_id?: string | null;
+          location?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "appointments_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "appointments_project_id_fkey";
+            columns: ["project_id"];
+            isOneToOne: false;
+            referencedRelation: "projects";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "appointments_work_item_id_fkey";
+            columns: ["work_item_id"];
+            isOneToOne: false;
+            referencedRelation: "work_items";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -674,6 +759,8 @@ export type Database = {
       project_status: ProjectStatus;
       quote_status: QuoteStatus;
       work_item_status: WorkItemStatus;
+      appointment_status: AppointmentStatus;
+      appointment_type: AppointmentType;
     };
     CompositeTypes: {
       [_ in never]: never;
