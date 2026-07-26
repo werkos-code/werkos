@@ -25,8 +25,6 @@ export type ShellNavItem = {
   labelKey: string;
   icon?: LucideIcon;
   children?: ShellNavChild[];
-  /** When true, section starts expanded */
-  defaultOpen?: boolean;
 };
 
 export type ShellNavSection = {
@@ -49,7 +47,6 @@ export const WERK_NAV: ShellNavSection[] = [
         id: "projects",
         labelKey: "projects",
         icon: ClipboardList,
-        defaultOpen: true,
         children: [
           { href: "/werk/projecten", labelKey: "allProjects" },
           { href: "/werk/projecten/offertes", labelKey: "quotes" },
@@ -72,7 +69,6 @@ export const WERK_NAV: ShellNavSection[] = [
         id: "materials",
         labelKey: "materials",
         icon: Package,
-        defaultOpen: false,
         children: [
           { href: "/werk/materiaal/voorraad", labelKey: "stock" },
           { href: "/werk/materiaal/artikelen", labelKey: "articles" },
@@ -84,7 +80,6 @@ export const WERK_NAV: ShellNavSection[] = [
         id: "people",
         labelKey: "people",
         icon: Users,
-        defaultOpen: false,
         children: [
           { href: "/werk/personen/klanten", labelKey: "customers" },
           { href: "/werk/personen/leveranciers", labelKey: "suppliers" },
@@ -158,7 +153,6 @@ export const PLATFORM_ADMIN_NAV: ShellNavSection = {
       id: "admin",
       labelKey: "admin",
       icon: Shield,
-      defaultOpen: true,
       children: [
         { href: "/platform/admin", labelKey: "adminDashboard" },
         { href: "/platform/admin/gebruikers", labelKey: "adminUsers" },

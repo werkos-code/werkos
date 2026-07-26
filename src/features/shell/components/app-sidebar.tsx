@@ -51,8 +51,8 @@ function NavGroup({
   const t = useTranslations("shell");
   const hasChildren = Boolean(item.children?.length);
   const containsActive = itemContainsActive(pathname, item);
-  const [manualOpen, setManualOpen] = useState<boolean | null>(null);
-  const open = manualOpen ?? (item.defaultOpen || containsActive);
+  const [manualOpen, setManualOpen] = useState(false);
+  const open = manualOpen;
 
   if (!hasChildren && item.href) {
     const Icon = item.icon;
@@ -79,7 +79,7 @@ function NavGroup({
     <div>
       <button
         type="button"
-        onClick={() => setManualOpen(!open)}
+        onClick={() => setManualOpen((value) => !value)}
         className={cn(
           "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors",
           containsActive
