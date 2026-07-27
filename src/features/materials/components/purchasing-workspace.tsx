@@ -16,8 +16,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  formatQty,
   type ArticleRow,
+  type PurchaseOrderLineRow,
   type PurchaseOrderRow,
+  type StockLocationRow,
 } from "@/features/materials/lib/materials";
 import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
 import type { PurchaseOrderStatus } from "@/types/database";
@@ -28,6 +31,7 @@ type PurchasingWorkspaceProps = {
   orders: PurchaseOrderRow[];
   suppliers: Array<{ id: string; name: string }>;
   articles: ArticleRow[];
+  locations: StockLocationRow[];
 };
 
 type DraftLine = {
@@ -54,6 +58,7 @@ export function PurchasingWorkspace({
   orders,
   suppliers,
   articles,
+  locations,
 }: PurchasingWorkspaceProps) {
   const t = useTranslations("materials.purchasing");
   const tCommon = useTranslations("common");
@@ -63,6 +68,11 @@ export function PurchasingWorkspace({
   const [reference, setReference] = useState("");
   const [expectedDate, setExpectedDate] = useState("");
   const [lines, setLines] = useState<DraftLine[]>([emptyLine()]);
+  const [receiveOrderId, setReceiveOrderId] = useState<string | null>(null);
+  const [receiveLocationId, setReceiveLocationId] = useState("");
+  const [receiveLines, setReceiveLines] = useState<PurchaseOrderLineRow[]>([]);
+  const [receiveQty, setReceiveQty] = useState<Record<string, string>>({});
+  const [receiveLoading, setReceiveLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -133,6 +143,90 @@ export function PurchasingWorkspace({
         body: JSON.stringify({ id, status }),
       });
       router.refresh();
+    });
+  }
+
+  async function openReceive(orderId: string) {
+    setError(null);
+    setReceiveLoading(true);
+    setReceiveOrderId(orderId);
+    setReceiveLocationId("");
+    setReceiveQty({});
+    try {
+      const response = await fetch(
+        `/api/purchase-orders?id=${encodeURIComponent(orderId)}`,
+        { signal: AbortSignal.timeout(20_000) },
+      );
+      const result = (await response.json()) as {
+        lines?: PurchaseOrderLineRow[];
+        error?: string;
+      };
+      if (!response.ok || result.error) {
+        setError(tCommon("error"));
+        setReceiveOrderId(null);
+        return;
+      }
+      const openLines = (result.lines ?? []).filter(
+        (line) => line.receivedQuantity + 0.0001 < line.quantity,
+      );
+      setReceiveLines(openLines);
+      const initialQty: Record<string, string> = {};
+      for (const line of openLines) {
+        initialQty[line.id] = String(line.quantity - line.receivedQuantity);
+      }
+      setReceiveQty(initialQty);
+    } catch {
+      setError(tCommon("error"));
+      setReceiveOrderId(null);
+    } finally {
+      setReceiveLoading(false);
+    }
+  }
+
+  function submitReceive() {
+    if (!receiveOrderId || !receiveLocationId) {
+      setError(t("errors.locationRequired"));
+      return;
+    }
+    const payloadLines = receiveLines
+      .map((line) => ({
+        purchaseOrderLineId: line.id,
+        quantity: receiveQty[line.id] ?? "",
+      }))
+      .filter((line) => line.quantity !== "" && Number(line.quantity) > 0);
+
+    if (payloadLines.length === 0) {
+      setError(t("errors.receiveLinesRequired"));
+      return;
+    }
+
+    startTransition(async () => {
+      setError(null);
+      try {
+        const response = await fetch("/api/purchase-receipts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            purchaseOrderId: receiveOrderId,
+            locationId: receiveLocationId,
+            lines: payloadLines,
+          }),
+          signal: AbortSignal.timeout(20_000),
+        });
+        const result = (await response.json()) as { error?: string };
+        if (!response.ok || result.error) {
+          setError(
+            result.error === "over_receive"
+              ? t("errors.overReceive")
+              : tCommon("error"),
+          );
+          return;
+        }
+        setReceiveOrderId(null);
+        router.refresh();
+      } catch {
+        setError(tCommon("error"));
+      }
     });
   }
 
@@ -216,17 +310,16 @@ export function PurchasingWorkspace({
                             {t("send")}
                           </Button>
                         ) : null}
-                        {order.status === "sent" ? (
+                        {order.status === "sent" ||
+                        order.status === "partially_received" ? (
                           <Button
                             type="button"
                             variant="ghost"
                             size="sm"
-                            disabled={isPending}
-                            onClick={() =>
-                              updateStatus(order.id, "partially_received")
-                            }
+                            disabled={isPending || receiveLoading}
+                            onClick={() => void openReceive(order.id)}
                           >
-                            {t("markPartial")}
+                            {t("receive")}
                           </Button>
                         ) : null}
                       </div>
@@ -375,6 +468,97 @@ export function PurchasingWorkspace({
             </Button>
             <Button type="button" disabled={isPending} onClick={createOrder}>
               {tCommon("save")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={receiveOrderId != null}
+        onOpenChange={(open) => !open && setReceiveOrderId(null)}
+      >
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{t("receiveTitle")}</DialogTitle>
+          </DialogHeader>
+          {receiveLoading ? (
+            <p className="text-sm text-muted-foreground">{t("loading")}</p>
+          ) : (
+            <div className="space-y-3">
+              <label className="block space-y-1 text-sm">
+                <span className="text-muted-foreground">{t("fields.location")}</span>
+                <select
+                  value={receiveLocationId}
+                  onChange={(e) => setReceiveLocationId(e.target.value)}
+                  className="border-input bg-background h-9 w-full rounded-lg border px-2.5 text-sm"
+                >
+                  <option value="">{t("fields.locationPick")}</option>
+                  {locations
+                    .filter((loc) => loc.isActive)
+                    .map((loc) => (
+                      <option key={loc.id} value={loc.id}>
+                        {loc.name}
+                      </option>
+                    ))}
+                </select>
+              </label>
+              {receiveLines.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  {t("receiveAllDone")}
+                </p>
+              ) : (
+                <ul className="divide-y divide-border/70 rounded-lg border border-border/70">
+                  {receiveLines.map((line) => {
+                    const remaining = line.quantity - line.receivedQuantity;
+                    return (
+                      <li key={line.id} className="space-y-2 px-3 py-3">
+                        <p className="text-sm font-medium">{line.title}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {t("receiveRemaining", {
+                            received: formatQty(line.receivedQuantity, line.unit),
+                            ordered: formatQty(line.quantity, line.unit),
+                          })}
+                        </p>
+                        <Input
+                          inputMode="decimal"
+                          value={receiveQty[line.id] ?? ""}
+                          onChange={(e) =>
+                            setReceiveQty((prev) => ({
+                              ...prev,
+                              [line.id]: e.target.value,
+                            }))
+                          }
+                          placeholder={t("fields.qty")}
+                        />
+                        {Number(receiveQty[line.id]) > remaining + 0.0001 ? (
+                          <p className="text-xs text-destructive">
+                            {t("errors.overReceive")}
+                          </p>
+                        ) : null}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          )}
+          {error && receiveOrderId ? (
+            <p className="text-sm text-destructive">{error}</p>
+          ) : null}
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setReceiveOrderId(null)}
+            >
+              {tCommon("cancel")}
+            </Button>
+            <Button
+              type="button"
+              disabled={isPending || receiveLoading || receiveLines.length === 0}
+              onClick={submitReceive}
+            >
+              {t("receiveConfirm")}
             </Button>
           </DialogFooter>
         </DialogContent>

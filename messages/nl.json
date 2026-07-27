@@ -1171,10 +1171,19 @@
         "location": "Locatie",
         "qty": "Aantal",
         "min": "Min",
-        "max": "Max"
+        "max": "Max",
+        "reserved": "Gereserveerd",
+        "available": "Beschikbaar"
       },
       "editLimits": "Min/max",
       "editLimitsTitle": "Min/max instellen",
+      "reserve": "Reserveren",
+      "reserveTitle": "Voorraad reserveren",
+      "reserveConfirm": "Reserveren",
+      "release": "Vrijgeven",
+      "reservationsTitle": "Actieve reserveringen",
+      "reservationsEmpty": "Geen actieve reserveringen.",
+      "availableHint": "Beschikbaar: {qty}",
       "fields": {
         "name": "Naam",
         "code": "Code",
@@ -1205,7 +1214,8 @@
       "errors": {
         "nameRequired": "Naam is verplicht.",
         "insufficient": "Onvoldoende voorraad op deze locatie.",
-        "minGtMax": "Minimum mag niet hoger zijn dan maximum."
+        "minGtMax": "Minimum mag niet hoger zijn dan maximum.",
+        "insufficientAvailable": "Onvoldoende beschikbare voorraad (na reserveringen)."
       }
     },
     "supplierPrices": {
@@ -1237,7 +1247,12 @@
       "kpiDraft": "Concept",
       "kpiOpen": "Open",
       "send": "Versturen",
-      "markPartial": "Deels ontvangen",
+      "receive": "Ontvangen",
+      "receiveTitle": "Levering boeken",
+      "receiveConfirm": "Ontvangst boeken",
+      "receiveAllDone": "Alle regels zijn al volledig ontvangen.",
+      "receiveRemaining": "Ontvangen {received} van {ordered}",
+      "loading": "Laden…",
       "addLine": "Regel toevoegen",
       "columns": {
         "supplier": "Leverancier",
@@ -1264,11 +1279,16 @@
         "lineTitle": "Omschrijving",
         "qty": "Aantal",
         "unit": "Eenheid",
-        "unitCost": "Prijs per eenheid (€)"
+        "unitCost": "Prijs per eenheid (€)",
+        "location": "Magazijnlocatie",
+        "locationPick": "Kies locatie…"
       },
       "errors": {
         "supplierRequired": "Kies een leverancier.",
-        "linesRequired": "Voeg minimaal één regel met omschrijving en aantal toe."
+        "linesRequired": "Voeg minimaal één regel met omschrijving en aantal toe.",
+        "locationRequired": "Kies een locatie voor de ontvangst.",
+        "receiveLinesRequired": "Vul minimaal één ontvangstaantal in.",
+        "overReceive": "Ontvangst overschrijdt het openstaande aantal."
       }
     },
     "workItem": {

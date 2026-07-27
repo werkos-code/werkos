@@ -6,6 +6,7 @@ import {
   listStockBalances,
   listStockLocations,
   listStockMovements,
+  listStockReservations,
 } from "@/features/materials/materials-actions";
 import { ShellPage } from "@/features/shell/components/shell-page";
 
@@ -15,18 +16,21 @@ export default async function VoorraadPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("materials.stock");
-  const [locations, balances, movements, articles] = await Promise.all([
+  const [locations, balances, movements, articles, reservations] =
+    await Promise.all([
     listStockLocations(),
     listStockBalances(),
     listStockMovements(),
     listArticles(),
+    listStockReservations(),
   ]);
 
   const error =
     locations.error ||
     balances.error ||
     movements.error ||
-    articles.error;
+    articles.error ||
+    reservations.error;
 
   return (
     <ShellPage title={t("title")} contentClassName="max-w-none w-[94%]">
@@ -38,6 +42,7 @@ export default async function VoorraadPage({ params }: Props) {
           balances={balances.balances ?? []}
           movements={movements.movements ?? []}
           articles={articles.articles ?? []}
+          reservations={reservations.reservations ?? []}
         />
       )}
     </ShellPage>

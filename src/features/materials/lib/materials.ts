@@ -46,11 +46,25 @@ export type PurchaseOrderLineRow = {
   id: string;
   purchaseOrderId: string;
   articleId: string | null;
+  articleName: string | null;
   title: string;
   quantity: number;
   unit: string;
   unitCostCents: number | null;
   receivedQuantity: number;
+};
+
+export type StockReservationRow = {
+  id: string;
+  articleId: string;
+  articleName: string;
+  locationId: string;
+  locationName: string;
+  projectId: string | null;
+  projectName: string | null;
+  quantity: number;
+  notes: string | null;
+  createdAt: string;
 };
 
 export type StockLocationRow = {

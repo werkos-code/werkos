@@ -4,6 +4,7 @@ import { PurchasingWorkspace } from "@/features/materials/components/purchasing-
 import {
   listArticles,
   listPurchaseOrders,
+  listStockLocations,
 } from "@/features/materials/materials-actions";
 import { listSupplierOptions } from "@/features/suppliers/suppliers-actions";
 import { ShellPage } from "@/features/shell/components/shell-page";
@@ -14,13 +15,15 @@ export default async function InkoopPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("materials.purchasing");
-  const [orders, suppliers, articles] = await Promise.all([
+  const [orders, suppliers, articles, locations] = await Promise.all([
     listPurchaseOrders(),
     listSupplierOptions(),
     listArticles(),
+    listStockLocations(),
   ]);
 
-  const error = orders.error || suppliers.error || articles.error;
+  const error =
+    orders.error || suppliers.error || articles.error || locations.error;
 
   return (
     <ShellPage title={t("title")} contentClassName="max-w-none w-[94%]">
@@ -31,6 +34,7 @@ export default async function InkoopPage({ params }: Props) {
           orders={orders.orders ?? []}
           suppliers={suppliers.suppliers ?? []}
           articles={articles.articles ?? []}
+          locations={locations.locations ?? []}
         />
       )}
     </ShellPage>

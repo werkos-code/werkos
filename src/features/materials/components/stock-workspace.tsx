@@ -22,6 +22,7 @@ import {
   type StockBalanceRow,
   type StockLocationRow,
   type StockMovementRow,
+  type StockReservationRow,
 } from "@/features/materials/lib/materials";
 import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
 import type { StockLocationKind, StockMovementType } from "@/types/database";
@@ -31,6 +32,7 @@ type StockWorkspaceProps = {
   balances: StockBalanceRow[];
   movements: StockMovementRow[];
   articles: ArticleRow[];
+  reservations: StockReservationRow[];
 };
 
 export function StockWorkspace({
@@ -38,6 +40,7 @@ export function StockWorkspace({
   balances,
   movements,
   articles,
+  reservations,
 }: StockWorkspaceProps) {
   const t = useTranslations("materials.stock");
   const tCommon = useTranslations("common");
@@ -57,6 +60,11 @@ export function StockWorkspace({
   const [balanceEdit, setBalanceEdit] = useState<StockBalanceRow | null>(null);
   const [minQty, setMinQty] = useState("");
   const [maxQty, setMaxQty] = useState("");
+  const [reserveBalance, setReserveBalance] = useState<StockBalanceRow | null>(
+    null,
+  );
+  const [reserveQty, setReserveQty] = useState("");
+  const [reserveNotes, setReserveNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -172,6 +180,52 @@ export function StockWorkspace({
     });
   }
 
+  function createReservation() {
+    if (!reserveBalance) return;
+    startTransition(async () => {
+      setError(null);
+      try {
+        const response = await fetch("/api/stock-reservations", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            articleId: reserveBalance.articleId,
+            locationId: reserveBalance.locationId,
+            quantity: reserveQty,
+            notes: reserveNotes,
+          }),
+          signal: AbortSignal.timeout(20_000),
+        });
+        const result = (await response.json()) as { error?: string };
+        if (!response.ok || result.error) {
+          setError(
+            result.error === "insufficient_available"
+              ? t("errors.insufficientAvailable")
+              : tCommon("error"),
+          );
+          return;
+        }
+        setReserveBalance(null);
+        setReserveQty("");
+        setReserveNotes("");
+        router.refresh();
+      } catch {
+        setError(tCommon("error"));
+      }
+    });
+  }
+
+  function releaseReservation(id: string) {
+    startTransition(async () => {
+      await fetch("/api/stock-reservations", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, release: true }),
+      });
+      router.refresh();
+    });
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -249,6 +303,8 @@ export function StockWorkspace({
                     <th className="px-3 py-2">{t("columns.article")}</th>
                     <th className="px-3 py-2">{t("columns.location")}</th>
                     <th className="px-3 py-2 text-right">{t("columns.qty")}</th>
+                    <th className="px-3 py-2 text-right">{t("columns.reserved")}</th>
+                    <th className="px-3 py-2 text-right">{t("columns.available")}</th>
                     <th className="px-3 py-2 text-right">{t("columns.min")}</th>
                     <th className="px-3 py-2 text-right">{t("columns.max")}</th>
                     <th className="px-3 py-2" />
@@ -278,20 +334,41 @@ export function StockWorkspace({
                         {formatQty(row.quantity, row.articleUnit)}
                       </td>
                       <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                        {formatQty(row.reservedQuantity)}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                        {formatQty(row.quantity - row.reservedQuantity)}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
                         {formatQty(row.minQuantity)}
                       </td>
                       <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
                         {formatQty(row.maxQuantity)}
                       </td>
                       <td className="px-3 py-2 text-right">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => openBalanceEdit(row)}
-                        >
-                          {t("editLimits")}
-                        </Button>
+                        <div className="flex flex-wrap justify-end gap-1">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setReserveBalance(row);
+                              setReserveQty("");
+                              setReserveNotes("");
+                              setError(null);
+                            }}
+                          >
+                            {t("reserve")}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openBalanceEdit(row)}
+                          >
+                            {t("editLimits")}
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                     );
@@ -302,6 +379,45 @@ export function StockWorkspace({
           )}
         </PageCard>
       </div>
+
+      <PageCard className="overflow-hidden">
+        <div className="border-b border-border px-4 py-3 text-sm font-medium">
+          {t("reservationsTitle")}
+        </div>
+        {reservations.length === 0 ? (
+          <p className="px-4 py-6 text-sm text-muted-foreground">
+            {t("reservationsEmpty")}
+          </p>
+        ) : (
+          <ul className="divide-y divide-border/70">
+            {reservations.map((row) => (
+              <li
+                key={row.id}
+                className="flex items-start justify-between gap-3 px-4 py-3 text-sm"
+              >
+                <div>
+                  <p className="font-medium">
+                    {formatQty(row.quantity)} · {row.articleName}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {row.locationName}
+                    {row.projectName ? ` · ${row.projectName}` : ""}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  disabled={isPending}
+                  onClick={() => releaseReservation(row.id)}
+                >
+                  {t("release")}
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </PageCard>
 
       <PageCard className="overflow-hidden">
         <div className="border-b border-border px-4 py-3 text-sm font-medium">
@@ -523,6 +639,56 @@ export function StockWorkspace({
             </Button>
             <Button type="button" disabled={isPending} onClick={saveBalanceLimits}>
               {tCommon("save")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={reserveBalance != null}
+        onOpenChange={(open) => !open && setReserveBalance(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("reserveTitle")}</DialogTitle>
+          </DialogHeader>
+          {reserveBalance ? (
+            <p className="text-sm text-muted-foreground">
+              {reserveBalance.articleName} · {reserveBalance.locationName} ·{" "}
+              {t("availableHint", {
+                qty: formatQty(
+                  reserveBalance.quantity - reserveBalance.reservedQuantity,
+                ),
+              })}
+            </p>
+          ) : null}
+          <div className="space-y-3">
+            <label className="block space-y-1 text-sm">
+              <span className="text-muted-foreground">{t("fields.quantity")}</span>
+              <Input
+                inputMode="decimal"
+                value={reserveQty}
+                onChange={(e) => setReserveQty(e.target.value)}
+              />
+            </label>
+            <label className="block space-y-1 text-sm">
+              <span className="text-muted-foreground">{t("fields.notes")}</span>
+              <Input
+                value={reserveNotes}
+                onChange={(e) => setReserveNotes(e.target.value)}
+              />
+            </label>
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setReserveBalance(null)}
+            >
+              {tCommon("cancel")}
+            </Button>
+            <Button type="button" disabled={isPending} onClick={createReservation}>
+              {t("reserveConfirm")}
             </Button>
           </DialogFooter>
         </DialogContent>

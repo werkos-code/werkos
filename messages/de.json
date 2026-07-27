@@ -1171,10 +1171,19 @@
         "location": "Standort",
         "qty": "Menge",
         "min": "Min",
-        "max": "Max"
+        "max": "Max",
+        "reserved": "Reserviert",
+        "available": "Verfügbar"
       },
       "editLimits": "Min/max",
       "editLimitsTitle": "Min/max festlegen",
+      "reserve": "Reservieren",
+      "reserveTitle": "Bestand reservieren",
+      "reserveConfirm": "Reservieren",
+      "release": "Freigeben",
+      "reservationsTitle": "Aktive Reservierungen",
+      "reservationsEmpty": "Keine aktiven Reservierungen.",
+      "availableHint": "Verfügbar: {qty}",
       "fields": {
         "name": "Name",
         "code": "Code",
@@ -1205,7 +1214,8 @@
       "errors": {
         "nameRequired": "Name ist erforderlich.",
         "insufficient": "Nicht genug Bestand an diesem Standort.",
-        "minGtMax": "Minimum darf nicht größer als Maximum sein."
+        "minGtMax": "Minimum darf nicht größer als Maximum sein.",
+        "insufficientAvailable": "Nicht genug verfügbarer Bestand (nach Reservierungen)."
       }
     },
     "supplierPrices": {
@@ -1237,7 +1247,12 @@
       "kpiDraft": "Entwurf",
       "kpiOpen": "Offen",
       "send": "Senden",
-      "markPartial": "Teilweise erhalten",
+      "receive": "Empfangen",
+      "receiveTitle": "Lieferung buchen",
+      "receiveConfirm": "Empfang buchen",
+      "receiveAllDone": "Alle Zeilen sind vollständig empfangen.",
+      "receiveRemaining": "Empfangen {received} von {ordered}",
+      "loading": "Laden…",
       "addLine": "Zeile hinzufügen",
       "columns": {
         "supplier": "Lieferant",
@@ -1264,11 +1279,16 @@
         "lineTitle": "Beschreibung",
         "qty": "Menge",
         "unit": "Einheit",
-        "unitCost": "Stückpreis (€)"
+        "unitCost": "Stückpreis (€)",
+        "location": "Lagerstandort",
+        "locationPick": "Standort wählen…"
       },
       "errors": {
         "supplierRequired": "Wähle einen Lieferanten.",
-        "linesRequired": "Füge mindestens eine Zeile mit Beschreibung und Menge hinzu."
+        "linesRequired": "Füge mindestens eine Zeile mit Beschreibung und Menge hinzu.",
+        "locationRequired": "Wähle einen Standort für den Empfang.",
+        "receiveLinesRequired": "Gib mindestens eine Empfangsmenge ein.",
+        "overReceive": "Empfang überschreitet die offene Menge."
       }
     },
     "workItem": {

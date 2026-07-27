@@ -1171,10 +1171,19 @@
         "location": "Location",
         "qty": "Qty",
         "min": "Min",
-        "max": "Max"
+        "max": "Max",
+        "reserved": "Reserved",
+        "available": "Available"
       },
       "editLimits": "Min/max",
       "editLimitsTitle": "Set min/max",
+      "reserve": "Reserve",
+      "reserveTitle": "Reserve stock",
+      "reserveConfirm": "Reserve",
+      "release": "Release",
+      "reservationsTitle": "Active reservations",
+      "reservationsEmpty": "No active reservations.",
+      "availableHint": "Available: {qty}",
       "fields": {
         "name": "Name",
         "code": "Code",
@@ -1205,7 +1214,8 @@
       "errors": {
         "nameRequired": "Name is required.",
         "insufficient": "Insufficient stock at this location.",
-        "minGtMax": "Minimum cannot be greater than maximum."
+        "minGtMax": "Minimum cannot be greater than maximum.",
+        "insufficientAvailable": "Insufficient available stock (after reservations)."
       }
     },
     "supplierPrices": {
@@ -1237,7 +1247,12 @@
       "kpiDraft": "Draft",
       "kpiOpen": "Open",
       "send": "Send",
-      "markPartial": "Partially received",
+      "receive": "Receive",
+      "receiveTitle": "Book delivery",
+      "receiveConfirm": "Book receipt",
+      "receiveAllDone": "All lines are fully received.",
+      "receiveRemaining": "Received {received} of {ordered}",
+      "loading": "Loading…",
       "addLine": "Add line",
       "columns": {
         "supplier": "Supplier",
@@ -1264,11 +1279,16 @@
         "lineTitle": "Description",
         "qty": "Qty",
         "unit": "Unit",
-        "unitCost": "Unit price (€)"
+        "unitCost": "Unit price (€)",
+        "location": "Stock location",
+        "locationPick": "Pick location…"
       },
       "errors": {
         "supplierRequired": "Pick a supplier.",
-        "linesRequired": "Add at least one line with description and quantity."
+        "linesRequired": "Add at least one line with description and quantity.",
+        "locationRequired": "Pick a location for the receipt.",
+        "receiveLinesRequired": "Enter at least one receipt quantity.",
+        "overReceive": "Receipt exceeds the remaining quantity."
       }
     },
     "workItem": {

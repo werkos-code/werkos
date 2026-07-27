@@ -47,3 +47,50 @@ export async function applyStockDelta(
 
   return { ok: true as const };
 }
+
+/** Reserve or release stock (updates reserved_quantity on stock_balances). */
+export async function applyReservationDelta(
+  admin: Admin,
+  organizationId: string,
+  articleId: string,
+  locationId: string,
+  delta: number,
+) {
+  if (delta === 0) return { ok: true as const };
+
+  const { data: existing } = await admin
+    .from("stock_balances")
+    .select("id, quantity, reserved_quantity")
+    .eq("organization_id", organizationId)
+    .eq("article_id", articleId)
+    .eq("location_id", locationId)
+    .maybeSingle();
+
+  if (!existing) {
+    if (delta > 0) {
+      return { ok: false as const, error: "no_balance" as const };
+    }
+    return { ok: false as const, error: "over_release" as const };
+  }
+
+  const quantity = Number(existing.quantity);
+  const currentReserved = Number(existing.reserved_quantity);
+  const nextReserved = currentReserved + delta;
+
+  if (nextReserved < -0.0001) {
+    return { ok: false as const, error: "over_release" as const };
+  }
+  if (nextReserved > quantity + 0.0001) {
+    return { ok: false as const, error: "insufficient_available" as const };
+  }
+
+  const reservedQuantity = Math.max(0, Math.round(nextReserved * 10000) / 10000);
+  const { error } = await admin
+    .from("stock_balances")
+    .update({ reserved_quantity: reservedQuantity })
+    .eq("id", existing.id)
+    .eq("organization_id", organizationId);
+
+  if (error) return { ok: false as const, error: error.message };
+  return { ok: true as const };
+}

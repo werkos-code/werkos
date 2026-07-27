@@ -1769,6 +1769,114 @@ export type Database = {
           },
         ];
       };
+      purchase_receipts: {
+        Row: {
+          id: string;
+          organization_id: string;
+          purchase_order_id: string;
+          location_id: string;
+          receipt_date: string;
+          reference: string | null;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          purchase_order_id: string;
+          location_id: string;
+          receipt_date?: string;
+          reference?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          purchase_order_id?: string;
+          location_id?: string;
+          receipt_date?: string;
+          reference?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      purchase_receipt_lines: {
+        Row: {
+          id: string;
+          organization_id: string;
+          purchase_receipt_id: string;
+          purchase_order_line_id: string;
+          quantity: number;
+          stock_movement_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          purchase_receipt_id: string;
+          purchase_order_line_id: string;
+          quantity: number;
+          stock_movement_id?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          purchase_receipt_id?: string;
+          purchase_order_line_id?: string;
+          quantity?: number;
+          stock_movement_id?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      stock_reservations: {
+        Row: {
+          id: string;
+          organization_id: string;
+          article_id: string;
+          location_id: string;
+          project_id: string | null;
+          material_line_id: string | null;
+          quantity: number;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          released_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          article_id: string;
+          location_id: string;
+          project_id?: string | null;
+          material_line_id?: string | null;
+          quantity: number;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          released_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          article_id?: string;
+          location_id?: string;
+          project_id?: string | null;
+          material_line_id?: string | null;
+          quantity?: number;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          released_at?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;

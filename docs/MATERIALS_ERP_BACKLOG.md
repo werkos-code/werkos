@@ -2,7 +2,8 @@
 
 > Laatst bijgewerkt: 2026-07-27  
 > SQL fase A–C: `docs/sql-applied/20260726290000_materials_erp.sql`  
-> SQL fase D: `supabase/migrations/20260727100000_materials_phase_d.sql`  
+> SQL fase D: `docs/sql-applied/20260727100000_materials_phase_d.sql` (+ grants)  
+> SQL fase D+: `supabase/migrations/20260727200000_materials_phase_d_plus.sql`  
 > Roadmap: `.cursor/plans/materiaal_registratie_v1_2f8a1c04.plan.md`
 
 ## Afgerond (fase A + B + C-kern)
@@ -25,16 +26,20 @@
 - [x] Uitgifte vanaf werkzaamheid met stock-aftrek (`deductStock`)
 - [x] Inkoop basis: `purchase_orders` + `/materiaal/inkoop` (aanmaken + overzicht)
 
-## Volgende (fase D+)
+## Afgerond (fase D+ — kern)
 
-- [ ] Levernota / ontvangst tegen PO (partial receive)
-- [ ] Reserveringen (reserved_quantity echt gebruiken)
+- [x] Levernota / ontvangst tegen PO (`purchase_receipts`, partial receive, stock receipt)
+- [x] Reserveringen (`stock_reservations`, `reserved_quantity` op saldi)
+
+## Volgende
+
 - [ ] Werkbon-materiaal, scan/barcode, portaal
 - [ ] 3-way match met facturen
 - [ ] Catalogus-integraties (2BA e.d.)
+- [ ] Reservering koppelen aan project/BOM-regel in UI
 
 ## Migratie
 
-Run in Supabase SQL Editor (na fase A–C):
+Run in Supabase SQL Editor (na fase D):
 
-`supabase/migrations/20260727100000_materials_phase_d.sql`
+`supabase/migrations/20260727200000_materials_phase_d_plus.sql`

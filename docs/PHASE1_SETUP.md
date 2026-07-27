@@ -233,17 +233,28 @@ Na Phase 1 / Super Admin:
 ## 21. Materiaal ERP fase D (leveranciers + inkoop)
 
 1. Open **SQL Editor** in Supabase
-2. Plak en run:  
-   `supabase/migrations/20260727100000_materials_phase_d.sql`
+2. Plak en run (indien nog niet gedaan):  
+   `docs/sql-applied/20260727100000_materials_phase_d.sql`  
+   en `docs/sql-applied/20260727110000_materials_phase_d_grants.sql`
 3. Test:
    - `/leveranciers` — leverancier aanmaken
    - `/materiaal/artikelen` — artikel bewerken → leveranciersprijzen
    - `/materiaal/voorraad` — min/max op saldo
    - Werkzaamheid → tab **Materiaal** → verbruik met voorraad-aftrek
    - `/materiaal/inkoop` — inkooporder aanmaken
-4. Als leverancier aanmaken **permission denied** geeft (fase D al gedraaid vóór grants-fix): run ook  
-   `supabase/migrations/20260727110000_materials_phase_d_grants.sql`
-5. Rest: [`MATERIALS_ERP_BACKLOG.md`](./MATERIALS_ERP_BACKLOG.md)
+4. Rest: [`MATERIALS_ERP_BACKLOG.md`](./MATERIALS_ERP_BACKLOG.md)
+
+## 22. Materiaal ERP fase D+ (ontvangst + reserveringen)
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260727200000_materials_phase_d_plus.sql`
+3. Test:
+   - `/materiaal/inkoop` — order versturen → **Ontvangen** → locatie + aantallen → voorraad stijgt
+   - `/materiaal/voorraad` — **Reserveren** op saldo → actieve reserveringen → **Vrijgeven**
+4. Rest: [`MATERIALS_ERP_BACKLOG.md`](./MATERIALS_ERP_BACKLOG.md)
+
+## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  
 Owner zit in de basis; tellers zijn alleen extra seats.  

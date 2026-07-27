@@ -29,6 +29,94 @@ type LineInput = {
   unitCost?: string | number | null;
 };
 
+export async function GET(request: Request) {
+  try {
+    const gate = await requireApiStaff();
+    if ("error" in gate) return gate.error;
+
+    const id = new URL(request.url).searchParams.get("id")?.trim() ?? "";
+    if (!id) {
+      return NextResponse.json({ error: "invalid_input" }, { status: 400 });
+    }
+
+    const admin = createAdminClient();
+    const { data: order, error: orderError } = await admin
+      .from("purchase_orders")
+      .select(
+        "id, supplier_id, reference, status, order_date, expected_date, notes",
+      )
+      .eq("organization_id", gate.organizationId)
+      .eq("id", id)
+      .maybeSingle();
+
+    if (orderError) {
+      return NextResponse.json({ error: orderError.message }, { status: 500 });
+    }
+    if (!order) {
+      return NextResponse.json({ error: "not_found" }, { status: 404 });
+    }
+
+    const [{ data: supplier }, { data: lines }] = await Promise.all([
+      admin
+        .from("suppliers")
+        .select("name")
+        .eq("organization_id", gate.organizationId)
+        .eq("id", order.supplier_id)
+        .maybeSingle(),
+      admin
+        .from("purchase_order_lines")
+        .select(
+          "id, article_id, title, quantity, unit, unit_cost_cents, received_quantity, sort_order",
+        )
+        .eq("organization_id", gate.organizationId)
+        .eq("purchase_order_id", id)
+        .order("sort_order"),
+    ]);
+
+    const articleIds = [
+      ...new Set(
+        (lines ?? []).map((row) => row.article_id).filter(Boolean) as string[],
+      ),
+    ];
+    const { data: articles } = articleIds.length
+      ? await admin.from("articles").select("id, name").in("id", articleIds)
+      : { data: [] as Array<{ id: string; name: string }> };
+
+    const articleById = new Map(
+      (articles ?? []).map((row) => [row.id, row.name] as const),
+    );
+
+    return NextResponse.json({
+      order: {
+        id: order.id,
+        supplierId: order.supplier_id,
+        supplierName: supplier?.name ?? "—",
+        reference: order.reference,
+        status: order.status,
+        orderDate: order.order_date,
+        expectedDate: order.expected_date,
+        notes: order.notes,
+      },
+      lines: (lines ?? []).map((row) => ({
+        id: row.id,
+        purchaseOrderId: id,
+        articleId: row.article_id,
+        articleName: row.article_id
+          ? (articleById.get(row.article_id) ?? "—")
+          : null,
+        title: row.title,
+        quantity: Number(row.quantity),
+        unit: row.unit,
+        unitCostCents: row.unit_cost_cents,
+        receivedQuantity: Number(row.received_quantity),
+      })),
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "list_failed";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const gate = await requireApiStaff();

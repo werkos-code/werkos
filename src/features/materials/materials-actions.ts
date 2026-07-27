@@ -436,3 +436,75 @@ export async function listMaterialLinesForWorkItem(workItemId: string): Promise<
     })),
   };
 }
+
+export async function listStockReservations(): Promise<{
+  reservations?: import("@/features/materials/lib/materials").StockReservationRow[];
+  error?: string;
+}> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const { data, error } = await ctx.supabase
+    .from("stock_reservations")
+    .select(
+      "id, article_id, location_id, project_id, quantity, notes, created_at",
+    )
+    .eq("organization_id", ctx.organizationId)
+    .is("released_at", null)
+    .order("created_at", { ascending: false });
+
+  if (error) return { error: error.message };
+
+  const articleIds = [...new Set((data ?? []).map((row) => row.article_id))];
+  const locationIds = [...new Set((data ?? []).map((row) => row.location_id))];
+  const projectIds = [
+    ...new Set(
+      (data ?? []).map((row) => row.project_id).filter(Boolean) as string[],
+    ),
+  ];
+
+  const [{ data: articles }, { data: locations }, { data: projects }] =
+    await Promise.all([
+      articleIds.length
+        ? ctx.supabase.from("articles").select("id, name").in("id", articleIds)
+        : Promise.resolve({
+            data: [] as Array<{ id: string; name: string }>,
+          }),
+      locationIds.length
+        ? ctx.supabase
+            .from("stock_locations")
+            .select("id, name")
+            .in("id", locationIds)
+        : Promise.resolve({ data: [] as Array<{ id: string; name: string }> }),
+      projectIds.length
+        ? ctx.supabase.from("projects").select("id, name").in("id", projectIds)
+        : Promise.resolve({ data: [] as Array<{ id: string; name: string }> }),
+    ]);
+
+  const articleById = new Map(
+    (articles ?? []).map((row) => [row.id, row.name] as const),
+  );
+  const locationById = new Map(
+    (locations ?? []).map((row) => [row.id, row.name] as const),
+  );
+  const projectById = new Map(
+    (projects ?? []).map((row) => [row.id, row.name] as const),
+  );
+
+  return {
+    reservations: (data ?? []).map((row) => ({
+      id: row.id,
+      articleId: row.article_id,
+      articleName: articleById.get(row.article_id) ?? "—",
+      locationId: row.location_id,
+      locationName: locationById.get(row.location_id) ?? "—",
+      projectId: row.project_id,
+      projectName: row.project_id
+        ? (projectById.get(row.project_id) ?? "—")
+        : null,
+      quantity: Number(row.quantity),
+      notes: row.notes,
+      createdAt: row.created_at,
+    })),
+  };
+}
