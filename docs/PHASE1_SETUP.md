@@ -272,8 +272,8 @@ Geen nieuwe SQL. Test:
 ## 25. Materiaal ERP fase F (3-way match)
 
 1. Open **SQL Editor** in Supabase
-2. Plak en run:  
-   `supabase/migrations/20260727310000_supplier_invoices_3way_match.sql`
+2. Plak en run (indien nog niet gedaan):  
+   `docs/sql-applied/20260727310000_supplier_invoices_3way_match.sql`
 3. Test: `/materiaal/inkoop` → order ontvangen → **Factuur** → **3-way match**
 
 ## Prijsformule

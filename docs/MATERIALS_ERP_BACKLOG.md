@@ -21,4 +21,4 @@ Artikelen, voorraad, project BOM, leveranciers, inkoop, ontvangst, reserveringen
 
 ## Migratie
 
-Fase F: `supabase/migrations/20260727310000_supplier_invoices_3way_match.sql` — run in SQL Editor, daarna archiveren.
+Fase F SQL: `docs/sql-applied/20260727310000_supplier_invoices_3way_match.sql` (toegepast).
