@@ -241,7 +241,9 @@ Na Phase 1 / Super Admin:
    - `/materiaal/voorraad` — min/max op saldo
    - Werkzaamheid → tab **Materiaal** → verbruik met voorraad-aftrek
    - `/materiaal/inkoop` — inkooporder aanmaken
-4. Rest: [`MATERIALS_ERP_BACKLOG.md`](./MATERIALS_ERP_BACKLOG.md)
+4. Als leverancier aanmaken **permission denied** geeft (fase D al gedraaid vóór grants-fix): run ook  
+   `supabase/migrations/20260727110000_materials_phase_d_grants.sql`
+5. Rest: [`MATERIALS_ERP_BACKLOG.md`](./MATERIALS_ERP_BACKLOG.md)
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  
 Owner zit in de basis; tellers zijn alleen extra seats.  

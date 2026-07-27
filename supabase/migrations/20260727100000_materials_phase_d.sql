@@ -263,5 +263,11 @@ begin
       'create policy %I on public.%I for delete using (public.is_org_staff(organization_id))',
       t || '_delete_staff', t
     );
+
+    execute format(
+      'grant select, insert, update, delete on table public.%I to authenticated',
+      t
+    );
+    execute format('grant all on table public.%I to service_role', t);
   end loop;
 end $$;
