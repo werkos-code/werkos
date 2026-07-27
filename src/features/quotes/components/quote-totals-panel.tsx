@@ -21,6 +21,8 @@ type QuoteTotalsPanelProps = {
   showInclVatToggle?: boolean;
   title?: string;
   footer?: React.ReactNode;
+  /** Render without PageCard wrapper (for nesting in rail). */
+  embedded?: boolean;
 };
 
 export function QuoteTotalsPanel({
@@ -31,6 +33,7 @@ export function QuoteTotalsPanel({
   showInclVatToggle = true,
   title,
   footer,
+  embedded = false,
 }: QuoteTotalsPanelProps) {
   const t = useTranslations("quotes");
   const [showInclVat, setShowInclVat] = useState(true);
@@ -40,12 +43,10 @@ export function QuoteTotalsPanel({
     [lines, marginPercent],
   );
 
-  return (
-    <PageCard className="space-y-4 p-4">
+  const body = (
+    <div className="space-y-4">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="text-sm font-medium">
-          {title ?? t("totalsTitle")}
-        </h2>
+        <h2 className="text-sm font-medium">{title ?? t("totalsTitle")}</h2>
         {showInclVatToggle ? (
           <button
             type="button"
@@ -115,8 +116,11 @@ export function QuoteTotalsPanel({
         </div>
       </dl>
       {footer ? <div className="pt-1">{footer}</div> : null}
-    </PageCard>
+    </div>
   );
+
+  if (embedded) return body;
+  return <PageCard className="p-4">{body}</PageCard>;
 }
 
 export function QuoteTotalsPanelFooterButton({

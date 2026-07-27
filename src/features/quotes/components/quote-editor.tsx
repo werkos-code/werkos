@@ -2,13 +2,13 @@
 
 import { Link, useRouter } from "@/i18n/navigation";
 import {
-  Calendar,
+  Activity,
   Check,
-  Copy,
   Ellipsis,
   Eye,
-  ExternalLink,
-  FileUp,
+  FileText,
+  Paperclip,
+  Pencil,
   Send,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -26,14 +26,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { QuoteEditorRail } from "@/features/quotes/components/quote-editor-rail";
 import { QuoteFinancialPlanning } from "@/features/quotes/components/quote-financial-planning";
 import { QuoteLinesWorkspace } from "@/features/quotes/components/quote-lines-workspace";
 import {
-  QuoteTotalsPanel,
-  QuoteTotalsPanelFooterButton,
-} from "@/features/quotes/components/quote-totals-panel";
-import {
   collectDescendants,
+  computeQuoteTotals,
+  formatEuro,
   getLeafLines,
 } from "@/features/quotes/lib/quote-line";
 import { isQuoteEditable } from "@/features/quotes/lib/quote-status";
@@ -49,7 +48,13 @@ type QuoteEditorProps = {
   quote: QuoteDetail;
 };
 
-type EditorTab = "lines" | "financial" | "info" | "terms" | "notes";
+type EditorTab =
+  | "overview"
+  | "editor"
+  | "terms"
+  | "attachments"
+  | "notes"
+  | "activity";
 
 export function QuoteEditor({ quote }: QuoteEditorProps) {
   const t = useTranslations("quotes");
@@ -58,8 +63,9 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
 
   const [status, setStatusState] = useState<QuoteStatus>(quote.status);
   const editable = isQuoteEditable(status);
-  const [tab, setTab] = useState<EditorTab>("lines");
+  const [tab, setTab] = useState<EditorTab>("editor");
   const [title, setTitle] = useState(quote.title);
+  const [editingTitle, setEditingTitle] = useState(false);
   const [internalNotes, setInternalNotes] = useState(quote.internalNotes ?? "");
   const [externalNotes, setExternalNotes] = useState(quote.externalNotes ?? "");
   const [validUntil, setValidUntil] = useState(quote.validUntil ?? "");
@@ -71,6 +77,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
   );
   const [pendingAction, setPendingAction] = useState(false);
   const [acceptOpen, setAcceptOpen] = useState(false);
+  const [planningOpen, setPlanningOpen] = useState(false);
   const [selectedLineIds, setSelectedLineIds] = useState<string[]>([]);
   const [setExecution, setSetExecution] = useState(true);
 
@@ -113,6 +120,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
   }, [dirty, t]);
 
   const leafLines = useMemo(() => getLeafLines(lines), [lines]);
+  const totals = useMemo(() => computeQuoteTotals(lines), [lines]);
 
   function markDirty() {
     setDirty(true);
@@ -254,7 +262,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
       setLines((prev) => [...prev, result.line!]);
       setDirty(true);
       setSaveState("idle");
-      setTab("lines");
+      setTab("editor");
     } catch {
       setError(tCommon("error"));
     } finally {
@@ -322,32 +330,89 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
   }
 
   const busy = saveState === "saving" || pendingAction;
+  const saveLabel =
+    saveState === "saving" ? tCommon("loading") : t("save");
+
   const tabs: { id: EditorTab; label: string }[] = [
-    { id: "lines", label: t("tabs.lines") },
-    { id: "financial", label: t("tabs.financial") },
-    { id: "info", label: t("tabs.info") },
+    { id: "overview", label: t("tabs.overview") },
+    { id: "editor", label: t("tabs.editor") },
     { id: "terms", label: t("tabs.terms") },
+    { id: "attachments", label: t("tabs.attachments") },
     { id: "notes", label: t("tabs.notes") },
+    { id: "activity", label: t("tabs.activity") },
   ];
+
+  const showRail = tab === "overview" || tab === "editor";
 
   return (
     <div className="space-y-5">
+      {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="min-w-0 space-y-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h2 className="truncate text-lg font-semibold tracking-tight">
-              {title || t("untitledQuote")}
-            </h2>
+        <div className="min-w-0 space-y-2">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <span className="font-mono tabular-nums">
+              {quote.quoteNumber ?? t("meta.numberPending")}
+            </span>
             <Badge
               variant={status === "draft" ? "success" : "secondary"}
-              className="h-6 shrink-0 px-2.5"
+              className="h-5 px-2"
             >
               {t(`status.${status}`)}
             </Badge>
           </div>
-          <p className="font-mono text-xs text-muted-foreground tabular-nums">
-            {quote.quoteNumber ?? t("meta.numberPending")}
-          </p>
+
+          <div className="flex min-w-0 items-center gap-2">
+            {editingTitle && editable ? (
+              <Input
+                autoFocus
+                value={title}
+                className="h-9 max-w-xl text-lg font-semibold"
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  markDirty();
+                }}
+                onBlur={() => setEditingTitle(false)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") setEditingTitle(false);
+                }}
+              />
+            ) : (
+              <h2 className="truncate text-xl font-semibold tracking-tight">
+                {title || t("untitledQuote")}
+              </h2>
+            )}
+            {editable ? (
+              <button
+                type="button"
+                className="text-muted-foreground hover:text-foreground"
+                onClick={() => setEditingTitle(true)}
+                aria-label={t("fields.title")}
+              >
+                <Pencil className="size-3.5" />
+              </button>
+            ) : null}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+            {quote.customerId ? (
+              <Link
+                href={`/klanten/${quote.customerId}`}
+                className="hover:text-primary hover:underline"
+              >
+                {quote.customerName ?? "—"}
+              </Link>
+            ) : (
+              <span>{quote.customerName ?? "—"}</span>
+            )}
+            <span aria-hidden>·</span>
+            <Link
+              href={`/projecten/${quote.projectId}`}
+              className="hover:text-primary hover:underline"
+            >
+              {quote.projectName}
+            </Link>
+          </div>
+
           {dirty ? (
             <span className="text-xs text-amber-700">{t("unsaved")}</span>
           ) : saveState === "saved" ? (
@@ -357,6 +422,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
             </span>
           ) : null}
         </div>
+
         <div className="flex flex-wrap items-center gap-2">
           {editable ? (
             <Button
@@ -366,13 +432,26 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
               disabled={busy || !dirty}
               onClick={() => void saveAll()}
             >
-              {saveState === "saving" ? tCommon("loading") : t("save")}
+              {saveLabel}
             </Button>
           ) : null}
-          <Button type="button" variant="outline" size="icon-sm" disabled title={t("stubs.more")}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled
+            title={t("stubs.more")}
+          >
+            {t("actions.menu")}
             <Ellipsis className="size-4" />
           </Button>
-          <Button type="button" variant="outline" size="sm" disabled title={t("stubs.preview")}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled
+            title={t("stubs.preview")}
+          >
             <Eye className="size-3.5" />
             {t("actions.preview")}
           </Button>
@@ -388,7 +467,13 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
             </Button>
           ) : null}
           {status === "sent" || status === "draft" ? (
-            <Button type="button" size="sm" variant="secondary" disabled={busy} onClick={openAccept}>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              disabled={busy}
+              onClick={openAccept}
+            >
               {t("actions.accept")}
             </Button>
           ) : null}
@@ -423,63 +508,46 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
         </p>
       ) : null}
 
+      {/* KPI strip */}
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <MetaStatCard
-          label={t("meta.number")}
-          value={quote.quoteNumber ?? t("meta.numberPending")}
-          icon={<Copy className="size-3.5 opacity-40" />}
+          label={t("kpi.net")}
+          value={
+            <span className="font-mono tabular-nums">
+              {formatEuro(totals.net)}
+            </span>
+          }
         />
         <MetaStatCard
-          label={t("meta.customer")}
+          label={t("kpi.vat")}
           value={
-            quote.customerId ? (
-              <Link
-                href={`/klanten/${quote.customerId}`}
-                className="hover:text-primary hover:underline"
-              >
-                {quote.customerName ?? "—"}
-              </Link>
-            ) : (
-              (quote.customerName ?? "—")
-            )
+            <span className="font-mono tabular-nums">
+              {formatEuro(totals.vat)}
+            </span>
           }
-          icon={<ExternalLink className="size-3.5" />}
         />
         <MetaStatCard
-          label={t("meta.project")}
+          label={t("kpi.gross")}
           value={
-            <Link
-              href={`/projecten/${quote.projectId}`}
-              className="hover:text-primary hover:underline"
-            >
-              {quote.projectName}
-            </Link>
+            <span className="font-mono tabular-nums">
+              {formatEuro(totals.gross)}
+            </span>
           }
-          icon={<ExternalLink className="size-3.5" />}
         />
         <MetaStatCard
-          label={t("fields.validUntil")}
-          value={
-            editable ? (
-              <Input
-                type="date"
-                value={validUntil}
-                className="h-7 border-0 bg-transparent px-0 shadow-none"
-                onChange={(e) => {
-                  setValidUntil(e.target.value);
-                  markDirty();
-                }}
-              />
-            ) : (
-              validUntil || "—"
-            )
-          }
-          icon={<Calendar className="size-3.5" />}
+          label={t("kpi.margin")}
+          value={<span className="text-muted-foreground">—</span>}
         />
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_18rem]">
-        <div className="space-y-4">
+      {/* Tabs + body */}
+      <div
+        className={cn(
+          "grid gap-5",
+          showRail ? "xl:grid-cols-[minmax(0,1fr)_20rem]" : "",
+        )}
+      >
+        <div className="min-w-0 space-y-4">
           <PageCard className="overflow-hidden">
             <div className="flex flex-wrap gap-1 border-b border-border px-2 pt-2">
               {tabs.map((item) => (
@@ -499,7 +567,50 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
               ))}
             </div>
 
-            {tab === "lines" ? (
+            {tab === "overview" ? (
+              <div className="space-y-4 p-5">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <OverviewRow
+                    label={t("meta.customer")}
+                    value={quote.customerName ?? "—"}
+                  />
+                  <OverviewRow
+                    label={t("meta.project")}
+                    value={quote.projectName}
+                  />
+                  <OverviewRow
+                    label={t("meta.number")}
+                    value={quote.quoteNumber ?? t("meta.numberPending")}
+                  />
+                  <OverviewRow
+                    label={t("fields.validUntil")}
+                    value={validUntil || "—"}
+                  />
+                  <OverviewRow
+                    label={t("kpi.net")}
+                    value={formatEuro(totals.net)}
+                  />
+                  <OverviewRow
+                    label={t("kpi.gross")}
+                    value={formatEuro(totals.gross)}
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {t("overview.hint")}
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setTab("editor")}
+                >
+                  <FileText className="size-3.5" />
+                  {t("overview.openEditor")}
+                </Button>
+              </div>
+            ) : null}
+
+            {tab === "editor" ? (
               <div className="space-y-0">
                 <QuoteLinesWorkspace
                   lines={lines}
@@ -512,66 +623,39 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
                   onAddLine={addLine}
                   onDeleteLine={deleteLine}
                 />
-                <div className="border-t border-dashed border-border px-4 py-6">
-                  <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-muted/20 px-4 py-8 text-center opacity-60">
-                    <FileUp className="size-6 text-primary" />
-                    <p className="text-sm font-medium text-foreground">
-                      {t("stubs.attachmentsTitle")}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {t("stubs.attachmentsHint")}
-                    </p>
+                {editable ? (
+                  <div className="border-t border-border px-4 py-3">
+                    <Label
+                      htmlFor="internalNotes-inline"
+                      className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase"
+                    >
+                      {t("fields.internalNotes")}
+                    </Label>
+                    <textarea
+                      id="internalNotes-inline"
+                      rows={2}
+                      value={internalNotes}
+                      onChange={(e) => {
+                        setInternalNotes(e.target.value);
+                        markDirty();
+                      }}
+                      placeholder={t("placeholders.internalNotesShort")}
+                      className="border-input bg-background mt-1.5 w-full resize-y rounded-lg border px-3 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                    />
                   </div>
-                </div>
-              </div>
-            ) : null}
-
-            {tab === "financial" ? (
-              <QuoteFinancialPlanning
-                quoteId={quote.id}
-                lines={lines}
-                quoteNumber={quote.quoteNumber}
-                editable={editable}
-              />
-            ) : null}
-
-            {tab === "info" ? (
-              <div className="space-y-4 p-5">
-                <div className="space-y-2">
-                  <Label htmlFor="quote-title">{t("fields.title")}</Label>
-                  <Input
-                    id="quote-title"
-                    value={title}
-                    disabled={!editable}
-                    onChange={(e) => {
-                      setTitle(e.target.value);
-                      markDirty();
-                    }}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="quote-valid">{t("fields.validUntil")}</Label>
-                  <Input
-                    id="quote-valid"
-                    type="date"
-                    value={validUntil}
-                    disabled={!editable}
-                    onChange={(e) => {
-                      setValidUntil(e.target.value);
-                      markDirty();
-                    }}
-                  />
-                </div>
+                ) : null}
               </div>
             ) : null}
 
             {tab === "terms" ? (
               <div className="space-y-4 p-5">
                 <div className="space-y-2">
-                  <Label htmlFor="externalNotes">{t("fields.externalNotes")}</Label>
+                  <Label htmlFor="externalNotes">
+                    {t("fields.externalNotes")}
+                  </Label>
                   <textarea
                     id="externalNotes"
-                    rows={8}
+                    rows={10}
                     value={externalNotes}
                     disabled={!editable}
                     onChange={(e) => {
@@ -594,12 +678,22 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
               </div>
             ) : null}
 
+            {tab === "attachments" ? (
+              <ComingSoon
+                icon={<Paperclip className="size-6 text-primary" />}
+                title={t("stubs.attachmentsTitle")}
+                hint={t("stubs.attachmentsHint")}
+              />
+            ) : null}
+
             {tab === "notes" ? (
               <div className="space-y-2 p-5">
-                <Label htmlFor="internalNotes">{t("fields.internalNotes")}</Label>
+                <Label htmlFor="internalNotes">
+                  {t("fields.internalNotes")}
+                </Label>
                 <textarea
                   id="internalNotes"
-                  rows={8}
+                  rows={10}
                   value={internalNotes}
                   disabled={!editable}
                   onChange={(e) => {
@@ -610,32 +704,53 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
                 />
               </div>
             ) : null}
+
+            {tab === "activity" ? (
+              <ComingSoon
+                icon={<Activity className="size-6 text-primary" />}
+                title={t("activity.title")}
+                hint={t("activity.hint")}
+              />
+            ) : null}
           </PageCard>
         </div>
 
-        <aside className="space-y-4 xl:sticky xl:top-20 xl:self-start">
-          <QuoteTotalsPanel
+        {showRail ? (
+          <QuoteEditorRail
+            quoteId={quote.id}
             lines={lines}
-            footer={
-              editable ? (
-                <QuoteTotalsPanelFooterButton
-                  disabled={busy || !dirty}
-                  onClick={() => void saveAll()}
-                >
-                  {saveState === "saving" ? tCommon("loading") : t("save")}
-                </QuoteTotalsPanelFooterButton>
-              ) : undefined
-            }
+            status={status}
+            editable={editable}
+            busy={busy}
+            dirty={dirty}
+            saveLabel={saveLabel}
+            validUntil={validUntil}
+            onSave={() => void saveAll()}
+            onOpenPlanningEditor={() => setPlanningOpen(true)}
+            onValidUntilChange={(value) => {
+              setValidUntil(value);
+              markDirty();
+            }}
           />
-
-          <PageCard className="space-y-3 p-4 opacity-70">
-            <h3 className="text-sm font-medium">{t("stubs.attachmentsList")}</h3>
-            <p className="text-xs text-muted-foreground">
-              {t("stubs.attachmentsEmpty")}
-            </p>
-          </PageCard>
-        </aside>
+        ) : null}
       </div>
+
+      <Dialog open={planningOpen} onOpenChange={setPlanningOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>{t("financialPlanning.title")}</DialogTitle>
+            <DialogDescription>
+              {t("financialPlanning.subtitle")}
+            </DialogDescription>
+          </DialogHeader>
+          <QuoteFinancialPlanning
+            quoteId={quote.id}
+            lines={lines}
+            quoteNumber={quote.quoteNumber}
+            editable={editable}
+          />
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={acceptOpen} onOpenChange={setAcceptOpen}>
         <DialogContent className="sm:max-w-md" showCloseButton>
@@ -687,6 +802,35 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function OverviewRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-muted/20 px-3 py-2.5">
+      <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+        {label}
+      </p>
+      <p className="mt-0.5 text-sm font-medium">{value}</p>
+    </div>
+  );
+}
+
+function ComingSoon({
+  icon,
+  title,
+  hint,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  hint: string;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-2 px-4 py-12 text-center">
+      {icon}
+      <p className="text-sm font-medium">{title}</p>
+      <p className="max-w-sm text-xs text-muted-foreground">{hint}</p>
     </div>
   );
 }

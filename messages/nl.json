@@ -810,18 +810,42 @@
     "setProjectExecution": "Zet projectstatus op Uitvoering",
     "confirmAccept": "Accepteren en werkzaamheden aanmaken",
     "tabs": {
+      "overview": "Overzicht",
+      "editor": "Offerte editor",
       "lines": "Regels",
       "financial": "Financiële planning",
       "info": "Informatie",
       "terms": "Voorwaarden",
-      "notes": "Opmerkingen"
+      "attachments": "Bijlagen",
+      "notes": "Opmerkingen",
+      "activity": "Activiteiten"
     },
     "untitledQuote": "Offerte zonder titel",
+    "kpi": {
+      "net": "Totaal excl. btw",
+      "vat": "Btw",
+      "gross": "Totaal incl. btw",
+      "margin": "Marge"
+    },
+    "rail": {
+      "summary": "Samenvatting",
+      "settings": "Offerte instellingen",
+      "paymentTermsTitle": "Betalingsvoorwaarden",
+      "draftBanner": "Deze offerte is een concept en nog niet verzonden."
+    },
+    "overview": {
+      "hint": "Bekijk de kerngegevens. Ga naar Offerte editor om regels aan te passen.",
+      "openEditor": "Naar offerte editor"
+    },
+    "activity": {
+      "title": "Activiteiten",
+      "hint": "Wijzigingen en statusupdates van deze offerte volgen hier in een volgende stap."
+    },
     "financialPlanning": {
       "title": "Financiële planning",
       "subtitle": "Plan hoe de klant betaalt: voorschotten, fasen en slotfactuur. Per schijf maak je een conceptfactuur.",
       "empty": "Nog geen betalingsschema. Voeg schijven toe of gebruik het standaardschema.",
-      "addPhase": "Schijf toevoegen",
+      "addPhase": "Termijn toevoegen",
       "addTemplate": "Standaardschema (4×25%)",
       "save": "Planning opslaan",
       "saveBeforeInvoice": "Sla de planning eerst op voordat je factureert.",
@@ -829,6 +853,7 @@
       "remove": "Verwijderen",
       "newPhaseTitle": "Nieuwe schijf",
       "finalAuto": "Restbedrag",
+      "editPlanning": "Planning bewerken",
       "unbalanced": "De geplande schijven dekken niet het offertetotaal. Controleer de percentages of bedragen.",
       "columns": {
         "title": "Omschrijving",
@@ -870,17 +895,19 @@
     "placeholders": {
       "line": "Omschrijving van de regel",
       "section": "Nieuw onderdeel",
-      "description": "Optionele toelichting"
+      "description": "Optionele toelichting",
+      "internalNotesShort": "Interne notitie bij deze offerte…"
     },
     "stubs": {
       "more": "Meer acties volgen later",
       "preview": "Voorbeeld volgt later",
+      "soon": "Volgt later",
       "textLine": "Tekstregel",
       "discount": "Korting",
       "image": "Afbeelding",
       "import": "Importeren",
-      "attachmentsTitle": "Sleep bestanden hierheen of klik om te uploaden",
-      "attachmentsHint": "PDF, JPG, PNG, Excel · max. 10MB — volgt later",
+      "attachmentsTitle": "Bijlagen",
+      "attachmentsHint": "PDF, JPG, PNG, Excel · upload volgt in een volgende versie",
       "attachmentsList": "Bijlagen",
       "attachmentsEmpty": "Nog geen bijlagen. Upload volgt in een volgende versie.",
       "paymentTerm": "Betaaltermijn",
@@ -910,7 +937,8 @@
       "accept": "Accepteren",
       "reject": "Afwijzen",
       "cancel": "Annuleren",
-      "preview": "Voorbeeld"
+      "preview": "Voorbeeld",
+      "menu": "Acties"
     },
     "fields": {
       "title": "Titel",

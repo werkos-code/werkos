@@ -810,13 +810,37 @@
     "setProjectExecution": "Set project status to Execution",
     "confirmAccept": "Accept and create work items",
     "tabs": {
+      "overview": "Overview",
+      "editor": "Quote editor",
       "lines": "Lines",
       "financial": "Financial planning",
       "info": "Information",
       "terms": "Terms",
-      "notes": "Notes"
+      "attachments": "Attachments",
+      "notes": "Notes",
+      "activity": "Activity"
     },
     "untitledQuote": "Untitled quote",
+    "kpi": {
+      "net": "Total excl. VAT",
+      "vat": "VAT",
+      "gross": "Total incl. VAT",
+      "margin": "Margin"
+    },
+    "rail": {
+      "summary": "Summary",
+      "settings": "Quote settings",
+      "paymentTermsTitle": "Payment terms",
+      "draftBanner": "This quote is a draft and has not been sent yet."
+    },
+    "overview": {
+      "hint": "Review key details. Open the quote editor to edit lines.",
+      "openEditor": "Open quote editor"
+    },
+    "activity": {
+      "title": "Activity",
+      "hint": "Changes and status updates for this quote will appear here later."
+    },
     "financialPlanning": {
       "title": "Financial planning",
       "subtitle": "Plan how the customer pays: deposits, milestones, and final invoice. Create a draft invoice per installment.",
@@ -829,6 +853,7 @@
       "remove": "Remove",
       "newPhaseTitle": "New installment",
       "finalAuto": "Remainder",
+      "editPlanning": "Edit schedule",
       "unbalanced": "Planned installments do not match the quote total. Check percentages or amounts.",
       "columns": {
         "title": "Description",
@@ -870,17 +895,19 @@
     "placeholders": {
       "line": "Line description",
       "section": "New section",
-      "description": "Optional details"
+      "description": "Optional details",
+      "internalNotesShort": "Internal note for this quote…"
     },
     "stubs": {
       "more": "More actions coming later",
       "preview": "Preview coming later",
+      "soon": "Coming later",
       "textLine": "Text line",
       "discount": "Discount",
       "image": "Image",
       "import": "Import",
-      "attachmentsTitle": "Drop files here or click to upload",
-      "attachmentsHint": "PDF, JPG, PNG, Excel · max 10MB — coming later",
+      "attachmentsTitle": "Attachments",
+      "attachmentsHint": "PDF, JPG, PNG, Excel · upload coming in a later version",
       "attachmentsList": "Attachments",
       "attachmentsEmpty": "No attachments yet. Upload comes in a later version.",
       "paymentTerm": "Payment term",
@@ -910,7 +937,8 @@
       "accept": "Accept",
       "reject": "Reject",
       "cancel": "Cancel",
-      "preview": "Preview"
+      "preview": "Preview",
+      "menu": "Actions"
     },
     "fields": {
       "title": "Title",

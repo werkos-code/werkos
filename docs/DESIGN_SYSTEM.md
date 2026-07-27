@@ -120,13 +120,28 @@ Detail-rest: [`WORK_ITEM_DETAIL_BACKLOG.md`](./WORK_ITEM_DETAIL_BACKLOG.md)
 **Voorbeeld:** `src/features/planning/components/planning-workspace.tsx`  
 Rest: [`PLANNING_BACKLOG.md`](./PLANNING_BACKLOG.md)
 
-### 4.5 Editor / workspace-dicht
+### 4.5 Offerte-editor (workspace-dicht)
 
-1. Status + save/send-acties
-2. `MetaStatCard`-rij
-3. Hoofd `PageCard` (tabs + regels) + sticky totals-aside
+```
+Header (titel · OFF-nummer · status · save-indicator · Acties / Voorbeeld / Verzenden)
+KPI-strip: 4× MetaStatCard (excl · btw · incl · marge)
+Underline-tabs: Overzicht · Offerte editor · Voorwaarden · Bijlagen · Opmerkingen · Activiteiten
+grid xl:[minmax(0,1fr)_20rem]
+  ├─ Main PageCard (tab-body; editor = regels + toolbar)
+  └─ Sticky rail PageCard
+       sub-tabs: Samenvatting | Offerte instellingen
+       Samenvatting: totalen · betalingsvoorwaarden · betalingsplanning-timeline · concept-banner
+```
 
-**Voorbeeld:** `quote-editor.tsx`
+| Regel | Detail |
+| --- | --- |
+| Financiële planning | In de **rail**, niet als primaire tab |
+| Marge-KPI | Alleen met echte kostprijs; anders `—` |
+| Actieve tab | `border-b-2 border-primary text-primary` |
+| Rail-breedte | `20rem` sticky `top-20` |
+
+**Canonical:** `src/features/quotes/components/quote-editor.tsx`  
+Fase-0 / backlog: [`QUOTE_EDITOR_PHASE0.md`](./QUOTE_EDITOR_PHASE0.md), [`QUOTE_FINANCIAL_PLANNING.md`](./QUOTE_FINANCIAL_PLANNING.md)
 
 ### 4.6 Coming soon / stub
 

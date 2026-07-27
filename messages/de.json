@@ -810,13 +810,37 @@
     "setProjectExecution": "Projektstatus auf Ausführung setzen",
     "confirmAccept": "Annehmen und Arbeiten anlegen",
     "tabs": {
+      "overview": "Übersicht",
+      "editor": "Angebotseditor",
       "lines": "Positionen",
       "financial": "Finanzplanung",
       "info": "Informationen",
       "terms": "Bedingungen",
-      "notes": "Notizen"
+      "attachments": "Anhänge",
+      "notes": "Notizen",
+      "activity": "Aktivität"
     },
     "untitledQuote": "Angebot ohne Titel",
+    "kpi": {
+      "net": "Gesamt zzgl. MwSt.",
+      "vat": "MwSt.",
+      "gross": "Gesamt inkl. MwSt.",
+      "margin": "Marge"
+    },
+    "rail": {
+      "summary": "Zusammenfassung",
+      "settings": "Angebotseinstellungen",
+      "paymentTermsTitle": "Zahlungsbedingungen",
+      "draftBanner": "Dieses Angebot ist ein Entwurf und noch nicht gesendet."
+    },
+    "overview": {
+      "hint": "Kernangaben prüfen. Öffne den Angebotseditor zum Bearbeiten der Positionen.",
+      "openEditor": "Zum Angebotseditor"
+    },
+    "activity": {
+      "title": "Aktivität",
+      "hint": "Änderungen und Statusupdates zu diesem Angebot erscheinen hier später."
+    },
     "financialPlanning": {
       "title": "Finanzplanung",
       "subtitle": "Planen Sie die Zahlung: Anzahlungen, Phasen und Schlussrechnung. Pro Rate eine Entwurfsrechnung erstellen.",
@@ -829,6 +853,7 @@
       "remove": "Entfernen",
       "newPhaseTitle": "Neue Rate",
       "finalAuto": "Restbetrag",
+      "editPlanning": "Plan bearbeiten",
       "unbalanced": "Die geplanten Raten decken nicht die Angebotssumme. Prozentsätze oder Beträge prüfen.",
       "columns": {
         "title": "Beschreibung",
@@ -870,17 +895,19 @@
     "placeholders": {
       "line": "Beschreibung der Position",
       "section": "Neuer Abschnitt",
-      "description": "Optionale Erläuterung"
+      "description": "Optionale Erläuterung",
+      "internalNotesShort": "Interne Notiz zu diesem Angebot…"
     },
     "stubs": {
       "more": "Weitere Aktionen folgen später",
       "preview": "Vorschau folgt später",
+      "soon": "Folgt später",
       "textLine": "Textzeile",
       "discount": "Rabatt",
       "image": "Bild",
       "import": "Importieren",
-      "attachmentsTitle": "Dateien hierher ziehen oder klicken zum Hochladen",
-      "attachmentsHint": "PDF, JPG, PNG, Excel · max. 10MB — folgt später",
+      "attachmentsTitle": "Anhänge",
+      "attachmentsHint": "PDF, JPG, PNG, Excel · Upload folgt in einer späteren Version",
       "attachmentsList": "Anhänge",
       "attachmentsEmpty": "Noch keine Anhänge. Upload folgt in einer späteren Version.",
       "paymentTerm": "Zahlungsziel",
@@ -910,7 +937,8 @@
       "accept": "Annehmen",
       "reject": "Ablehnen",
       "cancel": "Stornieren",
-      "preview": "Vorschau"
+      "preview": "Vorschau",
+      "menu": "Aktionen"
     },
     "fields": {
       "title": "Titel",

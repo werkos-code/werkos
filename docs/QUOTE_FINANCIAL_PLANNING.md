@@ -55,11 +55,16 @@ Auto `OFF-YYYY-NNNN` per organisatie (zelfde patroon als `INV-` / `PRJ-`).
 
 ## UI (offerte-editor)
 
-Tab **Financiële planning**:
+**Fase 0:** Betalingsplanning zit in de **rechter rail** (timeline), niet als primaire tab.
+Volledige fase-tabel opent via **Planning bewerken** (dialog).
 
-- Tabel: titel · type · %/bedrag · berekend bedrag · status · actie Factureren
-- Voortgangsbalk: gepland / gefactureerd / resterend
-- Knoppen: schijf toevoegen · standaardschema (25%×4) · opslaan
+Rail-sectie:
+
+- Timeline: titel · % · bedrag · status · Factureren
+- Voortgang / 100%-totaal
+- Knop “Termijn toevoegen” / standaardschema
+
+Zie `QUOTE_EDITOR_PHASE0.md`.
 
 ## Roadmap
 
