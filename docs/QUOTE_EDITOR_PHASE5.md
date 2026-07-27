@@ -23,6 +23,6 @@ Run SQL in Supabase:
 
 ## Volgende
 
+- [x] Zelfde preview-patroon voor facturen → [`INVOICE_EDITOR_PHASE6.md`](./INVOICE_EDITOR_PHASE6.md)
 - Logo op organisatie
-- Zelfde preview-patroon voor facturen
 - Header `⋯` (dupliceren) of bijlagen

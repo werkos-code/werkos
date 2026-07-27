@@ -1284,6 +1284,19 @@
   },
   "invoices": {
     "title": "Facturen",
+    "preview": {
+      "pageTitle": "Factuurvoorbeeld",
+      "documentLabel": "Factuur",
+      "customer": "Klant",
+      "project": "Project",
+      "hint": "Controleer het voorbeeld. Gebruik Afdrukken / PDF om via de browser op te slaan of te printen.",
+      "print": "Afdrukken / PDF",
+      "organizationFallback": "Jouw bedrijf",
+      "footer": "Factuur gegenereerd via WerkOS · {organization}",
+      "kvk": "KvK",
+      "vat": "Btw",
+      "iban": "IBAN"
+    },
     "export": "Exporteren",
     "settings": "Instellingen",
     "newInvoice": "Nieuwe factuur",
@@ -1426,7 +1439,8 @@
       },
       "actions": {
         "send": "Versturen",
-        "markPaid": "Markeer als betaald"
+        "markPaid": "Markeer als betaald",
+        "preview": "Voorbeeld"
       },
       "errors": {
         "notEditable": "Deze factuur is niet meer bewerkbaar (alleen concept).",

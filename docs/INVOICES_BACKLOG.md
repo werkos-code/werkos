@@ -22,8 +22,8 @@
 
 - [ ] Aanmaken vanuit geaccepteerde offerte (quote_lines kopiëren)
 - [x] **Termijnfacturen vanuit offerte** — financiële planning + factureren per schijf (MVP simpel)
-- [ ] PDF / voorbeeld / e-mail versturen
-- [ ] Herinneringen (e-mail / portaal)
+- [x] **Voorbeeld / Afdrukken-PDF** (fase 6 — browser print + letterhead)
+- [ ] E-mail versturen / herinneringen
 - [ ] Export / instellingen (nummerreeks, standaardtermijn, uurtarief org-default)
 - [ ] Betalingsregistratie / cumulatieve slotfactuur
 - [ ] `source_type` / `source_id` op regels (traceerbaarheid naar uren/materiaal)
@@ -35,6 +35,7 @@
 | --- | --- |
 | `/facturen` | Lijst + aanmaken |
 | `/facturen/[invoiceId]` | Editor |
+| `/facturen/[invoiceId]/voorbeeld` | Printbaar voorbeeld |
 | `POST /api/invoices` | Header (`editorMode: true` voor leeg concept) |
 | `*/api/invoices/[id]/lines` | Regel CRUD + herbereken totalen |
 | `GET/POST /api/invoices/from-project` | Bronnen preview + factuur met geselecteerde regels |

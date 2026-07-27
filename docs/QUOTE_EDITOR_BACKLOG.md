@@ -58,4 +58,4 @@
 - [ ] Echte e-mailprovider / publieke klantlink
 - [x] Org-briefpapier (KvK, adres, IBAN — fase 5; logo later)
 - [ ] Org-logo upload
-- [ ] Factuur-voorbeeld (zelfde printpatroon)
+- [x] Factuur-voorbeeld (zelfde printpatroon — fase 6)

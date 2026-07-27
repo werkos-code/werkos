@@ -22,8 +22,24 @@ export type InvoiceDetail = {
   projectId: string;
   projectName: string;
   projectNumber: string;
+  organizationName: string | null;
+  organization: {
+    name: string;
+    address: string | null;
+    postalCode: string | null;
+    city: string | null;
+    country: string | null;
+    phone: string | null;
+    email: string | null;
+    kvkNumber: string | null;
+    vatNumber: string | null;
+    iban: string | null;
+  } | null;
   customerId: string | null;
   customerName: string | null;
+  customerEmail: string | null;
+  customerPhone: string | null;
+  customerAddress: string | null;
   quoteId: string | null;
   issueDate: string;
   dueDate: string | null;
@@ -170,16 +186,30 @@ export async function getInvoice(invoiceId: string): Promise<{
 
   if (linesError) return { error: linesError.message };
 
+  const { data: organization } = await ctx.supabase
+    .from("organizations")
+    .select(
+      "name, address, postal_code, city, country, phone, email, kvk_number, vat_number, iban",
+    )
+    .eq("id", ctx.organizationId)
+    .maybeSingle();
+
   let customerName: string | null = null;
+  let customerEmail: string | null = null;
+  let customerPhone: string | null = null;
+  let customerAddress: string | null = null;
   const customerId = project?.customer_id ?? null;
   if (customerId) {
     const { data: customer } = await ctx.supabase
       .from("customers")
-      .select("id, name")
+      .select("id, name, email, phone, address")
       .eq("organization_id", ctx.organizationId)
       .eq("id", customerId)
       .maybeSingle();
     customerName = customer?.name ?? null;
+    customerEmail = customer?.email ?? null;
+    customerPhone = customer?.phone ?? null;
+    customerAddress = customer?.address ?? null;
   }
 
   return {
@@ -192,8 +222,26 @@ export async function getInvoice(invoiceId: string): Promise<{
       projectId: invoice.project_id,
       projectName: project?.name ?? "—",
       projectNumber: project?.project_number ?? "—",
+      organizationName: organization?.name ?? null,
+      organization: organization
+        ? {
+            name: organization.name,
+            address: organization.address,
+            postalCode: organization.postal_code,
+            city: organization.city,
+            country: organization.country,
+            phone: organization.phone,
+            email: organization.email,
+            kvkNumber: organization.kvk_number,
+            vatNumber: organization.vat_number,
+            iban: organization.iban,
+          }
+        : null,
       customerId,
       customerName,
+      customerEmail,
+      customerPhone,
+      customerAddress,
       quoteId: invoice.quote_id,
       issueDate: invoice.issue_date,
       dueDate: invoice.due_date,

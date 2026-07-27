@@ -209,7 +209,8 @@
     display: none !important;
   }
 
-  .quote-preview-document {
+  .quote-preview-document,
+  .document-preview-print {
     box-shadow: none !important;
     border: none !important;
     border-radius: 0 !important;

@@ -1284,6 +1284,19 @@
   },
   "invoices": {
     "title": "Rechnungen",
+    "preview": {
+      "pageTitle": "Rechnungsvorschau",
+      "documentLabel": "Rechnung",
+      "customer": "Kunde",
+      "project": "Projekt",
+      "hint": "Prüfe die Vorschau. Mit Drucken / PDF speicherst oder druckst du über den Browser.",
+      "print": "Drucken / PDF",
+      "organizationFallback": "Dein Unternehmen",
+      "footer": "Rechnung erstellt mit WerkOS · {organization}",
+      "kvk": "HR",
+      "vat": "USt",
+      "iban": "IBAN"
+    },
     "export": "Exportieren",
     "settings": "Einstellungen",
     "newInvoice": "Neue Rechnung",
@@ -1426,7 +1439,8 @@
       },
       "actions": {
         "send": "Senden",
-        "markPaid": "Als bezahlt markieren"
+        "markPaid": "Als bezahlt markieren",
+        "preview": "Vorschau"
       },
       "errors": {
         "notEditable": "Diese Rechnung kann nicht mehr bearbeitet werden (nur Entwurf).",

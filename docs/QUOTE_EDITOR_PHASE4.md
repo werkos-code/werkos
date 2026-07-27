@@ -20,7 +20,6 @@
 
 ## Volgende
 
-- [x] Org-letterhead velden → [`QUOTE_EDITOR_PHASE5.md`](./QUOTE_EDITOR_PHASE5.md)
-- Zelfde preview-patroon voor facturen
+- [x] Zelfde preview-patroon voor facturen → [`INVOICE_EDITOR_PHASE6.md`](./INVOICE_EDITOR_PHASE6.md)
 - Optioneel: echte mail-integratie
 - Logo-upload

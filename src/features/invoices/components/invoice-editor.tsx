@@ -5,6 +5,7 @@ import {
   Calendar,
   Check,
   Ellipsis,
+  Eye,
   ExternalLink,
   MoreVertical,
   Plus,
@@ -388,6 +389,12 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
           ) : null}
           <Button type="button" variant="outline" size="icon-sm" disabled>
             <Ellipsis className="size-4" />
+          </Button>
+          <Button type="button" variant="outline" size="sm" asChild>
+            <Link href={`/facturen/${invoice.id}/voorbeeld`} target="_blank">
+              <Eye className="size-3.5" />
+              {t("actions.preview")}
+            </Link>
           </Button>
           {editable ? (
             <Button
