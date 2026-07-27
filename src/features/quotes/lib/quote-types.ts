@@ -52,6 +52,8 @@ export type QuoteDetail = {
   customerId: string | null;
   customerName: string | null;
   validUntil: string | null;
+  paymentTermsDays: number | null;
+  paymentConditions: string | null;
   internalNotes: string | null;
   externalNotes: string | null;
   createdAt: string;

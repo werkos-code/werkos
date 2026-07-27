@@ -6,6 +6,7 @@ import {
   formatPhaseInvoiceDescription,
   type QuoteBillingPhaseRow,
 } from "@/features/quotes/lib/quote-billing";
+import { dueDateFromPaymentTerms } from "@/features/quotes/lib/quote-status";
 import { requireApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -23,7 +24,9 @@ export async function POST(_request: Request, { params }: RouteParams) {
 
     const { data: quote } = await admin
       .from("quotes")
-      .select("id, title, project_id, quote_number, status")
+      .select(
+        "id, title, project_id, quote_number, status, payment_terms_days",
+      )
       .eq("organization_id", gate.organizationId)
       .eq("id", quoteId)
       .maybeSingle();
@@ -109,6 +112,11 @@ export async function POST(_request: Request, { params }: RouteParams) {
         : 2100;
 
     const invoiceTitle = phase.title.trim();
+    const issueDate = new Date().toISOString().slice(0, 10);
+    const dueDate = dueDateFromPaymentTerms(
+      issueDate,
+      quote.payment_terms_days,
+    );
     const { data: invoice, error: invoiceError } = await admin
       .from("invoices")
       .insert({
@@ -117,6 +125,8 @@ export async function POST(_request: Request, { params }: RouteParams) {
         quote_id: quoteId,
         title: invoiceTitle,
         status: "draft",
+        issue_date: issueDate,
+        due_date: dueDate,
         subtotal_cents: computed.netCents,
         vat_cents: computed.vatCents,
         total_cents: computed.grossCents,

@@ -19,7 +19,7 @@ Run SQL in Supabase vóór gebruik:
 
 ## Volgende (fase 3+)
 
-- Betalingstriggers / voorwaarden (niet stub)
+- [x] Betalingstriggers / voorwaarden → [`QUOTE_EDITOR_PHASE3.md`](./QUOTE_EDITOR_PHASE3.md)
 - PDF / versturen (fase 4)
 - Handmatige kostprijs op uren/arbeid
 - 2BA-import direct in offerte-picker

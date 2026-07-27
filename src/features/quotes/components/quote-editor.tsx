@@ -36,7 +36,7 @@ import {
   formatEuro,
   getLeafLines,
 } from "@/features/quotes/lib/quote-line";
-import { isQuoteEditable } from "@/features/quotes/lib/quote-status";
+import { isQuoteEditable, PAYMENT_TERMS_DAY_OPTIONS } from "@/features/quotes/lib/quote-status";
 import type { QuoteDetail, QuoteLineRow } from "@/features/quotes/quotes-actions";
 import type { ArticleRow } from "@/features/materials/lib/materials";
 import {
@@ -72,6 +72,12 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
   const [internalNotes, setInternalNotes] = useState(quote.internalNotes ?? "");
   const [externalNotes, setExternalNotes] = useState(quote.externalNotes ?? "");
   const [validUntil, setValidUntil] = useState(quote.validUntil ?? "");
+  const [paymentTermsDays, setPaymentTermsDays] = useState<number>(
+    quote.paymentTermsDays ?? 30,
+  );
+  const [paymentConditions, setPaymentConditions] = useState(
+    quote.paymentConditions ?? "",
+  );
   const [lines, setLines] = useState(quote.lines);
   const [dirty, setDirty] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -90,6 +96,8 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
     setInternalNotes(quote.internalNotes ?? "");
     setExternalNotes(quote.externalNotes ?? "");
     setValidUntil(quote.validUntil ?? "");
+    setPaymentTermsDays(quote.paymentTermsDays ?? 30);
+    setPaymentConditions(quote.paymentConditions ?? "");
     setLines(quote.lines);
     setDirty(false);
     setSaveState("idle");
@@ -155,6 +163,8 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
           internalNotes,
           externalNotes,
           validUntil: validUntil || null,
+          paymentTermsDays,
+          paymentConditions: paymentConditions || null,
         }),
         signal: AbortSignal.timeout(20_000),
       });
@@ -773,13 +783,68 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
 
             {tab === "terms" ? (
               <div className="space-y-4 p-5">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="paymentTermsDays">
+                      {t("fields.paymentTermsDays")}
+                    </Label>
+                    <select
+                      id="paymentTermsDays"
+                      disabled={!editable}
+                      value={paymentTermsDays}
+                      onChange={(e) => {
+                        setPaymentTermsDays(Number(e.target.value));
+                        markDirty();
+                      }}
+                      className="border-input bg-background h-9 w-full rounded-lg border px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                    >
+                      {PAYMENT_TERMS_DAY_OPTIONS.map((days) => (
+                        <option key={days} value={days}>
+                          {t("paymentTermsDaysOption", { days })}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="validUntilTerms">
+                      {t("fields.validUntil")}
+                    </Label>
+                    <Input
+                      id="validUntilTerms"
+                      type="date"
+                      disabled={!editable}
+                      value={validUntil}
+                      onChange={(e) => {
+                        setValidUntil(e.target.value);
+                        markDirty();
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="paymentConditions">
+                    {t("fields.paymentConditions")}
+                  </Label>
+                  <textarea
+                    id="paymentConditions"
+                    rows={3}
+                    value={paymentConditions}
+                    disabled={!editable}
+                    placeholder={t("placeholders.paymentConditions")}
+                    onChange={(e) => {
+                      setPaymentConditions(e.target.value);
+                      markDirty();
+                    }}
+                    className="border-input bg-background w-full resize-y rounded-lg border px-3 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                  />
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="externalNotes">
                     {t("fields.externalNotes")}
                   </Label>
                   <textarea
                     id="externalNotes"
-                    rows={10}
+                    rows={8}
                     value={externalNotes}
                     disabled={!editable}
                     onChange={(e) => {
@@ -788,16 +853,6 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
                     }}
                     className="border-input bg-background w-full rounded-lg border px-3 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                   />
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="space-y-2 opacity-60">
-                    <Label>{t("stubs.paymentTerm")}</Label>
-                    <Input disabled value={t("stubs.paymentTermValue")} />
-                  </div>
-                  <div className="space-y-2 opacity-60">
-                    <Label>{t("stubs.paymentTerms")}</Label>
-                    <Input disabled value={t("stubs.paymentTermsValue")} />
-                  </div>
                 </div>
               </div>
             ) : null}
@@ -849,10 +904,20 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
             dirty={dirty}
             saveLabel={saveLabel}
             validUntil={validUntil}
+            paymentTermsDays={paymentTermsDays}
+            paymentConditions={paymentConditions}
             onSave={() => void saveAll()}
             onOpenPlanningEditor={() => setPlanningOpen(true)}
             onValidUntilChange={(value) => {
               setValidUntil(value);
+              markDirty();
+            }}
+            onPaymentTermsDaysChange={(value) => {
+              setPaymentTermsDays(value);
+              markDirty();
+            }}
+            onPaymentConditionsChange={(value) => {
+              setPaymentConditions(value);
               markDirty();
             }}
           />

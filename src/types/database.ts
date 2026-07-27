@@ -468,6 +468,8 @@ export type Database = {
           status: QuoteStatus;
           quote_number: string | null;
           valid_until: string | null;
+          payment_terms_days: number | null;
+          payment_conditions: string | null;
           internal_notes: string | null;
           external_notes: string | null;
           created_by: string | null;
@@ -482,6 +484,8 @@ export type Database = {
           status?: QuoteStatus;
           quote_number?: string | null;
           valid_until?: string | null;
+          payment_terms_days?: number | null;
+          payment_conditions?: string | null;
           internal_notes?: string | null;
           external_notes?: string | null;
           created_by?: string | null;
@@ -496,6 +500,8 @@ export type Database = {
           status?: QuoteStatus;
           quote_number?: string | null;
           valid_until?: string | null;
+          payment_terms_days?: number | null;
+          payment_conditions?: string | null;
           internal_notes?: string | null;
           external_notes?: string | null;
           created_by?: string | null;

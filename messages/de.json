@@ -896,8 +896,10 @@
       "line": "Beschreibung der Position",
       "section": "Neuer Abschnitt",
       "description": "Optionale Erläuterung",
-      "internalNotesShort": "Interne Notiz zu diesem Angebot…"
+      "internalNotesShort": "Interne Notiz zu diesem Angebot…",
+      "paymentConditions": "Z. B. 50 % bei Auftrag, Rest nach Fertigstellung…"
     },
+    "paymentTermsDaysOption": "{days, plural, =0 {Sofort} one {# Tag} other {# Tage}}",
     "stubs": {
       "more": "Weitere Aktionen folgen später",
       "preview": "Vorschau folgt später",
@@ -909,11 +911,7 @@
       "attachmentsTitle": "Anhänge",
       "attachmentsHint": "PDF, JPG, PNG, Excel · Upload folgt in einer späteren Version",
       "attachmentsList": "Anhänge",
-      "attachmentsEmpty": "Noch keine Anhänge. Upload folgt in einer späteren Version.",
-      "paymentTerm": "Zahlungsziel",
-      "paymentTermValue": "30 Tage",
-      "paymentTerms": "Zahlungsbedingungen",
-      "paymentTermsValue": "Standardbedingungen"
+      "attachmentsEmpty": "Noch keine Anhänge. Upload folgt in einer späteren Version."
     },
     "errors": {
       "notEditable": "Dieses Angebot ist nicht mehr bearbeitbar (nur Entwurf).",
@@ -945,6 +943,8 @@
       "validUntil": "Gültig bis",
       "externalNotes": "Text für den Kunden",
       "internalNotes": "Interne Notizen",
+      "paymentTermsDays": "Zahlungsziel",
+      "paymentConditions": "Zahlungsbedingungen",
       "lineTitle": "Beschreibung",
       "type": "Typ",
       "unit": "Einheit",

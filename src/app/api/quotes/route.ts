@@ -44,6 +44,7 @@ export async function POST(request: Request) {
       project_id: projectId,
       title,
       status: "draft",
+      payment_terms_days: 30,
       created_by: gate.userId,
     });
 
@@ -95,6 +96,8 @@ export async function PATCH(request: Request) {
       title?: string;
       status?: QuoteStatus;
       validUntil?: string | null;
+      paymentTermsDays?: number | null;
+      paymentConditions?: string | null;
       internalNotes?: string | null;
       externalNotes?: string | null;
     };
@@ -139,6 +142,20 @@ export async function PATCH(request: Request) {
         ...(body.validUntil !== undefined
           ? { valid_until: body.validUntil?.trim() || null }
           : {}),
+        ...(body.paymentTermsDays !== undefined
+          ? {
+              payment_terms_days:
+                body.paymentTermsDays === null ||
+                Number.isNaN(body.paymentTermsDays)
+                  ? null
+                  : Math.max(0, Math.round(body.paymentTermsDays)),
+            }
+          : {}),
+        ...(body.paymentConditions !== undefined
+          ? {
+              payment_conditions: body.paymentConditions?.trim() || null,
+            }
+          : {}),
         ...(body.internalNotes !== undefined
           ? { internal_notes: body.internalNotes?.trim() || null }
           : {}),
@@ -178,6 +195,8 @@ export async function PATCH(request: Request) {
     } else if (
       body.title !== undefined ||
       body.validUntil !== undefined ||
+      body.paymentTermsDays !== undefined ||
+      body.paymentConditions !== undefined ||
       body.internalNotes !== undefined ||
       body.externalNotes !== undefined
     ) {

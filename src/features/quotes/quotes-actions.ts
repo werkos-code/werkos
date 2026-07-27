@@ -105,7 +105,7 @@ export async function getQuote(quoteId: string): Promise<{
   const { data: quote, error } = await ctx.supabase
     .from("quotes")
     .select(
-      "id, title, status, quote_number, project_id, valid_until, internal_notes, external_notes, created_at",
+      "id, title, status, quote_number, project_id, valid_until, payment_terms_days, payment_conditions, internal_notes, external_notes, created_at",
     )
     .eq("organization_id", ctx.organizationId)
     .eq("id", quoteId)
@@ -157,6 +157,8 @@ export async function getQuote(quoteId: string): Promise<{
       customerId,
       customerName,
       validUntil: quote.valid_until,
+      paymentTermsDays: quote.payment_terms_days,
+      paymentConditions: quote.payment_conditions,
       internalNotes: quote.internal_notes,
       externalNotes: quote.external_notes,
       createdAt: quote.created_at,

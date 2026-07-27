@@ -26,8 +26,8 @@
 | Thumbnails op regels | Niet getoond | Zelfde als afbeeldingen |
 | Bijlagen / dropzone | Disabled dropzone + lege bijlagenlijst | Storage bucket, `quote_attachments` (of generiek), RLS, upload API |
 | Winstmarge-kaart | KPI toont % bij kostprijs-snapshot | ✅ Fase 2 |
-| Betaaltermijn | Disabled select | Veld op `quotes` of org-defaults |
-| Betalingsvoorwaarden | Disabled select | Catalogus voorwaarden + koppeling |
+| Betaaltermijn | Select 0–90 dagen op offerte | ✅ Fase 3 (`payment_terms_days`) |
+| Betalingsvoorwaarden | Vrij tekstveld op offerte | ✅ Fase 3 (`payment_conditions`); catalogus later |
 | Offerte-tips | Niet getoond | Content/CMS of vaste tips — alleen als het rust ondersteunt |
 | Sneltoetsen-footer | Disabled / hint later | Keyboard map + docs |
 
@@ -52,6 +52,7 @@
 - [x] Drag-and-drop sort (root)
 - [ ] Bijlagen upload + lijst
 - [x] Winstmarge (kostprijs-snapshot op regels)
-- [ ] Betaaltermijn + betalingsvoorwaarden
+- [x] Betaaltermijn + betalingsvoorwaarden (fase 3)
 - [ ] Sneltoetsen
 - [x] Catalogus / Bereken prijzen (fase 2)
+- [ ] Voorbeeld / PDF of online preview (fase 4)

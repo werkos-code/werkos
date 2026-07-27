@@ -9,6 +9,7 @@ import {
   QuoteTotalsPanel,
   QuoteTotalsPanelFooterButton,
 } from "@/features/quotes/components/quote-totals-panel";
+import { PAYMENT_TERMS_DAY_OPTIONS } from "@/features/quotes/lib/quote-status";
 import type { QuoteLineRow } from "@/features/quotes/quotes-actions";
 import { PageCard } from "@/features/shell/components/page-card";
 import { cn } from "@/lib/utils";
@@ -24,9 +25,13 @@ type QuoteEditorRailProps = {
   dirty: boolean;
   saveLabel: string;
   validUntil: string;
+  paymentTermsDays: number;
+  paymentConditions: string;
   onSave: () => void;
   onOpenPlanningEditor: () => void;
   onValidUntilChange?: (value: string) => void;
+  onPaymentTermsDaysChange?: (value: number) => void;
+  onPaymentConditionsChange?: (value: string) => void;
 };
 
 export function QuoteEditorRail({
@@ -38,9 +43,13 @@ export function QuoteEditorRail({
   dirty,
   saveLabel,
   validUntil,
+  paymentTermsDays,
+  paymentConditions,
   onSave,
   onOpenPlanningEditor,
   onValidUntilChange,
+  onPaymentTermsDaysChange,
+  onPaymentConditionsChange,
 }: QuoteEditorRailProps) {
   const t = useTranslations("quotes");
   const [subTab, setSubTab] = useState<RailSubTab>("summary");
@@ -91,20 +100,17 @@ export function QuoteEditorRail({
             />
 
             <div className="space-y-2 border-t border-border pt-4">
-              <div className="flex items-center justify-between gap-2">
-                <h3 className="text-sm font-medium">
-                  {t("rail.paymentTermsTitle")}
-                </h3>
-                <span className="text-[11px] text-muted-foreground">
-                  {t("stubs.soon")}
-                </span>
-              </div>
+              <h3 className="text-sm font-medium">
+                {t("rail.paymentTermsTitle")}
+              </h3>
               <dl className="space-y-1.5 text-sm">
                 <div className="flex justify-between gap-2">
                   <dt className="text-muted-foreground">
-                    {t("stubs.paymentTerm")}
+                    {t("fields.paymentTermsDays")}
                   </dt>
-                  <dd>{t("stubs.paymentTermValue")}</dd>
+                  <dd>
+                    {t("paymentTermsDaysOption", { days: paymentTermsDays })}
+                  </dd>
                 </div>
                 <div className="flex justify-between gap-2">
                   <dt className="text-muted-foreground">
@@ -114,6 +120,16 @@ export function QuoteEditorRail({
                     {validUntil || "—"}
                   </dd>
                 </div>
+                {paymentConditions.trim() ? (
+                  <div className="pt-1">
+                    <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                      {t("fields.paymentConditions")}
+                    </dt>
+                    <dd className="mt-1 text-xs text-foreground/90 whitespace-pre-wrap">
+                      {paymentConditions}
+                    </dd>
+                  </div>
+                ) : null}
               </dl>
             </div>
 
@@ -136,6 +152,29 @@ export function QuoteEditorRail({
           <div className="space-y-4 p-4">
             <div className="space-y-2">
               <label
+                htmlFor="rail-payment-terms"
+                className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase"
+              >
+                {t("fields.paymentTermsDays")}
+              </label>
+              <select
+                id="rail-payment-terms"
+                disabled={!editable}
+                value={paymentTermsDays}
+                onChange={(e) =>
+                  onPaymentTermsDaysChange?.(Number(e.target.value))
+                }
+                className="border-input bg-background h-8 w-full rounded-lg border px-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              >
+                {PAYMENT_TERMS_DAY_OPTIONS.map((days) => (
+                  <option key={days} value={days}>
+                    {t("paymentTermsDaysOption", { days })}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label
                 htmlFor="rail-valid-until"
                 className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase"
               >
@@ -150,12 +189,22 @@ export function QuoteEditorRail({
                 className="border-input bg-background h-8 w-full rounded-lg border px-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               />
             </div>
-            <div className="space-y-2 opacity-60">
-              <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                {t("stubs.paymentTerms")}
-              </p>
-              <p className="text-sm">{t("stubs.paymentTermsValue")}</p>
-              <p className="text-xs text-muted-foreground">{t("stubs.soon")}</p>
+            <div className="space-y-2">
+              <label
+                htmlFor="rail-payment-conditions"
+                className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase"
+              >
+                {t("fields.paymentConditions")}
+              </label>
+              <textarea
+                id="rail-payment-conditions"
+                rows={3}
+                disabled={!editable}
+                value={paymentConditions}
+                placeholder={t("placeholders.paymentConditions")}
+                onChange={(e) => onPaymentConditionsChange?.(e.target.value)}
+                className="border-input bg-background w-full resize-y rounded-lg border px-2 py-1.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              />
             </div>
             {editable ? (
               <Button

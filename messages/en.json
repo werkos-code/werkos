@@ -896,8 +896,10 @@
       "line": "Line description",
       "section": "New section",
       "description": "Optional details",
-      "internalNotesShort": "Internal note for this quote…"
+      "internalNotesShort": "Internal note for this quote…",
+      "paymentConditions": "E.g. 50% on order, remainder on completion…"
     },
+    "paymentTermsDaysOption": "{days, plural, =0 {Due immediately} one {# day} other {# days}}",
     "stubs": {
       "more": "More actions coming later",
       "preview": "Preview coming later",
@@ -909,11 +911,7 @@
       "attachmentsTitle": "Attachments",
       "attachmentsHint": "PDF, JPG, PNG, Excel · upload coming in a later version",
       "attachmentsList": "Attachments",
-      "attachmentsEmpty": "No attachments yet. Upload comes in a later version.",
-      "paymentTerm": "Payment term",
-      "paymentTermValue": "30 days",
-      "paymentTerms": "Payment terms",
-      "paymentTermsValue": "Standard terms"
+      "attachmentsEmpty": "No attachments yet. Upload comes in a later version."
     },
     "errors": {
       "notEditable": "This quote can no longer be edited (draft only).",
@@ -945,6 +943,8 @@
       "validUntil": "Valid until",
       "externalNotes": "Customer-facing notes",
       "internalNotes": "Internal notes",
+      "paymentTermsDays": "Payment term",
+      "paymentConditions": "Payment conditions",
       "lineTitle": "Description",
       "type": "Type",
       "unit": "Unit",

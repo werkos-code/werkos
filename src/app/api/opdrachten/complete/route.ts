@@ -233,6 +233,7 @@ export async function POST(request: Request) {
       project_id: projectId,
       title: quoteTitle,
       status: "draft",
+      payment_terms_days: 30,
       internal_notes:
         marginPercent > 0
           ? `Marge: ${marginPercent}% (${(totals.marginCents / 100).toFixed(2)} excl. btw)`
