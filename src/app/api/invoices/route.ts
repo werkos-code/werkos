@@ -39,6 +39,7 @@ export async function POST(request: Request) {
       totalEuros?: number | string;
       vatEuros?: number | string;
       notes?: string | null;
+      editorMode?: boolean;
     };
 
     const projectId = body.projectId?.trim() ?? "";
@@ -55,12 +56,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "invalid_status" }, { status: 400 });
     }
 
-    const totalCents = eurosToCents(body.totalEuros);
-    const vatCents = eurosToCents(body.vatEuros ?? 0);
-    if (totalCents == null || vatCents == null) {
-      return NextResponse.json({ error: "invalid_amount" }, { status: 400 });
+    const editorMode = body.editorMode === true;
+    let totalCents = 0;
+    let vatCents = 0;
+    let subtotalCents = 0;
+
+    if (!editorMode) {
+      const parsedTotal = eurosToCents(body.totalEuros);
+      const parsedVat = eurosToCents(body.vatEuros ?? 0);
+      if (parsedTotal == null || parsedVat == null) {
+        return NextResponse.json({ error: "invalid_amount" }, { status: 400 });
+      }
+      totalCents = parsedTotal;
+      vatCents = parsedVat;
+      subtotalCents = Math.max(0, totalCents - vatCents);
     }
-    const subtotalCents = Math.max(0, totalCents - vatCents);
 
     const admin = createAdminClient();
     const { data: project } = await admin

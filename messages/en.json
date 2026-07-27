@@ -1119,7 +1119,100 @@
       "selectProject": "Choose a project",
       "total": "Total incl. VAT (€)",
       "vat": "VAT (€)",
-      "required": "Title and project are required."
+      "required": "Title and project are required.",
+      "editorHint": "After creating, you open the editor to add line items.",
+      "openEditor": "Create and edit"
+    },
+    "editor": {
+      "editTitle": "Edit invoice",
+      "noLines": "No lines yet. Add a line or import from the project.",
+      "addLine": "Add line",
+      "deleteLineConfirm": "Delete this line?",
+      "save": "Save",
+      "savedJustNow": "Last saved: just now",
+      "unsaved": "Unsaved changes",
+      "totalsTitle": "Invoice total",
+      "tabs": {
+        "lines": "Lines",
+        "notes": "Notes"
+      },
+      "meta": {
+        "number": "Invoice number",
+        "customer": "Customer",
+        "project": "Project"
+      },
+      "placeholders": {
+        "line": "Line description",
+        "description": "Optional details",
+        "notes": "Notes on the invoice"
+      },
+      "fields": {
+        "title": "Title",
+        "issueDate": "Invoice date",
+        "dueDate": "Due date",
+        "lineTitle": "Description",
+        "unit": "Unit",
+        "quantity": "Qty",
+        "unitPrice": "Price",
+        "lineTotal": "Total"
+      },
+      "totals": {
+        "subtotal": "Subtotal",
+        "vat": "VAT",
+        "gross": "Total incl. VAT"
+      },
+      "status": {
+        "draft": "Draft",
+        "open": "Open",
+        "sent": "Sent",
+        "paid": "Paid"
+      },
+      "actions": {
+        "send": "Send",
+        "markPaid": "Mark as paid"
+      },
+      "errors": {
+        "notEditable": "This invoice can no longer be edited (draft only).",
+        "notFound": "Invoice or line not found.",
+        "forbidden": "You do not have permission to do this."
+      }
+    },
+    "fromProject": {
+      "title": "Invoice from project",
+      "invoiceTitle": "Invoice title",
+      "hourlyRate": "Hourly rate (€)",
+      "reload": "Reload",
+      "loading": "Loading sources…",
+      "empty": "No hours, materials or work items found to invoice.",
+      "groups": {
+        "hours": "Hours",
+        "material": "Materials",
+        "workItems": "Work items"
+      },
+      "selectAll": "Select all",
+      "deselectAll": "Deselect all",
+      "selectedTotal": "Selected",
+      "exclVat": "excl. VAT",
+      "create": "Create invoice",
+      "titleRequired": "Title is required.",
+      "noLinesSelected": "Select at least one line."
+    },
+    "project": {
+      "outstanding": "Outstanding on this project",
+      "createFromProject": "Invoice from project",
+      "empty": "No invoices for this project yet.",
+      "columns": {
+        "invoice": "Invoice",
+        "date": "Date",
+        "amount": "Amount",
+        "status": "Status"
+      },
+      "status": {
+        "draft": "Draft",
+        "open": "Open",
+        "sent": "Sent",
+        "paid": "Paid"
+      }
     }
   },
   "files": {

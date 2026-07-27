@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition, type FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import {
   CalendarDays,
   ExternalLink,
@@ -596,9 +596,9 @@ export function InvoicesWorkspace({
         open={createOpen}
         onOpenChange={setCreateOpen}
         projects={projects}
-        onCreated={() => {
+        onCreated={(invoiceId) => {
           setCreateOpen(false);
-          refresh();
+          router.push(`/facturen/${invoiceId}`);
         }}
         onError={setError}
       />
@@ -911,8 +911,8 @@ function InvoiceDetailSheet({
         </div>
 
         <div className="flex gap-2 border-t border-border p-4">
-          <Button type="button" variant="outline" className="flex-1" disabled>
-            {t("detail.openFull")}
+          <Button type="button" variant="outline" className="flex-1" asChild>
+            <Link href={`/facturen/${invoice.id}`}>{t("detail.openFull")}</Link>
           </Button>
           <Button
             type="button"
@@ -939,20 +939,17 @@ function CreateInvoiceDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   projects: InvoiceProjectOption[];
-  onCreated: () => void;
+  onCreated: (invoiceId: string) => void;
   onError: (message: string | null) => void;
 }) {
   const t = useTranslations("invoices");
   const tCommon = useTranslations("common");
   const [title, setTitle] = useState("");
   const [projectId, setProjectId] = useState("");
-  const [status, setStatus] = useState<InvoiceStatus>("draft");
   const [issueDate, setIssueDate] = useState(
     () => new Date().toISOString().slice(0, 10),
   );
   const [dueDate, setDueDate] = useState("");
-  const [totalEuros, setTotalEuros] = useState("");
-  const [vatEuros, setVatEuros] = useState("");
   const [notes, setNotes] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -972,29 +969,28 @@ function CreateInvoiceDialog({
             body: JSON.stringify({
               title: title.trim(),
               projectId,
-              status,
+              status: "draft",
               issueDate: issueDate || null,
               dueDate: dueDate || null,
-              totalEuros: totalEuros || 0,
-              vatEuros: vatEuros || 0,
               notes: notes || null,
+              editorMode: true,
             }),
             signal: AbortSignal.timeout(20_000),
           });
-          const result = (await res.json()) as { error?: string };
-          if (!res.ok || result.error) {
+          const result = (await res.json()) as {
+            error?: string;
+            invoiceId?: string;
+          };
+          if (!res.ok || !result.invoiceId) {
             onError(result.error || tCommon("error"));
             return;
           }
           setTitle("");
           setProjectId("");
-          setStatus("draft");
           setIssueDate(new Date().toISOString().slice(0, 10));
           setDueDate("");
-          setTotalEuros("");
-          setVatEuros("");
           setNotes("");
-          onCreated();
+          onCreated(result.invoiceId);
         } catch {
           onError(tCommon("error"));
         }
@@ -1038,21 +1034,6 @@ function CreateInvoiceDialog({
           </label>
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block space-y-1 text-sm">
-              <span className="text-muted-foreground">{t("columns.status")}</span>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value as InvoiceStatus)}
-                disabled={isPending}
-                className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
-              >
-                {INVOICE_STATUSES.map((entry) => (
-                  <option key={entry} value={entry}>
-                    {t(`status.${entry}`)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="block space-y-1 text-sm">
               <span className="text-muted-foreground">{t("columns.issueDate")}</span>
               <input
                 type="date"
@@ -1062,8 +1043,6 @@ function CreateInvoiceDialog({
                 className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
               />
             </label>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
             <label className="block space-y-1 text-sm">
               <span className="text-muted-foreground">{t("columns.dueDate")}</span>
               <input
@@ -1074,33 +1053,8 @@ function CreateInvoiceDialog({
                 className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
               />
             </label>
-            <label className="block space-y-1 text-sm">
-              <span className="text-muted-foreground">{t("form.total")}</span>
-              <input
-                type="number"
-                min={0}
-                step={0.01}
-                value={totalEuros}
-                onChange={(e) => setTotalEuros(e.target.value)}
-                disabled={isPending}
-                className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
-                placeholder="0,00"
-              />
-            </label>
           </div>
-          <label className="block space-y-1 text-sm">
-            <span className="text-muted-foreground">{t("form.vat")}</span>
-            <input
-              type="number"
-              min={0}
-              step={0.01}
-              value={vatEuros}
-              onChange={(e) => setVatEuros(e.target.value)}
-              disabled={isPending}
-              className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
-              placeholder="0,00"
-            />
-          </label>
+          <p className="text-xs text-muted-foreground">{t("form.editorHint")}</p>
           <label className="block space-y-1 text-sm">
             <span className="text-muted-foreground">{t("detail.notes")}</span>
             <textarea
@@ -1122,7 +1076,7 @@ function CreateInvoiceDialog({
               {tCommon("cancel")}
             </Button>
             <Button type="submit" size="sm" disabled={isPending}>
-              {isPending ? tCommon("loading") : tCommon("save")}
+              {isPending ? tCommon("loading") : t("form.openEditor")}
             </Button>
           </div>
         </form>

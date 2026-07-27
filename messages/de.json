@@ -1119,7 +1119,100 @@
       "selectProject": "Projekt wählen",
       "total": "Gesamt inkl. MwSt. (€)",
       "vat": "MwSt. (€)",
-      "required": "Titel und Projekt sind Pflicht."
+      "required": "Titel und Projekt sind Pflicht.",
+      "editorHint": "Nach dem Anlegen öffnest du den Editor, um Positionen hinzuzufügen.",
+      "openEditor": "Anlegen und bearbeiten"
+    },
+    "editor": {
+      "editTitle": "Rechnung bearbeiten",
+      "noLines": "Noch keine Positionen. Füge eine Position hinzu oder importiere aus dem Projekt.",
+      "addLine": "Position hinzufügen",
+      "deleteLineConfirm": "Diese Position löschen?",
+      "save": "Speichern",
+      "savedJustNow": "Zuletzt gespeichert: gerade eben",
+      "unsaved": "Ungespeicherte Änderungen",
+      "totalsTitle": "Rechnungssumme",
+      "tabs": {
+        "lines": "Positionen",
+        "notes": "Notizen"
+      },
+      "meta": {
+        "number": "Rechnungsnummer",
+        "customer": "Kunde",
+        "project": "Projekt"
+      },
+      "placeholders": {
+        "line": "Positionsbeschreibung",
+        "description": "Optionale Erläuterung",
+        "notes": "Notizen auf der Rechnung"
+      },
+      "fields": {
+        "title": "Titel",
+        "issueDate": "Rechnungsdatum",
+        "dueDate": "Fälligkeitsdatum",
+        "lineTitle": "Beschreibung",
+        "unit": "Einheit",
+        "quantity": "Menge",
+        "unitPrice": "Preis",
+        "lineTotal": "Gesamt"
+      },
+      "totals": {
+        "subtotal": "Zwischensumme",
+        "vat": "MwSt.",
+        "gross": "Gesamt inkl. MwSt."
+      },
+      "status": {
+        "draft": "Entwurf",
+        "open": "Offen",
+        "sent": "Gesendet",
+        "paid": "Bezahlt"
+      },
+      "actions": {
+        "send": "Senden",
+        "markPaid": "Als bezahlt markieren"
+      },
+      "errors": {
+        "notEditable": "Diese Rechnung kann nicht mehr bearbeitet werden (nur Entwurf).",
+        "notFound": "Rechnung oder Position nicht gefunden.",
+        "forbidden": "Keine Berechtigung für diese Aktion."
+      }
+    },
+    "fromProject": {
+      "title": "Rechnung aus Projekt",
+      "invoiceTitle": "Rechnungstitel",
+      "hourlyRate": "Stundensatz (€)",
+      "reload": "Neu laden",
+      "loading": "Quellen werden geladen…",
+      "empty": "Keine Stunden, Material oder Arbeiten zum Abrechnen gefunden.",
+      "groups": {
+        "hours": "Stunden",
+        "material": "Material",
+        "workItems": "Arbeiten"
+      },
+      "selectAll": "Alle auswählen",
+      "deselectAll": "Alle abwählen",
+      "selectedTotal": "Ausgewählt",
+      "exclVat": "zzgl. MwSt.",
+      "create": "Rechnung erstellen",
+      "titleRequired": "Titel ist Pflicht.",
+      "noLinesSelected": "Mindestens eine Position auswählen."
+    },
+    "project": {
+      "outstanding": "Offen in diesem Projekt",
+      "createFromProject": "Rechnung aus Projekt",
+      "empty": "Noch keine Rechnungen für dieses Projekt.",
+      "columns": {
+        "invoice": "Rechnung",
+        "date": "Datum",
+        "amount": "Betrag",
+        "status": "Status"
+      },
+      "status": {
+        "draft": "Entwurf",
+        "open": "Offen",
+        "sent": "Gesendet",
+        "paid": "Bezahlt"
+      }
     }
   },
   "files": {

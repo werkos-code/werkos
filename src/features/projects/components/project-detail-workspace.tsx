@@ -42,6 +42,8 @@ import {
   workItemStats,
   type WorkItemRow,
 } from "@/features/projects/lib/work-item";
+import { ProjectFinancialPanel } from "@/features/invoices/components/project-financial-panel";
+import type { InvoiceListItem } from "@/features/invoices/invoices-actions";
 import { QuotesList } from "@/features/quotes/components/quotes-list";
 import type { QuoteListItem } from "@/features/quotes/quotes-actions";
 import type { WorkOrderRow } from "@/features/work-orders/lib/work-order";
@@ -61,6 +63,7 @@ type ProjectDetailWorkspaceProps = {
   activities: ProjectActivityRow[];
   minutesByWorkItem?: Record<string, number>;
   articles?: import("@/features/materials/lib/materials").ArticleRow[];
+  invoices?: InvoiceListItem[];
   initialTab?: string;
 };
 
@@ -292,6 +295,7 @@ export function ProjectDetailWorkspace({
   activities,
   minutesByWorkItem = {},
   articles = [],
+  invoices = [],
   initialTab = "overview",
 }: ProjectDetailWorkspaceProps) {
   const t = useTranslations("projects");
@@ -1181,9 +1185,7 @@ export function ProjectDetailWorkspace({
         />
       ) : null}
 
-      {tab === "planning" ||
-      tab === "financial" ||
-      tab === "communication" ? (
+      {tab === "planning" || tab === "communication" ? (
         <PageCard className="flex flex-col items-start gap-3 p-8">
           <div className="text-muted-foreground">
             {tab === "communication" ? (
@@ -1204,6 +1206,14 @@ export function ProjectDetailWorkspace({
             </Button>
           ) : null}
         </PageCard>
+      ) : null}
+
+      {tab === "financial" ? (
+        <ProjectFinancialPanel
+          projectId={project.id}
+          projectName={project.name}
+          invoices={invoices ?? []}
+        />
       ) : null}
 
       <div className="fixed right-0 bottom-0 left-0 z-10 border-t border-border bg-background/95 p-3 backdrop-blur-sm md:left-[calc(var(--sidebar-width)+1.5rem)]">

@@ -1119,7 +1119,100 @@
       "selectProject": "Kies een project",
       "total": "Totaal incl. btw (€)",
       "vat": "Btw (€)",
-      "required": "Titel en project zijn verplicht."
+      "required": "Titel en project zijn verplicht.",
+      "editorHint": "Na aanmaken open je de editor om regels toe te voegen.",
+      "openEditor": "Aanmaken en bewerken"
+    },
+    "editor": {
+      "editTitle": "Factuur bewerken",
+      "noLines": "Nog geen regels. Voeg een regel toe of importeer vanuit het project.",
+      "addLine": "Regel toevoegen",
+      "deleteLineConfirm": "Deze regel verwijderen?",
+      "save": "Opslaan",
+      "savedJustNow": "Laatst opgeslagen: zojuist",
+      "unsaved": "Niet-opgeslagen wijzigingen",
+      "totalsTitle": "Factuur totaal",
+      "tabs": {
+        "lines": "Regels",
+        "notes": "Notities"
+      },
+      "meta": {
+        "number": "Factuurnummer",
+        "customer": "Klant",
+        "project": "Project"
+      },
+      "placeholders": {
+        "line": "Omschrijving van de regel",
+        "description": "Optionele toelichting",
+        "notes": "Notities op de factuur"
+      },
+      "fields": {
+        "title": "Titel",
+        "issueDate": "Factuurdatum",
+        "dueDate": "Vervaldatum",
+        "lineTitle": "Omschrijving",
+        "unit": "Eenheid",
+        "quantity": "Aantal",
+        "unitPrice": "Prijs",
+        "lineTotal": "Totaal"
+      },
+      "totals": {
+        "subtotal": "Subtotaal",
+        "vat": "Btw",
+        "gross": "Totaal incl. btw"
+      },
+      "status": {
+        "draft": "Concept",
+        "open": "Open",
+        "sent": "Verzonden",
+        "paid": "Betaald"
+      },
+      "actions": {
+        "send": "Versturen",
+        "markPaid": "Markeer als betaald"
+      },
+      "errors": {
+        "notEditable": "Deze factuur is niet meer bewerkbaar (alleen concept).",
+        "notFound": "Factuur of regel niet gevonden.",
+        "forbidden": "Je hebt geen rechten om dit te doen."
+      }
+    },
+    "fromProject": {
+      "title": "Factuur vanuit project",
+      "invoiceTitle": "Factuurtitel",
+      "hourlyRate": "Uurtarief (€)",
+      "reload": "Herlaad",
+      "loading": "Bronnen laden…",
+      "empty": "Geen uren, materiaal of werkzaamheden gevonden om te factureren.",
+      "groups": {
+        "hours": "Uren",
+        "material": "Materiaal",
+        "workItems": "Werkzaamheden"
+      },
+      "selectAll": "Alles selecteren",
+      "deselectAll": "Alles deselecteren",
+      "selectedTotal": "Geselecteerd",
+      "exclVat": "excl. btw",
+      "create": "Factuur aanmaken",
+      "titleRequired": "Titel is verplicht.",
+      "noLinesSelected": "Selecteer minimaal één regel."
+    },
+    "project": {
+      "outstanding": "Openstaand op dit project",
+      "createFromProject": "Factuur vanuit project",
+      "empty": "Nog geen facturen voor dit project.",
+      "columns": {
+        "invoice": "Factuur",
+        "date": "Datum",
+        "amount": "Bedrag",
+        "status": "Status"
+      },
+      "status": {
+        "draft": "Concept",
+        "open": "Open",
+        "sent": "Verzonden",
+        "paid": "Betaald"
+      }
     }
   },
   "files": {
