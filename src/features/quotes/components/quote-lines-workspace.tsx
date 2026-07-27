@@ -7,7 +7,7 @@ import {
   Plus,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useMemo, useState, Fragment } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,9 +29,6 @@ import {
 } from "@/features/quotes/lib/quote-line";
 import { lineNetCents } from "@/features/quotes/lib/quote-status";
 import type { QuoteLineRow } from "@/features/quotes/quotes-actions";
-import { cn } from "@/lib/utils";
-
-const LINE_GRID_CLASS = "quote-line-grid";
 
 export type QuoteLinesWorkspaceProps = {
   lines: QuoteLineRow[];
@@ -100,48 +97,53 @@ export function QuoteLinesWorkspace({
     if (showAsSection) {
       const total = sectionTotalCents(lines, line.id);
       return (
-        <div key={line.id} className="border-b border-border/70 last:border-0">
-          <div className="flex items-center gap-2 bg-muted/50 px-3 py-2.5">
-            <button
-              type="button"
-              className="text-muted-foreground"
-              onClick={() =>
-                setCollapsed((prev) => ({ ...prev, [line.id]: !prev[line.id] }))
-              }
-            >
-              {isCollapsed ? (
-                <ChevronRight className="size-4" />
-              ) : (
-                <ChevronDown className="size-4" />
-              )}
-            </button>
-            <span className="w-6 text-xs tabular-nums text-muted-foreground">
-              {indexLabel}
-            </span>
-            <Input
-              value={line.title}
-              disabled={!editable}
-              placeholder={t("placeholders.section")}
-              className="h-8 flex-1 border-transparent bg-transparent font-medium shadow-none focus-visible:border-input focus-visible:bg-background"
-              onChange={(e) =>
-                updateLocalLine(line.id, { title: e.target.value })
-              }
-            />
-            <span className="font-mono text-sm tabular-nums text-foreground">
-              {formatEuro(total)}
-            </span>
-            {editable ? (
-              <Button
+        <Fragment key={line.id}>
+          <div className="quote-line-section border-b border-border/70">
+            <div className="flex items-center gap-2 bg-muted/50 px-3 py-2.5">
+              <button
                 type="button"
-                variant="ghost"
-                size="icon-sm"
                 className="text-muted-foreground"
-                disabled={busy}
-                onClick={() => void handleDeleteLine(line.id)}
+                onClick={() =>
+                  setCollapsed((prev) => ({
+                    ...prev,
+                    [line.id]: !prev[line.id],
+                  }))
+                }
               >
-                <MoreVertical className="size-4" />
-              </Button>
-            ) : null}
+                {isCollapsed ? (
+                  <ChevronRight className="size-4" />
+                ) : (
+                  <ChevronDown className="size-4" />
+                )}
+              </button>
+              <span className="w-6 text-xs tabular-nums text-muted-foreground">
+                {indexLabel}
+              </span>
+              <Input
+                value={line.title}
+                disabled={!editable}
+                placeholder={t("placeholders.section")}
+                className="h-8 flex-1 border-transparent bg-transparent font-medium shadow-none focus-visible:border-input focus-visible:bg-background"
+                onChange={(e) =>
+                  updateLocalLine(line.id, { title: e.target.value })
+                }
+              />
+              <span className="font-mono text-sm tabular-nums text-foreground">
+                {formatEuro(total)}
+              </span>
+              {editable ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  className="text-muted-foreground"
+                  disabled={busy}
+                  onClick={() => void handleDeleteLine(line.id)}
+                >
+                  <MoreVertical className="size-4" />
+                </Button>
+              ) : null}
+            </div>
           </div>
           {!isCollapsed
             ? kids.map((child, index) =>
@@ -153,7 +155,7 @@ export function QuoteLinesWorkspace({
               )
             : null}
           {!isCollapsed && editable ? (
-            <div className="bg-card px-3 py-2 pl-12">
+            <div className="quote-line-section bg-card px-3 py-2 pl-12">
               <button
                 type="button"
                 className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
@@ -165,20 +167,15 @@ export function QuoteLinesWorkspace({
               </button>
             </div>
           ) : null}
-        </div>
+        </Fragment>
       );
     }
 
     return (
-      <div key={line.id}>
-        <div
-          className={cn(
-            "group items-start gap-y-1 border-b border-border/60 px-3 py-3 lg:items-center",
-            LINE_GRID_CLASS,
-          )}
-        >
+      <Fragment key={line.id}>
+        <div className="quote-line-row group">
           <span
-            className="hidden pt-2 text-[11px] tabular-nums text-muted-foreground lg:block"
+            className="hidden text-[11px] tabular-nums text-muted-foreground lg:block"
             style={{ paddingLeft: depth * 12 }}
           >
             {indexLabel}
@@ -195,7 +192,7 @@ export function QuoteLinesWorkspace({
                 value={line.title}
                 disabled={!editable}
                 placeholder={t("placeholders.line")}
-                className="h-8 border-transparent bg-transparent px-0 font-medium shadow-none focus-visible:border-input focus-visible:bg-background focus-visible:px-2"
+                className="h-8 w-full border-transparent bg-transparent px-0 font-medium shadow-none focus-visible:border-input focus-visible:bg-background focus-visible:px-2"
                 onChange={(e) =>
                   updateLocalLine(line.id, { title: e.target.value })
                 }
@@ -217,7 +214,7 @@ export function QuoteLinesWorkspace({
           <Input
             disabled={!editable}
             value={line.unit ?? ""}
-            className="h-8 border-border/70 bg-background"
+            className="h-8 w-full border-border/70 bg-background"
             onChange={(e) =>
               updateLocalLine(line.id, { unit: e.target.value || null })
             }
@@ -281,7 +278,7 @@ export function QuoteLinesWorkspace({
         {kids.map((child, index) =>
           renderLineRow(child, depth + 1, `${indexLabel}.${index + 1}`),
         )}
-      </div>
+      </Fragment>
     );
   }
 
@@ -325,13 +322,9 @@ export function QuoteLinesWorkspace({
       </div>
 
       <div className="overflow-x-auto">
-        <div className="min-w-[52rem]">
-          <div
-            className={cn(
-              "quote-line-grid hidden gap-x-2 border-b border-border px-3 py-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase lg:grid",
-            )}
-          >
-            <span aria-hidden className="block min-w-0" />
+        <div className="quote-lines-table min-w-[52rem]">
+          <div className="quote-line-header hidden lg:contents">
+            <span aria-hidden className="min-w-0" />
             <span className="min-w-0 truncate">{t("fields.lineTitle")}</span>
             <span className="min-w-0 truncate text-center">
               {t("fields.unit")}
@@ -351,7 +344,7 @@ export function QuoteLinesWorkspace({
             <span className="min-w-0 truncate text-right">
               {t("fields.lineTotal")}
             </span>
-            <span aria-hidden className="block min-w-0" />
+            <span aria-hidden className="min-w-0" />
           </div>
 
           {roots.length === 0 ? (

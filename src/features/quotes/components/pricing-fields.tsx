@@ -92,7 +92,7 @@ export function QuantityField({
       inputMode="decimal"
       disabled={disabled}
       value={focused ? draft : display}
-      className="h-8 border-border/70 bg-background font-mono text-right tabular-nums"
+      className="h-8 w-full border-border/70 bg-background font-mono text-right tabular-nums"
       onFocus={() => {
         setFocused(true);
         setDraft(display);
@@ -128,7 +128,7 @@ export function HoursField({
       inputMode="decimal"
       disabled={disabled}
       value={focused ? draft : display}
-      className="h-8 border-border/70 bg-background font-mono text-right tabular-nums"
+      className="h-8 w-full border-border/70 bg-background font-mono text-right tabular-nums"
       onFocus={() => {
         setFocused(true);
         setDraft(display);
@@ -164,7 +164,7 @@ export function VatRateField({
       inputMode="decimal"
       disabled={disabled}
       value={focused ? draft : display}
-      className="h-8 border-border/70 bg-background font-mono text-right tabular-nums"
+      className="h-8 w-full border-border/70 bg-background font-mono text-right tabular-nums"
       onFocus={() => {
         setFocused(true);
         setDraft(display);
