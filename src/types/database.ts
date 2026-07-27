@@ -51,6 +51,13 @@ export type StockMovementType =
   | "transfer"
   | "adjustment"
   | "return";
+
+export type PurchaseOrderStatus =
+  | "draft"
+  | "sent"
+  | "partially_received"
+  | "received"
+  | "cancelled";
 export type WorkItemPriority = "low" | "normal" | "high";
 export type AppointmentStatus =
   | "planned"
@@ -1280,6 +1287,7 @@ export type Database = {
           id: string;
           organization_id: string;
           article_id: string;
+          supplier_id: string | null;
           supplier_name: string;
           supplier_sku: string | null;
           unit_cost_cents: number | null;
@@ -1294,6 +1302,7 @@ export type Database = {
           id?: string;
           organization_id: string;
           article_id: string;
+          supplier_id?: string | null;
           supplier_name: string;
           supplier_sku?: string | null;
           unit_cost_cents?: number | null;
@@ -1308,6 +1317,7 @@ export type Database = {
           id?: string;
           organization_id?: string;
           article_id?: string;
+          supplier_id?: string | null;
           supplier_name?: string;
           supplier_sku?: string | null;
           unit_cost_cents?: number | null;
@@ -1600,6 +1610,165 @@ export type Database = {
           },
         ];
       };
+      suppliers: {
+        Row: {
+          id: string;
+          organization_id: string;
+          name: string;
+          email: string | null;
+          phone: string | null;
+          address: string | null;
+          kvk_number: string | null;
+          payment_terms_days: number | null;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          name: string;
+          email?: string | null;
+          phone?: string | null;
+          address?: string | null;
+          kvk_number?: string | null;
+          payment_terms_days?: number | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          name?: string;
+          email?: string | null;
+          phone?: string | null;
+          address?: string | null;
+          kvk_number?: string | null;
+          payment_terms_days?: number | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "suppliers_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      purchase_orders: {
+        Row: {
+          id: string;
+          organization_id: string;
+          supplier_id: string;
+          reference: string | null;
+          status: PurchaseOrderStatus;
+          order_date: string;
+          expected_date: string | null;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          supplier_id: string;
+          reference?: string | null;
+          status?: PurchaseOrderStatus;
+          order_date?: string;
+          expected_date?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          supplier_id?: string;
+          reference?: string | null;
+          status?: PurchaseOrderStatus;
+          order_date?: string;
+          expected_date?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "purchase_orders_supplier_id_fkey";
+            columns: ["supplier_id"];
+            isOneToOne: false;
+            referencedRelation: "suppliers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      purchase_order_lines: {
+        Row: {
+          id: string;
+          organization_id: string;
+          purchase_order_id: string;
+          article_id: string | null;
+          title: string;
+          quantity: number;
+          unit: string;
+          unit_cost_cents: number | null;
+          received_quantity: number;
+          sort_order: number;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          purchase_order_id: string;
+          article_id?: string | null;
+          title: string;
+          quantity?: number;
+          unit?: string;
+          unit_cost_cents?: number | null;
+          received_quantity?: number;
+          sort_order?: number;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          purchase_order_id?: string;
+          article_id?: string | null;
+          title?: string;
+          quantity?: number;
+          unit?: string;
+          unit_cost_cents?: number | null;
+          received_quantity?: number;
+          sort_order?: number;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "purchase_order_lines_purchase_order_id_fkey";
+            columns: ["purchase_order_id"];
+            isOneToOne: false;
+            referencedRelation: "purchase_orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -1636,6 +1805,7 @@ export type Database = {
       invoice_status: InvoiceStatus;
       stock_location_kind: StockLocationKind;
       stock_movement_type: StockMovementType;
+      purchase_order_status: PurchaseOrderStatus;
     };
     CompositeTypes: {
       [_ in never]: never;

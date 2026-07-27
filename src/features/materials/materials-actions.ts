@@ -58,7 +58,7 @@ export async function listArticleSupplierPrices(articleId: string): Promise<{
   const { data, error } = await ctx.supabase
     .from("article_supplier_prices")
     .select(
-      "id, article_id, supplier_name, supplier_sku, unit_cost_cents, lead_time_days, is_preferred, notes",
+      "id, article_id, supplier_id, supplier_name, supplier_sku, unit_cost_cents, lead_time_days, is_preferred, notes",
     )
     .eq("organization_id", ctx.organizationId)
     .eq("article_id", articleId)
@@ -71,6 +71,7 @@ export async function listArticleSupplierPrices(articleId: string): Promise<{
     prices: (data ?? []).map((row) => ({
       id: row.id,
       articleId: row.article_id,
+      supplierId: row.supplier_id,
       supplierName: row.supplier_name,
       supplierSku: row.supplier_sku,
       unitCostCents: row.unit_cost_cents,
@@ -78,6 +79,91 @@ export async function listArticleSupplierPrices(articleId: string): Promise<{
       isPreferred: row.is_preferred,
       notes: row.notes,
     })),
+  };
+}
+
+export async function listPurchaseOrders(): Promise<{
+  orders?: import("@/features/materials/lib/materials").PurchaseOrderRow[];
+  error?: string;
+}> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const { data, error } = await ctx.supabase
+    .from("purchase_orders")
+    .select(
+      "id, supplier_id, reference, status, order_date, expected_date, notes, created_at",
+    )
+    .eq("organization_id", ctx.organizationId)
+    .order("created_at", { ascending: false });
+
+  if (error) return { error: error.message };
+
+  const poIds = (data ?? []).map((row) => row.id);
+  const supplierIds = [...new Set((data ?? []).map((row) => row.supplier_id))];
+
+  const [{ data: suppliers }, { data: lines }] = await Promise.all([
+    supplierIds.length
+      ? ctx.supabase.from("suppliers").select("id, name").in("id", supplierIds)
+      : Promise.resolve({ data: [] as Array<{ id: string; name: string }> }),
+    poIds.length
+      ? ctx.supabase
+          .from("purchase_order_lines")
+          .select(
+            "purchase_order_id, quantity, unit_cost_cents, received_quantity",
+          )
+          .in("purchase_order_id", poIds)
+      : Promise.resolve({
+          data: [] as Array<{
+            purchase_order_id: string;
+            quantity: number;
+            unit_cost_cents: number | null;
+            received_quantity: number;
+          }>,
+        }),
+  ]);
+
+  const supplierById = new Map(
+    (suppliers ?? []).map((row) => [row.id, row.name] as const),
+  );
+  const linesByPo = new Map<
+    string,
+    { count: number; totalCents: number | null }
+  >();
+
+  for (const line of lines ?? []) {
+    const current = linesByPo.get(line.purchase_order_id) ?? {
+      count: 0,
+      totalCents: 0,
+    };
+    current.count += 1;
+    if (line.unit_cost_cents != null) {
+      current.totalCents =
+        (current.totalCents ?? 0) +
+        Math.round(Number(line.quantity) * line.unit_cost_cents);
+    } else {
+      current.totalCents = null;
+    }
+    linesByPo.set(line.purchase_order_id, current);
+  }
+
+  return {
+    orders: (data ?? []).map((row) => {
+      const summary = linesByPo.get(row.id);
+      return {
+        id: row.id,
+        supplierId: row.supplier_id,
+        supplierName: supplierById.get(row.supplier_id) ?? "—",
+        reference: row.reference,
+        status: row.status,
+        orderDate: row.order_date,
+        expectedDate: row.expected_date,
+        notes: row.notes,
+        lineCount: summary?.count ?? 0,
+        totalCents: summary?.totalCents ?? null,
+        createdAt: row.created_at,
+      };
+    }),
   };
 }
 

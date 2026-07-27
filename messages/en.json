@@ -186,7 +186,7 @@
       },
       "suppliers": {
         "title": "Suppliers",
-        "description": "Suppliers will be built in a later phase."
+        "description": "Manage your company's suppliers."
       },
       "subcontractors": {
         "title": "Subcontractors / freelancers",
@@ -289,6 +289,38 @@
       "actions": "Actions"
     },
     "openProjects": "View projects"
+  },
+  "suppliers": {
+    "title": "Suppliers",
+    "description": "Suppliers for purchasing and article prices.",
+    "newSupplier": "New supplier",
+    "newTitle": "New supplier",
+    "newDescription": "At least a name. Add the rest when needed.",
+    "empty": "No suppliers yet. Add your first supplier.",
+    "create": "Save supplier",
+    "save": "Save changes",
+    "open": "Open",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete {name}?",
+    "hasLinks": "This supplier still has prices or purchase orders and cannot be deleted.",
+    "nameRequired": "Enter a name.",
+    "linkCount": "{prices} prices · {orders} orders",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "kvk": "Chamber of commerce no.",
+      "paymentTerms": "Payment terms (days)",
+      "notes": "Notes"
+    },
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "links": "Links",
+      "actions": "Actions"
+    }
   },
   "projects": {
     "title": "All projects",
@@ -1137,8 +1169,12 @@
       "columns": {
         "article": "Article",
         "location": "Location",
-        "qty": "Qty"
+        "qty": "Qty",
+        "min": "Min",
+        "max": "Max"
       },
+      "editLimits": "Min/max",
+      "editLimitsTitle": "Set min/max",
       "fields": {
         "name": "Name",
         "code": "Code",
@@ -1149,7 +1185,9 @@
         "quantity": "Quantity",
         "from": "From location",
         "to": "To location",
-        "notes": "Note"
+        "notes": "Note",
+        "min": "Minimum",
+        "max": "Maximum"
       },
       "kinds": {
         "warehouse": "Warehouse",
@@ -1166,7 +1204,71 @@
       },
       "errors": {
         "nameRequired": "Name is required.",
-        "insufficient": "Insufficient stock at this location."
+        "insufficient": "Insufficient stock at this location.",
+        "minGtMax": "Minimum cannot be greater than maximum."
+      }
+    },
+    "supplierPrices": {
+      "title": "Supplier prices",
+      "hint": "Link suppliers with purchase price and lead time.",
+      "empty": "No supplier prices for this article yet.",
+      "loading": "Loading…",
+      "preferred": "Preferred",
+      "pickSupplier": "Pick supplier…",
+      "noSuppliers": "Add suppliers first via /leveranciers.",
+      "add": "Add price",
+      "leadDays": "{days} days lead time",
+      "fields": {
+        "sku": "Supplier SKU",
+        "cost": "Purchase price (€)",
+        "leadDays": "Lead time (days)",
+        "preferred": "Preferred supplier"
+      },
+      "errors": {
+        "supplierRequired": "Pick a supplier."
+      }
+    },
+    "purchasing": {
+      "title": "Purchasing",
+      "new": "New order",
+      "newTitle": "Create purchase order",
+      "empty": "No purchase orders yet.",
+      "kpiTotal": "Total",
+      "kpiDraft": "Draft",
+      "kpiOpen": "Open",
+      "send": "Send",
+      "markPartial": "Partially received",
+      "addLine": "Add line",
+      "columns": {
+        "supplier": "Supplier",
+        "reference": "Reference",
+        "date": "Date",
+        "total": "Total",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "status": {
+        "draft": "Draft",
+        "sent": "Sent",
+        "partially_received": "Partially received",
+        "received": "Received",
+        "cancelled": "Cancelled"
+      },
+      "fields": {
+        "supplier": "Supplier",
+        "supplierPick": "Pick supplier…",
+        "reference": "Reference / PO number",
+        "expected": "Expected delivery date",
+        "lines": "Order lines",
+        "articleAdHoc": "Ad-hoc (no article)",
+        "lineTitle": "Description",
+        "qty": "Qty",
+        "unit": "Unit",
+        "unitCost": "Unit price (€)"
+      },
+      "errors": {
+        "supplierRequired": "Pick a supplier.",
+        "linesRequired": "Add at least one line with description and quantity."
       }
     },
     "workItem": {
@@ -1180,16 +1282,21 @@
       "freeUsage": "Free usage (no plan line)",
       "addPlan": "Add line",
       "addUsage": "Log usage",
+      "deductStock": "Deduct from stock",
       "loading": "Loading…",
       "expectedVsActual": "Expected {expected} · actual {actual}",
       "fields": {
         "title": "Description",
         "qty": "Qty",
-        "unit": "Unit"
+        "unit": "Unit",
+        "locationPick": "Pick location…"
       },
       "errors": {
         "titleRequired": "Description or article is required.",
-        "usageRequired": "Description and quantity are required."
+        "usageRequired": "Description and quantity are required.",
+        "stockArticleRequired": "Stock deduction requires a stock-tracked article.",
+        "locationRequired": "Pick a location for stock deduction.",
+        "insufficientStock": "Insufficient stock at this location."
       }
     }
   }

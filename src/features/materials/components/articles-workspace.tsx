@@ -19,12 +19,14 @@ import {
   euroFromCents,
   type ArticleRow,
 } from "@/features/materials/lib/materials";
+import { ArticleSupplierPricesPanel } from "@/features/materials/components/article-supplier-prices-panel";
 import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
 import { formatEuroFromCents } from "@/utils/format";
 import { cn } from "@/lib/utils";
 
 type ArticlesWorkspaceProps = {
   articles: ArticleRow[];
+  suppliers: Array<{ id: string; name: string }>;
 };
 
 type ArticleDraft = {
@@ -75,7 +77,7 @@ function fromRow(row: ArticleRow): ArticleDraft {
   };
 }
 
-export function ArticlesWorkspace({ articles }: ArticlesWorkspaceProps) {
+export function ArticlesWorkspace({ articles, suppliers }: ArticlesWorkspaceProps) {
   const t = useTranslations("materials.articles");
   const tCommon = useTranslations("common");
   const router = useRouter();
@@ -393,6 +395,12 @@ export function ArticlesWorkspace({ articles }: ArticlesWorkspaceProps) {
               {t("fields.active")}
             </label>
           </div>
+          {draft.id ? (
+            <ArticleSupplierPricesPanel
+              articleId={draft.id}
+              suppliers={suppliers}
+            />
+          ) : null}
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
           <DialogFooter>
             <Button

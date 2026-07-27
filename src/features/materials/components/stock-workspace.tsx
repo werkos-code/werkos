@@ -54,6 +54,9 @@ export function StockWorkspace({
   const [fromLocationId, setFromLocationId] = useState("");
   const [toLocationId, setToLocationId] = useState("");
   const [notes, setNotes] = useState("");
+  const [balanceEdit, setBalanceEdit] = useState<StockBalanceRow | null>(null);
+  const [minQty, setMinQty] = useState("");
+  const [maxQty, setMaxQty] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -123,6 +126,45 @@ export function StockWorkspace({
         setMoveOpen(false);
         setQuantity("");
         setNotes("");
+        router.refresh();
+      } catch {
+        setError(tCommon("error"));
+      }
+    });
+  }
+
+  function openBalanceEdit(row: StockBalanceRow) {
+    setBalanceEdit(row);
+    setMinQty(row.minQuantity == null ? "" : String(row.minQuantity));
+    setMaxQty(row.maxQuantity == null ? "" : String(row.maxQuantity));
+    setError(null);
+  }
+
+  function saveBalanceLimits() {
+    if (!balanceEdit) return;
+    startTransition(async () => {
+      setError(null);
+      try {
+        const response = await fetch("/api/stock-balances", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: balanceEdit.id,
+            minQuantity: minQty,
+            maxQuantity: maxQty,
+          }),
+          signal: AbortSignal.timeout(20_000),
+        });
+        const result = (await response.json()) as { error?: string };
+        if (!response.ok || result.error) {
+          setError(
+            result.error === "min_gt_max"
+              ? t("errors.minGtMax")
+              : tCommon("error"),
+          );
+          return;
+        }
+        setBalanceEdit(null);
         router.refresh();
       } catch {
         setError(tCommon("error"));
@@ -207,13 +249,19 @@ export function StockWorkspace({
                     <th className="px-3 py-2">{t("columns.article")}</th>
                     <th className="px-3 py-2">{t("columns.location")}</th>
                     <th className="px-3 py-2 text-right">{t("columns.qty")}</th>
+                    <th className="px-3 py-2 text-right">{t("columns.min")}</th>
+                    <th className="px-3 py-2 text-right">{t("columns.max")}</th>
+                    <th className="px-3 py-2" />
                   </tr>
                 </thead>
                 <tbody>
-                  {balances.map((row) => (
+                  {balances.map((row) => {
+                    const isLow =
+                      row.minQuantity != null && row.quantity < row.minQuantity;
+                    return (
                     <tr
                       key={row.id}
-                      className="border-b border-border/70 last:border-0"
+                      className={`border-b border-border/70 last:border-0 ${isLow ? "bg-destructive/5" : ""}`}
                     >
                       <td className="px-3 py-2">
                         <span className="font-medium">{row.articleName}</span>
@@ -229,8 +277,25 @@ export function StockWorkspace({
                       <td className="px-3 py-2 text-right tabular-nums">
                         {formatQty(row.quantity, row.articleUnit)}
                       </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                        {formatQty(row.minQuantity)}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                        {formatQty(row.maxQuantity)}
+                      </td>
+                      <td className="px-3 py-2 text-right">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openBalanceEdit(row)}
+                        >
+                          {t("editLimits")}
+                        </Button>
+                      </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -411,6 +476,52 @@ export function StockWorkspace({
               {tCommon("cancel")}
             </Button>
             <Button type="button" disabled={isPending} onClick={createMovement}>
+              {tCommon("save")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={balanceEdit != null}
+        onOpenChange={(open) => !open && setBalanceEdit(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("editLimitsTitle")}</DialogTitle>
+          </DialogHeader>
+          {balanceEdit ? (
+            <p className="text-sm text-muted-foreground">
+              {balanceEdit.articleName} · {balanceEdit.locationName}
+            </p>
+          ) : null}
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block space-y-1 text-sm">
+              <span className="text-muted-foreground">{t("fields.min")}</span>
+              <Input
+                inputMode="decimal"
+                value={minQty}
+                onChange={(e) => setMinQty(e.target.value)}
+              />
+            </label>
+            <label className="block space-y-1 text-sm">
+              <span className="text-muted-foreground">{t("fields.max")}</span>
+              <Input
+                inputMode="decimal"
+                value={maxQty}
+                onChange={(e) => setMaxQty(e.target.value)}
+              />
+            </label>
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setBalanceEdit(null)}
+            >
+              {tCommon("cancel")}
+            </Button>
+            <Button type="button" disabled={isPending} onClick={saveBalanceLimits}>
               {tCommon("save")}
             </Button>
           </DialogFooter>

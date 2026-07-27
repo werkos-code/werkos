@@ -186,7 +186,7 @@
       },
       "suppliers": {
         "title": "Lieferanten",
-        "description": "Lieferanten werden in einer späteren Phase gebaut."
+        "description": "Lieferanten deines Unternehmens verwalten."
       },
       "subcontractors": {
         "title": "Subunternehmer / Freelancer",
@@ -289,6 +289,38 @@
       "actions": "Aktionen"
     },
     "openProjects": "Projekte anzeigen"
+  },
+  "suppliers": {
+    "title": "Lieferanten",
+    "description": "Lieferanten für Einkauf und Artikelpreise.",
+    "newSupplier": "Neuer Lieferant",
+    "newTitle": "Neuer Lieferant",
+    "newDescription": "Mindestens ein Name. Den Rest fügst du bei Bedarf hinzu.",
+    "empty": "Noch keine Lieferanten. Füge deinen ersten Lieferanten hinzu.",
+    "create": "Lieferant speichern",
+    "save": "Änderungen speichern",
+    "open": "Öffnen",
+    "delete": "Löschen",
+    "deleteConfirm": "Möchtest du {name} wirklich löschen?",
+    "hasLinks": "Dieser Lieferant hat noch Preise oder Bestellungen und kann nicht gelöscht werden.",
+    "nameRequired": "Gib einen Namen ein.",
+    "linkCount": "{prices} Preise · {orders} Bestellungen",
+    "fields": {
+      "name": "Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "address": "Adresse",
+      "kvk": "Handelsregisternummer",
+      "paymentTerms": "Zahlungsziel (Tage)",
+      "notes": "Notizen"
+    },
+    "columns": {
+      "name": "Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "links": "Verknüpfungen",
+      "actions": "Aktionen"
+    }
   },
   "projects": {
     "title": "Alle Projekte",
@@ -1137,8 +1169,12 @@
       "columns": {
         "article": "Artikel",
         "location": "Standort",
-        "qty": "Menge"
+        "qty": "Menge",
+        "min": "Min",
+        "max": "Max"
       },
+      "editLimits": "Min/max",
+      "editLimitsTitle": "Min/max festlegen",
       "fields": {
         "name": "Name",
         "code": "Code",
@@ -1149,7 +1185,9 @@
         "quantity": "Menge",
         "from": "Von Standort",
         "to": "Nach Standort",
-        "notes": "Notiz"
+        "notes": "Notiz",
+        "min": "Minimum",
+        "max": "Maximum"
       },
       "kinds": {
         "warehouse": "Lager",
@@ -1166,7 +1204,71 @@
       },
       "errors": {
         "nameRequired": "Name ist erforderlich.",
-        "insufficient": "Nicht genug Bestand an diesem Standort."
+        "insufficient": "Nicht genug Bestand an diesem Standort.",
+        "minGtMax": "Minimum darf nicht größer als Maximum sein."
+      }
+    },
+    "supplierPrices": {
+      "title": "Lieferantenpreise",
+      "hint": "Lieferanten mit Einkaufspreis und Lieferzeit verknüpfen.",
+      "empty": "Noch keine Lieferantenpreise für diesen Artikel.",
+      "loading": "Laden…",
+      "preferred": "Bevorzugt",
+      "pickSupplier": "Lieferant wählen…",
+      "noSuppliers": "Füge zuerst Lieferanten über /leveranciers hinzu.",
+      "add": "Preis hinzufügen",
+      "leadDays": "{days} Tage Lieferzeit",
+      "fields": {
+        "sku": "Lieferanten-SKU",
+        "cost": "Einkaufspreis (€)",
+        "leadDays": "Lieferzeit (Tage)",
+        "preferred": "Bevorzugter Lieferant"
+      },
+      "errors": {
+        "supplierRequired": "Wähle einen Lieferanten."
+      }
+    },
+    "purchasing": {
+      "title": "Einkauf",
+      "new": "Neue Bestellung",
+      "newTitle": "Bestellung anlegen",
+      "empty": "Noch keine Bestellungen.",
+      "kpiTotal": "Gesamt",
+      "kpiDraft": "Entwurf",
+      "kpiOpen": "Offen",
+      "send": "Senden",
+      "markPartial": "Teilweise erhalten",
+      "addLine": "Zeile hinzufügen",
+      "columns": {
+        "supplier": "Lieferant",
+        "reference": "Referenz",
+        "date": "Datum",
+        "total": "Gesamt",
+        "status": "Status",
+        "actions": "Aktionen"
+      },
+      "status": {
+        "draft": "Entwurf",
+        "sent": "Gesendet",
+        "partially_received": "Teilweise erhalten",
+        "received": "Erhalten",
+        "cancelled": "Storniert"
+      },
+      "fields": {
+        "supplier": "Lieferant",
+        "supplierPick": "Lieferant wählen…",
+        "reference": "Referenz / Bestellnummer",
+        "expected": "Erwartetes Lieferdatum",
+        "lines": "Bestellzeilen",
+        "articleAdHoc": "Ad-hoc (kein Artikel)",
+        "lineTitle": "Beschreibung",
+        "qty": "Menge",
+        "unit": "Einheit",
+        "unitCost": "Stückpreis (€)"
+      },
+      "errors": {
+        "supplierRequired": "Wähle einen Lieferanten.",
+        "linesRequired": "Füge mindestens eine Zeile mit Beschreibung und Menge hinzu."
       }
     },
     "workItem": {
@@ -1180,16 +1282,21 @@
       "freeUsage": "Freier Verbrauch (ohne Planzeile)",
       "addPlan": "Zeile hinzufügen",
       "addUsage": "Verbrauch buchen",
+      "deductStock": "Vom Bestand abziehen",
       "loading": "Laden…",
       "expectedVsActual": "Erwartet {expected} · tatsächlich {actual}",
       "fields": {
         "title": "Beschreibung",
         "qty": "Menge",
-        "unit": "Einheit"
+        "unit": "Einheit",
+        "locationPick": "Standort wählen…"
       },
       "errors": {
         "titleRequired": "Beschreibung oder Artikel ist erforderlich.",
-        "usageRequired": "Beschreibung und Menge sind erforderlich."
+        "usageRequired": "Beschreibung und Menge sind erforderlich.",
+        "stockArticleRequired": "Bestandsabzug erfordert einen bestandsgeführten Artikel.",
+        "locationRequired": "Wähle einen Standort für den Bestandsabzug.",
+        "insufficientStock": "Nicht genug Bestand an diesem Standort."
       }
     }
   }

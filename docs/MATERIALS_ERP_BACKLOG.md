@@ -1,7 +1,8 @@
 # Materiaal ERP — backlog
 
-> Laatst bijgewerkt: 2026-07-26  
-> SQL: `supabase/migrations/20260726290000_materials_erp.sql`  
+> Laatst bijgewerkt: 2026-07-27  
+> SQL fase A–C: `docs/sql-applied/20260726290000_materials_erp.sql`  
+> SQL fase D: `supabase/migrations/20260727100000_materials_phase_d.sql`  
 > Roadmap: `.cursor/plans/materiaal_registratie_v1_2f8a1c04.plan.md`
 
 ## Afgerond (fase A + B + C-kern)
@@ -15,20 +16,25 @@
 - [x] Werkzaamheid-tab **Materiaal**: begroot (artikel of ad-hoc) + verbruik (vrij toegestaan)
 - [x] Ad-hoc regels zonder SKU toegestaan
 
+## Afgerond (fase D — kern)
+
+- [x] Leveranciersmodule (`suppliers`) + FK op `article_supplier_prices`
+- [x] UI `/leveranciers` — CRUD
+- [x] UI leveranciersprijzen per artikel (in artikel-editor)
+- [x] Min/max bewerken op voorraadsaldi + KPI alerts
+- [x] Uitgifte vanaf werkzaamheid met stock-aftrek (`deductStock`)
+- [x] Inkoop basis: `purchase_orders` + `/materiaal/inkoop` (aanmaken + overzicht)
+
 ## Volgende (fase D+)
 
-- [ ] Leveranciersmodule + FK op `article_supplier_prices`
-- [ ] UI leveranciersprijzen per artikel
-- [ ] Min/max bewerken + alerts
-- [ ] Inkoop: aanvraag → bestelbon → levernota
+- [ ] Levernota / ontvangst tegen PO (partial receive)
 - [ ] Reserveringen (reserved_quantity echt gebruiken)
-- [ ] Uitgifte vanaf werkzaamheid met stock-aftrek (`deductStock`)
 - [ ] Werkbon-materiaal, scan/barcode, portaal
 - [ ] 3-way match met facturen
 - [ ] Catalogus-integraties (2BA e.d.)
 
 ## Migratie
 
-Run in Supabase SQL Editor:
+Run in Supabase SQL Editor (na fase A–C):
 
-`supabase/migrations/20260726290000_materials_erp.sql`
+`supabase/migrations/20260727100000_materials_phase_d.sql`

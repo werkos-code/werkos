@@ -19,12 +19,38 @@ export type ArticleRow = {
 export type ArticleSupplierPriceRow = {
   id: string;
   articleId: string;
+  supplierId: string | null;
   supplierName: string;
   supplierSku: string | null;
   unitCostCents: number | null;
   leadTimeDays: number | null;
   isPreferred: boolean;
   notes: string | null;
+};
+
+export type PurchaseOrderRow = {
+  id: string;
+  supplierId: string;
+  supplierName: string;
+  reference: string | null;
+  status: import("@/types/database").PurchaseOrderStatus;
+  orderDate: string;
+  expectedDate: string | null;
+  notes: string | null;
+  lineCount: number;
+  totalCents: number | null;
+  createdAt: string;
+};
+
+export type PurchaseOrderLineRow = {
+  id: string;
+  purchaseOrderId: string;
+  articleId: string | null;
+  title: string;
+  quantity: number;
+  unit: string;
+  unitCostCents: number | null;
+  receivedQuantity: number;
 };
 
 export type StockLocationRow = {

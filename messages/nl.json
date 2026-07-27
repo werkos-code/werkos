@@ -186,7 +186,7 @@
       },
       "suppliers": {
         "title": "Leveranciers",
-        "description": "Leveranciers worden gebouwd in een volgende fase."
+        "description": "Beheer leveranciers van je bedrijf."
       },
       "subcontractors": {
         "title": "Onderaannemers / ZZP'ers",
@@ -289,6 +289,38 @@
       "actions": "Acties"
     },
     "openProjects": "Bekijk projecten"
+  },
+  "suppliers": {
+    "title": "Leveranciers",
+    "description": "Leveranciers voor inkoop en artikelprijzen.",
+    "newSupplier": "Nieuwe leverancier",
+    "newTitle": "Nieuwe leverancier",
+    "newDescription": "Minimaal een naam. De rest vul je in wanneer nodig.",
+    "empty": "Nog geen leveranciers. Voeg je eerste leverancier toe.",
+    "create": "Leverancier opslaan",
+    "save": "Wijzigingen opslaan",
+    "open": "Openen",
+    "delete": "Verwijderen",
+    "deleteConfirm": "Weet je zeker dat je {name} wilt verwijderen?",
+    "hasLinks": "Deze leverancier heeft nog prijzen of inkooporders en kan niet worden verwijderd.",
+    "nameRequired": "Vul een naam in.",
+    "linkCount": "{prices} prijzen · {orders} orders",
+    "fields": {
+      "name": "Naam",
+      "email": "E-mail",
+      "phone": "Telefoon",
+      "address": "Adres",
+      "kvk": "KvK-nummer",
+      "paymentTerms": "Betalingstermijn (dagen)",
+      "notes": "Notities"
+    },
+    "columns": {
+      "name": "Naam",
+      "email": "E-mail",
+      "phone": "Telefoon",
+      "links": "Koppelingen",
+      "actions": "Acties"
+    }
   },
   "projects": {
     "title": "Alle projecten",
@@ -1137,8 +1169,12 @@
       "columns": {
         "article": "Artikel",
         "location": "Locatie",
-        "qty": "Aantal"
+        "qty": "Aantal",
+        "min": "Min",
+        "max": "Max"
       },
+      "editLimits": "Min/max",
+      "editLimitsTitle": "Min/max instellen",
       "fields": {
         "name": "Naam",
         "code": "Code",
@@ -1149,7 +1185,9 @@
         "quantity": "Aantal",
         "from": "Van locatie",
         "to": "Naar locatie",
-        "notes": "Notitie"
+        "notes": "Notitie",
+        "min": "Minimum",
+        "max": "Maximum"
       },
       "kinds": {
         "warehouse": "Magazijn",
@@ -1166,7 +1204,71 @@
       },
       "errors": {
         "nameRequired": "Naam is verplicht.",
-        "insufficient": "Onvoldoende voorraad op deze locatie."
+        "insufficient": "Onvoldoende voorraad op deze locatie.",
+        "minGtMax": "Minimum mag niet hoger zijn dan maximum."
+      }
+    },
+    "supplierPrices": {
+      "title": "Leveranciersprijzen",
+      "hint": "Koppel leveranciers met inkoopprijs en levertijd.",
+      "empty": "Nog geen leveranciersprijzen voor dit artikel.",
+      "loading": "Laden…",
+      "preferred": "Voorkeur",
+      "pickSupplier": "Kies leverancier…",
+      "noSuppliers": "Voeg eerst leveranciers toe via /leveranciers.",
+      "add": "Prijs toevoegen",
+      "leadDays": "{days} dagen levertijd",
+      "fields": {
+        "sku": "Leveranciers-SKU",
+        "cost": "Inkoopprijs (€)",
+        "leadDays": "Levertijd (dagen)",
+        "preferred": "Voorkeursleverancier"
+      },
+      "errors": {
+        "supplierRequired": "Kies een leverancier."
+      }
+    },
+    "purchasing": {
+      "title": "Inkoop",
+      "new": "Nieuwe order",
+      "newTitle": "Inkooporder aanmaken",
+      "empty": "Nog geen inkooporders.",
+      "kpiTotal": "Totaal",
+      "kpiDraft": "Concept",
+      "kpiOpen": "Open",
+      "send": "Versturen",
+      "markPartial": "Deels ontvangen",
+      "addLine": "Regel toevoegen",
+      "columns": {
+        "supplier": "Leverancier",
+        "reference": "Referentie",
+        "date": "Datum",
+        "total": "Totaal",
+        "status": "Status",
+        "actions": "Acties"
+      },
+      "status": {
+        "draft": "Concept",
+        "sent": "Verstuurd",
+        "partially_received": "Deels ontvangen",
+        "received": "Ontvangen",
+        "cancelled": "Geannuleerd"
+      },
+      "fields": {
+        "supplier": "Leverancier",
+        "supplierPick": "Kies leverancier…",
+        "reference": "Referentie / PO-nummer",
+        "expected": "Verwachte leverdatum",
+        "lines": "Orderregels",
+        "articleAdHoc": "Ad-hoc (geen artikel)",
+        "lineTitle": "Omschrijving",
+        "qty": "Aantal",
+        "unit": "Eenheid",
+        "unitCost": "Prijs per eenheid (€)"
+      },
+      "errors": {
+        "supplierRequired": "Kies een leverancier.",
+        "linesRequired": "Voeg minimaal één regel met omschrijving en aantal toe."
       }
     },
     "workItem": {
@@ -1180,16 +1282,21 @@
       "freeUsage": "Vrij verbruik (zonder planregel)",
       "addPlan": "Regel toevoegen",
       "addUsage": "Verbruik boeken",
+      "deductStock": "Aftrekken van voorraad",
       "loading": "Laden…",
       "expectedVsActual": "Verwacht {expected} · werkelijk {actual}",
       "fields": {
         "title": "Omschrijving",
         "qty": "Aantal",
-        "unit": "Eenheid"
+        "unit": "Eenheid",
+        "locationPick": "Kies locatie…"
       },
       "errors": {
         "titleRequired": "Omschrijving of artikel is verplicht.",
-        "usageRequired": "Omschrijving en aantal zijn verplicht."
+        "usageRequired": "Omschrijving en aantal zijn verplicht.",
+        "stockArticleRequired": "Voorraad-aftrek vereist een voorraadplichtig artikel.",
+        "locationRequired": "Kies een locatie voor voorraad-aftrek.",
+        "insufficientStock": "Onvoldoende voorraad op deze locatie."
       }
     }
   }

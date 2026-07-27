@@ -42,6 +42,12 @@ export function WorkItemMaterialsPanel({
   const [usageTitle, setUsageTitle] = useState("");
   const [usageQty, setUsageQty] = useState("");
   const [usageLineId, setUsageLineId] = useState("");
+  const [usageArticleId, setUsageArticleId] = useState("");
+  const [deductStock, setDeductStock] = useState(false);
+  const [usageLocationId, setUsageLocationId] = useState("");
+  const [stockLocations, setStockLocations] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
   const [isPending, startTransition] = useTransition();
 
   async function reload() {
@@ -80,6 +86,19 @@ export function WorkItemMaterialsPanel({
       return;
     }
     void reload();
+    void (async () => {
+      try {
+        const response = await fetch("/api/stock-locations", {
+          signal: AbortSignal.timeout(20_000),
+        });
+        const result = (await response.json()) as {
+          locations?: Array<{ id: string; name: string }>;
+        };
+        setStockLocations(result.locations ?? []);
+      } catch {
+        setStockLocations([]);
+      }
+    })();
   }, [workItemId, isGroup]);
 
   function addLine() {
@@ -123,9 +142,24 @@ export function WorkItemMaterialsPanel({
   function addUsage() {
     const line = lines.find((l) => l.id === usageLineId);
     const usageName = usageTitle.trim() || line?.title || "";
+    const resolvedArticleId =
+      line?.articleId ?? (usageArticleId || null);
+    const article = resolvedArticleId
+      ? articles.find((a) => a.id === resolvedArticleId)
+      : null;
     if (!usageName || !usageQty) {
       setError(t("errors.usageRequired"));
       return;
+    }
+    if (deductStock) {
+      if (!resolvedArticleId || !article?.trackStock) {
+        setError(t("errors.stockArticleRequired"));
+        return;
+      }
+      if (!usageLocationId) {
+        setError(t("errors.locationRequired"));
+        return;
+      }
     }
     startTransition(async () => {
       setError(null);
@@ -136,21 +170,30 @@ export function WorkItemMaterialsPanel({
           body: JSON.stringify({
             workItemId,
             materialLineId: usageLineId || null,
-            articleId: line?.articleId ?? null,
+            articleId: resolvedArticleId,
             title: usageName,
             quantity: usageQty,
             unit: line?.unit ?? unit,
-            deductStock: false,
+            deductStock: deductStock && !!resolvedArticleId && !!usageLocationId,
+            locationId: deductStock ? usageLocationId : null,
           }),
           signal: AbortSignal.timeout(20_000),
         });
         if (!response.ok) {
-          setError(tCommon("error"));
+          const result = (await response.json()) as { error?: string };
+          setError(
+            result.error === "insufficient_stock"
+              ? t("errors.insufficientStock")
+              : tCommon("error"),
+          );
           return;
         }
         setUsageTitle("");
         setUsageQty("");
         setUsageLineId("");
+        setUsageArticleId("");
+        setDeductStock(false);
+        setUsageLocationId("");
         await reload();
         onChanged();
       } catch {
@@ -288,7 +331,12 @@ export function WorkItemMaterialsPanel({
               const id = e.target.value;
               setUsageLineId(id);
               const line = lines.find((l) => l.id === id);
-              if (line) setUsageTitle(line.title);
+              if (line) {
+                setUsageTitle(line.title);
+                setUsageArticleId(line.articleId ?? "");
+              } else {
+                setUsageArticleId("");
+              }
             }}
             className="border-input bg-background h-9 rounded-lg border px-2.5 text-sm sm:col-span-2"
           >
@@ -312,6 +360,58 @@ export function WorkItemMaterialsPanel({
             onChange={(e) => setUsageQty(e.target.value)}
             className="h-9"
           />
+          {!usageLineId ? (
+            <select
+              value={usageArticleId}
+              onChange={(e) => setUsageArticleId(e.target.value)}
+              className="border-input bg-background h-9 rounded-lg border px-2.5 text-sm sm:col-span-2"
+            >
+              <option value="">{t("adHoc")}</option>
+              {articles
+                .filter((a) => a.isActive && a.trackStock)
+                .map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.name}
+                  </option>
+                ))}
+            </select>
+          ) : null}
+          <label className="flex items-center gap-2 text-sm sm:col-span-2">
+            <input
+              type="checkbox"
+              checked={deductStock}
+              onChange={(e) => setDeductStock(e.target.checked)}
+              disabled={
+                !(
+                  (usageLineId
+                    ? lines.find((l) => l.id === usageLineId)?.articleId
+                    : usageArticleId) &&
+                  articles.find(
+                    (a) =>
+                      a.id ===
+                      (usageLineId
+                        ? lines.find((l) => l.id === usageLineId)?.articleId
+                        : usageArticleId),
+                  )?.trackStock
+                )
+              }
+            />
+            {t("deductStock")}
+          </label>
+          {deductStock ? (
+            <select
+              value={usageLocationId}
+              onChange={(e) => setUsageLocationId(e.target.value)}
+              className="border-input bg-background h-9 rounded-lg border px-2.5 text-sm sm:col-span-2"
+            >
+              <option value="">{t("fields.locationPick")}</option>
+              {stockLocations.map((loc) => (
+                <option key={loc.id} value={loc.id}>
+                  {loc.name}
+                </option>
+              ))}
+            </select>
+          ) : null}
           <Button
             type="button"
             size="sm"

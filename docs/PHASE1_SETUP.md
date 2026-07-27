@@ -222,15 +222,26 @@ Na Phase 1 / Super Admin:
 ## 20. Materiaal ERP (artikelen + voorraad + project)
 
 1. Open **SQL Editor** in Supabase
-2. Plak en run:  
-   `supabase/migrations/20260726290000_materials_erp.sql`
+2. Plak en run (indien nog niet gedaan):  
+   `docs/sql-applied/20260726290000_materials_erp.sql`
 3. Test:
    - `/materiaal/artikelen` — artikel aanmaken
    - `/materiaal/voorraad` — locatie + ontvangstmutatie
    - Project → Taken → werkzaamheid → tab **Materiaal** — begroot + verbruik (ad-hoc mag)
 4. Rest: [`MATERIALS_ERP_BACKLOG.md`](./MATERIALS_ERP_BACKLOG.md)
 
-## Prijsformule
+## 21. Materiaal ERP fase D (leveranciers + inkoop)
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260727100000_materials_phase_d.sql`
+3. Test:
+   - `/leveranciers` — leverancier aanmaken
+   - `/materiaal/artikelen` — artikel bewerken → leveranciersprijzen
+   - `/materiaal/voorraad` — min/max op saldo
+   - Werkzaamheid → tab **Materiaal** → verbruik met voorraad-aftrek
+   - `/materiaal/inkoop` — inkooporder aanmaken
+4. Rest: [`MATERIALS_ERP_BACKLOG.md`](./MATERIALS_ERP_BACKLOG.md)
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  
 Owner zit in de basis; tellers zijn alleen extra seats.  
