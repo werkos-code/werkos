@@ -528,6 +528,7 @@ export type Database = {
           sort_order: number;
           title: string;
           description: string | null;
+          line_type: "article" | "hours" | "labor" | "text" | "section";
           quantity: number | null;
           unit: string | null;
           unit_price_cents: number | null;
@@ -545,6 +546,7 @@ export type Database = {
           sort_order?: number;
           title?: string;
           description?: string | null;
+          line_type?: "article" | "hours" | "labor" | "text" | "section";
           quantity?: number | null;
           unit?: string | null;
           unit_price_cents?: number | null;
@@ -562,6 +564,7 @@ export type Database = {
           sort_order?: number;
           title?: string;
           description?: string | null;
+          line_type?: "article" | "hours" | "labor" | "text" | "section";
           quantity?: number | null;
           unit?: string | null;
           unit_price_cents?: number | null;

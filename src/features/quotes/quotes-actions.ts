@@ -13,12 +13,28 @@ export type QuoteListItem = {
   validUntil: string | null;
 };
 
+export type QuoteLineType =
+  | "article"
+  | "hours"
+  | "labor"
+  | "text"
+  | "section";
+
+export const QUOTE_LINE_TYPES: QuoteLineType[] = [
+  "article",
+  "hours",
+  "labor",
+  "text",
+  "section",
+];
+
 export type QuoteLineRow = {
   id: string;
   parentId: string | null;
   sortOrder: number;
   title: string;
   description: string | null;
+  lineType: QuoteLineType;
   quantity: number | null;
   unit: string | null;
   unitPriceCents: number | null;
@@ -154,7 +170,7 @@ export async function getQuote(quoteId: string): Promise<{
       ctx.supabase
         .from("quote_lines")
         .select(
-          "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, estimated_minutes",
+          "id, parent_id, sort_order, title, description, line_type, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, estimated_minutes",
         )
         .eq("organization_id", ctx.organizationId)
         .eq("quote_id", quoteId)
@@ -195,6 +211,7 @@ export async function getQuote(quoteId: string): Promise<{
         sortOrder: line.sort_order,
         title: line.title,
         description: line.description,
+        lineType: (line.line_type as QuoteLineRow["lineType"]) ?? "article",
         quantity: line.quantity === null ? null : Number(line.quantity),
         unit: line.unit,
         unitPriceCents: line.unit_price_cents,

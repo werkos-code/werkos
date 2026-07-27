@@ -60,6 +60,7 @@ export async function POST(request: Request) {
       parent_id: null,
       sort_order: 0,
       title: "",
+      line_type: "article",
       quantity: 1,
       unit: "st",
       unit_price_cents: 0,

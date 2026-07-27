@@ -171,6 +171,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
               parentId: line.parentId,
               title: line.title,
               description: line.description,
+              lineType: line.lineType,
               quantity: line.quantity,
               unit: line.unit,
               unitPriceCents: line.unitPriceCents,
@@ -232,22 +233,37 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
     }
   }
 
-  async function addLine(parentId: string | null, asSection = false) {
+  async function addLine(
+    parentId: string | null,
+    options?: { asSection?: boolean; lineType?: QuoteLineRow["lineType"] },
+  ) {
     if (!editable) return;
     setPendingAction(true);
     setError(null);
+    const asSection = options?.asSection || options?.lineType === "section";
+    const lineType = asSection
+      ? "section"
+      : (options?.lineType ?? "article");
     try {
       const response = await fetch(`/api/quotes/${quote.id}/lines`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           parentId,
+          lineType,
           title: asSection ? t("placeholders.section") : "",
-          quantity: asSection ? null : 1,
-          unit: asSection ? null : "st",
-          unitPriceCents: asSection ? null : 0,
-          vatRateBps: 2100,
+          quantity: asSection || lineType === "text" ? null : 1,
+          unit:
+            asSection || lineType === "text"
+              ? null
+              : lineType === "hours" || lineType === "labor"
+                ? "uur"
+                : "st",
+          unitPriceCents: asSection || lineType === "text" ? null : 0,
+          vatRateBps: lineType === "text" ? 0 : 2100,
           discountCents: 0,
+          estimatedMinutes:
+            lineType === "hours" || lineType === "labor" ? 60 : null,
         }),
         signal: AbortSignal.timeout(20_000),
       });
@@ -293,6 +309,91 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
       setError(tCommon("error"));
     } finally {
       setPendingAction(false);
+    }
+  }
+
+  async function deleteLines(lineIds: string[]) {
+    if (!editable || lineIds.length === 0) return;
+    setPendingAction(true);
+    setError(null);
+    try {
+      const response = await fetch(
+        `/api/quotes/${quote.id}/lines?ids=${encodeURIComponent(lineIds.join(","))}`,
+        { method: "DELETE", signal: AbortSignal.timeout(20_000) },
+      );
+      const result = (await response.json()) as { error?: string };
+      if (!response.ok || result.error) {
+        setError(mapApiError(result.error));
+        return;
+      }
+      const removeIds = new Set(
+        lineIds.flatMap((id) => collectDescendants(lines, id)),
+      );
+      setLines((prev) => prev.filter((line) => !removeIds.has(line.id)));
+      setDirty(true);
+      setSaveState("idle");
+    } catch {
+      setError(tCommon("error"));
+    } finally {
+      setPendingAction(false);
+    }
+  }
+
+  async function duplicateLine(lineId: string) {
+    if (!editable) return;
+    const source = lines.find((line) => line.id === lineId);
+    if (!source) return;
+    setPendingAction(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/quotes/${quote.id}/lines`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          parentId: source.parentId,
+          lineType: source.lineType,
+          title: source.title ? `${source.title} (kopie)` : "",
+          description: source.description,
+          quantity: source.quantity,
+          unit: source.unit,
+          unitPriceCents: source.unitPriceCents,
+          vatRateBps: source.vatRateBps,
+          discountCents: source.discountCents,
+          estimatedMinutes: source.estimatedMinutes,
+        }),
+        signal: AbortSignal.timeout(20_000),
+      });
+      const result = (await response.json()) as {
+        error?: string;
+        line?: QuoteLineRow;
+      };
+      if (!response.ok || !result.line) {
+        setError(mapApiError(result.error));
+        return;
+      }
+      setLines((prev) => [...prev, result.line!]);
+      setDirty(true);
+      setSaveState("idle");
+    } catch {
+      setError(tCommon("error"));
+    } finally {
+      setPendingAction(false);
+    }
+  }
+
+  async function reorderLines(
+    items: Array<{ id: string; sortOrder: number; parentId: string | null }>,
+  ) {
+    if (!editable) return;
+    try {
+      await fetch(`/api/quotes/${quote.id}/lines`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reorder: items }),
+        signal: AbortSignal.timeout(20_000),
+      });
+    } catch {
+      // Local order already applied; server sync can retry on save.
     }
   }
 
@@ -622,6 +723,9 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
                   busy={busy}
                   onAddLine={addLine}
                   onDeleteLine={deleteLine}
+                  onDeleteLines={deleteLines}
+                  onDuplicateLine={duplicateLine}
+                  onReorder={reorderLines}
                 />
                 {editable ? (
                   <div className="border-t border-border px-4 py-3">

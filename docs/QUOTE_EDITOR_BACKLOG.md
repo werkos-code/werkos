@@ -18,11 +18,11 @@
 | Offertenummer (`OFF-…`) | Meta-kaart + header | ✅ `OFF-YYYY-NNNN` via DB-trigger |
 | Voorbeeld (preview) | Disabled knop in editor-header | PDF/online representatie (domain: aparte weergave, bron = offerte) |
 | Meer-opties `⋯` | Disabled | Dupliceren, annuleren-shortcuts, export, … |
-| Tekstregel | Disabled in toolbar | Line-type of flag “alleen tekst” zonder prijs |
-| Korting (regel- of offerte-niveau in toolbar) | Disabled in toolbar; regel-korting blijft in rij | Eventueel quote-level `discount`; toolbar-actie |
+| Tekstregel | Type `text` in type-select | ✅ Fase 1 (`line_type`) |
+| Korting (regel- of offerte-niveau in toolbar) | Regel-korting in kolom; offerte-niveau later | Eventueel quote-level `discount`; toolbar-actie |
 | Afbeelding op regel | Disabled in toolbar | Storage + `image_url` / attachment op `quote_lines` |
 | Importeren | Disabled | Importflow (Excel/CSV) + mapping |
-| Drag-and-drop herordenen | Geen handle / later | `sort_order` updates via API + DnD lib |
+| Drag-and-drop herordenen | Root-niveau DnD | ✅ Fase 1 (child-DnD later) |
 | Thumbnails op regels | Niet getoond | Zelfde als afbeeldingen |
 | Bijlagen / dropzone | Disabled dropzone + lege bijlagenlijst | Storage bucket, `quote_attachments` (of generiek), RLS, upload API |
 | Winstmarge-kaart | Niet getoond (geen stub-ruis) | Kostprijs op regels/artikelen; berekening |
@@ -45,12 +45,13 @@
 - [x] Offertenummer (`OFF-YYYY-NNNN`)
 - [ ] Voorbeeld / PDF of online preview
 - [ ] Header `⋯` acties (o.a. dupliceren)
-- [ ] Tekstregel
+- [x] Tekstregel (`line_type = text`)
 - [ ] Toolbar-korting (offerte-niveau)
 - [ ] Regel-afbeeldingen + thumbnails
 - [ ] Importeren
-- [ ] Drag-and-drop sort
+- [x] Drag-and-drop sort (root)
 - [ ] Bijlagen upload + lijst
 - [ ] Winstmarge (alleen met echte kostprijs)
 - [ ] Betaaltermijn + betalingsvoorwaarden
 - [ ] Sneltoetsen
+- [ ] Catalogus / Bereken prijzen (fase 2)

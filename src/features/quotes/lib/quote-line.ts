@@ -2,9 +2,13 @@ import {
   lineNetCents,
   lineVatCents,
 } from "@/features/quotes/lib/quote-status";
-import type { QuoteLineRow } from "@/features/quotes/quotes-actions";
+import type {
+  QuoteLineRow,
+  QuoteLineType,
+} from "@/features/quotes/quotes-actions";
 
-export type { QuoteLineRow };
+export type { QuoteLineRow, QuoteLineType };
+export { QUOTE_LINE_TYPES } from "@/features/quotes/quotes-actions";
 
 export function formatEuro(cents: number) {
   return new Intl.NumberFormat("nl-NL", {
@@ -13,22 +17,91 @@ export function formatEuro(cents: number) {
   }).format(cents / 100);
 }
 
+export function formatHours(minutes: number) {
+  const hours = minutes / 60;
+  return `${hours.toLocaleString("nl-NL", {
+    maximumFractionDigits: 2,
+  })} uur`;
+}
+
+export function defaultsForLineType(
+  lineType: QuoteLineType,
+): Partial<QuoteLineRow> {
+  switch (lineType) {
+    case "section":
+      return {
+        lineType: "section",
+        quantity: null,
+        unit: null,
+        unitPriceCents: null,
+        discountCents: 0,
+        estimatedMinutes: null,
+      };
+    case "text":
+      return {
+        lineType: "text",
+        quantity: null,
+        unit: null,
+        unitPriceCents: null,
+        discountCents: 0,
+        estimatedMinutes: null,
+        vatRateBps: 0,
+      };
+    case "hours":
+      return {
+        lineType: "hours",
+        quantity: 1,
+        unit: "uur",
+        unitPriceCents: 0,
+        estimatedMinutes: 60,
+      };
+    case "labor":
+      return {
+        lineType: "labor",
+        quantity: 1,
+        unit: "uur",
+        unitPriceCents: 0,
+        estimatedMinutes: 60,
+      };
+    case "article":
+    default:
+      return {
+        lineType: "article",
+        quantity: 1,
+        unit: "st",
+        unitPriceCents: 0,
+        estimatedMinutes: null,
+      };
+  }
+}
+
 export function createQuoteLine(
   partial?: Partial<QuoteLineRow>,
 ): QuoteLineRow {
+  const lineType = partial?.lineType ?? "article";
+  const defaults = defaultsForLineType(lineType);
   return {
-    id: crypto.randomUUID(),
-    parentId: null,
+    id: partial?.id ?? crypto.randomUUID(),
+    parentId: partial?.parentId ?? null,
     sortOrder: partial?.sortOrder ?? 0,
-    title: "",
-    description: null,
-    quantity: 1,
-    unit: "st",
-    unitPriceCents: 0,
-    vatRateBps: 2100,
-    discountCents: 0,
-    estimatedMinutes: null,
-    ...partial,
+    title: partial?.title ?? "",
+    description: partial?.description ?? null,
+    lineType,
+    quantity:
+      partial?.quantity !== undefined
+        ? partial.quantity
+        : (defaults.quantity ?? null),
+    unit: partial?.unit !== undefined ? partial.unit : (defaults.unit ?? null),
+    unitPriceCents:
+      partial?.unitPriceCents !== undefined
+        ? partial.unitPriceCents
+        : (defaults.unitPriceCents ?? null),
+    vatRateBps: partial?.vatRateBps ?? defaults.vatRateBps ?? 2100,
+    discountCents: partial?.discountCents ?? defaults.discountCents ?? 0,
+    estimatedMinutes:
+      partial?.estimatedMinutes !== undefined
+        ? partial.estimatedMinutes
+        : (defaults.estimatedMinutes ?? null),
   };
 }
 
@@ -36,13 +109,39 @@ export function createSectionLine(
   partial?: Partial<QuoteLineRow>,
 ): QuoteLineRow {
   return createQuoteLine({
-    title: "",
-    quantity: null,
-    unit: null,
-    unitPriceCents: null,
-    estimatedMinutes: null,
+    lineType: "section",
     ...partial,
   });
+}
+
+export function isPricedLineType(lineType: QuoteLineType) {
+  return lineType === "article" || lineType === "hours" || lineType === "labor";
+}
+
+export function aggregateQuoteLineStats(lines: QuoteLineRow[]) {
+  let totalMinutes = 0;
+  let materialCents = 0;
+  let laborCents = 0;
+
+  for (const line of getLeafLines(lines)) {
+    if (line.lineType === "text" || line.lineType === "section") continue;
+    const net = lineNetCents({
+      quantity: line.quantity,
+      unitPriceCents: line.unitPriceCents,
+      discountCents: line.discountCents,
+    });
+    if (line.lineType === "article") {
+      materialCents += net;
+    } else {
+      laborCents += net;
+      if (line.estimatedMinutes) totalMinutes += line.estimatedMinutes;
+      else if (line.quantity && line.unit === "uur") {
+        totalMinutes += Math.round(line.quantity * 60);
+      }
+    }
+  }
+
+  return { totalMinutes, materialCents, laborCents };
 }
 
 export function collectDescendants(
@@ -76,6 +175,7 @@ export function childrenOf(lines: QuoteLineRow[], parentId: string) {
 }
 
 export function isSectionLine(line: QuoteLineRow, lines: QuoteLineRow[]) {
+  if (line.lineType === "section") return true;
   const kids = childrenOf(lines, line.id);
   return (
     kids.length > 0 ||
@@ -90,6 +190,8 @@ export function getLeafLines(lines: QuoteLineRow[]) {
   return lines.filter(
     (line) =>
       !parentIds.has(line.id) &&
+      line.lineType !== "section" &&
+      line.lineType !== "text" &&
       !(line.quantity === null && line.unitPriceCents === null),
   );
 }
@@ -192,12 +294,47 @@ export function addLineToTree(
   return [...lines, line];
 }
 
-/** Lines to persist — sections with children, or leaves with a title. */
 export function billableLines(lines: QuoteLineRow[]) {
   return lines.filter((line) => {
-    if (isSectionLine(line, lines)) {
+    if (line.lineType === "section" || isSectionLine(line, lines)) {
       return childrenOf(lines, line.id).length > 0 || line.title.trim().length > 0;
+    }
+    if (line.lineType === "text") {
+      return line.title.trim().length > 0 || Boolean(line.description?.trim());
     }
     return line.title.trim().length > 0;
   });
+}
+
+export function reorderSiblings(
+  lines: QuoteLineRow[],
+  parentId: string | null,
+  orderedIds: string[],
+): QuoteLineRow[] {
+  const orderMap = new Map(orderedIds.map((id, index) => [id, index]));
+  return lines.map((line) => {
+    if (line.parentId !== parentId) return line;
+    const next = orderMap.get(line.id);
+    return next === undefined ? line : { ...line, sortOrder: next };
+  });
+}
+
+export function duplicateLineInTree(
+  lines: QuoteLineRow[],
+  lineId: string,
+): QuoteLineRow[] {
+  const source = lines.find((line) => line.id === lineId);
+  if (!source) return lines;
+  const siblings = lines.filter((line) => line.parentId === source.parentId);
+  const sortOrder =
+    siblings.length > 0
+      ? Math.max(...siblings.map((line) => line.sortOrder)) + 1
+      : 0;
+  const copy: QuoteLineRow = {
+    ...source,
+    id: crypto.randomUUID(),
+    title: source.title ? `${source.title} (kopie)` : "",
+    sortOrder,
+  };
+  return [...lines, copy];
 }

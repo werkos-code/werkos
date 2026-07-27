@@ -58,6 +58,7 @@ function mapIncomingLines(
     sortOrder: Number(line.sortOrder ?? index),
     title: String(line.title ?? ""),
     description: (line.description as string | null) ?? null,
+    lineType: (line.lineType as QuoteLineRow["lineType"]) ?? "article",
     quantity:
       line.quantity === null || line.quantity === undefined
         ? null
@@ -246,6 +247,7 @@ export async function POST(request: Request) {
       sort_order: line.sortOrder,
       title: line.title.trim(),
       description: line.description,
+      line_type: line.lineType ?? "article",
       quantity: line.quantity,
       unit: line.unit,
       unit_price_cents:
@@ -264,6 +266,7 @@ export async function POST(request: Request) {
         sort_order: lineRows.length,
         title: "Marge",
         description: null,
+        line_type: "article" as const,
         quantity: 1,
         unit: "post",
         unit_price_cents: totals.marginCents,

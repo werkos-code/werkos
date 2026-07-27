@@ -148,8 +148,9 @@
       width: 100%;
       min-width: 0;
       column-gap: 0.5rem;
+      /* drag/# · omschrijving · type · aantal · eenheid · prijs · korting · totaal · acties */
       grid-template-columns:
-        1.75rem minmax(10rem, 1fr) 4.5rem 5rem 4.5rem 5.5rem 4.5rem 5.5rem 6rem;
+        3rem minmax(10rem, 1fr) 6.5rem 4.5rem 4rem 5.5rem 5rem 5.5rem 5.5rem;
     }
 
     .quote-line-header {

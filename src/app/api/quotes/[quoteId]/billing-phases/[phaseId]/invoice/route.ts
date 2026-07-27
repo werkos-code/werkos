@@ -53,7 +53,7 @@ export async function POST(_request: Request, { params }: RouteParams) {
     const { data: lines } = await admin
       .from("quote_lines")
       .select(
-        "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, estimated_minutes",
+        "id, parent_id, sort_order, title, description, line_type, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, estimated_minutes",
       )
       .eq("organization_id", gate.organizationId)
       .eq("quote_id", quoteId);
@@ -72,6 +72,7 @@ export async function POST(_request: Request, { params }: RouteParams) {
       sortOrder: line.sort_order,
       title: line.title,
       description: line.description,
+      lineType: line.line_type ?? "article",
       quantity: line.quantity === null ? null : Number(line.quantity),
       unit: line.unit,
       unitPriceCents: line.unit_price_cents,

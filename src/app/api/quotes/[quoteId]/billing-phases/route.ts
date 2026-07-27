@@ -56,7 +56,7 @@ async function loadQuoteContext(organizationId: string, quoteId: string) {
     admin
       .from("quote_lines")
       .select(
-        "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, estimated_minutes",
+        "id, parent_id, sort_order, title, description, line_type, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, estimated_minutes",
       )
       .eq("organization_id", organizationId)
       .eq("quote_id", quoteId)
@@ -92,6 +92,7 @@ async function loadQuoteContext(organizationId: string, quoteId: string) {
     sortOrder: line.sort_order,
     title: line.title,
     description: line.description,
+    lineType: line.line_type ?? "article",
     quantity: line.quantity === null ? null : Number(line.quantity),
     unit: line.unit,
     unitPriceCents: line.unit_price_cents,

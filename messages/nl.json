@@ -946,6 +946,7 @@
       "externalNotes": "Tekst voor de klant",
       "internalNotes": "Interne notities",
       "lineTitle": "Omschrijving",
+      "type": "Type",
       "unit": "Eenheid",
       "quantity": "Aantal",
       "hours": "Uren",
@@ -954,6 +955,23 @@
       "discount": "Korting",
       "lineTotal": "Totaal"
     },
+    "lineTypes": {
+      "article": "Artikel",
+      "hours": "Uren",
+      "labor": "Arbeid",
+      "text": "Tekst",
+      "section": "Groep"
+    },
+    "toolbar": {
+      "copy": "Kopieer",
+      "delete": "Verwijder",
+      "recalculate": "Bereken prijzen"
+    },
+    "footer": {
+      "totalHours": "Totaal uren",
+      "totalMaterial": "Totaal materiaal"
+    },
+    "deleteSelectedConfirm": "{count, plural, one {1 geselecteerde regel verwijderen?} other {# geselecteerde regels verwijderen?}}",
     "totals": {
       "subtotal": "Subtotaal",
       "discount": "Korting",

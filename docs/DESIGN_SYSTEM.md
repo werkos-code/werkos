@@ -141,7 +141,7 @@ grid xl:[minmax(0,1fr)_20rem]
 | Rail-breedte | `20rem` sticky `top-20` |
 
 **Canonical:** `src/features/quotes/components/quote-editor.tsx`  
-Fase-0 / backlog: [`QUOTE_EDITOR_PHASE0.md`](./QUOTE_EDITOR_PHASE0.md), [`QUOTE_FINANCIAL_PLANNING.md`](./QUOTE_FINANCIAL_PLANNING.md)
+Fases: [`QUOTE_EDITOR_PHASE0.md`](./QUOTE_EDITOR_PHASE0.md), [`QUOTE_EDITOR_PHASE1.md`](./QUOTE_EDITOR_PHASE1.md), [`QUOTE_FINANCIAL_PLANNING.md`](./QUOTE_FINANCIAL_PLANNING.md)
 
 ### 4.6 Coming soon / stub
 

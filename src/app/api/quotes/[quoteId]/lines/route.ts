@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { QUOTE_LINE_TYPES } from "@/features/quotes/quotes-actions";
+import type { QuoteLineType } from "@/features/quotes/quotes-actions";
 import { isQuoteEditable } from "@/features/quotes/lib/quote-status";
 import { requireApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -30,6 +32,7 @@ function mapLineRow(row: {
   sort_order: number;
   title: string;
   description: string | null;
+  line_type: QuoteLineType;
   quantity: number | string | null;
   unit: string | null;
   unit_price_cents: number | null;
@@ -43,6 +46,7 @@ function mapLineRow(row: {
     sortOrder: row.sort_order,
     title: row.title,
     description: row.description,
+    lineType: row.line_type,
     quantity: row.quantity === null ? null : Number(row.quantity),
     unit: row.unit,
     unitPriceCents: row.unit_price_cents,
@@ -50,6 +54,16 @@ function mapLineRow(row: {
     discountCents: row.discount_cents,
     estimatedMinutes: row.estimated_minutes,
   };
+}
+
+const LINE_SELECT =
+  "id, parent_id, sort_order, title, description, line_type, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, estimated_minutes";
+
+function parseLineType(value: unknown): QuoteLineType | null {
+  if (typeof value !== "string") return null;
+  return QUOTE_LINE_TYPES.includes(value as QuoteLineType)
+    ? (value as QuoteLineType)
+    : null;
 }
 
 export async function POST(request: Request, { params }: RouteParams) {
@@ -68,6 +82,7 @@ export async function POST(request: Request, { params }: RouteParams) {
       parentId?: string | null;
       title?: string;
       description?: string | null;
+      lineType?: string;
       quantity?: number | null;
       unit?: string | null;
       unitPriceCents?: number | null;
@@ -77,6 +92,7 @@ export async function POST(request: Request, { params }: RouteParams) {
       sortOrder?: number;
     };
 
+    const lineType = parseLineType(body.lineType) ?? "article";
     const lineId = crypto.randomUUID();
 
     const { count } = await draft.admin
@@ -84,6 +100,9 @@ export async function POST(request: Request, { params }: RouteParams) {
       .select("id", { count: "exact", head: true })
       .eq("quote_id", quoteId)
       .eq("organization_id", gate.organizationId);
+
+    const isSection = lineType === "section";
+    const isText = lineType === "text";
 
     const insert = {
       id: lineId,
@@ -93,15 +112,34 @@ export async function POST(request: Request, { params }: RouteParams) {
       sort_order: body.sortOrder ?? count ?? 0,
       title: body.title?.trim() ?? "",
       description: body.description?.trim() || null,
-      quantity: body.quantity === undefined ? 1 : body.quantity,
-      unit: body.unit === undefined ? "st" : body.unit?.trim() || null,
+      line_type: lineType,
+      quantity:
+        body.quantity !== undefined
+          ? body.quantity
+          : isSection || isText
+            ? null
+            : 1,
+      unit:
+        body.unit !== undefined
+          ? body.unit?.trim() || null
+          : isSection || isText
+            ? null
+            : lineType === "hours" || lineType === "labor"
+              ? "uur"
+              : "st",
       unit_price_cents:
-        body.unitPriceCents === undefined ? 0 : body.unitPriceCents,
-      vat_rate_bps: body.vatRateBps ?? 2100,
+        body.unitPriceCents !== undefined
+          ? body.unitPriceCents
+          : isSection || isText
+            ? null
+            : 0,
+      vat_rate_bps: body.vatRateBps ?? (isText ? 0 : 2100),
       discount_cents: body.discountCents ?? 0,
       estimated_minutes:
         body.estimatedMinutes === undefined
-          ? null
+          ? lineType === "hours" || lineType === "labor"
+            ? 60
+            : null
           : body.estimatedMinutes === null ||
               Number.isNaN(body.estimatedMinutes)
             ? null
@@ -111,9 +149,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     const { data, error } = await draft.admin
       .from("quote_lines")
       .insert(insert)
-      .select(
-        "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, estimated_minutes",
-      )
+      .select(LINE_SELECT)
       .single();
 
     if (error || !data) {
@@ -147,6 +183,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       parentId?: string | null;
       title?: string;
       description?: string | null;
+      lineType?: string;
       quantity?: number | null;
       unit?: string | null;
       unitPriceCents?: number | null;
@@ -154,12 +191,40 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       discountCents?: number;
       estimatedMinutes?: number | null;
       sortOrder?: number;
+      /** Bulk reorder: [{ id, sortOrder, parentId? }] */
+      reorder?: Array<{
+        id: string;
+        sortOrder: number;
+        parentId?: string | null;
+      }>;
     };
+
+    if (body.reorder?.length) {
+      for (const item of body.reorder) {
+        const { error } = await draft.admin
+          .from("quote_lines")
+          .update({
+            sort_order: item.sortOrder,
+            ...(item.parentId !== undefined
+              ? { parent_id: item.parentId?.trim() || null }
+              : {}),
+          })
+          .eq("organization_id", gate.organizationId)
+          .eq("quote_id", quoteId)
+          .eq("id", item.id);
+        if (error) {
+          return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+      }
+      return NextResponse.json({ success: true });
+    }
 
     const lineId = body.id?.trim() ?? "";
     if (!lineId) {
       return NextResponse.json({ error: "invalid_input" }, { status: 400 });
     }
+
+    const parsedType = parseLineType(body.lineType);
 
     const { error } = await draft.admin
       .from("quote_lines")
@@ -171,6 +236,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
         ...(body.description !== undefined
           ? { description: body.description?.trim() || null }
           : {}),
+        ...(parsedType ? { line_type: parsedType } : {}),
         ...(body.quantity !== undefined
           ? {
               quantity:
@@ -241,7 +307,14 @@ export async function DELETE(request: Request, { params }: RouteParams) {
 
     const { searchParams } = new URL(request.url);
     const lineId = searchParams.get("id")?.trim() ?? "";
-    if (!lineId) {
+    const idsParam = searchParams.get("ids")?.trim() ?? "";
+    const ids = idsParam
+      ? idsParam.split(",").map((id) => id.trim()).filter(Boolean)
+      : lineId
+        ? [lineId]
+        : [];
+
+    if (ids.length === 0) {
       return NextResponse.json({ error: "invalid_input" }, { status: 400 });
     }
 
@@ -250,7 +323,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       .delete()
       .eq("organization_id", gate.organizationId)
       .eq("quote_id", quoteId)
-      .eq("id", lineId);
+      .in("id", ids);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

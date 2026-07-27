@@ -30,4 +30,5 @@ QuoteEditor
 
 ## Volgende fases
 
-Zie analyse in chat + `QUOTE_FINANCIAL_PLANNING.md` / `QUOTE_EDITOR_BACKLOG.md`.
+- [x] Fase 1 — regelwerkplaats → [`QUOTE_EDITOR_PHASE1.md`](./QUOTE_EDITOR_PHASE1.md)
+- Zie ook `QUOTE_FINANCIAL_PLANNING.md` / `QUOTE_EDITOR_BACKLOG.md`.

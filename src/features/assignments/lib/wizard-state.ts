@@ -101,7 +101,11 @@ function migrateV1Lines(raw: unknown): QuoteLineRow[] {
   return raw.map((entry, index) => {
     const line = entry as Record<string, unknown>;
     if ("parentId" in line) {
-      return line as QuoteLineRow;
+      const existing = line as QuoteLineRow;
+      return {
+        ...existing,
+        lineType: existing.lineType ?? "article",
+      };
     }
     return createQuoteLine({
       sortOrder: index,
@@ -110,6 +114,7 @@ function migrateV1Lines(raw: unknown): QuoteLineRow[] {
       unit: String(line.unit ?? "st"),
       unitPriceCents: Number(line.unitPriceCents ?? 0),
       vatRateBps: Number(line.vatRateBps ?? 2100),
+      lineType: "article",
     });
   });
 }

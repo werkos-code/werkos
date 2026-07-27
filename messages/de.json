@@ -946,6 +946,7 @@
       "externalNotes": "Text für den Kunden",
       "internalNotes": "Interne Notizen",
       "lineTitle": "Beschreibung",
+      "type": "Typ",
       "unit": "Einheit",
       "quantity": "Menge",
       "hours": "Stunden",
@@ -954,6 +955,23 @@
       "discount": "Rabatt",
       "lineTotal": "Gesamt"
     },
+    "lineTypes": {
+      "article": "Artikel",
+      "hours": "Stunden",
+      "labor": "Arbeit",
+      "text": "Text",
+      "section": "Gruppe"
+    },
+    "toolbar": {
+      "copy": "Kopieren",
+      "delete": "Löschen",
+      "recalculate": "Preise berechnen"
+    },
+    "footer": {
+      "totalHours": "Stunden gesamt",
+      "totalMaterial": "Material gesamt"
+    },
+    "deleteSelectedConfirm": "{count, plural, one {1 ausgewählte Position löschen?} other {# ausgewählte Positionen löschen?}}",
     "totals": {
       "subtotal": "Zwischensumme",
       "discount": "Rabatt",

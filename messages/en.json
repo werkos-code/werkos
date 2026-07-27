@@ -946,6 +946,7 @@
       "externalNotes": "Customer-facing notes",
       "internalNotes": "Internal notes",
       "lineTitle": "Description",
+      "type": "Type",
       "unit": "Unit",
       "quantity": "Quantity",
       "hours": "Hours",
@@ -954,6 +955,23 @@
       "discount": "Discount",
       "lineTotal": "Total"
     },
+    "lineTypes": {
+      "article": "Article",
+      "hours": "Hours",
+      "labor": "Labor",
+      "text": "Text",
+      "section": "Group"
+    },
+    "toolbar": {
+      "copy": "Copy",
+      "delete": "Delete",
+      "recalculate": "Recalculate prices"
+    },
+    "footer": {
+      "totalHours": "Total hours",
+      "totalMaterial": "Total materials"
+    },
+    "deleteSelectedConfirm": "{count, plural, one {Delete 1 selected line?} other {Delete # selected lines?}}",
     "totals": {
       "subtotal": "Subtotal",
       "discount": "Discount",
