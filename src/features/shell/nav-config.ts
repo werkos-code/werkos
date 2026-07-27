@@ -181,7 +181,7 @@ export const APP_NAV: ShellNavSection[] = [
   },
 ];
 
-export const NEW_REQUEST_HREF = "/aanvragen/nieuw" as const;
+export const NEW_REQUEST_HREF = "/opdrachten/nieuw" as const;
 
 export const PLATFORM_ADMIN_NAV: ShellNavSection = {
   id: "platform-admin",

@@ -15,7 +15,7 @@ Korte definities zodat product, design en engineering dezelfde taal spreken.
 | Klant (relatie) | Customer (record) | Opdrachtgever binnen een bedrijf |
 | Klant (gebruiker) | `customer` | Portaalgebruiker; mag bij meerdere bedrijven klant zijn |
 | Project | Project | Centrale operationele entiteit |
-| Nieuwe aanvraag | — | UI-filter/weergave, geen domeinstatus |
+| Nieuwe opdracht | — | Intake-wizard `/opdrachten/nieuw`, geen domeinstatus |
 | Voorbereiding … Archief | Project status | Domeinstatussen van een project |
 | Offerte | Quote | Voorstel (data); PDF is slechts weergave |
 | Offerteregel | Quote line | Onderdeel van een offerte; mag hiërarchisch zijn |

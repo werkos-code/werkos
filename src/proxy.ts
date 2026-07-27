@@ -40,6 +40,7 @@ const APP_SHELL_PREFIXES = [
   "/financien",
   "/instellingen",
   "/aanvragen",
+  "/opdrachten",
   "/platform",
 ] as const;
 
@@ -54,7 +55,8 @@ const LEGACY_REDIRECTS: Array<{ from: RegExp; to: string | ((match: RegExpMatchA
   { from: /^\/werk\/projecten\/offertes(.*)$/, to: "/offertes$1" },
   { from: /^\/werk\/projecten(.*)$/, to: "/projecten$1" },
   { from: /^\/werk\/planning(.*)$/, to: "/planning$1" },
-  { from: /^\/werk\/aanvragen(.*)$/, to: "/aanvragen$1" },
+  { from: /^\/werk\/aanvragen(.*)$/, to: "/opdrachten$1" },
+  { from: /^\/aanvragen(.*)$/, to: "/opdrachten$1" },
   { from: /^\/werk\/inbox(.*)$/, to: "/inbox$1" },
   { from: /^\/werk\/materiaal(.*)$/, to: "/materiaal$1" },
   { from: /^\/werk\/personen\/klanten(.*)$/, to: "/klanten$1" },

@@ -93,7 +93,7 @@ Na Phase 1 / Super Admin:
    `supabase/migrations/20260726180000_phase2_customers_projects.sql`
 3. Test:
    - Klanten → nieuwe klant
-   - Nieuwe aanvraag → project in Voorbereiding
+   - Nieuwe opdracht → intake-wizard op `/opdrachten/nieuw`
    - Projectdetail openen en status wijzigen
 
 ## 9. Phase 3 — Offertes

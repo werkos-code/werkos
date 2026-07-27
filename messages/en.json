@@ -133,7 +133,7 @@
     "adminDashboard": "Dashboard",
     "adminUsers": "Users",
     "adminAdministration": "Administration",
-    "newRequest": "New request",
+    "newRequest": "New assignment",
     "accountMenu": "Account menu",
     "back": "Back",
     "search": "Search",
@@ -197,8 +197,8 @@
         "description": "Inbox will be built in a later phase."
       },
       "newRequest": {
-        "title": "New request",
-        "description": "Start a new project in preparation."
+        "title": "New assignment",
+        "description": "Start a new assignment via the intake wizard."
       },
       "finance": {
         "title": "Finance",
@@ -322,15 +322,121 @@
       "actions": "Actions"
     }
   },
+  "assignment": {
+    "pageTitle": "New assignment",
+    "progressLabel": "Progress",
+    "steps": {
+      "gegevens": "Details",
+      "aanvraag": "Request",
+      "calculatie": "Estimate",
+      "afronden": "Finish"
+    },
+    "back": "Back",
+    "next": "Next",
+    "openProject": "Open project",
+    "autosaveHint": "Your progress is saved automatically on this device.",
+    "errors": {
+      "nameRequired": "Enter a name.",
+      "projectNameRequired": "Enter a project name."
+    },
+    "gegevens": {
+      "title": "Who is contacting you?",
+      "subtitle": "Search for an existing customer or add a new contact.",
+      "searchLabel": "Search existing customer",
+      "searchPlaceholder": "Type a name, phone or email…",
+      "searching": "Searching…",
+      "existingSelected": "Existing customer selected",
+      "newCustomerHint": "Not found? Fill in the details below — we'll create a new customer.",
+      "name": "Name",
+      "namePlaceholder": "e.g. John Smith",
+      "company": "Company",
+      "companyPlaceholder": "Optional",
+      "phone": "Phone",
+      "phonePlaceholder": "Phone number",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "address": "Address",
+      "addressPlaceholder": "Street, city"
+    },
+    "aanvraag": {
+      "title": "What is the job about?",
+      "subtitle": "Briefly describe the work. This becomes the basis of the project.",
+      "projectType": "Project type",
+      "projectTypePlaceholder": "e.g. Roof renovation",
+      "projectName": "Project name",
+      "projectNamePlaceholder": "e.g. Roof renovation - Smith family",
+      "projectNameHint": "Suggested automatically from type and customer.",
+      "location": "Work location",
+      "locationPlaceholder": "Address or location description",
+      "description": "Customer wishes",
+      "descriptionPlaceholder": "What does the customer want?",
+      "particulars": "Particulars",
+      "particularsPlaceholder": "Access, planning, material choices…",
+      "internalNotes": "Internal notes",
+      "internalNotesPlaceholder": "Visible to your team only"
+    },
+    "calculatie": {
+      "title": "Estimate & pricing",
+      "subtitle": "Build a first price breakdown. A draft quote is created automatically.",
+      "empty": "No estimate lines yet. Add labour, materials or work items.",
+      "addLine": "Add line",
+      "removeLine": "Remove",
+      "linePlaceholder": "Description",
+      "columns": {
+        "description": "Description",
+        "unit": "Unit",
+        "qty": "Qty",
+        "price": "Price",
+        "total": "Total"
+      },
+      "totalsTitle": "Price indication",
+      "subtotal": "Subtotal excl. VAT",
+      "margin": "Margin %",
+      "marginAmount": "Margin",
+      "vat": "VAT",
+      "total": "Total incl. VAT",
+      "futureTitle": "Coming soon",
+      "futureHint": "Catalog materials, hours, work items and templates will land here — architecture is ready."
+    },
+    "afronden": {
+      "title": "Ready to start",
+      "subtitle": "Review the details. We'll create the project, quote and timeline.",
+      "checks": {
+        "customer": "Customer",
+        "request": "Request",
+        "calculation": "Estimate",
+        "quote": "Quote created"
+      },
+      "sections": {
+        "customer": "Customer",
+        "request": "Request",
+        "calculation": "Estimate"
+      },
+      "fields": {
+        "customer": "Customer",
+        "contact": "Contact person",
+        "phone": "Phone",
+        "email": "Email",
+        "projectName": "Project",
+        "projectType": "Type",
+        "location": "Location",
+        "lines": "Lines",
+        "lineCount": "{count, plural, =0 {No lines} one {1 line} other {# lines}}",
+        "totalExcl": "Total excl. VAT",
+        "totalIncl": "Total incl. VAT"
+      },
+      "createHint": "The project is created in preparation with a draft quote and filled activity timeline."
+    }
+  },
   "projects": {
     "title": "All projects",
     "description": "Which projects are you working on?",
-    "newRequest": "New request",
-    "newTitle": "New request",
-    "newDescription": "Creates a project in Preparation.",
+    "newRequest": "New assignment",
+    "newTitle": "New assignment",
+    "newDescription": "Intake wizard: from first contact to quote.",
     "detailDescription": "Main workspace for this project.",
     "empty": "No projects in this view.",
-    "create": "Start request",
+    "create": "Start assignment",
     "save": "Save",
     "nameRequired": "Enter a project name.",
     "customerRequired": "Choose a client.",
@@ -338,7 +444,7 @@
     "createCustomerFirst": "Create a new customer",
     "customerPlaceholder": "Choose a client",
     "filters": {
-      "new_requests": "New requests",
+      "new_requests": "New assignments",
       "active": "Active",
       "completed": "Completed",
       "archived": "Archive",
@@ -405,7 +511,7 @@
     "stats": {
       "total": "Total projects",
       "totalHint": "In your company",
-      "newRequests": "New requests",
+      "newRequests": "New assignments",
       "newRequestsHint": "In preparation",
       "active": "Active projects",
       "activeHint": "In execution",

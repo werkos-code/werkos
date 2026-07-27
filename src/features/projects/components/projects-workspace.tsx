@@ -198,7 +198,7 @@ export function ProjectsWorkspace({
             {t("actions.saveFilters")}
           </Button>
           <Button type="button" size="sm" asChild>
-            <Link href="/aanvragen/nieuw">
+            <Link href="/opdrachten/nieuw">
               <Plus className="size-3.5" />
               {t("newRequest")}
             </Link>

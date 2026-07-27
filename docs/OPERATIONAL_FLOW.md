@@ -52,27 +52,23 @@ Afgerond
 Archief
 ```
 
-**Nieuwe aanvraag** is geen aparte status.
+**Nieuwe opdracht** is geen aparte status.
 
-Het is een **UI-label / filter** voor projecten in Voorbereiding (bijvoorbeeld zonder geaccepteerde offerte).
+Het is de **hoofd-CTA** (intake-wizard op `/opdrachten/nieuw`) en een **UI-filter** voor projecten in Voorbereiding.
 
-Zo voelt het voor de ondernemer als een aanvraag, terwijl technisch hetzelfde project doorloopt.
+Zie `docs/NEW_ASSIGNMENT_FLOW.md` voor de volledige wizard-flow.
 
 ---
 
-# Voorbereiding (en de weergave “Nieuwe aanvraag”)
+# Voorbereiding (en de weergave “Nieuwe opdrachten”)
 
-Een project ontstaat zodra de ondernemer begint met een klantaanvraag.
+Een project ontstaat via de wizard **Nieuwe opdracht** — niet meer als leeg project, maar met klant, intake, conceptofferte en tijdlijn.
 
-Technisch bestaat het project dus direct.
+Technisch bestaat het project direct na afronden van de wizard.
 
 De status is **Voorbereiding**.
 
-Voor de ondernemer voelt dit vaak nog niet als “het project”.
-
-Daarom kan WerkOS deze projecten tonen als:
-
-**Nieuwe aanvraag**
+Op de projectenlijst worden deze getoond als filter **Nieuwe opdrachten**.
 
 Binnen deze fase bevinden zich onder andere:
 

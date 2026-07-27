@@ -133,7 +133,7 @@
     "adminDashboard": "Dashboard",
     "adminUsers": "Gebruikers",
     "adminAdministration": "Administratie",
-    "newRequest": "Nieuwe aanvraag",
+    "newRequest": "Nieuwe opdracht",
     "accountMenu": "Accountmenu",
     "back": "Terug",
     "search": "Zoeken",
@@ -146,7 +146,7 @@
       },
       "allProjects": {
         "title": "Alle projecten",
-        "description": "Overzicht van je projecten en nieuwe aanvragen."
+        "description": "Overzicht van je projecten en nieuwe opdrachten."
       },
       "quotes": {
         "title": "Offertes",
@@ -197,8 +197,8 @@
         "description": "Inbox wordt gebouwd in een volgende fase."
       },
       "newRequest": {
-        "title": "Nieuwe aanvraag",
-        "description": "Start een nieuw project in voorbereiding."
+        "title": "Nieuwe opdracht",
+        "description": "Start een nieuwe opdracht via de intake-wizard."
       },
       "finance": {
         "title": "Financiën",
@@ -322,15 +322,121 @@
       "actions": "Acties"
     }
   },
+  "assignment": {
+    "pageTitle": "Nieuwe opdracht",
+    "progressLabel": "Voortgang",
+    "steps": {
+      "gegevens": "Gegevens",
+      "aanvraag": "Aanvraag",
+      "calculatie": "Calculatie",
+      "afronden": "Afronden"
+    },
+    "back": "Terug",
+    "next": "Volgende",
+    "openProject": "Project openen",
+    "autosaveHint": "Je voortgang wordt automatisch bewaard op dit apparaat.",
+    "errors": {
+      "nameRequired": "Vul minimaal een naam in.",
+      "projectNameRequired": "Vul een projectnaam in."
+    },
+    "gegevens": {
+      "title": "Wie neemt contact op?",
+      "subtitle": "Zoek een bestaande klant of leg een nieuwe contactpersoon vast.",
+      "searchLabel": "Bestaande klant zoeken",
+      "searchPlaceholder": "Typ een naam, telefoon of e-mail…",
+      "searching": "Zoeken…",
+      "existingSelected": "Bestaande klant geselecteerd",
+      "newCustomerHint": "Niet gevonden? Vul de gegevens hieronder in — we maken een nieuwe klant aan.",
+      "name": "Naam",
+      "namePlaceholder": "Bijv. Jan Jansen",
+      "company": "Bedrijfsnaam",
+      "companyPlaceholder": "Optioneel",
+      "phone": "Telefoon",
+      "phonePlaceholder": "06 …",
+      "email": "E-mail",
+      "emailPlaceholder": "naam@voorbeeld.nl",
+      "address": "Adres",
+      "addressPlaceholder": "Straat, plaats"
+    },
+    "aanvraag": {
+      "title": "Waar gaat de opdracht over?",
+      "subtitle": "Beschrijf kort de klus. Dit wordt de basis van het project.",
+      "projectType": "Soort project",
+      "projectTypePlaceholder": "Bijv. Dakrenovatie",
+      "projectName": "Projectnaam",
+      "projectNamePlaceholder": "Bijv. Dakrenovatie - Familie Jansen",
+      "projectNameHint": "Wordt automatisch voorgesteld op basis van soort en klant.",
+      "location": "Locatie werkzaamheden",
+      "locationPlaceholder": "Adres of omschrijving van de locatie",
+      "description": "Wensen van de klant",
+      "descriptionPlaceholder": "Wat wil de klant? Wat moet er gebeuren?",
+      "particulars": "Bijzonderheden",
+      "particularsPlaceholder": "Bereikbaarheid, planning, materiaalkeuzes…",
+      "internalNotes": "Interne notities",
+      "internalNotesPlaceholder": "Alleen zichtbaar voor je team"
+    },
+    "calculatie": {
+      "title": "Calculatie & prijsindicatie",
+      "subtitle": "Bouw een eerste prijsopbouw. Hieruit ontstaat automatisch een conceptofferte.",
+      "empty": "Nog geen calculatieregels. Voeg werkzaamheden, materiaal of arbeid toe.",
+      "addLine": "Regel toevoegen",
+      "removeLine": "Verwijderen",
+      "linePlaceholder": "Omschrijving",
+      "columns": {
+        "description": "Omschrijving",
+        "unit": "Eenheid",
+        "qty": "Aantal",
+        "price": "Prijs",
+        "total": "Totaal"
+      },
+      "totalsTitle": "Prijsindicatie",
+      "subtotal": "Subtotaal excl. btw",
+      "margin": "Marge %",
+      "marginAmount": "Marge",
+      "vat": "Btw",
+      "total": "Totaal incl. btw",
+      "futureTitle": "Straks slimmer",
+      "futureHint": "Materiaal uit catalogus, uren, werkzaamheden en sjablonen komen hier — de architectuur is hierop voorbereid."
+    },
+    "afronden": {
+      "title": "Klaar om te starten",
+      "subtitle": "Controleer de gegevens. Daarna maken we het project, de offerte en de tijdlijn aan.",
+      "checks": {
+        "customer": "Klant",
+        "request": "Aanvraag",
+        "calculation": "Calculatie",
+        "quote": "Offerte aangemaakt"
+      },
+      "sections": {
+        "customer": "Klant",
+        "request": "Aanvraag",
+        "calculation": "Calculatie"
+      },
+      "fields": {
+        "customer": "Opdrachtgever",
+        "contact": "Contactpersoon",
+        "phone": "Telefoon",
+        "email": "E-mail",
+        "projectName": "Project",
+        "projectType": "Soort",
+        "location": "Locatie",
+        "lines": "Regels",
+        "lineCount": "{count, plural, =0 {Geen regels} one {1 regel} other {# regels}}",
+        "totalExcl": "Totaal excl. btw",
+        "totalIncl": "Totaal incl. btw"
+      },
+      "createHint": "Het project wordt aangemaakt in Voorbereiding met een conceptofferte en een gevulde activiteitentijdlijn."
+    }
+  },
   "projects": {
     "title": "Alle projecten",
     "description": "Aan welke projecten werk je?",
-    "newRequest": "Nieuwe aanvraag",
-    "newTitle": "Nieuwe aanvraag",
-    "newDescription": "Maakt een project aan in Voorbereiding.",
+    "newRequest": "Nieuwe opdracht",
+    "newTitle": "Nieuwe opdracht",
+    "newDescription": "Intake-wizard: van eerste contact naar offerte.",
     "detailDescription": "Hoofdwerkruimte van dit project.",
     "empty": "Geen projecten in deze weergave.",
-    "create": "Aanvraag starten",
+    "create": "Opdracht starten",
     "save": "Opslaan",
     "nameRequired": "Vul een projectnaam in.",
     "customerRequired": "Kies een opdrachtgever.",
@@ -338,7 +444,7 @@
     "createCustomerFirst": "Nieuwe klant aanmaken",
     "customerPlaceholder": "Kies een opdrachtgever",
     "filters": {
-      "new_requests": "Nieuwe aanvragen",
+      "new_requests": "Nieuwe opdrachten",
       "active": "Lopend",
       "completed": "Afgerond",
       "archived": "Archief",
@@ -392,7 +498,7 @@
       "quotes": "Offertes",
       "invoices": "Facturen"
     },
-    "pageSubtitle": "Overzicht van al je projecten en aanvragen",
+    "pageSubtitle": "Overzicht van al je projecten en opdrachten",
     "searchPlaceholder": "Zoek op projectnaam, klant of referentie...",
     "selectPage": "Selecteer alle op deze pagina",
     "selectedCount": "{count} geselecteerd",
@@ -405,7 +511,7 @@
     "stats": {
       "total": "Totaal projecten",
       "totalHint": "In je bedrijf",
-      "newRequests": "Nieuwe aanvragen",
+      "newRequests": "Nieuwe opdrachten",
       "newRequestsHint": "In voorbereiding",
       "active": "Lopende projecten",
       "activeHint": "In uitvoering",

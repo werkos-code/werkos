@@ -6,7 +6,7 @@
 
 ## Bewust wél in v1
 
-- Header + primaire CTA “Nieuwe aanvraag”
+- Header + primaire CTA “Nieuwe opdracht”
 - KPI-kaarten op **echte** projectcounts (totaal, voorbereiding, lopend, afgerond deze maand)
 - Zoeken op projectnaam / klant (client)
 - Statusfilter (domain-statussen) + klantfilter

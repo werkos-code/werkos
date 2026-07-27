@@ -133,7 +133,7 @@
     "adminDashboard": "Dashboard",
     "adminUsers": "Benutzer",
     "adminAdministration": "Administration",
-    "newRequest": "Neue Anfrage",
+    "newRequest": "Neuer Auftrag",
     "accountMenu": "Konto-Menü",
     "back": "Zurück",
     "search": "Suchen",
@@ -197,8 +197,8 @@
         "description": "Posteingang wird in einer späteren Phase gebaut."
       },
       "newRequest": {
-        "title": "Neue Anfrage",
-        "description": "Starte ein neues Projekt in Vorbereitung."
+        "title": "Neuer Auftrag",
+        "description": "Neuen Auftrag über den Intake-Assistenten starten."
       },
       "finance": {
         "title": "Finanzen",
@@ -322,15 +322,121 @@
       "actions": "Aktionen"
     }
   },
+  "assignment": {
+    "pageTitle": "Neuer Auftrag",
+    "progressLabel": "Fortschritt",
+    "steps": {
+      "gegevens": "Daten",
+      "aanvraag": "Anfrage",
+      "calculatie": "Kalkulation",
+      "afronden": "Abschluss"
+    },
+    "back": "Zurück",
+    "next": "Weiter",
+    "openProject": "Projekt öffnen",
+    "autosaveHint": "Dein Fortschritt wird auf diesem Gerät automatisch gespeichert.",
+    "errors": {
+      "nameRequired": "Bitte einen Namen eingeben.",
+      "projectNameRequired": "Bitte einen Projektnamen eingeben."
+    },
+    "gegevens": {
+      "title": "Wer meldet sich?",
+      "subtitle": "Bestehenden Kunden suchen oder neuen Kontakt erfassen.",
+      "searchLabel": "Bestehenden Kunden suchen",
+      "searchPlaceholder": "Name, Telefon oder E-Mail eingeben…",
+      "searching": "Suche…",
+      "existingSelected": "Bestehender Kunde ausgewählt",
+      "newCustomerHint": "Nicht gefunden? Daten unten ausfüllen — wir legen einen neuen Kunden an.",
+      "name": "Name",
+      "namePlaceholder": "z. B. Max Mustermann",
+      "company": "Firma",
+      "companyPlaceholder": "Optional",
+      "phone": "Telefon",
+      "phonePlaceholder": "Telefonnummer",
+      "email": "E-Mail",
+      "emailPlaceholder": "name@beispiel.de",
+      "address": "Adresse",
+      "addressPlaceholder": "Straße, Ort"
+    },
+    "aanvraag": {
+      "title": "Worum geht der Auftrag?",
+      "subtitle": "Kurz beschreiben. Das wird die Basis des Projekts.",
+      "projectType": "Projektart",
+      "projectTypePlaceholder": "z. B. Dachsanierung",
+      "projectName": "Projektname",
+      "projectNamePlaceholder": "z. B. Dachsanierung - Familie Meyer",
+      "projectNameHint": "Wird automatisch aus Art und Kunde vorgeschlagen.",
+      "location": "Einsatzort",
+      "locationPlaceholder": "Adresse oder Ortsbeschreibung",
+      "description": "Kundenwünsche",
+      "descriptionPlaceholder": "Was soll erledigt werden?",
+      "particulars": "Besonderheiten",
+      "particularsPlaceholder": "Zugang, Planung, Material…",
+      "internalNotes": "Interne Notizen",
+      "internalNotesPlaceholder": "Nur für dein Team sichtbar"
+    },
+    "calculatie": {
+      "title": "Kalkulation & Preisindikation",
+      "subtitle": "Erste Preisstruktur aufbauen. Daraus entsteht automatisch ein Angebotsentwurf.",
+      "empty": "Noch keine Kalkulationszeilen. Arbeit, Material oder Leistungen hinzufügen.",
+      "addLine": "Zeile hinzufügen",
+      "removeLine": "Entfernen",
+      "linePlaceholder": "Beschreibung",
+      "columns": {
+        "description": "Beschreibung",
+        "unit": "Einheit",
+        "qty": "Menge",
+        "price": "Preis",
+        "total": "Gesamt"
+      },
+      "totalsTitle": "Preisindikation",
+      "subtotal": "Zwischensumme zzgl. MwSt.",
+      "margin": "Marge %",
+      "marginAmount": "Marge",
+      "vat": "MwSt.",
+      "total": "Gesamt inkl. MwSt.",
+      "futureTitle": "Demnächst",
+      "futureHint": "Katalogmaterial, Stunden, Leistungen und Vorlagen folgen — die Architektur ist vorbereitet."
+    },
+    "afronden": {
+      "title": "Bereit zum Start",
+      "subtitle": "Daten prüfen. Danach erstellen wir Projekt, Angebot und Zeitachse.",
+      "checks": {
+        "customer": "Kunde",
+        "request": "Anfrage",
+        "calculation": "Kalkulation",
+        "quote": "Angebot erstellt"
+      },
+      "sections": {
+        "customer": "Kunde",
+        "request": "Anfrage",
+        "calculation": "Kalkulation"
+      },
+      "fields": {
+        "customer": "Auftraggeber",
+        "contact": "Ansprechpartner",
+        "phone": "Telefon",
+        "email": "E-Mail",
+        "projectName": "Projekt",
+        "projectType": "Art",
+        "location": "Ort",
+        "lines": "Zeilen",
+        "lineCount": "{count, plural, =0 {Keine Zeilen} one {1 Zeile} other {# Zeilen}}",
+        "totalExcl": "Gesamt zzgl. MwSt.",
+        "totalIncl": "Gesamt inkl. MwSt."
+      },
+      "createHint": "Das Projekt wird in Vorbereitung mit Angebotsentwurf und gefüllter Aktivitätszeitachse angelegt."
+    }
+  },
   "projects": {
     "title": "Alle Projekte",
     "description": "An welchen Projekten arbeitest du?",
-    "newRequest": "Neue Anfrage",
-    "newTitle": "Neue Anfrage",
-    "newDescription": "Erstellt ein Projekt in Vorbereitung.",
+    "newRequest": "Neuer Auftrag",
+    "newTitle": "Neuer Auftrag",
+    "newDescription": "Intake-Assistent: vom Erstkontakt zum Angebot.",
     "detailDescription": "Hauptarbeitsbereich dieses Projekts.",
     "empty": "Keine Projekte in dieser Ansicht.",
-    "create": "Anfrage starten",
+    "create": "Auftrag starten",
     "save": "Speichern",
     "nameRequired": "Gib einen Projektnamen ein.",
     "customerRequired": "Wähle einen Auftraggeber.",
@@ -338,7 +444,7 @@
     "createCustomerFirst": "Neuen Kunden anlegen",
     "customerPlaceholder": "Auftraggeber wählen",
     "filters": {
-      "new_requests": "Neue Anfragen",
+      "new_requests": "Neue Aufträge",
       "active": "Laufend",
       "completed": "Abgeschlossen",
       "archived": "Archiv",
@@ -405,7 +511,7 @@
     "stats": {
       "total": "Projekte gesamt",
       "totalHint": "In deinem Unternehmen",
-      "newRequests": "Neue Anfragen",
+      "newRequests": "Neue Aufträge",
       "newRequestsHint": "In Vorbereitung",
       "active": "Laufende Projekte",
       "activeHint": "In Ausführung",
