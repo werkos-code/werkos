@@ -49,8 +49,12 @@ export type QuoteDetail = {
   quoteNumber: string | null;
   projectId: string;
   projectName: string;
+  organizationName: string | null;
   customerId: string | null;
   customerName: string | null;
+  customerEmail: string | null;
+  customerPhone: string | null;
+  customerAddress: string | null;
   validUntil: string | null;
   paymentTermsDays: number | null;
   paymentConditions: string | null;

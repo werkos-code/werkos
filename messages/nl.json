@@ -900,6 +900,20 @@
       "paymentConditions": "Bijv. 50% bij opdracht, rest na oplevering…"
     },
     "paymentTermsDaysOption": "{days, plural, =0 {Direct} one {# dag} other {# dagen}}",
+    "preview": {
+      "pageTitle": "Offertevoorbeeld",
+      "documentLabel": "Offerte",
+      "customer": "Klant",
+      "project": "Project",
+      "hint": "Controleer het voorbeeld. Gebruik Afdrukken / PDF om via de browser op te slaan of te printen.",
+      "print": "Afdrukken / PDF",
+      "organizationFallback": "Jouw bedrijf",
+      "footer": "Offerte gegenereerd via WerkOS · {organization}"
+    },
+    "send": {
+      "openMailConfirm": "Offerte gemarkeerd als verstuurd. E-mail naar de klant openen?",
+      "mailBody": "Beste relatie,\n\nHierbij de offerte {number} — {title}.\n\nMet vriendelijke groet"
+    },
     "stubs": {
       "more": "Meer acties volgen later",
       "preview": "Voorbeeld volgt later",

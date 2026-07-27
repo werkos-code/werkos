@@ -241,6 +241,24 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
         return;
       }
       setStatusState(next);
+      if (next === "sent" && quote.customerEmail?.trim()) {
+        const openMail = window.confirm(t("send.openMailConfirm"));
+        if (openMail) {
+          const subject = encodeURIComponent(
+            `${t("preview.documentLabel")} ${quote.quoteNumber ?? quote.title}`,
+          );
+          const body = encodeURIComponent(
+            t("send.mailBody", {
+              title: quote.title,
+              number: quote.quoteNumber ?? "—",
+            }),
+          );
+          window.open(
+            `mailto:${quote.customerEmail.trim()}?subject=${subject}&body=${body}`,
+            "_blank",
+          );
+        }
+      }
       router.refresh();
     } catch {
       setError(tCommon("error"));
@@ -564,15 +582,14 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
             {t("actions.menu")}
             <Ellipsis className="size-4" />
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            disabled
-            title={t("stubs.preview")}
-          >
-            <Eye className="size-3.5" />
-            {t("actions.preview")}
+          <Button type="button" variant="outline" size="sm" asChild>
+            <Link
+              href={`/projecten/${quote.projectId}/offertes/${quote.id}/voorbeeld`}
+              target="_blank"
+            >
+              <Eye className="size-3.5" />
+              {t("actions.preview")}
+            </Link>
           </Button>
           {editable ? (
             <Button

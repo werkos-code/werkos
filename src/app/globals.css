@@ -191,3 +191,27 @@
     }
   }
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+  }
+
+  /* Hide app chrome while printing the quote preview */
+  [data-slot="sidebar"],
+  [data-slot="sidebar-gap"],
+  [data-slot="sidebar-container"],
+  header.sticky {
+    display: none !important;
+  }
+
+  .quote-preview-document {
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+}

@@ -900,6 +900,20 @@
       "paymentConditions": "Z. B. 50 % bei Auftrag, Rest nach Fertigstellung…"
     },
     "paymentTermsDaysOption": "{days, plural, =0 {Sofort} one {# Tag} other {# Tage}}",
+    "preview": {
+      "pageTitle": "Angebotsvorschau",
+      "documentLabel": "Angebot",
+      "customer": "Kunde",
+      "project": "Projekt",
+      "hint": "Prüfe die Vorschau. Mit Drucken / PDF speicherst oder druckst du über den Browser.",
+      "print": "Drucken / PDF",
+      "organizationFallback": "Dein Unternehmen",
+      "footer": "Angebot erstellt mit WerkOS · {organization}"
+    },
+    "send": {
+      "openMailConfirm": "Angebot als gesendet markiert. E-Mail an den Kunden öffnen?",
+      "mailBody": "Guten Tag,\n\nanbei Angebot {number} — {title}.\n\nFreundliche Grüße"
+    },
     "stubs": {
       "more": "Weitere Aktionen folgen später",
       "preview": "Vorschau folgt später",

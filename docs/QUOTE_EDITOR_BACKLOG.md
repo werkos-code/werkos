@@ -16,7 +16,7 @@
 | Feature | UI nu | Nodig om te activeren |
 | --- | --- | --- |
 | Offertenummer (`OFF-…`) | Meta-kaart + header | ✅ `OFF-YYYY-NNNN` via DB-trigger |
-| Voorbeeld (preview) | Disabled knop in editor-header | PDF/online representatie (domain: aparte weergave, bron = offerte) |
+| Voorbeeld (preview) | Voorbeeldpagina + Afdrukken/PDF | ✅ Fase 4 (browser-PDF; geen server-PDF) |
 | Meer-opties `⋯` | Disabled | Dupliceren, annuleren-shortcuts, export, … |
 | Tekstregel | Type `text` in type-select | ✅ Fase 1 (`line_type`) |
 | Korting (regel- of offerte-niveau in toolbar) | Regel-korting in kolom; offerte-niveau later | Eventueel quote-level `discount`; toolbar-actie |
@@ -43,7 +43,7 @@
 ## Afvinklijst (voor latere sprints)
 
 - [x] Offertenummer (`OFF-YYYY-NNNN`)
-- [ ] Voorbeeld / PDF of online preview (fase 4)
+- [x] Voorbeeld / PDF of online preview (fase 4 — browser print)
 - [ ] Header `⋯` acties (o.a. dupliceren)
 - [x] Tekstregel (`line_type = text`)
 - [ ] Toolbar-korting (offerte-niveau)
@@ -55,3 +55,5 @@
 - [x] Betaaltermijn + betalingsvoorwaarden (fase 3)
 - [ ] Sneltoetsen
 - [x] Catalogus / Bereken prijzen (fase 2)
+- [ ] Echte e-mailprovider / publieke klantlink
+- [ ] Org-briefpapier (KvK, logo, adres)

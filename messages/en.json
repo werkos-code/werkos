@@ -900,6 +900,20 @@
       "paymentConditions": "E.g. 50% on order, remainder on completion…"
     },
     "paymentTermsDaysOption": "{days, plural, =0 {Due immediately} one {# day} other {# days}}",
+    "preview": {
+      "pageTitle": "Quote preview",
+      "documentLabel": "Quote",
+      "customer": "Customer",
+      "project": "Project",
+      "hint": "Review the preview. Use Print / PDF to save or print from the browser.",
+      "print": "Print / PDF",
+      "organizationFallback": "Your company",
+      "footer": "Quote generated with WerkOS · {organization}"
+    },
+    "send": {
+      "openMailConfirm": "Quote marked as sent. Open an email to the customer?",
+      "mailBody": "Hello,\n\nPlease find quote {number} — {title}.\n\nKind regards"
+    },
     "stubs": {
       "more": "More actions coming later",
       "preview": "Preview coming later",

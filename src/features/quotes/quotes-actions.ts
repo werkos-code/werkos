@@ -134,16 +134,28 @@ export async function getQuote(quoteId: string): Promise<{
 
   if (linesError) return { error: linesError.message };
 
+  const { data: organization } = await ctx.supabase
+    .from("organizations")
+    .select("name")
+    .eq("id", ctx.organizationId)
+    .maybeSingle();
+
   let customerName: string | null = null;
+  let customerEmail: string | null = null;
+  let customerPhone: string | null = null;
+  let customerAddress: string | null = null;
   let customerId: string | null = project?.customer_id ?? null;
   if (customerId) {
     const { data: customer } = await ctx.supabase
       .from("customers")
-      .select("id, name")
+      .select("id, name, email, phone, address")
       .eq("organization_id", ctx.organizationId)
       .eq("id", customerId)
       .maybeSingle();
     customerName = customer?.name ?? null;
+    customerEmail = customer?.email ?? null;
+    customerPhone = customer?.phone ?? null;
+    customerAddress = customer?.address ?? null;
   }
 
   return {
@@ -154,8 +166,12 @@ export async function getQuote(quoteId: string): Promise<{
       quoteNumber: quote.quote_number,
       projectId: quote.project_id,
       projectName: project?.name ?? "—",
+      organizationName: organization?.name ?? null,
       customerId,
       customerName,
+      customerEmail,
+      customerPhone,
+      customerAddress,
       validUntil: quote.valid_until,
       paymentTermsDays: quote.payment_terms_days,
       paymentConditions: quote.payment_conditions,

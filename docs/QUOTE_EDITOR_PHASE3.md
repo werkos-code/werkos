@@ -18,6 +18,6 @@ Run SQL in Supabase:
 
 ## Volgende (fase 4)
 
-- PDF / voorbeeld / versturen
+- [x] PDF / voorbeeld / versturen → [`QUOTE_EDITOR_PHASE4.md`](./QUOTE_EDITOR_PHASE4.md)
 - Org-defaults voor betaaltermijn
 - Voorwaarden-catalogus (optioneel)

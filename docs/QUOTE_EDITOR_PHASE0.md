@@ -33,4 +33,5 @@ QuoteEditor
 - [x] Fase 1 — regelwerkplaats → [`QUOTE_EDITOR_PHASE1.md`](./QUOTE_EDITOR_PHASE1.md)
 - [x] Fase 2 — catalogus & marge → [`QUOTE_EDITOR_PHASE2.md`](./QUOTE_EDITOR_PHASE2.md)
 - [x] Fase 3 — betaaltermijn & voorwaarden → [`QUOTE_EDITOR_PHASE3.md`](./QUOTE_EDITOR_PHASE3.md)
+- [x] Fase 4 — voorbeeld / versturen → [`QUOTE_EDITOR_PHASE4.md`](./QUOTE_EDITOR_PHASE4.md)
 - Zie ook `QUOTE_FINANCIAL_PLANNING.md` / `QUOTE_EDITOR_BACKLOG.md`.
