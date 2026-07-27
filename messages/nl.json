@@ -980,6 +980,19 @@
       "attachmentsSoon": "Bestanden volgen bij de Bestanden-module.",
       "openFull": "Werkbon openen"
     },
+    "materials": {
+      "title": "Materiaal",
+      "hint": "Koppel werkzaamheden om begroot en werkelijk materiaal op deze werkbon te zien.",
+      "noLinks": "Nog geen werkzaamheden gekoppeld.",
+      "pickWorkItem": "Kies werkzaamheid…",
+      "link": "Koppelen",
+      "loading": "Laden…",
+      "empty": "Nog geen materiaal op gekoppelde werkzaamheden.",
+      "kinds": {
+        "planned": "Begroot",
+        "usage": "Verbruik"
+      }
+    },
     "form": {
       "createTitle": "Nieuwe werkbon",
       "title": "Titel",
@@ -1119,6 +1132,7 @@
       "delete": "Verwijderen",
       "deleteConfirm": "Artikel “{name}” verwijderen?",
       "search": "Zoek artikelen…",
+      "barcodeScan": "Barcode scannen…",
       "activeOnly": "Alleen actief",
       "empty": "Nog geen artikelen. Voeg je catalogus toe.",
       "kpiTotal": "Totaal",
@@ -1303,7 +1317,11 @@
       "addPlan": "Regel toevoegen",
       "addUsage": "Verbruik boeken",
       "deductStock": "Aftrekken van voorraad",
+      "reserve": "Reserveren",
+      "reserveTitle": "Voorraad reserveren voor planregel",
+      "reserveConfirm": "Reserveren",
       "loading": "Laden…",
+      "lineStatus": "Verwacht {expected} · gereserveerd {reserved} · werkelijk {actual}",
       "expectedVsActual": "Verwacht {expected} · werkelijk {actual}",
       "fields": {
         "title": "Omschrijving",
@@ -1316,7 +1334,9 @@
         "usageRequired": "Omschrijving en aantal zijn verplicht.",
         "stockArticleRequired": "Voorraad-aftrek vereist een voorraadplichtig artikel.",
         "locationRequired": "Kies een locatie voor voorraad-aftrek.",
-        "insufficientStock": "Onvoldoende voorraad op deze locatie."
+        "insufficientStock": "Onvoldoende voorraad op deze locatie.",
+        "reserveRequired": "Locatie en aantal zijn verplicht voor reserveren.",
+        "insufficientAvailable": "Onvoldoende beschikbare voorraad."
       }
     }
   }

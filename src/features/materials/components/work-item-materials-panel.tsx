@@ -48,6 +48,11 @@ export function WorkItemMaterialsPanel({
   const [stockLocations, setStockLocations] = useState<
     Array<{ id: string; name: string }>
   >([]);
+  const [reserveLine, setReserveLine] = useState<ProjectMaterialLineRow | null>(
+    null,
+  );
+  const [reserveLocationId, setReserveLocationId] = useState("");
+  const [reserveQty, setReserveQty] = useState("");
   const [isPending, startTransition] = useTransition();
 
   async function reload() {
@@ -202,6 +207,46 @@ export function WorkItemMaterialsPanel({
     });
   }
 
+  function submitReserve() {
+    if (!reserveLine?.articleId || !reserveLocationId || !reserveQty) {
+      setError(t("errors.reserveRequired"));
+      return;
+    }
+    startTransition(async () => {
+      setError(null);
+      try {
+        const response = await fetch("/api/stock-reservations", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            articleId: reserveLine.articleId,
+            locationId: reserveLocationId,
+            projectId,
+            materialLineId: reserveLine.id,
+            quantity: reserveQty,
+          }),
+          signal: AbortSignal.timeout(20_000),
+        });
+        const result = (await response.json()) as { error?: string };
+        if (!response.ok || result.error) {
+          setError(
+            result.error === "insufficient_available"
+              ? t("errors.insufficientAvailable")
+              : tCommon("error"),
+          );
+          return;
+        }
+        setReserveLine(null);
+        setReserveLocationId("");
+        setReserveQty("");
+        await reload();
+        onChanged();
+      } catch {
+        setError(tCommon("error"));
+      }
+    });
+  }
+
   function deleteLine(id: string) {
     startTransition(async () => {
       await fetch(`/api/material-lines?id=${encodeURIComponent(id)}`, {
@@ -301,21 +346,49 @@ export function WorkItemMaterialsPanel({
                 <div>
                   <p className="text-sm font-medium">{line.title}</p>
                   <p className="text-xs text-muted-foreground">
-                    {t("expectedVsActual", {
+                    {t("lineStatus", {
                       expected: formatQty(line.estimatedQuantity, line.unit),
+                      reserved: formatQty(line.reservedQuantity, line.unit),
                       actual: formatQty(line.usedQuantity, line.unit),
                     })}
                   </p>
                 </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  disabled={isPending}
-                  onClick={() => deleteLine(line.id)}
-                >
-                  <Trash2 className="size-3.5" />
-                </Button>
+                <div className="flex shrink-0 gap-1">
+                  {line.articleId ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      disabled={isPending}
+                      onClick={() => {
+                        setReserveLine(line);
+                        setReserveQty(
+                          String(
+                            Math.max(
+                              0,
+                              line.estimatedQuantity -
+                                line.reservedQuantity -
+                                line.usedQuantity,
+                            ) || line.estimatedQuantity,
+                          ),
+                        );
+                        setReserveLocationId("");
+                        setError(null);
+                      }}
+                    >
+                      {t("reserve")}
+                    </Button>
+                  ) : null}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    disabled={isPending}
+                    onClick={() => deleteLine(line.id)}
+                  >
+                    <Trash2 className="size-3.5" />
+                  </Button>
+                </div>
               </li>
             ))}
           </ul>
@@ -455,6 +528,50 @@ export function WorkItemMaterialsPanel({
       </PageCard>
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
+
+      {reserveLine ? (
+        <PageCard className="space-y-3 border-primary/30 p-4">
+          <h4 className="text-sm font-medium">{t("reserveTitle")}</h4>
+          <p className="text-sm text-muted-foreground">{reserveLine.title}</p>
+          <select
+            value={reserveLocationId}
+            onChange={(e) => setReserveLocationId(e.target.value)}
+            className="border-input bg-background h-9 w-full rounded-lg border px-2.5 text-sm"
+          >
+            <option value="">{t("fields.locationPick")}</option>
+            {stockLocations.map((loc) => (
+              <option key={loc.id} value={loc.id}>
+                {loc.name}
+              </option>
+            ))}
+          </select>
+          <Input
+            inputMode="decimal"
+            value={reserveQty}
+            onChange={(e) => setReserveQty(e.target.value)}
+            placeholder={t("fields.qty")}
+          />
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              size="sm"
+              disabled={isPending}
+              onClick={submitReserve}
+            >
+              {t("reserveConfirm")}
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => setReserveLine(null)}
+            >
+              {tCommon("cancel")}
+            </Button>
+          </div>
+        </PageCard>
+      ) : null}
+
       <p className="sr-only">{locale}</p>
     </div>
   );

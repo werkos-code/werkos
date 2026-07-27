@@ -980,6 +980,19 @@
       "attachmentsSoon": "Dateien folgen mit dem Dateien-Modul.",
       "openFull": "Auftrag öffnen"
     },
+    "materials": {
+      "title": "Material",
+      "hint": "Arbeitsposten verknüpfen, um geplantes und tatsächliches Material auf diesem Auftrag zu sehen.",
+      "noLinks": "Noch keine Arbeitsposten verknüpft.",
+      "pickWorkItem": "Arbeitsposten wählen…",
+      "link": "Verknüpfen",
+      "loading": "Laden…",
+      "empty": "Noch kein Material auf verknüpften Arbeitsposten.",
+      "kinds": {
+        "planned": "Geplant",
+        "usage": "Verbrauch"
+      }
+    },
     "form": {
       "createTitle": "Neuer Arbeitsauftrag",
       "title": "Titel",
@@ -1119,6 +1132,7 @@
       "delete": "Löschen",
       "deleteConfirm": "Artikel „{name}“ löschen?",
       "search": "Artikel suchen…",
+      "barcodeScan": "Barcode scannen…",
       "activeOnly": "Nur aktiv",
       "empty": "Noch keine Artikel. Füge deinen Katalog hinzu.",
       "kpiTotal": "Gesamt",
@@ -1303,7 +1317,11 @@
       "addPlan": "Zeile hinzufügen",
       "addUsage": "Verbrauch buchen",
       "deductStock": "Vom Bestand abziehen",
+      "reserve": "Reservieren",
+      "reserveTitle": "Bestand für Planzeile reservieren",
+      "reserveConfirm": "Reservieren",
       "loading": "Laden…",
+      "lineStatus": "Erwartet {expected} · reserviert {reserved} · tatsächlich {actual}",
       "expectedVsActual": "Erwartet {expected} · tatsächlich {actual}",
       "fields": {
         "title": "Beschreibung",
@@ -1316,7 +1334,9 @@
         "usageRequired": "Beschreibung und Menge sind erforderlich.",
         "stockArticleRequired": "Bestandsabzug erfordert einen bestandsgeführten Artikel.",
         "locationRequired": "Wähle einen Standort für den Bestandsabzug.",
-        "insufficientStock": "Nicht genug Bestand an diesem Standort."
+        "insufficientStock": "Nicht genug Bestand an diesem Standort.",
+        "reserveRequired": "Standort und Menge sind für Reservierung erforderlich.",
+        "insufficientAvailable": "Nicht genug verfügbarer Bestand."
       }
     }
   }

@@ -247,12 +247,20 @@ Na Phase 1 / Super Admin:
 ## 22. Materiaal ERP fase D+ (ontvangst + reserveringen)
 
 1. Open **SQL Editor** in Supabase
-2. Plak en run:  
-   `supabase/migrations/20260727200000_materials_phase_d_plus.sql`
+2. Plak en run (indien nog niet gedaan):  
+   `docs/sql-applied/20260727200000_materials_phase_d_plus.sql`
 3. Test:
    - `/materiaal/inkoop` — order versturen → **Ontvangen** → locatie + aantallen → voorraad stijgt
    - `/materiaal/voorraad` — **Reserveren** op saldo → actieve reserveringen → **Vrijgeven**
 4. Rest: [`MATERIALS_ERP_BACKLOG.md`](./MATERIALS_ERP_BACKLOG.md)
+
+## 23. Materiaal ERP fase E (werkbon + BOM-reserveringen)
+
+Geen nieuwe SQL. Test:
+
+- Project → werkzaamheid → tab **Materiaal** → **Reserveren** op planregel met artikel
+- `/materiaal/artikelen` — barcodeveld, Enter opent artikel
+- `/werkbonnen` — werkbon openen → **Materiaal** → werkzaamheid koppelen → overzicht
 
 ## Prijsformule
 

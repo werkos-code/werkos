@@ -62,9 +62,19 @@ export type StockReservationRow = {
   locationName: string;
   projectId: string | null;
   projectName: string | null;
+  materialLineId: string | null;
   quantity: number;
   notes: string | null;
   createdAt: string;
+};
+
+export type WorkOrderMaterialSummaryRow = {
+  workItemId: string;
+  workItemTitle: string;
+  title: string;
+  quantity: number;
+  unit: string;
+  kind: "planned" | "usage";
 };
 
 export type StockLocationRow = {
@@ -118,6 +128,7 @@ export type ProjectMaterialLineRow = {
   notes: string | null;
   sortOrder: number;
   usedQuantity: number;
+  reservedQuantity: number;
 };
 
 export type MaterialUsageRow = {

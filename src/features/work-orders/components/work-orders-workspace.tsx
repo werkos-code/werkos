@@ -33,6 +33,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { PageCard } from "@/features/shell/components/page-card";
+import { WorkOrderMaterialsSection } from "@/features/work-orders/components/work-order-materials-section";
 import type { StaffOption } from "@/features/projects/projects-actions";
 import {
   WORK_ORDER_PRIORITIES,
@@ -618,6 +619,12 @@ function WorkOrderDetailSheet({
               </ul>
             )}
           </div>
+
+          <WorkOrderMaterialsSection
+            workOrderId={order.id}
+            projectId={order.projectId}
+            disabled={disabled}
+          />
 
           <div>
             <h3 className="text-sm font-medium">{t("detail.attachments")}</h3>

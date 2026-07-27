@@ -980,6 +980,19 @@
       "attachmentsSoon": "Files come with the Files module.",
       "openFull": "Open work order"
     },
+    "materials": {
+      "title": "Materials",
+      "hint": "Link work items to see planned and actual materials on this work order.",
+      "noLinks": "No work items linked yet.",
+      "pickWorkItem": "Pick work item…",
+      "link": "Link",
+      "loading": "Loading…",
+      "empty": "No materials on linked work items yet.",
+      "kinds": {
+        "planned": "Planned",
+        "usage": "Usage"
+      }
+    },
     "form": {
       "createTitle": "New work order",
       "title": "Title",
@@ -1119,6 +1132,7 @@
       "delete": "Delete",
       "deleteConfirm": "Delete article “{name}”?",
       "search": "Search articles…",
+      "barcodeScan": "Scan barcode…",
       "activeOnly": "Active only",
       "empty": "No articles yet. Add your catalog.",
       "kpiTotal": "Total",
@@ -1303,7 +1317,11 @@
       "addPlan": "Add line",
       "addUsage": "Log usage",
       "deductStock": "Deduct from stock",
+      "reserve": "Reserve",
+      "reserveTitle": "Reserve stock for plan line",
+      "reserveConfirm": "Reserve",
       "loading": "Loading…",
+      "lineStatus": "Expected {expected} · reserved {reserved} · actual {actual}",
       "expectedVsActual": "Expected {expected} · actual {actual}",
       "fields": {
         "title": "Description",
@@ -1316,7 +1334,9 @@
         "usageRequired": "Description and quantity are required.",
         "stockArticleRequired": "Stock deduction requires a stock-tracked article.",
         "locationRequired": "Pick a location for stock deduction.",
-        "insufficientStock": "Insufficient stock at this location."
+        "insufficientStock": "Insufficient stock at this location.",
+        "reserveRequired": "Location and quantity are required to reserve.",
+        "insufficientAvailable": "Insufficient available stock."
       }
     }
   }

@@ -386,6 +386,25 @@ export async function listMaterialLinesForWorkItem(workItemId: string): Promise<
   if (linesError) return { error: linesError.message };
   if (usagesError) return { error: usagesError.message };
 
+  const lineIds = (lines ?? []).map((row) => row.id);
+  const reservedByLine = new Map<string, number>();
+  if (lineIds.length > 0) {
+    const { data: reservations } = await ctx.supabase
+      .from("stock_reservations")
+      .select("material_line_id, quantity")
+      .eq("organization_id", ctx.organizationId)
+      .is("released_at", null)
+      .in("material_line_id", lineIds);
+
+    for (const row of reservations ?? []) {
+      if (!row.material_line_id) continue;
+      reservedByLine.set(
+        row.material_line_id,
+        (reservedByLine.get(row.material_line_id) ?? 0) + Number(row.quantity),
+      );
+    }
+  }
+
   const usedByLine = new Map<string, number>();
   for (const usage of usages ?? []) {
     if (!usage.material_line_id) continue;
@@ -419,6 +438,7 @@ export async function listMaterialLinesForWorkItem(workItemId: string): Promise<
       notes: row.notes,
       sortOrder: row.sort_order,
       usedQuantity: usedByLine.get(row.id) ?? 0,
+      reservedQuantity: reservedByLine.get(row.id) ?? 0,
     })),
     usages: (usages ?? []).map((row) => ({
       id: row.id,
@@ -447,7 +467,7 @@ export async function listStockReservations(): Promise<{
   const { data, error } = await ctx.supabase
     .from("stock_reservations")
     .select(
-      "id, article_id, location_id, project_id, quantity, notes, created_at",
+      "id, article_id, location_id, project_id, material_line_id, quantity, notes, created_at",
     )
     .eq("organization_id", ctx.organizationId)
     .is("released_at", null)
@@ -502,9 +522,83 @@ export async function listStockReservations(): Promise<{
       projectName: row.project_id
         ? (projectById.get(row.project_id) ?? "—")
         : null,
+      materialLineId: row.material_line_id,
       quantity: Number(row.quantity),
       notes: row.notes,
       createdAt: row.created_at,
     })),
   };
+}
+
+export async function listWorkOrderMaterials(workOrderId: string): Promise<{
+  linkedWorkItemIds?: string[];
+  rows?: import("@/features/materials/lib/materials").WorkOrderMaterialSummaryRow[];
+  error?: string;
+}> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const { data: links, error: linksError } = await ctx.supabase
+    .from("work_order_work_items")
+    .select("work_item_id")
+    .eq("organization_id", ctx.organizationId)
+    .eq("work_order_id", workOrderId);
+
+  if (linksError) return { error: linksError.message };
+
+  const workItemIds = (links ?? []).map((row) => row.work_item_id);
+  if (workItemIds.length === 0) {
+    return { linkedWorkItemIds: [], rows: [] };
+  }
+
+  const { data: items } = await ctx.supabase
+    .from("work_items")
+    .select("id, title")
+    .eq("organization_id", ctx.organizationId)
+    .in("id", workItemIds);
+
+  const titleById = new Map(
+    (items ?? []).map((row) => [row.id, row.title] as const),
+  );
+
+  const [{ data: lines }, { data: usages }] = await Promise.all([
+    ctx.supabase
+      .from("project_material_lines")
+      .select("work_item_id, title, estimated_quantity, unit")
+      .eq("organization_id", ctx.organizationId)
+      .in("work_item_id", workItemIds),
+    ctx.supabase
+      .from("material_usages")
+      .select("work_item_id, title, quantity, unit")
+      .eq("organization_id", ctx.organizationId)
+      .in("work_item_id", workItemIds),
+  ]);
+
+  const rows: import("@/features/materials/lib/materials").WorkOrderMaterialSummaryRow[] =
+    [];
+
+  for (const line of lines ?? []) {
+    if (!line.work_item_id) continue;
+    rows.push({
+      workItemId: line.work_item_id,
+      workItemTitle: titleById.get(line.work_item_id) ?? "—",
+      title: line.title,
+      quantity: Number(line.estimated_quantity),
+      unit: line.unit,
+      kind: "planned",
+    });
+  }
+
+  for (const usage of usages ?? []) {
+    rows.push({
+      workItemId: usage.work_item_id,
+      workItemTitle: titleById.get(usage.work_item_id) ?? "—",
+      title: usage.title,
+      quantity: Number(usage.quantity),
+      unit: usage.unit,
+      kind: "usage",
+    });
+  }
+
+  return { linkedWorkItemIds: workItemIds, rows };
 }

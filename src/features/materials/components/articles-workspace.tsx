@@ -82,6 +82,7 @@ export function ArticlesWorkspace({ articles, suppliers }: ArticlesWorkspaceProp
   const tCommon = useTranslations("common");
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [barcode, setBarcode] = useState("");
   const [activeOnly, setActiveOnly] = useState(true);
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<ArticleDraft>(emptyDraft());
@@ -90,8 +91,12 @@ export function ArticlesWorkspace({ articles, suppliers }: ArticlesWorkspaceProp
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
+    const bc = barcode.trim().toLowerCase();
     return articles.filter((row) => {
       if (activeOnly && !row.isActive) return false;
+      if (bc) {
+        return (row.barcode?.toLowerCase() ?? "") === bc;
+      }
       if (!q) return true;
       return (
         row.name.toLowerCase().includes(q) ||
@@ -100,7 +105,7 @@ export function ArticlesWorkspace({ articles, suppliers }: ArticlesWorkspaceProp
         (row.barcode?.toLowerCase().includes(q) ?? false)
       );
     });
-  }, [articles, query, activeOnly]);
+  }, [articles, query, barcode, activeOnly]);
 
   const activeCount = articles.filter((row) => row.isActive).length;
   const trackedCount = articles.filter((row) => row.trackStock).length;
@@ -196,6 +201,21 @@ export function ArticlesWorkspace({ articles, suppliers }: ArticlesWorkspaceProp
             className="h-9 pl-8"
           />
         </div>
+        <Input
+          value={barcode}
+          onChange={(event) => setBarcode(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && barcode.trim()) {
+              const match = articles.find(
+                (row) =>
+                  row.barcode?.toLowerCase() === barcode.trim().toLowerCase(),
+              );
+              if (match) openEdit(match);
+            }
+          }}
+          placeholder={t("barcodeScan")}
+          className="h-9 min-w-[10rem] flex-1 font-mono text-sm"
+        />
         <label className="flex items-center gap-2 text-sm text-muted-foreground">
           <input
             type="checkbox"
