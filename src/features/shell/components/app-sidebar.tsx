@@ -279,9 +279,12 @@ export function AppSidebar({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" side="top" className="w-48">
-              <DropdownMenuItem asChild>
-                <Link href="/instellingen/account">{t("settingsAccount")}</Link>
-              </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/instellingen/bedrijf">{t("companyProfile")}</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/instellingen/account">{t("settingsAccount")}</Link>
+                </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/instellingen/abonnement">
                   {t("settingsBilling")}

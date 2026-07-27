@@ -9,6 +9,15 @@ export type Organization = {
   name: string;
   slug: string;
   industry: string | null;
+  address: string | null;
+  postalCode: string | null;
+  city: string | null;
+  country: string | null;
+  phone: string | null;
+  email: string | null;
+  kvkNumber: string | null;
+  vatNumber: string | null;
+  iban: string | null;
   createdAt: string;
   updatedAt: string;
 };

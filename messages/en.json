@@ -210,7 +210,11 @@
       },
       "settings": {
         "title": "Settings",
-        "description": "Settings will be built in a later phase."
+        "description": "Manage company and account settings.",
+        "accountTitle": "Account",
+        "accountSoon": "Coming in a later version.",
+        "billingTitle": "Subscription",
+        "billingSoon": "Coming in a later version."
       },
       "workItems": {
         "title": "Work items",
@@ -256,7 +260,39 @@
     "documentsLibrary": "Documents",
     "notificationsSettings": "Notifications",
     "settingsAccount": "Account",
-    "settingsBilling": "Subscription"
+    "settingsBilling": "Subscription",
+    "companyProfile": "Company profile"
+  },
+  "organizationSettings": {
+    "title": "Company profile",
+    "subtitle": "These details appear on quotes and other documents.",
+    "open": "Edit",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved.",
+    "nameRequired": "Enter a company name.",
+    "sections": {
+      "identity": "Identity",
+      "identityHint": "Name as it should appear on quotes.",
+      "address": "Address",
+      "addressHint": "For the letterhead on quotes.",
+      "contact": "Contact",
+      "legal": "Registration",
+      "legalHint": "Chamber of commerce, VAT and bank account (optional)."
+    },
+    "fields": {
+      "name": "Company name",
+      "industry": "Industry",
+      "address": "Address",
+      "postalCode": "Postal code",
+      "city": "City",
+      "country": "Country",
+      "email": "Email",
+      "phone": "Phone",
+      "kvkNumber": "Company number",
+      "vatNumber": "VAT number",
+      "iban": "IBAN"
+    }
   },
   "customers": {
     "title": "Customers",
@@ -908,7 +944,10 @@
       "hint": "Review the preview. Use Print / PDF to save or print from the browser.",
       "print": "Print / PDF",
       "organizationFallback": "Your company",
-      "footer": "Quote generated with WerkOS · {organization}"
+      "footer": "Quote generated with WerkOS · {organization}",
+      "kvk": "CoC",
+      "vat": "VAT",
+      "iban": "IBAN"
     },
     "send": {
       "openMailConfirm": "Quote marked as sent. Open an email to the customer?",

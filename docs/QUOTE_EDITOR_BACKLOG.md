@@ -56,4 +56,6 @@
 - [ ] Sneltoetsen
 - [x] Catalogus / Bereken prijzen (fase 2)
 - [ ] Echte e-mailprovider / publieke klantlink
-- [ ] Org-briefpapier (KvK, logo, adres)
+- [x] Org-briefpapier (KvK, adres, IBAN — fase 5; logo later)
+- [ ] Org-logo upload
+- [ ] Factuur-voorbeeld (zelfde printpatroon)

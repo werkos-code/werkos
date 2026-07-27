@@ -50,6 +50,18 @@ export type QuoteDetail = {
   projectId: string;
   projectName: string;
   organizationName: string | null;
+  organization: {
+    name: string;
+    address: string | null;
+    postalCode: string | null;
+    city: string | null;
+    country: string | null;
+    phone: string | null;
+    email: string | null;
+    kvkNumber: string | null;
+    vatNumber: string | null;
+    iban: string | null;
+  } | null;
   customerId: string | null;
   customerName: string | null;
   customerEmail: string | null;

@@ -1,6 +1,7 @@
 import {
   BarChart3,
   Bell,
+  Building2,
   CalendarDays,
   ClipboardList,
   FolderOpen,
@@ -145,6 +146,12 @@ export const APP_NAV: ShellNavSection[] = [
     labelKey: "company",
     defaultOpen: false,
     items: [
+      {
+        id: "companyProfile",
+        href: "/instellingen/bedrijf",
+        labelKey: "companyProfile",
+        icon: Building2,
+      },
       {
         id: "reports",
         href: "/rapportages",

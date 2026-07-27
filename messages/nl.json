@@ -210,7 +210,11 @@
       },
       "settings": {
         "title": "Instellingen",
-        "description": "Instellingen worden gebouwd in een volgende fase."
+        "description": "Beheer bedrijfs- en accountinstellingen.",
+        "accountTitle": "Account",
+        "accountSoon": "Volgt in een volgende versie.",
+        "billingTitle": "Abonnement",
+        "billingSoon": "Volgt in een volgende versie."
       },
       "workItems": {
         "title": "Werkzaamheden",
@@ -256,7 +260,39 @@
     "documentsLibrary": "Documenten",
     "notificationsSettings": "Notificaties",
     "settingsAccount": "Account",
-    "settingsBilling": "Abonnement"
+    "settingsBilling": "Abonnement",
+    "companyProfile": "Bedrijfsgegevens"
+  },
+  "organizationSettings": {
+    "title": "Bedrijfsgegevens",
+    "subtitle": "Deze gegevens verschijnen op offertes en andere documenten.",
+    "open": "Bewerken",
+    "save": "Opslaan",
+    "saving": "Opslaan…",
+    "saved": "Opgeslagen.",
+    "nameRequired": "Vul een bedrijfsnaam in.",
+    "sections": {
+      "identity": "Identiteit",
+      "identityHint": "Naam zoals die op offertes moet staan.",
+      "address": "Adres",
+      "addressHint": "Voor het briefhoofd op offertes.",
+      "contact": "Contact",
+      "legal": "Registratie",
+      "legalHint": "KvK, btw en rekeningnummer (optioneel)."
+    },
+    "fields": {
+      "name": "Bedrijfsnaam",
+      "industry": "Branche",
+      "address": "Adres",
+      "postalCode": "Postcode",
+      "city": "Plaats",
+      "country": "Land",
+      "email": "E-mail",
+      "phone": "Telefoon",
+      "kvkNumber": "KvK-nummer",
+      "vatNumber": "Btw-nummer",
+      "iban": "IBAN"
+    }
   },
   "customers": {
     "title": "Klanten",
@@ -908,7 +944,10 @@
       "hint": "Controleer het voorbeeld. Gebruik Afdrukken / PDF om via de browser op te slaan of te printen.",
       "print": "Afdrukken / PDF",
       "organizationFallback": "Jouw bedrijf",
-      "footer": "Offerte gegenereerd via WerkOS · {organization}"
+      "footer": "Offerte gegenereerd via WerkOS · {organization}",
+      "kvk": "KvK",
+      "vat": "Btw",
+      "iban": "IBAN"
     },
     "send": {
       "openMailConfirm": "Offerte gemarkeerd als verstuurd. E-mail naar de klant openen?",

@@ -210,7 +210,11 @@
       },
       "settings": {
         "title": "Einstellungen",
-        "description": "Einstellungen werden in einer späteren Phase gebaut."
+        "description": "Unternehmens- und Kontoeinstellungen verwalten.",
+        "accountTitle": "Konto",
+        "accountSoon": "Folgt in einer späteren Version.",
+        "billingTitle": "Abo",
+        "billingSoon": "Folgt in einer späteren Version."
       },
       "workItems": {
         "title": "Arbeitsposten",
@@ -256,7 +260,39 @@
     "documentsLibrary": "Dokumente",
     "notificationsSettings": "Benachrichtigungen",
     "settingsAccount": "Konto",
-    "settingsBilling": "Abo"
+    "settingsBilling": "Abo",
+    "companyProfile": "Unternehmensdaten"
+  },
+  "organizationSettings": {
+    "title": "Unternehmensdaten",
+    "subtitle": "Diese Angaben erscheinen auf Angeboten und anderen Dokumenten.",
+    "open": "Bearbeiten",
+    "save": "Speichern",
+    "saving": "Speichern…",
+    "saved": "Gespeichert.",
+    "nameRequired": "Bitte einen Unternehmensnamen eingeben.",
+    "sections": {
+      "identity": "Identität",
+      "identityHint": "Name wie er auf Angeboten stehen soll.",
+      "address": "Adresse",
+      "addressHint": "Für den Briefkopf auf Angeboten.",
+      "contact": "Kontakt",
+      "legal": "Registrierung",
+      "legalHint": "Handelsregister, USt-IdNr. und Bankkonto (optional)."
+    },
+    "fields": {
+      "name": "Unternehmensname",
+      "industry": "Branche",
+      "address": "Adresse",
+      "postalCode": "PLZ",
+      "city": "Ort",
+      "country": "Land",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "kvkNumber": "Handelsregisternr.",
+      "vatNumber": "USt-IdNr.",
+      "iban": "IBAN"
+    }
   },
   "customers": {
     "title": "Kunden",
@@ -908,7 +944,10 @@
       "hint": "Prüfe die Vorschau. Mit Drucken / PDF speicherst oder druckst du über den Browser.",
       "print": "Drucken / PDF",
       "organizationFallback": "Dein Unternehmen",
-      "footer": "Angebot erstellt mit WerkOS · {organization}"
+      "footer": "Angebot erstellt mit WerkOS · {organization}",
+      "kvk": "HR",
+      "vat": "USt",
+      "iban": "IBAN"
     },
     "send": {
       "openMailConfirm": "Angebot als gesendet markiert. E-Mail an den Kunden öffnen?",

@@ -16,6 +16,7 @@ import {
 } from "@/features/quotes/lib/quote-line";
 import { lineNetCents } from "@/features/quotes/lib/quote-status";
 import type { QuoteDetail, QuoteLineRow } from "@/features/quotes/lib/quote-types";
+import { formatLetterheadAddressLines } from "@/features/organization/lib/organization-letterhead";
 import { PageCard } from "@/features/shell/components/page-card";
 import { cn } from "@/lib/utils";
 
@@ -39,6 +40,14 @@ export function QuotePreview({ quote, showToolbar = true }: QuotePreviewProps) {
   const t = useTranslations("quotes");
   const totals = computeQuoteTotals(quote.lines);
   const roots = getRootLines(quote.lines);
+  const org = quote.organization;
+  const orgName =
+    org?.name?.trim() ||
+    quote.organizationName?.trim() ||
+    t("preview.organizationFallback");
+  const addressLines = org
+    ? formatLetterheadAddressLines(org)
+    : [];
   const locale =
     typeof document !== "undefined"
       ? document.documentElement.lang || "nl-NL"
@@ -150,11 +159,37 @@ export function QuotePreview({ quote, showToolbar = true }: QuotePreviewProps) {
 
       <PageCard className="quote-preview-document overflow-hidden p-6 sm:p-8">
         <header className="flex flex-wrap items-start justify-between gap-6 border-b border-border pb-6">
-          <div className="space-y-1">
-            <p className="text-lg font-semibold tracking-tight">
-              {quote.organizationName?.trim() || t("preview.organizationFallback")}
-            </p>
-            <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+          <div className="max-w-sm space-y-1">
+            <p className="text-lg font-semibold tracking-tight">{orgName}</p>
+            {addressLines.map((line) => (
+              <p key={line} className="text-sm text-muted-foreground">
+                {line}
+              </p>
+            ))}
+            {org?.phone ? (
+              <p className="text-sm text-muted-foreground">{org.phone}</p>
+            ) : null}
+            {org?.email ? (
+              <p className="text-sm text-muted-foreground">{org.email}</p>
+            ) : null}
+            <div className="pt-2 space-y-0.5 text-xs text-muted-foreground">
+              {org?.kvkNumber ? (
+                <p>
+                  {t("preview.kvk")}: {org.kvkNumber}
+                </p>
+              ) : null}
+              {org?.vatNumber ? (
+                <p>
+                  {t("preview.vat")}: {org.vatNumber}
+                </p>
+              ) : null}
+              {org?.iban ? (
+                <p>
+                  {t("preview.iban")}: {org.iban}
+                </p>
+              ) : null}
+            </div>
+            <p className="pt-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
               {t("preview.documentLabel")}
             </p>
           </div>
@@ -303,9 +338,7 @@ export function QuotePreview({ quote, showToolbar = true }: QuotePreviewProps) {
           )}
         >
           {t("preview.footer", {
-            organization:
-              quote.organizationName?.trim() ||
-              t("preview.organizationFallback"),
+            organization: orgName,
           })}
         </p>
       </PageCard>
