@@ -17,10 +17,13 @@ import {
 } from "@/components/ui/dialog";
 import {
   formatQty,
+  euroFromCents,
   type ArticleRow,
   type PurchaseOrderLineRow,
+  type PurchaseOrderMatchLineRow,
   type PurchaseOrderRow,
   type StockLocationRow,
+  type SupplierInvoiceRow,
 } from "@/features/materials/lib/materials";
 import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
 import type { PurchaseOrderStatus } from "@/types/database";
@@ -73,6 +76,20 @@ export function PurchasingWorkspace({
   const [receiveLines, setReceiveLines] = useState<PurchaseOrderLineRow[]>([]);
   const [receiveQty, setReceiveQty] = useState<Record<string, string>>({});
   const [receiveLoading, setReceiveLoading] = useState(false);
+  const [matchOrderId, setMatchOrderId] = useState<string | null>(null);
+  const [matchLines, setMatchLines] = useState<PurchaseOrderMatchLineRow[]>([]);
+  const [matchInvoices, setMatchInvoices] = useState<SupplierInvoiceRow[]>([]);
+  const [matchOverallStatus, setMatchOverallStatus] = useState<string | null>(
+    null,
+  );
+  const [matchLoading, setMatchLoading] = useState(false);
+  const [invoiceOrderId, setInvoiceOrderId] = useState<string | null>(null);
+  const [invoiceNumber, setInvoiceNumber] = useState("");
+  const [invoiceDate, setInvoiceDate] = useState("");
+  const [invoiceLines, setInvoiceLines] = useState<PurchaseOrderLineRow[]>([]);
+  const [invoiceQty, setInvoiceQty] = useState<Record<string, string>>({});
+  const [invoiceCost, setInvoiceCost] = useState<Record<string, string>>({});
+  const [invoiceLoading, setInvoiceLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -230,6 +247,152 @@ export function PurchasingWorkspace({
     });
   }
 
+  async function openMatch(orderId: string) {
+    setError(null);
+    setMatchLoading(true);
+    setMatchOrderId(orderId);
+    try {
+      const response = await fetch(
+        `/api/purchase-order-match?purchaseOrderId=${encodeURIComponent(orderId)}`,
+        { signal: AbortSignal.timeout(20_000) },
+      );
+      const result = (await response.json()) as {
+        lines?: PurchaseOrderMatchLineRow[];
+        invoices?: SupplierInvoiceRow[];
+        overallStatus?: string;
+        error?: string;
+      };
+      if (!response.ok || result.error) {
+        setError(tCommon("error"));
+        setMatchOrderId(null);
+        return;
+      }
+      setMatchLines(result.lines ?? []);
+      setMatchInvoices(result.invoices ?? []);
+      setMatchOverallStatus(result.overallStatus ?? null);
+    } catch {
+      setError(tCommon("error"));
+      setMatchOrderId(null);
+    } finally {
+      setMatchLoading(false);
+    }
+  }
+
+  async function openInvoice(orderId: string) {
+    setError(null);
+    setInvoiceLoading(true);
+    setInvoiceOrderId(orderId);
+    setInvoiceNumber("");
+    setInvoiceDate(new Date().toISOString().slice(0, 10));
+    setInvoiceQty({});
+    setInvoiceCost({});
+    try {
+      const response = await fetch(
+        `/api/purchase-orders?id=${encodeURIComponent(orderId)}`,
+        { signal: AbortSignal.timeout(20_000) },
+      );
+      const result = (await response.json()) as {
+        lines?: PurchaseOrderLineRow[];
+        error?: string;
+      };
+      if (!response.ok || result.error) {
+        setError(tCommon("error"));
+        setInvoiceOrderId(null);
+        return;
+      }
+      const billable = (result.lines ?? []).filter(
+        (line) => line.receivedQuantity > 0,
+      );
+      setInvoiceLines(billable);
+      const qty: Record<string, string> = {};
+      const cost: Record<string, string> = {};
+      for (const line of billable) {
+        qty[line.id] = String(line.receivedQuantity);
+        cost[line.id] =
+          line.unitCostCents != null ? euroFromCents(line.unitCostCents) : "";
+      }
+      setInvoiceQty(qty);
+      setInvoiceCost(cost);
+    } catch {
+      setError(tCommon("error"));
+      setInvoiceOrderId(null);
+    } finally {
+      setInvoiceLoading(false);
+    }
+  }
+
+  function submitInvoice() {
+    if (!invoiceOrderId || !invoiceNumber.trim()) {
+      setError(t("errors.invoiceNumberRequired"));
+      return;
+    }
+    const payloadLines = invoiceLines
+      .map((line) => ({
+        purchaseOrderLineId: line.id,
+        quantity: invoiceQty[line.id] ?? "",
+        unitCost: invoiceCost[line.id] ?? "",
+      }))
+      .filter((line) => line.quantity !== "" && Number(line.quantity) > 0);
+
+    if (payloadLines.length === 0) {
+      setError(t("errors.invoiceLinesRequired"));
+      return;
+    }
+
+    startTransition(async () => {
+      setError(null);
+      try {
+        const response = await fetch("/api/supplier-invoices", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            purchaseOrderId: invoiceOrderId,
+            invoiceNumber: invoiceNumber.trim(),
+            invoiceDate: invoiceDate || null,
+            lines: payloadLines,
+          }),
+          signal: AbortSignal.timeout(20_000),
+        });
+        const result = (await response.json()) as { error?: string };
+        if (!response.ok || result.error) {
+          setError(
+            result.error === "po_not_ready"
+              ? t("errors.poNotReady")
+              : tCommon("error"),
+          );
+          return;
+        }
+        setInvoiceOrderId(null);
+        router.refresh();
+      } catch {
+        setError(tCommon("error"));
+      }
+    });
+  }
+
+  function deleteSupplierInvoice(id: string) {
+    startTransition(async () => {
+      await fetch(`/api/supplier-invoices?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      });
+      if (matchOrderId) {
+        await openMatch(matchOrderId);
+      }
+      router.refresh();
+    });
+  }
+
+  function matchBadgeVariant(status: string) {
+    if (status === "matched") return "success";
+    if (status === "awaiting_invoice") return "secondary";
+    return "destructive";
+  }
+
+  const canMatch = (status: PurchaseOrderStatus) =>
+    status === "sent" ||
+    status === "partially_received" ||
+    status === "received";
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -321,6 +484,28 @@ export function PurchasingWorkspace({
                           >
                             {t("receive")}
                           </Button>
+                        ) : null}
+                        {canMatch(order.status) ? (
+                          <>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              disabled={isPending || matchLoading}
+                              onClick={() => void openInvoice(order.id)}
+                            >
+                              {t("invoice")}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              disabled={isPending || matchLoading}
+                              onClick={() => void openMatch(order.id)}
+                            >
+                              {t("match")}
+                            </Button>
+                          </>
                         ) : null}
                       </div>
                     </td>
@@ -559,6 +744,234 @@ export function PurchasingWorkspace({
               onClick={submitReceive}
             >
               {t("receiveConfirm")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={invoiceOrderId != null}
+        onOpenChange={(open) => !open && setInvoiceOrderId(null)}
+      >
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{t("invoiceTitle")}</DialogTitle>
+          </DialogHeader>
+          {invoiceLoading ? (
+            <p className="text-sm text-muted-foreground">{t("loading")}</p>
+          ) : (
+            <div className="space-y-3">
+              <label className="block space-y-1 text-sm">
+                <span className="text-muted-foreground">
+                  {t("fields.invoiceNumber")}
+                </span>
+                <Input
+                  value={invoiceNumber}
+                  onChange={(e) => setInvoiceNumber(e.target.value)}
+                />
+              </label>
+              <label className="block space-y-1 text-sm">
+                <span className="text-muted-foreground">
+                  {t("fields.invoiceDate")}
+                </span>
+                <Input
+                  type="date"
+                  value={invoiceDate}
+                  onChange={(e) => setInvoiceDate(e.target.value)}
+                />
+              </label>
+              {invoiceLines.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  {t("invoiceNoReceived")}
+                </p>
+              ) : (
+                <ul className="divide-y divide-border/70 rounded-lg border border-border/70">
+                  {invoiceLines.map((line) => (
+                    <li key={line.id} className="space-y-2 px-3 py-3">
+                      <p className="text-sm font-medium">{line.title}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {t("invoiceReceivedHint", {
+                          qty: formatQty(line.receivedQuantity, line.unit),
+                        })}
+                      </p>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        <Input
+                          inputMode="decimal"
+                          value={invoiceQty[line.id] ?? ""}
+                          onChange={(e) =>
+                            setInvoiceQty((prev) => ({
+                              ...prev,
+                              [line.id]: e.target.value,
+                            }))
+                          }
+                          placeholder={t("fields.qty")}
+                        />
+                        <Input
+                          inputMode="decimal"
+                          value={invoiceCost[line.id] ?? ""}
+                          onChange={(e) =>
+                            setInvoiceCost((prev) => ({
+                              ...prev,
+                              [line.id]: e.target.value,
+                            }))
+                          }
+                          placeholder={t("fields.unitCost")}
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+          {error && invoiceOrderId ? (
+            <p className="text-sm text-destructive">{error}</p>
+          ) : null}
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setInvoiceOrderId(null)}
+            >
+              {tCommon("cancel")}
+            </Button>
+            <Button
+              type="button"
+              disabled={isPending || invoiceLoading || invoiceLines.length === 0}
+              onClick={submitInvoice}
+            >
+              {t("invoiceConfirm")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={matchOrderId != null}
+        onOpenChange={(open) => !open && setMatchOrderId(null)}
+      >
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{t("matchTitle")}</DialogTitle>
+          </DialogHeader>
+          {matchLoading ? (
+            <p className="text-sm text-muted-foreground">{t("loading")}</p>
+          ) : (
+            <div className="space-y-4">
+              {matchOverallStatus ? (
+                <Badge variant={matchBadgeVariant(matchOverallStatus)}>
+                  {t(`matchStatus.${matchOverallStatus}`)}
+                </Badge>
+              ) : null}
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[40rem] text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                      <th className="px-3 py-2">{t("matchColumns.line")}</th>
+                      <th className="px-3 py-2 text-right">
+                        {t("matchColumns.ordered")}
+                      </th>
+                      <th className="px-3 py-2 text-right">
+                        {t("matchColumns.received")}
+                      </th>
+                      <th className="px-3 py-2 text-right">
+                        {t("matchColumns.invoiced")}
+                      </th>
+                      <th className="px-3 py-2 text-right">
+                        {t("matchColumns.poPrice")}
+                      </th>
+                      <th className="px-3 py-2 text-right">
+                        {t("matchColumns.invoicePrice")}
+                      </th>
+                      <th className="px-3 py-2">{t("matchColumns.status")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {matchLines.map((line) => (
+                      <tr
+                        key={line.purchaseOrderLineId}
+                        className="border-b border-border/70 last:border-0"
+                      >
+                        <td className="px-3 py-2 font-medium">{line.title}</td>
+                        <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                          {formatQty(line.orderedQuantity, line.unit)}
+                        </td>
+                        <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                          {formatQty(line.receivedQuantity, line.unit)}
+                        </td>
+                        <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                          {formatQty(line.invoicedQuantity, line.unit)}
+                        </td>
+                        <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                          {line.orderedUnitCostCents != null
+                            ? formatEuroFromCents(line.orderedUnitCostCents)
+                            : "—"}
+                        </td>
+                        <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                          {line.invoicedUnitCostCents != null
+                            ? formatEuroFromCents(line.invoicedUnitCostCents)
+                            : "—"}
+                        </td>
+                        <td className="px-3 py-2">
+                          <Badge variant={matchBadgeVariant(line.matchStatus)}>
+                            {t(`lineMatch.${line.matchStatus}`)}
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {matchInvoices.length > 0 ? (
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">{t("invoicesTitle")}</p>
+                  <ul className="divide-y divide-border/70 rounded-lg border border-border/70">
+                    {matchInvoices.map((invoice) => (
+                      <li
+                        key={invoice.id}
+                        className="flex items-center justify-between gap-2 px-3 py-2 text-sm"
+                      >
+                        <div>
+                          <p className="font-medium">{invoice.invoiceNumber}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {invoice.invoiceDate}
+                            {invoice.totalCents != null
+                              ? ` · ${formatEuroFromCents(invoice.totalCents)}`
+                              : ""}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant={matchBadgeVariant(invoice.status)}>
+                            {t(`matchStatus.${invoice.status}`)}
+                          </Badge>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            disabled={isPending}
+                            onClick={() => deleteSupplierInvoice(invoice.id)}
+                          >
+                            {t("deleteInvoice")}
+                          </Button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  {t("invoicesEmpty")}
+                </p>
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setMatchOrderId(null)}
+            >
+              {tCommon("close")}
             </Button>
           </DialogFooter>
         </DialogContent>

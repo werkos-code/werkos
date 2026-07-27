@@ -1282,7 +1282,17 @@
       "kpiOpen": "Offen",
       "send": "Senden",
       "receive": "Empfangen",
+      "invoice": "Rechnung",
+      "match": "3-Way-Match",
       "receiveTitle": "Lieferung buchen",
+      "invoiceTitle": "Lieferantenrechnung erfassen",
+      "invoiceConfirm": "Rechnung speichern",
+      "invoiceNoReceived": "Zuerst Ware empfangen, bevor eine Rechnung gematcht werden kann.",
+      "invoiceReceivedHint": "Empfangen: {qty}",
+      "matchTitle": "3-Way-Match (Bestellung · Empfang · Rechnung)",
+      "invoicesTitle": "Erfasste Rechnungen",
+      "invoicesEmpty": "Noch keine Lieferantenrechnungen zu dieser Bestellung.",
+      "deleteInvoice": "Löschen",
       "receiveConfirm": "Empfang buchen",
       "receiveAllDone": "Alle Zeilen sind vollständig empfangen.",
       "receiveRemaining": "Empfangen {received} von {ordered}",
@@ -1315,14 +1325,41 @@
         "unit": "Einheit",
         "unitCost": "Stückpreis (€)",
         "location": "Lagerstandort",
-        "locationPick": "Standort wählen…"
+        "locationPick": "Standort wählen…",
+        "invoiceNumber": "Rechnungsnummer",
+        "invoiceDate": "Rechnungsdatum"
+      },
+      "matchColumns": {
+        "line": "Zeile",
+        "ordered": "Bestellt",
+        "received": "Empfangen",
+        "invoiced": "Fakturiert",
+        "poPrice": "PO-Preis",
+        "invoicePrice": "Rechnungspreis",
+        "status": "Status"
+      },
+      "matchStatus": {
+        "draft": "Entwurf",
+        "matched": "Match",
+        "variance": "Abweichung"
+      },
+      "lineMatch": {
+        "matched": "OK",
+        "quantity_variance": "Menge",
+        "price_variance": "Preis",
+        "both_variance": "Menge + Preis",
+        "awaiting_invoice": "Warte auf Rechnung",
+        "not_received": "Nicht empfangen"
       },
       "errors": {
         "supplierRequired": "Wähle einen Lieferanten.",
         "linesRequired": "Füge mindestens eine Zeile mit Beschreibung und Menge hinzu.",
         "locationRequired": "Wähle einen Standort für den Empfang.",
         "receiveLinesRequired": "Gib mindestens eine Empfangsmenge ein.",
-        "overReceive": "Empfang überschreitet die offene Menge."
+        "overReceive": "Empfang überschreitet die offene Menge.",
+        "invoiceNumberRequired": "Rechnungsnummer ist erforderlich.",
+        "invoiceLinesRequired": "Mindestens eine Rechnungszeile erforderlich.",
+        "poNotReady": "Bestellung muss gesendet oder empfangen sein."
       }
     },
     "workItem": {

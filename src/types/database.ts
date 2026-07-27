@@ -58,6 +58,7 @@ export type PurchaseOrderStatus =
   | "partially_received"
   | "received"
   | "cancelled";
+export type SupplierInvoiceStatus = "draft" | "matched" | "variance";
 export type WorkItemPriority = "low" | "normal" | "high";
 export type AppointmentStatus =
   | "planned"
@@ -1897,6 +1898,81 @@ export type Database = {
         };
         Relationships: [];
       };
+      supplier_invoices: {
+        Row: {
+          id: string;
+          organization_id: string;
+          supplier_id: string;
+          purchase_order_id: string;
+          invoice_number: string;
+          invoice_date: string;
+          status: SupplierInvoiceStatus;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          supplier_id: string;
+          purchase_order_id: string;
+          invoice_number: string;
+          invoice_date?: string;
+          status?: SupplierInvoiceStatus;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          supplier_id?: string;
+          purchase_order_id?: string;
+          invoice_number?: string;
+          invoice_date?: string;
+          status?: SupplierInvoiceStatus;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      supplier_invoice_lines: {
+        Row: {
+          id: string;
+          organization_id: string;
+          supplier_invoice_id: string;
+          purchase_order_line_id: string;
+          quantity: number;
+          unit_cost_cents: number | null;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          supplier_invoice_id: string;
+          purchase_order_line_id: string;
+          quantity: number;
+          unit_cost_cents?: number | null;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          supplier_invoice_id?: string;
+          purchase_order_line_id?: string;
+          quantity?: number;
+          unit_cost_cents?: number | null;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       stock_reservations: {
         Row: {
           id: string;
@@ -1976,6 +2052,7 @@ export type Database = {
       stock_location_kind: StockLocationKind;
       stock_movement_type: StockMovementType;
       purchase_order_status: PurchaseOrderStatus;
+      supplier_invoice_status: SupplierInvoiceStatus;
     };
     CompositeTypes: {
       [_ in never]: never;

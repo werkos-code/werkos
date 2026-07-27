@@ -1282,7 +1282,17 @@
       "kpiOpen": "Open",
       "send": "Send",
       "receive": "Receive",
+      "invoice": "Invoice",
+      "match": "3-way match",
       "receiveTitle": "Book delivery",
+      "invoiceTitle": "Register supplier invoice",
+      "invoiceConfirm": "Save invoice",
+      "invoiceNoReceived": "Receive goods first before matching an invoice.",
+      "invoiceReceivedHint": "Received: {qty}",
+      "matchTitle": "3-way match (order · receipt · invoice)",
+      "invoicesTitle": "Registered invoices",
+      "invoicesEmpty": "No supplier invoices on this order yet.",
+      "deleteInvoice": "Delete",
       "receiveConfirm": "Book receipt",
       "receiveAllDone": "All lines are fully received.",
       "receiveRemaining": "Received {received} of {ordered}",
@@ -1315,14 +1325,41 @@
         "unit": "Unit",
         "unitCost": "Unit price (€)",
         "location": "Stock location",
-        "locationPick": "Pick location…"
+        "locationPick": "Pick location…",
+        "invoiceNumber": "Invoice number",
+        "invoiceDate": "Invoice date"
+      },
+      "matchColumns": {
+        "line": "Line",
+        "ordered": "Ordered",
+        "received": "Received",
+        "invoiced": "Invoiced",
+        "poPrice": "PO price",
+        "invoicePrice": "Invoice price",
+        "status": "Status"
+      },
+      "matchStatus": {
+        "draft": "Draft",
+        "matched": "Matched",
+        "variance": "Variance"
+      },
+      "lineMatch": {
+        "matched": "OK",
+        "quantity_variance": "Quantity",
+        "price_variance": "Price",
+        "both_variance": "Qty + price",
+        "awaiting_invoice": "Awaiting invoice",
+        "not_received": "Not received"
       },
       "errors": {
         "supplierRequired": "Pick a supplier.",
         "linesRequired": "Add at least one line with description and quantity.",
         "locationRequired": "Pick a location for the receipt.",
         "receiveLinesRequired": "Enter at least one receipt quantity.",
-        "overReceive": "Receipt exceeds the remaining quantity."
+        "overReceive": "Receipt exceeds the remaining quantity.",
+        "invoiceNumberRequired": "Invoice number is required.",
+        "invoiceLinesRequired": "Add at least one invoice line.",
+        "poNotReady": "Order must be sent or received."
       }
     },
     "workItem": {

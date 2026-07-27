@@ -1282,7 +1282,17 @@
       "kpiOpen": "Open",
       "send": "Versturen",
       "receive": "Ontvangen",
+      "invoice": "Factuur",
+      "match": "3-way match",
       "receiveTitle": "Levering boeken",
+      "invoiceTitle": "Leveranciersfactuur registreren",
+      "invoiceConfirm": "Factuur opslaan",
+      "invoiceNoReceived": "Eerst goederen ontvangen voordat je een factuur kunt matchen.",
+      "invoiceReceivedHint": "Ontvangen: {qty}",
+      "matchTitle": "3-way match (order · ontvangst · factuur)",
+      "invoicesTitle": "Geregistreerde facturen",
+      "invoicesEmpty": "Nog geen leveranciersfacturen op deze order.",
+      "deleteInvoice": "Verwijderen",
       "receiveConfirm": "Ontvangst boeken",
       "receiveAllDone": "Alle regels zijn al volledig ontvangen.",
       "receiveRemaining": "Ontvangen {received} van {ordered}",
@@ -1315,14 +1325,41 @@
         "unit": "Eenheid",
         "unitCost": "Prijs per eenheid (€)",
         "location": "Magazijnlocatie",
-        "locationPick": "Kies locatie…"
+        "locationPick": "Kies locatie…",
+        "invoiceNumber": "Factuurnummer",
+        "invoiceDate": "Factuurdatum"
+      },
+      "matchColumns": {
+        "line": "Regel",
+        "ordered": "Besteld",
+        "received": "Ontvangen",
+        "invoiced": "Gefactureerd",
+        "poPrice": "PO-prijs",
+        "invoicePrice": "Factuurprijs",
+        "status": "Status"
+      },
+      "matchStatus": {
+        "draft": "Concept",
+        "matched": "Match",
+        "variance": "Afwijking"
+      },
+      "lineMatch": {
+        "matched": "OK",
+        "quantity_variance": "Aantal",
+        "price_variance": "Prijs",
+        "both_variance": "Aantal + prijs",
+        "awaiting_invoice": "Wacht op factuur",
+        "not_received": "Niet ontvangen"
       },
       "errors": {
         "supplierRequired": "Kies een leverancier.",
         "linesRequired": "Voeg minimaal één regel met omschrijving en aantal toe.",
         "locationRequired": "Kies een locatie voor de ontvangst.",
         "receiveLinesRequired": "Vul minimaal één ontvangstaantal in.",
-        "overReceive": "Ontvangst overschrijdt het openstaande aantal."
+        "overReceive": "Ontvangst overschrijdt het openstaande aantal.",
+        "invoiceNumberRequired": "Factuurnummer is verplicht.",
+        "invoiceLinesRequired": "Vul minimaal één factuurregel in.",
+        "poNotReady": "Order moet verstuurd of ontvangen zijn."
       }
     },
     "workItem": {

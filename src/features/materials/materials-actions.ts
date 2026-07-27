@@ -8,6 +8,8 @@ import {
   type StockBalanceRow,
   type StockLocationRow,
   type StockMovementRow,
+  computePurchaseLineMatch,
+  aggregateInvoiceStatus,
 } from "@/features/materials/lib/materials";
 import { getStaffOrgContext } from "@/features/shell/lib/staff-org-context";
 import type { StockLocationKind, StockMovementType } from "@/types/database";
@@ -634,4 +636,182 @@ export async function listWorkOrderMaterials(workOrderId: string): Promise<{
   }
 
   return { linkedWorkItemIds: workItemIds, rows };
+}
+
+export async function getPurchaseOrderMatch(purchaseOrderId: string): Promise<{
+  order?: {
+    id: string;
+    supplierName: string;
+    reference: string | null;
+    status: import("@/types/database").PurchaseOrderStatus;
+  };
+  lines?: import("@/features/materials/lib/materials").PurchaseOrderMatchLineRow[];
+  invoices?: import("@/features/materials/lib/materials").SupplierInvoiceRow[];
+  overallStatus?: import("@/features/materials/lib/materials").SupplierInvoiceStatus;
+  error?: string;
+}> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const { data: order, error: orderError } = await ctx.supabase
+    .from("purchase_orders")
+    .select("id, supplier_id, reference, status")
+    .eq("organization_id", ctx.organizationId)
+    .eq("id", purchaseOrderId)
+    .maybeSingle();
+
+  if (orderError) return { error: orderError.message };
+  if (!order) return { error: "not_found" };
+
+  const { data: poLines, error: poLinesError } = await ctx.supabase
+    .from("purchase_order_lines")
+    .select(
+      "id, title, quantity, unit, unit_cost_cents, received_quantity, sort_order",
+    )
+    .eq("organization_id", ctx.organizationId)
+    .eq("purchase_order_id", purchaseOrderId)
+    .order("sort_order");
+
+  if (poLinesError) return { error: poLinesError.message };
+
+  const poLineIds = (poLines ?? []).map((row) => row.id);
+
+  const [
+    { data: supplier },
+    { data: invoices },
+    { data: invoiceLines },
+  ] = await Promise.all([
+    ctx.supabase
+      .from("suppliers")
+      .select("name")
+      .eq("organization_id", ctx.organizationId)
+      .eq("id", order.supplier_id)
+      .maybeSingle(),
+    ctx.supabase
+      .from("supplier_invoices")
+      .select("id, invoice_number, invoice_date, status, created_at")
+      .eq("organization_id", ctx.organizationId)
+      .eq("purchase_order_id", purchaseOrderId)
+      .order("created_at", { ascending: false }),
+    poLineIds.length
+      ? ctx.supabase
+          .from("supplier_invoice_lines")
+          .select(
+            "supplier_invoice_id, purchase_order_line_id, quantity, unit_cost_cents",
+          )
+          .eq("organization_id", ctx.organizationId)
+          .in("purchase_order_line_id", poLineIds)
+      : Promise.resolve({
+          data: [] as Array<{
+            supplier_invoice_id: string;
+            purchase_order_line_id: string;
+            quantity: number;
+            unit_cost_cents: number | null;
+          }>,
+        }),
+  ]);
+
+  const invoiceIds = new Set((invoices ?? []).map((row) => row.id));
+  const relevantInvoiceLines = (invoiceLines ?? []).filter((row) =>
+    invoiceIds.has(row.supplier_invoice_id),
+  );
+
+  const invoicedQtyByLine = new Map<string, number>();
+  const invoicedCostByLine = new Map<
+    string,
+    { totalCents: number; totalQty: number }
+  >();
+
+  for (const row of relevantInvoiceLines) {
+    const qty = Number(row.quantity);
+    invoicedQtyByLine.set(
+      row.purchase_order_line_id,
+      (invoicedQtyByLine.get(row.purchase_order_line_id) ?? 0) + qty,
+    );
+    if (row.unit_cost_cents != null) {
+      const current = invoicedCostByLine.get(row.purchase_order_line_id) ?? {
+        totalCents: 0,
+        totalQty: 0,
+      };
+      current.totalCents += Math.round(qty * row.unit_cost_cents);
+      current.totalQty += qty;
+      invoicedCostByLine.set(row.purchase_order_line_id, current);
+    }
+  }
+
+  const lines = (poLines ?? []).map((row) => {
+    const invoicedQuantity = invoicedQtyByLine.get(row.id) ?? 0;
+    const costAgg = invoicedCostByLine.get(row.id);
+    const invoicedUnitCostCents =
+      costAgg && costAgg.totalQty > 0
+        ? Math.round(costAgg.totalCents / costAgg.totalQty)
+        : null;
+
+    return {
+      purchaseOrderLineId: row.id,
+      title: row.title,
+      unit: row.unit,
+      orderedQuantity: Number(row.quantity),
+      receivedQuantity: Number(row.received_quantity),
+      invoicedQuantity,
+      orderedUnitCostCents: row.unit_cost_cents,
+      invoicedUnitCostCents,
+      matchStatus: computePurchaseLineMatch({
+        orderedQuantity: Number(row.quantity),
+        receivedQuantity: Number(row.received_quantity),
+        invoicedQuantity,
+        orderedUnitCostCents: row.unit_cost_cents,
+        invoicedUnitCostCents,
+      }),
+    };
+  });
+
+  const invoiceLineCount = new Map<string, number>();
+  for (const row of relevantInvoiceLines) {
+    invoiceLineCount.set(
+      row.supplier_invoice_id,
+      (invoiceLineCount.get(row.supplier_invoice_id) ?? 0) + 1,
+    );
+  }
+
+  const invoiceRows: import("@/features/materials/lib/materials").SupplierInvoiceRow[] =
+    (invoices ?? []).map((row) => {
+      const lineCount = invoiceLineCount.get(row.id) ?? 0;
+      let totalCents: number | null = 0;
+      for (const line of relevantInvoiceLines) {
+        if (line.supplier_invoice_id !== row.id) continue;
+        if (line.unit_cost_cents == null) {
+          totalCents = null;
+          break;
+        }
+        totalCents =
+          (totalCents ?? 0) +
+          Math.round(Number(line.quantity) * line.unit_cost_cents);
+      }
+
+      return {
+        id: row.id,
+        purchaseOrderId,
+        supplierId: order.supplier_id,
+        supplierName: supplier?.name ?? "—",
+        invoiceNumber: row.invoice_number,
+        invoiceDate: row.invoice_date,
+        status: row.status as import("@/features/materials/lib/materials").SupplierInvoiceStatus,
+        lineCount,
+        totalCents,
+        createdAt: row.created_at,
+      };
+    });
+
+  return {
+    order: {
+      id: order.id,
+      supplierName: supplier?.name ?? "—",
+      reference: order.reference,
+      status: order.status,
+    },
+    lines,
+    invoices: invoiceRows,
+    overallStatus: aggregateInvoiceStatus(lines),
+  };
 }

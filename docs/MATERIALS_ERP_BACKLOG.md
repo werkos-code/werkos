@@ -4,26 +4,21 @@
 > SQL: zie `docs/sql-applied/README.md`  
 > Roadmap: `.cursor/plans/materiaal_registratie_v1_2f8a1c04.plan.md`
 
-## Afgerond (fase A t/m D+)
+## Afgerond (fase A t/m E+)
 
-Zie eerdere secties in git history — artikelen, voorraad, project BOM, leveranciers, inkoop, ontvangst, reserveringen.
+Artikelen, voorraad, project BOM, leveranciers, inkoop, ontvangst, reserveringen, werkbon-materiaal, direct boeken op werkbon.
 
-## Afgerond (fase E — veld & koppelingen)
+## Afgerond (fase F — 3-way match)
 
-- [x] BOM-reserveringen op werkzaamheid (planregel → `stock_reservations` + project)
-- [x] Barcode-zoeken in artikelen-workspace (Enter opent artikel)
-- [x] Werkbon-materiaal: koppel werkzaamheden + rollup begroot/verbruik
-
-## Afgerond (fase E+ — direct op werkbon)
-
-- [x] Materiaal direct op werkbon boeken (zonder werkzaamheid)
+- [x] Leveranciersfacturen gekoppeld aan inkooporderregels
+- [x] Match-overzicht: besteld · ontvangen · gefactureerd + prijs
+- [x] UI op `/materiaal/inkoop` (Factuur + 3-way match)
 
 ## Volgende
 
-- [ ] 3-way match met facturen
 - [ ] Catalogus-integraties (2BA e.d.)
 - [ ] Veld/portaal (scan + offline)
 
 ## Migratie
 
-Fase E+ SQL staat in `docs/sql-applied/20260727300000_work_order_material_usages.sql` (reeds toegepast).
+Fase F: `supabase/migrations/20260727310000_supplier_invoices_3way_match.sql` — run in SQL Editor, daarna archiveren.

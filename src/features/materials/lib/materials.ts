@@ -54,6 +54,41 @@ export type PurchaseOrderLineRow = {
   receivedQuantity: number;
 };
 
+export type SupplierInvoiceStatus = "draft" | "matched" | "variance";
+
+export type PurchaseLineMatchStatus =
+  | "matched"
+  | "quantity_variance"
+  | "price_variance"
+  | "both_variance"
+  | "awaiting_invoice"
+  | "not_received";
+
+export type PurchaseOrderMatchLineRow = {
+  purchaseOrderLineId: string;
+  title: string;
+  unit: string;
+  orderedQuantity: number;
+  receivedQuantity: number;
+  invoicedQuantity: number;
+  orderedUnitCostCents: number | null;
+  invoicedUnitCostCents: number | null;
+  matchStatus: PurchaseLineMatchStatus;
+};
+
+export type SupplierInvoiceRow = {
+  id: string;
+  purchaseOrderId: string;
+  supplierId: string;
+  supplierName: string;
+  invoiceNumber: string;
+  invoiceDate: string;
+  status: SupplierInvoiceStatus;
+  lineCount: number;
+  totalCents: number | null;
+  createdAt: string;
+};
+
 export type StockReservationRow = {
   id: string;
   articleId: string;
@@ -185,4 +220,52 @@ export function centsFromEuroInput(value: string | number | null | undefined) {
 export function euroFromCents(cents: number | null | undefined) {
   if (cents == null) return "";
   return String(cents / 100).replace(".", ",");
+}
+
+const QTY_EPSILON = 0.0001;
+
+export function computePurchaseLineMatch(params: {
+  orderedQuantity: number;
+  receivedQuantity: number;
+  invoicedQuantity: number;
+  orderedUnitCostCents: number | null;
+  invoicedUnitCostCents: number | null;
+}): PurchaseLineMatchStatus {
+  const {
+    receivedQuantity,
+    invoicedQuantity,
+    orderedUnitCostCents,
+    invoicedUnitCostCents,
+  } = params;
+
+  const qtyMatch = Math.abs(invoicedQuantity - receivedQuantity) <= QTY_EPSILON;
+  const priceMatch =
+    orderedUnitCostCents == null ||
+    invoicedUnitCostCents == null ||
+    orderedUnitCostCents === invoicedUnitCostCents;
+
+  if (invoicedQuantity <= QTY_EPSILON && receivedQuantity > QTY_EPSILON) {
+    return "awaiting_invoice";
+  }
+  if (invoicedQuantity > receivedQuantity + QTY_EPSILON) {
+    return priceMatch ? "quantity_variance" : "both_variance";
+  }
+  if (invoicedQuantity + QTY_EPSILON < receivedQuantity && invoicedQuantity > QTY_EPSILON) {
+    return priceMatch ? "quantity_variance" : "both_variance";
+  }
+  if (!qtyMatch && !priceMatch) return "both_variance";
+  if (!qtyMatch) return "quantity_variance";
+  if (!priceMatch) return "price_variance";
+  return "matched";
+}
+
+export function aggregateInvoiceStatus(
+  lines: PurchaseOrderMatchLineRow[],
+): SupplierInvoiceStatus {
+  if (lines.length === 0) return "draft";
+  const hasVariance = lines.some(
+    (line) =>
+      line.matchStatus !== "matched" && line.matchStatus !== "awaiting_invoice",
+  );
+  return hasVariance ? "variance" : "matched";
 }
