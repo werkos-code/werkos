@@ -816,6 +816,12 @@
   "quotes": {
     "listTitle": "Quotes",
     "listDescription": "Overview of all quotes in your company.",
+    "listHint": "All quotes across all projects. Open a row to edit.",
+    "searchPlaceholder": "Search by number, title or project…",
+    "emptyFiltered": "No quotes for these filters.",
+    "filters": {
+      "all": "All"
+    },
     "sectionTitle": "Quotes",
     "editorDescription": "Quote for {project}",
     "documentLabel": "Quote",
@@ -972,9 +978,11 @@
       "forbidden": "You do not have permission to do this."
     },
     "columns": {
+      "number": "Number",
       "title": "Quote",
       "project": "Project",
-      "status": "Status"
+      "status": "Status",
+      "updated": "Updated"
     },
     "status": {
       "draft": "Draft",

@@ -36,6 +36,7 @@ export type QuoteListItem = {
   id: string;
   title: string;
   status: QuoteStatus;
+  quoteNumber: string | null;
   projectId: string;
   projectName: string;
   updatedAt: string;

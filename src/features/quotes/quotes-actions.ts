@@ -32,7 +32,7 @@ export async function listQuotesForProject(projectId: string): Promise<{
 
   const { data, error } = await ctx.supabase
     .from("quotes")
-    .select("id, title, status, project_id, updated_at, valid_until")
+    .select("id, title, status, quote_number, project_id, updated_at, valid_until")
     .eq("organization_id", ctx.organizationId)
     .eq("project_id", projectId)
     .order("updated_at", { ascending: false });
@@ -44,6 +44,7 @@ export async function listQuotesForProject(projectId: string): Promise<{
       id: row.id,
       title: row.title,
       status: row.status,
+      quoteNumber: row.quote_number,
       projectId: row.project_id,
       projectName: project.name,
       updatedAt: row.updated_at,
@@ -61,7 +62,7 @@ export async function listQuotesForOrganization(): Promise<{
 
   const { data, error } = await ctx.supabase
     .from("quotes")
-    .select("id, title, status, project_id, updated_at, valid_until")
+    .select("id, title, status, quote_number, project_id, updated_at, valid_until")
     .eq("organization_id", ctx.organizationId)
     .order("updated_at", { ascending: false });
 
@@ -87,6 +88,7 @@ export async function listQuotesForOrganization(): Promise<{
       id: row.id,
       title: row.title,
       status: row.status,
+      quoteNumber: row.quote_number,
       projectId: row.project_id,
       projectName: nameById.get(row.project_id) ?? "—",
       updatedAt: row.updated_at,

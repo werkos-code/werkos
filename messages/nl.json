@@ -816,6 +816,12 @@
   "quotes": {
     "listTitle": "Offertes",
     "listDescription": "Overzicht van alle offertes in je bedrijf.",
+    "listHint": "Alle offertes van alle projecten. Open een regel om te bewerken.",
+    "searchPlaceholder": "Zoek op nummer, titel of project…",
+    "emptyFiltered": "Geen offertes voor deze filters.",
+    "filters": {
+      "all": "Alles"
+    },
     "sectionTitle": "Offertes",
     "editorDescription": "Offerte voor {project}",
     "documentLabel": "Offerte",
@@ -972,9 +978,11 @@
       "forbidden": "Je hebt geen rechten om dit te doen."
     },
     "columns": {
+      "number": "Nummer",
       "title": "Offerte",
       "project": "Project",
-      "status": "Status"
+      "status": "Status",
+      "updated": "Bijgewerkt"
     },
     "status": {
       "draft": "Concept",

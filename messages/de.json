@@ -816,6 +816,12 @@
   "quotes": {
     "listTitle": "Angebote",
     "listDescription": "Übersicht aller Angebote in deinem Unternehmen.",
+    "listHint": "Alle Angebote aller Projekte. Öffne eine Zeile zum Bearbeiten.",
+    "searchPlaceholder": "Suche nach Nummer, Titel oder Projekt…",
+    "emptyFiltered": "Keine Angebote für diese Filter.",
+    "filters": {
+      "all": "Alle"
+    },
     "sectionTitle": "Angebote",
     "editorDescription": "Angebot für {project}",
     "documentLabel": "Angebot",
@@ -972,9 +978,11 @@
       "forbidden": "Du hast keine Berechtigung dafür."
     },
     "columns": {
+      "number": "Nummer",
       "title": "Angebot",
       "project": "Projekt",
-      "status": "Status"
+      "status": "Status",
+      "updated": "Aktualisiert"
     },
     "status": {
       "draft": "Entwurf",

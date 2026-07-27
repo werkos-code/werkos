@@ -4,6 +4,7 @@ import {
   Building2,
   CalendarDays,
   ClipboardList,
+  FileText,
   FolderOpen,
   Inbox,
   LayoutDashboard,
@@ -85,6 +86,12 @@ export const APP_NAV: ShellNavSection[] = [
     labelKey: "documents",
     defaultOpen: true,
     items: [
+      {
+        id: "quotes",
+        href: "/offertes",
+        labelKey: "quotes",
+        icon: FileText,
+      },
       {
         id: "invoices",
         href: "/facturen",

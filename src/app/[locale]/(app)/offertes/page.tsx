@@ -13,7 +13,7 @@ export default async function OffertesPage({ params }: Props) {
   const result = await listQuotesForOrganization();
 
   return (
-    <ShellPage title={t("listTitle")} description={t("listDescription")}>
+    <ShellPage title={t("listTitle")} contentClassName="max-w-none w-[94%]">
       {result.error ? (
         <p className="text-sm text-destructive">{result.error}</p>
       ) : (
