@@ -31,8 +31,7 @@ import { lineNetCents } from "@/features/quotes/lib/quote-status";
 import type { QuoteLineRow } from "@/features/quotes/quotes-actions";
 import { cn } from "@/lib/utils";
 
-const LINE_GRID_CLASS =
-  "lg:grid-cols-[1.75rem_minmax(0,1fr)_4rem_5rem_4.5rem_5.5rem_4.5rem_5rem_6.5rem_7rem]";
+const LINE_GRID_CLASS = "quote-line-grid";
 
 export type QuoteLinesWorkspaceProps = {
   lines: QuoteLineRow[];
@@ -174,7 +173,7 @@ export function QuoteLinesWorkspace({
       <div key={line.id}>
         <div
           className={cn(
-            "group grid grid-cols-1 items-start gap-x-2 gap-y-1 border-b border-border/60 px-3 py-3 lg:items-center",
+            "group items-start gap-y-1 border-b border-border/60 px-3 py-3 lg:items-center",
             LINE_GRID_CLASS,
           )}
         >
@@ -325,30 +324,47 @@ export function QuoteLinesWorkspace({
         ) : null}
       </div>
 
-      <div
-        className={cn(
-          "hidden gap-x-2 border-b border-border px-3 py-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase lg:grid",
-          LINE_GRID_CLASS,
-        )}
-      >
-        <span aria-hidden className="block" />
-        <span>{t("fields.lineTitle")}</span>
-        <span className="text-center">{t("fields.unit")}</span>
-        <span className="text-right">{t("fields.quantity")}</span>
-        <span className="text-right">{t("fields.hours")}</span>
-        <span className="text-right">{t("fields.unitPrice")}</span>
-        <span className="text-right">{t("fields.vat")}</span>
-        <span className="text-right">{t("fields.lineTotal")}</span>
-        <span aria-hidden className="block" />
-      </div>
+      <div className="overflow-x-auto">
+        <div className="min-w-[52rem]">
+          <div
+            className={cn(
+              "quote-line-grid hidden gap-x-2 border-b border-border px-3 py-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase lg:grid",
+            )}
+          >
+            <span aria-hidden className="block min-w-0" />
+            <span className="min-w-0 truncate">{t("fields.lineTitle")}</span>
+            <span className="min-w-0 truncate text-center">
+              {t("fields.unit")}
+            </span>
+            <span className="min-w-0 truncate text-right">
+              {t("fields.quantity")}
+            </span>
+            <span className="min-w-0 truncate text-right">
+              {t("fields.hours")}
+            </span>
+            <span className="min-w-0 truncate text-right">
+              {t("fields.unitPrice")}
+            </span>
+            <span className="min-w-0 truncate text-right">
+              {t("fields.vat")}
+            </span>
+            <span className="min-w-0 truncate text-right">
+              {t("fields.lineTotal")}
+            </span>
+            <span aria-hidden className="block min-w-0" />
+          </div>
 
-      {roots.length === 0 ? (
-        <p className="px-4 py-10 text-sm text-muted-foreground">
-          {emptyMessage ?? t("noLines")}
-        </p>
-      ) : (
-        roots.map((line, index) => renderLineRow(line, 0, String(index + 1)))
-      )}
+          {roots.length === 0 ? (
+            <p className="px-4 py-10 text-sm text-muted-foreground">
+              {emptyMessage ?? t("noLines")}
+            </p>
+          ) : (
+            roots.map((line, index) =>
+              renderLineRow(line, 0, String(index + 1)),
+            )
+          )}
+        </div>
+      </div>
     </div>
   );
 }

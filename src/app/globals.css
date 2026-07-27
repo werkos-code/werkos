@@ -140,3 +140,21 @@
     @apply font-sans;
   }
 }
+
+@layer components {
+  .quote-line-grid {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    column-gap: 0.5rem;
+  }
+
+  @media (min-width: 64rem) {
+    .quote-line-grid {
+      grid-template-columns:
+        1.75rem minmax(10rem, 1fr) minmax(3.25rem, 4.5rem) minmax(3.5rem, 5rem)
+        minmax(3rem, 4.5rem) minmax(4rem, 5.5rem) minmax(3.25rem, 4.5rem)
+        minmax(4.25rem, 5.5rem) minmax(4.5rem, auto);
+    }
+  }
+}
