@@ -988,9 +988,29 @@
       "link": "Koppelen",
       "loading": "Laden…",
       "empty": "Nog geen materiaal op gekoppelde werkzaamheden.",
+      "directTitle": "Direct op werkbon",
+      "directHint": "Boek verbruik zonder werkzaamheid — optioneel met voorraad-aftrek.",
+      "directEmpty": "Nog geen direct geboekt materiaal.",
+      "adHoc": "Ad-hoc (geen artikel)",
+      "bookDirect": "Verbruik boeken",
+      "deductStock": "Aftrekken van voorraad",
+      "deleteDirect": "Verwijderen",
+      "fields": {
+        "title": "Omschrijving",
+        "qty": "Aantal",
+        "unit": "Eenheid",
+        "locationPick": "Kies locatie…"
+      },
+      "errors": {
+        "usageRequired": "Omschrijving en aantal zijn verplicht.",
+        "stockArticleRequired": "Voorraad-aftrek vereist een voorraadplichtig artikel.",
+        "locationRequired": "Kies een locatie voor voorraad-aftrek.",
+        "insufficientStock": "Onvoldoende voorraad op deze locatie."
+      },
       "kinds": {
         "planned": "Begroot",
-        "usage": "Verbruik"
+        "usage": "Verbruik",
+        "direct": "Direct"
       }
     },
     "form": {

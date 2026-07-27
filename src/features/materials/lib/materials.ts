@@ -69,12 +69,13 @@ export type StockReservationRow = {
 };
 
 export type WorkOrderMaterialSummaryRow = {
-  workItemId: string;
-  workItemTitle: string;
+  id?: string;
+  workItemId?: string;
+  workItemTitle?: string;
   title: string;
   quantity: number;
   unit: string;
-  kind: "planned" | "usage";
+  kind: "planned" | "usage" | "direct";
 };
 
 export type StockLocationRow = {

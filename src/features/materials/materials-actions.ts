@@ -547,37 +547,60 @@ export async function listWorkOrderMaterials(workOrderId: string): Promise<{
   if (linksError) return { error: linksError.message };
 
   const workItemIds = (links ?? []).map((row) => row.work_item_id);
-  if (workItemIds.length === 0) {
-    return { linkedWorkItemIds: [], rows: [] };
+
+  const titleById = new Map<string, string>();
+  let lines: Array<{
+    work_item_id: string | null;
+    title: string;
+    estimated_quantity: number;
+    unit: string;
+  }> = [];
+  let usages: Array<{
+    work_item_id: string;
+    title: string;
+    quantity: number;
+    unit: string;
+  }> = [];
+
+  if (workItemIds.length > 0) {
+    const { data: items } = await ctx.supabase
+      .from("work_items")
+      .select("id, title")
+      .eq("organization_id", ctx.organizationId)
+      .in("id", workItemIds);
+
+    for (const row of items ?? []) {
+      titleById.set(row.id, row.title);
+    }
+
+    const [linesResult, usagesResult] = await Promise.all([
+      ctx.supabase
+        .from("project_material_lines")
+        .select("work_item_id, title, estimated_quantity, unit")
+        .eq("organization_id", ctx.organizationId)
+        .in("work_item_id", workItemIds),
+      ctx.supabase
+        .from("material_usages")
+        .select("work_item_id, title, quantity, unit")
+        .eq("organization_id", ctx.organizationId)
+        .in("work_item_id", workItemIds),
+    ]);
+
+    lines = linesResult.data ?? [];
+    usages = usagesResult.data ?? [];
   }
 
-  const { data: items } = await ctx.supabase
-    .from("work_items")
-    .select("id, title")
+  const { data: directUsages } = await ctx.supabase
+    .from("work_order_material_usages")
+    .select("id, title, quantity, unit")
     .eq("organization_id", ctx.organizationId)
-    .in("id", workItemIds);
-
-  const titleById = new Map(
-    (items ?? []).map((row) => [row.id, row.title] as const),
-  );
-
-  const [{ data: lines }, { data: usages }] = await Promise.all([
-    ctx.supabase
-      .from("project_material_lines")
-      .select("work_item_id, title, estimated_quantity, unit")
-      .eq("organization_id", ctx.organizationId)
-      .in("work_item_id", workItemIds),
-    ctx.supabase
-      .from("material_usages")
-      .select("work_item_id, title, quantity, unit")
-      .eq("organization_id", ctx.organizationId)
-      .in("work_item_id", workItemIds),
-  ]);
+    .eq("work_order_id", workOrderId)
+    .order("created_at", { ascending: false });
 
   const rows: import("@/features/materials/lib/materials").WorkOrderMaterialSummaryRow[] =
     [];
 
-  for (const line of lines ?? []) {
+  for (const line of lines) {
     if (!line.work_item_id) continue;
     rows.push({
       workItemId: line.work_item_id,
@@ -589,7 +612,7 @@ export async function listWorkOrderMaterials(workOrderId: string): Promise<{
     });
   }
 
-  for (const usage of usages ?? []) {
+  for (const usage of usages) {
     rows.push({
       workItemId: usage.work_item_id,
       workItemTitle: titleById.get(usage.work_item_id) ?? "—",
@@ -597,6 +620,16 @@ export async function listWorkOrderMaterials(workOrderId: string): Promise<{
       quantity: Number(usage.quantity),
       unit: usage.unit,
       kind: "usage",
+    });
+  }
+
+  for (const usage of directUsages ?? []) {
+    rows.push({
+      id: usage.id,
+      title: usage.title,
+      quantity: Number(usage.quantity),
+      unit: usage.unit,
+      kind: "direct",
     });
   }
 

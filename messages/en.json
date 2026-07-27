@@ -988,9 +988,29 @@
       "link": "Link",
       "loading": "Loading…",
       "empty": "No materials on linked work items yet.",
+      "directTitle": "Direct on work order",
+      "directHint": "Book usage without a work item — optionally deduct stock.",
+      "directEmpty": "No direct material bookings yet.",
+      "adHoc": "Ad-hoc (no article)",
+      "bookDirect": "Book usage",
+      "deductStock": "Deduct from stock",
+      "deleteDirect": "Delete",
+      "fields": {
+        "title": "Description",
+        "qty": "Quantity",
+        "unit": "Unit",
+        "locationPick": "Pick location…"
+      },
+      "errors": {
+        "usageRequired": "Description and quantity are required.",
+        "stockArticleRequired": "Stock deduction requires a stock-tracked article.",
+        "locationRequired": "Pick a location for stock deduction.",
+        "insufficientStock": "Insufficient stock at this location."
+      },
       "kinds": {
         "planned": "Planned",
-        "usage": "Usage"
+        "usage": "Usage",
+        "direct": "Direct"
       }
     },
     "form": {

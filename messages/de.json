@@ -988,9 +988,29 @@
       "link": "Verknüpfen",
       "loading": "Laden…",
       "empty": "Noch kein Material auf verknüpften Arbeitsposten.",
+      "directTitle": "Direkt auf Auftrag",
+      "directHint": "Verbrauch ohne Arbeitsposten buchen — optional mit Bestandsabzug.",
+      "directEmpty": "Noch kein direkt gebuchtes Material.",
+      "adHoc": "Ad-hoc (kein Artikel)",
+      "bookDirect": "Verbrauch buchen",
+      "deductStock": "Vom Bestand abziehen",
+      "deleteDirect": "Löschen",
+      "fields": {
+        "title": "Beschreibung",
+        "qty": "Menge",
+        "unit": "Einheit",
+        "locationPick": "Standort wählen…"
+      },
+      "errors": {
+        "usageRequired": "Beschreibung und Menge sind erforderlich.",
+        "stockArticleRequired": "Bestandsabzug erfordert einen bestandsgeführten Artikel.",
+        "locationRequired": "Wähle einen Standort für den Bestandsabzug.",
+        "insufficientStock": "Nicht genug Bestand an diesem Standort."
+      },
       "kinds": {
         "planned": "Geplant",
-        "usage": "Verbrauch"
+        "usage": "Verbrauch",
+        "direct": "Direkt"
       }
     },
     "form": {

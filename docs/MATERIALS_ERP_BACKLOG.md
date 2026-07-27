@@ -14,13 +14,16 @@ Zie eerdere secties in git history — artikelen, voorraad, project BOM, leveran
 - [x] Barcode-zoeken in artikelen-workspace (Enter opent artikel)
 - [x] Werkbon-materiaal: koppel werkzaamheden + rollup begroot/verbruik
 
+## Afgerond (fase E+ — direct op werkbon)
+
+- [x] Materiaal direct op werkbon boeken (zonder werkzaamheid)
+
 ## Volgende
 
-- [ ] Materiaal direct op werkbon boeken (zonder werkzaamheid)
 - [ ] 3-way match met facturen
 - [ ] Catalogus-integraties (2BA e.d.)
 - [ ] Veld/portaal (scan + offline)
 
 ## Migratie
 
-Fase E gebruikt bestaande tabellen — **geen nieuwe migratie**.
+Fase E+ vereist `supabase/migrations/20260727300000_work_order_material_usages.sql` — run in SQL Editor, daarna archiveren.

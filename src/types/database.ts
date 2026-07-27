@@ -904,6 +904,68 @@ export type Database = {
           },
         ];
       };
+      work_order_material_usages: {
+        Row: {
+          id: string;
+          organization_id: string;
+          project_id: string;
+          work_order_id: string;
+          article_id: string | null;
+          title: string;
+          quantity: number;
+          unit: string;
+          location_id: string | null;
+          stock_movement_id: string | null;
+          user_id: string;
+          work_date: string;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          project_id: string;
+          work_order_id: string;
+          article_id?: string | null;
+          title: string;
+          quantity: number;
+          unit?: string;
+          location_id?: string | null;
+          stock_movement_id?: string | null;
+          user_id: string;
+          work_date?: string;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          project_id?: string;
+          work_order_id?: string;
+          article_id?: string | null;
+          title?: string;
+          quantity?: number;
+          unit?: string;
+          location_id?: string | null;
+          stock_movement_id?: string | null;
+          user_id?: string;
+          work_date?: string;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "work_order_material_usages_work_order_id_fkey";
+            columns: ["work_order_id"];
+            isOneToOne: false;
+            referencedRelation: "work_orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       file_folders: {
         Row: {
           id: string;

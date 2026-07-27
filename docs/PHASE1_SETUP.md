@@ -262,6 +262,13 @@ Geen nieuwe SQL. Test:
 - `/materiaal/artikelen` — barcodeveld, Enter opent artikel
 - `/werkbonnen` — werkbon openen → **Materiaal** → werkzaamheid koppelen → overzicht
 
+## 24. Materiaal ERP fase E+ (direct op werkbon)
+
+1. Open **SQL Editor** in Supabase
+2. Plak en run:  
+   `supabase/migrations/20260727300000_work_order_material_usages.sql`
+3. Test: `/werkbonnen` → werkbon → **Direct op werkbon** → verbruik boeken
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  
