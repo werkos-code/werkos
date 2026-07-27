@@ -1320,6 +1320,7 @@
         "expected": "Verwachte leverdatum",
         "lines": "Orderregels",
         "articleAdHoc": "Ad-hoc (geen artikel)",
+        "articlePick": "Kies artikel…",
         "lineTitle": "Omschrijving",
         "qty": "Aantal",
         "unit": "Eenheid",
@@ -1360,6 +1361,20 @@
         "invoiceNumberRequired": "Factuurnummer is verplicht.",
         "invoiceLinesRequired": "Vul minimaal één factuurregel in.",
         "poNotReady": "Order moet verstuurd of ontvangen zijn."
+      },
+      "catalog": {
+        "hint": "Per regel: eigen catalogus, 2BA zoeken of handmatig invullen.",
+        "modes": {
+          "local": "Eigen catalogus",
+          "twoba": "2BA",
+          "adhoc": "Handmatig"
+        },
+        "searchPlaceholder": "Zoek in 2BA (naam, artikelcode, EAN)…",
+        "noResults": "Geen resultaten in 2BA.",
+        "selected": "Geselecteerd: {title}",
+        "notConfigured": "2BA is nog niet gekoppeld. Vul TWOBA_* env-vars in of gebruik handmatig.",
+        "searchError": "2BA-zoekopdracht mislukt.",
+        "importError": "Artikel importeren vanuit 2BA mislukt."
       }
     },
     "workItem": {

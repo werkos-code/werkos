@@ -276,6 +276,12 @@ Geen nieuwe SQL. Test:
    `docs/sql-applied/20260727310000_supplier_invoices_3way_match.sql`
 3. Test: `/materiaal/inkoop` → order ontvangen → **Factuur** → **3-way match**
 
+## 26. Materiaal ERP fase G (2BA + handmatig in inkoop)
+
+1. Run SQL: `supabase/migrations/20260727320000_articles_catalog_refs.sql`
+2. Optioneel: zet `TWOBA_*` in `.env.local` / Vercel (zie `.env.example`)
+3. Test: `/materiaal/inkoop` → nieuwe order → per regel **Eigen catalogus** / **2BA** / **Handmatig**
+
 ## Prijsformule
 
 `totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  

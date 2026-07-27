@@ -2,7 +2,7 @@
 
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useMemo, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "@/i18n/navigation";
 
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +25,11 @@ import {
   type StockLocationRow,
   type SupplierInvoiceRow,
 } from "@/features/materials/lib/materials";
+import {
+  PoLineArticlePicker,
+  emptyPoLineDraft,
+  type PoLineDraft,
+} from "@/features/materials/components/po-line-article-picker";
 import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
 import type { PurchaseOrderStatus } from "@/types/database";
 import { formatEuroFromCents } from "@/utils/format";
@@ -36,18 +41,6 @@ type PurchasingWorkspaceProps = {
   articles: ArticleRow[];
   locations: StockLocationRow[];
 };
-
-type DraftLine = {
-  articleId: string;
-  title: string;
-  quantity: string;
-  unit: string;
-  unitCost: string;
-};
-
-function emptyLine(): DraftLine {
-  return { articleId: "", title: "", quantity: "", unit: "st", unitCost: "" };
-}
 
 const STATUSES: PurchaseOrderStatus[] = [
   "draft",
@@ -70,7 +63,7 @@ export function PurchasingWorkspace({
   const [supplierId, setSupplierId] = useState("");
   const [reference, setReference] = useState("");
   const [expectedDate, setExpectedDate] = useState("");
-  const [lines, setLines] = useState<DraftLine[]>([emptyLine()]);
+  const [lines, setLines] = useState<PoLineDraft[]>([emptyPoLineDraft()]);
   const [receiveOrderId, setReceiveOrderId] = useState<string | null>(null);
   const [receiveLocationId, setReceiveLocationId] = useState("");
   const [receiveLines, setReceiveLines] = useState<PurchaseOrderLineRow[]>([]);
@@ -97,11 +90,6 @@ export function PurchasingWorkspace({
   const openCount = orders.filter(
     (row) => row.status === "sent" || row.status === "partially_received",
   ).length;
-
-  const filteredArticles = useMemo(
-    () => articles.filter((row) => row.isActive),
-    [articles],
-  );
 
   function createOrder() {
     if (!supplierId) {
@@ -144,7 +132,7 @@ export function PurchasingWorkspace({
         setSupplierId("");
         setReference("");
         setExpectedDate("");
-        setLines([emptyLine()]);
+        setLines([emptyPoLineDraft()]);
         router.refresh();
       } catch {
         setError(tCommon("error"));
@@ -518,7 +506,7 @@ export function PurchasingWorkspace({
       )}
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle>{t("newTitle")}</DialogTitle>
           </DialogHeader>
@@ -556,90 +544,25 @@ export function PurchasingWorkspace({
 
             <div className="space-y-2">
               <p className="text-sm font-medium">{t("fields.lines")}</p>
+              <p className="text-xs text-muted-foreground">{t("catalog.hint")}</p>
               {lines.map((line, index) => (
-                <div key={index} className="grid gap-2 rounded-lg border border-border/70 p-3 sm:grid-cols-2">
-                  <select
-                    value={line.articleId}
-                    onChange={(e) => {
-                      const articleId = e.target.value;
-                      const article = filteredArticles.find(
-                        (row) => row.id === articleId,
-                      );
-                      setLines((prev) =>
-                        prev.map((row, i) =>
-                          i === index
-                            ? {
-                                ...row,
-                                articleId,
-                                title: article?.name ?? row.title,
-                                unit: article?.unit ?? row.unit,
-                              }
-                            : row,
-                        ),
-                      );
-                    }}
-                    className="border-input bg-background h-9 rounded-lg border px-2.5 text-sm sm:col-span-2"
-                  >
-                    <option value="">{t("fields.articleAdHoc")}</option>
-                    {filteredArticles.map((article) => (
-                      <option key={article.id} value={article.id}>
-                        {article.name}
-                      </option>
-                    ))}
-                  </select>
-                  <Input
-                    value={line.title}
-                    placeholder={t("fields.lineTitle")}
-                    onChange={(e) =>
-                      setLines((prev) =>
-                        prev.map((row, i) =>
-                          i === index ? { ...row, title: e.target.value } : row,
-                        ),
-                      )
-                    }
-                  />
-                  <Input
-                    inputMode="decimal"
-                    value={line.quantity}
-                    placeholder={t("fields.qty")}
-                    onChange={(e) =>
-                      setLines((prev) =>
-                        prev.map((row, i) =>
-                          i === index ? { ...row, quantity: e.target.value } : row,
-                        ),
-                      )
-                    }
-                  />
-                  <Input
-                    value={line.unit}
-                    placeholder={t("fields.unit")}
-                    onChange={(e) =>
-                      setLines((prev) =>
-                        prev.map((row, i) =>
-                          i === index ? { ...row, unit: e.target.value } : row,
-                        ),
-                      )
-                    }
-                  />
-                  <Input
-                    inputMode="decimal"
-                    value={line.unitCost}
-                    placeholder={t("fields.unitCost")}
-                    onChange={(e) =>
-                      setLines((prev) =>
-                        prev.map((row, i) =>
-                          i === index ? { ...row, unitCost: e.target.value } : row,
-                        ),
-                      )
-                    }
-                  />
-                </div>
+                <PoLineArticlePicker
+                  key={index}
+                  articles={articles}
+                  value={line}
+                  disabled={isPending}
+                  onChange={(next) =>
+                    setLines((prev) =>
+                      prev.map((row, i) => (i === index ? next : row)),
+                    )
+                  }
+                />
               ))}
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => setLines((prev) => [...prev, emptyLine()])}
+                onClick={() => setLines((prev) => [...prev, emptyPoLineDraft()])}
               >
                 <Plus className="size-4" />
                 {t("addLine")}

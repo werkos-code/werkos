@@ -1320,6 +1320,7 @@
         "expected": "Expected delivery date",
         "lines": "Order lines",
         "articleAdHoc": "Ad-hoc (no article)",
+        "articlePick": "Pick article…",
         "lineTitle": "Description",
         "qty": "Qty",
         "unit": "Unit",
@@ -1360,6 +1361,20 @@
         "invoiceNumberRequired": "Invoice number is required.",
         "invoiceLinesRequired": "Add at least one invoice line.",
         "poNotReady": "Order must be sent or received."
+      },
+      "catalog": {
+        "hint": "Per line: local catalog, 2BA search, or manual entry.",
+        "modes": {
+          "local": "Local catalog",
+          "twoba": "2BA",
+          "adhoc": "Manual"
+        },
+        "searchPlaceholder": "Search 2BA (name, code, EAN)…",
+        "noResults": "No results in 2BA.",
+        "selected": "Selected: {title}",
+        "notConfigured": "2BA is not configured yet. Set TWOBA_* env vars or use manual entry.",
+        "searchError": "2BA search failed.",
+        "importError": "Failed to import article from 2BA."
       }
     },
     "workItem": {

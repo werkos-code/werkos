@@ -1,24 +1,22 @@
 # Materiaal ERP — backlog
 
 > Laatst bijgewerkt: 2026-07-27  
-> SQL: zie `docs/sql-applied/README.md`  
-> Roadmap: `.cursor/plans/materiaal_registratie_v1_2f8a1c04.plan.md`
+> SQL: zie `docs/sql-applied/README.md`
 
-## Afgerond (fase A t/m E+)
+## Afgerond (fase A t/m F)
 
-Artikelen, voorraad, project BOM, leveranciers, inkoop, ontvangst, reserveringen, werkbon-materiaal, direct boeken op werkbon.
+Artikelen, voorraad, BOM, leveranciers, inkoop, ontvangst, reserveringen, werkbon-materiaal, 3-way match.
 
-## Afgerond (fase F — 3-way match)
+## Afgerond (fase G — catalogus + handmatig)
 
-- [x] Leveranciersfacturen gekoppeld aan inkooporderregels
-- [x] Match-overzicht: besteld · ontvangen · gefactureerd + prijs
-- [x] UI op `/materiaal/inkoop` (Factuur + 3-way match)
+- [x] 2BA zoeken en importeren naar artikelen (via env-credentials)
+- [x] Per inkoopregel: eigen catalogus · 2BA · handmatig (gecombineerd)
 
 ## Volgende
 
-- [ ] Catalogus-integraties (2BA e.d.)
 - [ ] Veld/portaal (scan + offline)
+- [ ] 2BA: nettoprijzen / voorraad per leverancier (optioneel)
 
 ## Migratie
 
-Fase F SQL: `docs/sql-applied/20260727310000_supplier_invoices_3way_match.sql` (toegepast).
+Fase G: `supabase/migrations/20260727320000_articles_catalog_refs.sql`

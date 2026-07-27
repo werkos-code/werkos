@@ -1295,6 +1295,9 @@ export type Database = {
           sale_price_cents: number | null;
           is_active: boolean;
           notes: string | null;
+          catalog_source: string | null;
+          catalog_supplier_gln: string | null;
+          catalog_trade_item_id: string | null;
           created_by: string | null;
           created_at: string;
           updated_at: string;
@@ -1313,6 +1316,9 @@ export type Database = {
           sale_price_cents?: number | null;
           is_active?: boolean;
           notes?: string | null;
+          catalog_source?: string | null;
+          catalog_supplier_gln?: string | null;
+          catalog_trade_item_id?: string | null;
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -1331,6 +1337,9 @@ export type Database = {
           sale_price_cents?: number | null;
           is_active?: boolean;
           notes?: string | null;
+          catalog_source?: string | null;
+          catalog_supplier_gln?: string | null;
+          catalog_trade_item_id?: string | null;
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;

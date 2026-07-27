@@ -1320,6 +1320,7 @@
         "expected": "Erwartetes Lieferdatum",
         "lines": "Bestellzeilen",
         "articleAdHoc": "Ad-hoc (kein Artikel)",
+        "articlePick": "Artikel wählen…",
         "lineTitle": "Beschreibung",
         "qty": "Menge",
         "unit": "Einheit",
@@ -1360,6 +1361,20 @@
         "invoiceNumberRequired": "Rechnungsnummer ist erforderlich.",
         "invoiceLinesRequired": "Mindestens eine Rechnungszeile erforderlich.",
         "poNotReady": "Bestellung muss gesendet oder empfangen sein."
+      },
+      "catalog": {
+        "hint": "Pro Zeile: eigener Katalog, 2BA-Suche oder manuelle Eingabe.",
+        "modes": {
+          "local": "Eigener Katalog",
+          "twoba": "2BA",
+          "adhoc": "Manuell"
+        },
+        "searchPlaceholder": "In 2BA suchen (Name, Code, EAN)…",
+        "noResults": "Keine Ergebnisse in 2BA.",
+        "selected": "Ausgewählt: {title}",
+        "notConfigured": "2BA ist noch nicht konfiguriert. TWOBA_* env-vars setzen oder manuell eingeben.",
+        "searchError": "2BA-Suche fehlgeschlagen.",
+        "importError": "Artikelimport aus 2BA fehlgeschlagen."
       }
     },
     "workItem": {
