@@ -967,6 +967,9 @@
       "delete": "Verwijder",
       "recalculate": "Bereken prijzen"
     },
+    "articlePick": "Kies artikel…",
+    "recalculateConfirm": "{count, plural, one {Verkoop- en kostprijs van 1 gekoppeld artikel bijwerken vanuit de catalogus?} other {Verkoop- en kostprijzen van # gekoppelde artikelen bijwerken vanuit de catalogus?}}",
+    "recalculateNone": "Geen gekoppelde artikelen gevonden om bij te werken.",
     "footer": {
       "totalHours": "Totaal uren",
       "totalMaterial": "Totaal materiaal"

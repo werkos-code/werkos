@@ -967,6 +967,9 @@
       "delete": "Delete",
       "recalculate": "Recalculate prices"
     },
+    "articlePick": "Pick article…",
+    "recalculateConfirm": "{count, plural, one {Update sale and cost price for 1 linked article from the catalog?} other {Update sale and cost prices for # linked articles from the catalog?}}",
+    "recalculateNone": "No linked articles found to update.",
     "footer": {
       "totalHours": "Total hours",
       "totalMaterial": "Total materials"

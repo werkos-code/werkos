@@ -967,6 +967,9 @@
       "delete": "Löschen",
       "recalculate": "Preise berechnen"
     },
+    "articlePick": "Artikel wählen…",
+    "recalculateConfirm": "{count, plural, one {Verkaufs- und Einkaufspreis von 1 verknüpften Artikel aus dem Katalog aktualisieren?} other {Verkaufs- und Einkaufspreise von # verknüpften Artikeln aus dem Katalog aktualisieren?}}",
+    "recalculateNone": "Keine verknüpften Artikel zum Aktualisieren gefunden.",
     "footer": {
       "totalHours": "Stunden gesamt",
       "totalMaterial": "Material gesamt"

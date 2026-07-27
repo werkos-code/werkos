@@ -31,18 +31,22 @@ export function defaultsForLineType(
     case "section":
       return {
         lineType: "section",
+        articleId: null,
         quantity: null,
         unit: null,
         unitPriceCents: null,
+        costPriceCents: null,
         discountCents: 0,
         estimatedMinutes: null,
       };
     case "text":
       return {
         lineType: "text",
+        articleId: null,
         quantity: null,
         unit: null,
         unitPriceCents: null,
+        costPriceCents: null,
         discountCents: 0,
         estimatedMinutes: null,
         vatRateBps: 0,
@@ -50,17 +54,21 @@ export function defaultsForLineType(
     case "hours":
       return {
         lineType: "hours",
+        articleId: null,
         quantity: 1,
         unit: "uur",
         unitPriceCents: 0,
+        costPriceCents: null,
         estimatedMinutes: 60,
       };
     case "labor":
       return {
         lineType: "labor",
+        articleId: null,
         quantity: 1,
         unit: "uur",
         unitPriceCents: 0,
+        costPriceCents: null,
         estimatedMinutes: 60,
       };
     case "article":
@@ -87,6 +95,10 @@ export function createQuoteLine(
     title: partial?.title ?? "",
     description: partial?.description ?? null,
     lineType,
+    articleId:
+      partial?.articleId !== undefined
+        ? partial.articleId
+        : (defaults.articleId ?? null),
     quantity:
       partial?.quantity !== undefined
         ? partial.quantity
@@ -96,6 +108,10 @@ export function createQuoteLine(
       partial?.unitPriceCents !== undefined
         ? partial.unitPriceCents
         : (defaults.unitPriceCents ?? null),
+    costPriceCents:
+      partial?.costPriceCents !== undefined
+        ? partial.costPriceCents
+        : (defaults.costPriceCents ?? null),
     vatRateBps: partial?.vatRateBps ?? defaults.vatRateBps ?? 2100,
     discountCents: partial?.discountCents ?? defaults.discountCents ?? 0,
     estimatedMinutes:
@@ -142,6 +158,99 @@ export function aggregateQuoteLineStats(lines: QuoteLineRow[]) {
   }
 
   return { totalMinutes, materialCents, laborCents };
+}
+
+export type QuoteArticlePriceSource = {
+  id: string;
+  name: string;
+  description: string | null;
+  unit: string;
+  salePriceCents: number | null;
+  purchasePriceCents: number | null;
+};
+
+/** Fill line fields from a catalog article (sale → unit price, purchase → cost). */
+export function applyArticleToLine(
+  line: QuoteLineRow,
+  article: QuoteArticlePriceSource,
+): QuoteLineRow {
+  return {
+    ...line,
+    lineType: "article",
+    articleId: article.id,
+    title: article.name,
+    description: article.description ?? line.description,
+    unit: article.unit || line.unit || "st",
+    unitPriceCents: article.salePriceCents ?? line.unitPriceCents ?? 0,
+    costPriceCents: article.purchasePriceCents,
+    quantity: line.quantity ?? 1,
+  };
+}
+
+/** Refresh sale/cost from catalog for lines linked to articles. */
+export function recalculateLinesFromArticles(
+  lines: QuoteLineRow[],
+  articles: QuoteArticlePriceSource[],
+  options?: { onlyLineIds?: Set<string> },
+): { lines: QuoteLineRow[]; updatedCount: number } {
+  const byId = new Map(articles.map((article) => [article.id, article]));
+  let updatedCount = 0;
+  const next = lines.map((line) => {
+    if (!line.articleId) return line;
+    if (options?.onlyLineIds && !options.onlyLineIds.has(line.id)) return line;
+    const article = byId.get(line.articleId);
+    if (!article) return line;
+    updatedCount += 1;
+    return {
+      ...line,
+      unit: article.unit || line.unit,
+      unitPriceCents: article.salePriceCents ?? line.unitPriceCents ?? 0,
+      costPriceCents: article.purchasePriceCents,
+    };
+  });
+  return { lines: next, updatedCount };
+}
+
+export type QuoteMarginStats = {
+  /** True when at least one priced leaf has a cost snapshot. */
+  hasCost: boolean;
+  costCents: number;
+  /** Net of lines that contribute to cost (have costPriceCents). */
+  netWithCostCents: number;
+  marginCents: number;
+  /** null when netWithCost is 0 */
+  marginPercent: number | null;
+};
+
+export function computeQuoteMarginStats(lines: QuoteLineRow[]): QuoteMarginStats {
+  let costCents = 0;
+  let netWithCostCents = 0;
+  let hasCost = false;
+
+  for (const line of getLeafLines(lines)) {
+    if (!isPricedLineType(line.lineType)) continue;
+    if (line.costPriceCents == null) continue;
+    hasCost = true;
+    const qty = line.quantity ?? 0;
+    costCents += Math.round(qty * line.costPriceCents);
+    netWithCostCents += lineNetCents({
+      quantity: line.quantity,
+      unitPriceCents: line.unitPriceCents,
+      discountCents: line.discountCents,
+    });
+  }
+
+  const marginCents = netWithCostCents - costCents;
+  return {
+    hasCost,
+    costCents,
+    netWithCostCents,
+    marginCents,
+    marginPercent:
+      netWithCostCents > 0
+        ? Math.round((marginCents / netWithCostCents) * 1000) / 10
+        : null,
+  };
 }
 
 export function collectDescendants(

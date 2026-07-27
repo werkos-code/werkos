@@ -21,6 +21,6 @@ Run SQL in Supabase vóór gebruik:
 
 ## Volgende (fase 2)
 
-- Artikel-picker uit catalogus
-- Echte “Bereken prijzen”
-- Kostprijs → marge-KPI
+- [x] Artikel-picker uit catalogus → [`QUOTE_EDITOR_PHASE2.md`](./QUOTE_EDITOR_PHASE2.md)
+- [x] Echte “Bereken prijzen”
+- [x] Kostprijs → marge-KPI

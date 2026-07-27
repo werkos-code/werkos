@@ -25,7 +25,7 @@
 | Drag-and-drop herordenen | Root-niveau DnD | ✅ Fase 1 (child-DnD later) |
 | Thumbnails op regels | Niet getoond | Zelfde als afbeeldingen |
 | Bijlagen / dropzone | Disabled dropzone + lege bijlagenlijst | Storage bucket, `quote_attachments` (of generiek), RLS, upload API |
-| Winstmarge-kaart | Niet getoond (geen stub-ruis) | Kostprijs op regels/artikelen; berekening |
+| Winstmarge-kaart | KPI toont % bij kostprijs-snapshot | ✅ Fase 2 |
 | Betaaltermijn | Disabled select | Veld op `quotes` of org-defaults |
 | Betalingsvoorwaarden | Disabled select | Catalogus voorwaarden + koppeling |
 | Offerte-tips | Niet getoond | Content/CMS of vaste tips — alleen als het rust ondersteunt |
@@ -51,7 +51,7 @@
 - [ ] Importeren
 - [x] Drag-and-drop sort (root)
 - [ ] Bijlagen upload + lijst
-- [ ] Winstmarge (alleen met echte kostprijs)
+- [x] Winstmarge (kostprijs-snapshot op regels)
 - [ ] Betaaltermijn + betalingsvoorwaarden
 - [ ] Sneltoetsen
-- [ ] Catalogus / Bereken prijzen (fase 2)
+- [x] Catalogus / Bereken prijzen (fase 2)

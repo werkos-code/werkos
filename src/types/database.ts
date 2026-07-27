@@ -529,9 +529,11 @@ export type Database = {
           title: string;
           description: string | null;
           line_type: "article" | "hours" | "labor" | "text" | "section";
+          article_id: string | null;
           quantity: number | null;
           unit: string | null;
           unit_price_cents: number | null;
+          cost_price_cents: number | null;
           vat_rate_bps: number;
           discount_cents: number;
           estimated_minutes: number | null;
@@ -547,9 +549,11 @@ export type Database = {
           title?: string;
           description?: string | null;
           line_type?: "article" | "hours" | "labor" | "text" | "section";
+          article_id?: string | null;
           quantity?: number | null;
           unit?: string | null;
           unit_price_cents?: number | null;
+          cost_price_cents?: number | null;
           vat_rate_bps?: number;
           discount_cents?: number;
           estimated_minutes?: number | null;
@@ -565,9 +569,11 @@ export type Database = {
           title?: string;
           description?: string | null;
           line_type?: "article" | "hours" | "labor" | "text" | "section";
+          article_id?: string | null;
           quantity?: number | null;
           unit?: string | null;
           unit_price_cents?: number | null;
+          cost_price_cents?: number | null;
           vat_rate_bps?: number;
           discount_cents?: number;
           estimated_minutes?: number | null;
@@ -594,6 +600,13 @@ export type Database = {
             columns: ["parent_id"];
             isOneToOne: false;
             referencedRelation: "quote_lines";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "quote_lines_article_id_fkey";
+            columns: ["article_id"];
+            isOneToOne: false;
+            referencedRelation: "articles";
             referencedColumns: ["id"];
           },
         ];

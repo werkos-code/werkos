@@ -33,9 +33,11 @@ function mapLineRow(row: {
   title: string;
   description: string | null;
   line_type: QuoteLineType;
+  article_id: string | null;
   quantity: number | string | null;
   unit: string | null;
   unit_price_cents: number | null;
+  cost_price_cents: number | null;
   vat_rate_bps: number;
   discount_cents: number;
   estimated_minutes: number | null;
@@ -47,9 +49,11 @@ function mapLineRow(row: {
     title: row.title,
     description: row.description,
     lineType: row.line_type,
+    articleId: row.article_id,
     quantity: row.quantity === null ? null : Number(row.quantity),
     unit: row.unit,
     unitPriceCents: row.unit_price_cents,
+    costPriceCents: row.cost_price_cents,
     vatRateBps: row.vat_rate_bps,
     discountCents: row.discount_cents,
     estimatedMinutes: row.estimated_minutes,
@@ -57,7 +61,7 @@ function mapLineRow(row: {
 }
 
 const LINE_SELECT =
-  "id, parent_id, sort_order, title, description, line_type, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, estimated_minutes";
+  "id, parent_id, sort_order, title, description, line_type, article_id, quantity, unit, unit_price_cents, cost_price_cents, vat_rate_bps, discount_cents, estimated_minutes";
 
 function parseLineType(value: unknown): QuoteLineType | null {
   if (typeof value !== "string") return null;
@@ -83,9 +87,11 @@ export async function POST(request: Request, { params }: RouteParams) {
       title?: string;
       description?: string | null;
       lineType?: string;
+      articleId?: string | null;
       quantity?: number | null;
       unit?: string | null;
       unitPriceCents?: number | null;
+      costPriceCents?: number | null;
       vatRateBps?: number;
       discountCents?: number;
       estimatedMinutes?: number | null;
@@ -103,6 +109,8 @@ export async function POST(request: Request, { params }: RouteParams) {
 
     const isSection = lineType === "section";
     const isText = lineType === "text";
+    const articleId =
+      lineType === "article" ? body.articleId?.trim() || null : null;
 
     const insert = {
       id: lineId,
@@ -113,6 +121,7 @@ export async function POST(request: Request, { params }: RouteParams) {
       title: body.title?.trim() ?? "",
       description: body.description?.trim() || null,
       line_type: lineType,
+      article_id: articleId,
       quantity:
         body.quantity !== undefined
           ? body.quantity
@@ -133,6 +142,12 @@ export async function POST(request: Request, { params }: RouteParams) {
           : isSection || isText
             ? null
             : 0,
+      cost_price_cents:
+        body.costPriceCents === undefined ||
+        body.costPriceCents === null ||
+        Number.isNaN(body.costPriceCents)
+          ? null
+          : Math.max(0, Math.round(body.costPriceCents)),
       vat_rate_bps: body.vatRateBps ?? (isText ? 0 : 2100),
       discount_cents: body.discountCents ?? 0,
       estimated_minutes:
@@ -184,9 +199,11 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       title?: string;
       description?: string | null;
       lineType?: string;
+      articleId?: string | null;
       quantity?: number | null;
       unit?: string | null;
       unitPriceCents?: number | null;
+      costPriceCents?: number | null;
       vatRateBps?: number;
       discountCents?: number;
       estimatedMinutes?: number | null;
@@ -237,6 +254,12 @@ export async function PATCH(request: Request, { params }: RouteParams) {
           ? { description: body.description?.trim() || null }
           : {}),
         ...(parsedType ? { line_type: parsedType } : {}),
+        ...(body.articleId !== undefined
+          ? { article_id: body.articleId?.trim() || null }
+          : {}),
+        ...(parsedType && parsedType !== "article"
+          ? { article_id: null }
+          : {}),
         ...(body.quantity !== undefined
           ? {
               quantity:
@@ -256,6 +279,18 @@ export async function PATCH(request: Request, { params }: RouteParams) {
                   ? null
                   : Math.round(body.unitPriceCents),
             }
+          : {}),
+        ...(body.costPriceCents !== undefined
+          ? {
+              cost_price_cents:
+                body.costPriceCents === null ||
+                Number.isNaN(body.costPriceCents)
+                  ? null
+                  : Math.max(0, Math.round(body.costPriceCents)),
+            }
+          : {}),
+        ...(parsedType && parsedType !== "article"
+          ? { cost_price_cents: null }
           : {}),
         ...(body.vatRateBps !== undefined
           ? { vat_rate_bps: Math.round(body.vatRateBps) }

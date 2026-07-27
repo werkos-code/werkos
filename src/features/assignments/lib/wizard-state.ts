@@ -105,6 +105,8 @@ function migrateV1Lines(raw: unknown): QuoteLineRow[] {
       return {
         ...existing,
         lineType: existing.lineType ?? "article",
+        articleId: existing.articleId ?? null,
+        costPriceCents: existing.costPriceCents ?? null,
       };
     }
     return createQuoteLine({

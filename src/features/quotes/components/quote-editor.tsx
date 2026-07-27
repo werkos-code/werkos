@@ -31,12 +31,14 @@ import { QuoteFinancialPlanning } from "@/features/quotes/components/quote-finan
 import { QuoteLinesWorkspace } from "@/features/quotes/components/quote-lines-workspace";
 import {
   collectDescendants,
+  computeQuoteMarginStats,
   computeQuoteTotals,
   formatEuro,
   getLeafLines,
 } from "@/features/quotes/lib/quote-line";
 import { isQuoteEditable } from "@/features/quotes/lib/quote-status";
 import type { QuoteDetail, QuoteLineRow } from "@/features/quotes/quotes-actions";
+import type { ArticleRow } from "@/features/materials/lib/materials";
 import {
   MetaStatCard,
   PageCard,
@@ -46,6 +48,7 @@ import { cn } from "@/lib/utils";
 
 type QuoteEditorProps = {
   quote: QuoteDetail;
+  articles?: ArticleRow[];
 };
 
 type EditorTab =
@@ -56,7 +59,7 @@ type EditorTab =
   | "notes"
   | "activity";
 
-export function QuoteEditor({ quote }: QuoteEditorProps) {
+export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
   const t = useTranslations("quotes");
   const tCommon = useTranslations("common");
   const router = useRouter();
@@ -121,6 +124,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
 
   const leafLines = useMemo(() => getLeafLines(lines), [lines]);
   const totals = useMemo(() => computeQuoteTotals(lines), [lines]);
+  const margin = useMemo(() => computeQuoteMarginStats(lines), [lines]);
 
   function markDirty() {
     setDirty(true);
@@ -172,9 +176,11 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
               title: line.title,
               description: line.description,
               lineType: line.lineType,
+              articleId: line.articleId,
               quantity: line.quantity,
               unit: line.unit,
               unitPriceCents: line.unitPriceCents,
+              costPriceCents: line.costPriceCents,
               vatRateBps: line.vatRateBps,
               discountCents: line.discountCents,
               estimatedMinutes: line.estimatedMinutes,
@@ -352,11 +358,13 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
         body: JSON.stringify({
           parentId: source.parentId,
           lineType: source.lineType,
+          articleId: source.articleId,
           title: source.title ? `${source.title} (kopie)` : "",
           description: source.description,
           quantity: source.quantity,
           unit: source.unit,
           unitPriceCents: source.unitPriceCents,
+          costPriceCents: source.costPriceCents,
           vatRateBps: source.vatRateBps,
           discountCents: source.discountCents,
           estimatedMinutes: source.estimatedMinutes,
@@ -637,7 +645,18 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
         />
         <MetaStatCard
           label={t("kpi.margin")}
-          value={<span className="text-muted-foreground">—</span>}
+          value={
+            margin.hasCost && margin.marginPercent != null ? (
+              <span className="font-mono tabular-nums">
+                {margin.marginPercent.toLocaleString("nl-NL", {
+                  maximumFractionDigits: 1,
+                })}
+                %
+              </span>
+            ) : (
+              <span className="text-muted-foreground">—</span>
+            )
+          }
         />
       </div>
 
@@ -715,6 +734,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
               <div className="space-y-0">
                 <QuoteLinesWorkspace
                   lines={lines}
+                  articles={articles}
                   onChange={(next) => {
                     setLines(next);
                     markDirty();

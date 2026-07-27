@@ -36,6 +36,7 @@ import {
 import {
   addLineToTree,
   aggregateQuoteLineStats,
+  applyArticleToLine,
   childrenOf,
   createQuoteLine,
   defaultsForLineType,
@@ -46,6 +47,7 @@ import {
   getRootLines,
   isPricedLineType,
   isSectionLine,
+  recalculateLinesFromArticles,
   reorderSiblings,
   sectionTotalCents,
   updateLineInTree,
@@ -55,6 +57,7 @@ import type {
   QuoteLineRow,
   QuoteLineType,
 } from "@/features/quotes/quotes-actions";
+import type { ArticleRow } from "@/features/materials/lib/materials";
 import { cn } from "@/lib/utils";
 
 const selectClass =
@@ -67,6 +70,7 @@ export type QuoteLinesWorkspaceProps = {
   busy?: boolean;
   showToolbarExtras?: boolean;
   emptyMessage?: string;
+  articles?: ArticleRow[];
   onAddLine?: (
     parentId: string | null,
     options?: { asSection?: boolean; lineType?: QuoteLineType },
@@ -86,6 +90,7 @@ export function QuoteLinesWorkspace({
   busy = false,
   showToolbarExtras = true,
   emptyMessage,
+  articles = [],
   onAddLine,
   onDeleteLine,
   onDeleteLines,
@@ -98,6 +103,14 @@ export function QuoteLinesWorkspace({
 
   const roots = useMemo(() => getRootLines(lines), [lines]);
   const stats = useMemo(() => aggregateQuoteLineStats(lines), [lines]);
+  const activeArticles = useMemo(
+    () => articles.filter((article) => article.isActive),
+    [articles],
+  );
+  const linkedArticleCount = useMemo(
+    () => lines.filter((line) => Boolean(line.articleId)).length,
+    [lines],
+  );
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
@@ -187,6 +200,49 @@ export function QuoteLinesWorkspace({
       next = duplicateLineInTree(next, id);
     }
     onChange(next);
+  }
+
+  function handleRecalculatePrices() {
+    if (linkedArticleCount === 0) return;
+    if (!window.confirm(t("recalculateConfirm", { count: linkedArticleCount }))) {
+      return;
+    }
+    const onlyLineIds =
+      selected.size > 0
+        ? new Set(
+            [...selected].filter((id) =>
+              lines.some((line) => line.id === id && line.articleId),
+            ),
+          )
+        : undefined;
+    const { lines: next, updatedCount } = recalculateLinesFromArticles(
+      lines,
+      activeArticles,
+      onlyLineIds && onlyLineIds.size > 0 ? { onlyLineIds } : undefined,
+    );
+    if (updatedCount === 0) {
+      window.alert(t("recalculateNone"));
+      return;
+    }
+    onChange(next);
+  }
+
+  function pickArticle(lineId: string, articleId: string) {
+    if (!articleId) {
+      updateLocalLine(lineId, { articleId: null });
+      return;
+    }
+    const article = activeArticles.find((row) => row.id === articleId);
+    if (!article) return;
+    const line = lines.find((row) => row.id === lineId);
+    if (!line) return;
+    onChange(
+      updateLineInTree(
+        lines,
+        lineId,
+        applyArticleToLine(line, article),
+      ),
+    );
   }
 
   async function onDragEnd(event: DragEndEvent, parentId: string | null) {
@@ -332,6 +388,22 @@ export function QuoteLinesWorkspace({
               }
             />
           </div>
+          {line.lineType === "article" && activeArticles.length > 0 ? (
+            <select
+              className={cn(selectClass, "text-muted-foreground")}
+              value={line.articleId ?? ""}
+              disabled={!editable || busy}
+              onChange={(e) => pickArticle(line.id, e.target.value)}
+            >
+              <option value="">{t("articlePick")}</option>
+              {activeArticles.map((article) => (
+                <option key={article.id} value={article.id}>
+                  {article.code ? `${article.code} · ` : ""}
+                  {article.name}
+                </option>
+              ))}
+            </select>
+          ) : null}
           {line.lineType !== "text" ? (
             <textarea
               rows={1}
@@ -359,6 +431,9 @@ export function QuoteLinesWorkspace({
                 ...defaultsForLineType(lineType),
                 title: line.title,
                 description: line.description,
+                articleId: lineType === "article" ? line.articleId : null,
+                costPriceCents:
+                  lineType === "article" ? line.costPriceCents : null,
               });
             }}
           >
@@ -495,7 +570,13 @@ export function QuoteLinesWorkspace({
           </>
         ) : null}
         {showToolbarExtras ? (
-          <Button type="button" variant="outline" size="sm" disabled>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={busy || !editable || linkedArticleCount === 0}
+            onClick={handleRecalculatePrices}
+          >
             <Calculator className="size-3.5" />
             {t("toolbar.recalculate")}
           </Button>

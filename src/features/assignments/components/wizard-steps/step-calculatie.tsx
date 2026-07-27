@@ -5,11 +5,13 @@ import { useTranslations } from "next-intl";
 import { QuoteLinesWorkspace } from "@/features/quotes/components/quote-lines-workspace";
 import { QuoteTotalsPanel } from "@/features/quotes/components/quote-totals-panel";
 import type { QuoteLineRow } from "@/features/quotes/quotes-actions";
+import type { ArticleRow } from "@/features/materials/lib/materials";
 import { PageCard } from "@/features/shell/components/page-card";
 
 type StepCalculatieProps = {
   lines: QuoteLineRow[];
   marginPercent: number;
+  articles?: ArticleRow[];
   onChangeLines: (lines: QuoteLineRow[]) => void;
   onChangeMargin: (marginPercent: number) => void;
 };
@@ -17,6 +19,7 @@ type StepCalculatieProps = {
 export function StepCalculatie({
   lines,
   marginPercent,
+  articles = [],
   onChangeLines,
   onChangeMargin,
 }: StepCalculatieProps) {
@@ -33,6 +36,7 @@ export function StepCalculatie({
         <PageCard className="overflow-hidden">
           <QuoteLinesWorkspace
             lines={lines}
+            articles={articles}
             onChange={onChangeLines}
             showToolbarExtras={false}
             emptyMessage={t("empty")}

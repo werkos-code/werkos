@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
+import { listArticles } from "@/features/materials/materials-actions";
 import { QuoteEditor } from "@/features/quotes/components/quote-editor";
 import { getQuote } from "@/features/quotes/quotes-actions";
 import { ShellPage } from "@/features/shell/components/shell-page";
@@ -13,7 +14,10 @@ export default async function QuoteDetailPage({ params }: Props) {
   const { locale, projectId, quoteId } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("quotes");
-  const result = await getQuote(quoteId);
+  const [result, articlesResult] = await Promise.all([
+    getQuote(quoteId),
+    listArticles(),
+  ]);
 
   if (result.error === "not_found" || !result.quote) {
     notFound();
@@ -29,7 +33,10 @@ export default async function QuoteDetailPage({ params }: Props) {
       backHref={`/projecten/${projectId}`}
       contentClassName="max-w-none w-[94%]"
     >
-      <QuoteEditor quote={result.quote} />
+      <QuoteEditor
+        quote={result.quote}
+        articles={articlesResult.articles ?? []}
+      />
     </ShellPage>
   );
 }

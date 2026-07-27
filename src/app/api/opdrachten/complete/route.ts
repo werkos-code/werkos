@@ -59,6 +59,7 @@ function mapIncomingLines(
     title: String(line.title ?? ""),
     description: (line.description as string | null) ?? null,
     lineType: (line.lineType as QuoteLineRow["lineType"]) ?? "article",
+    articleId: (line.articleId as string | null) ?? null,
     quantity:
       line.quantity === null || line.quantity === undefined
         ? null
@@ -68,6 +69,10 @@ function mapIncomingLines(
       line.unitPriceCents === null || line.unitPriceCents === undefined
         ? null
         : Math.round(Number(line.unitPriceCents)),
+    costPriceCents:
+      line.costPriceCents === null || line.costPriceCents === undefined
+        ? null
+        : Math.round(Number(line.costPriceCents)),
     vatRateBps: Number(line.vatRateBps ?? 2100),
     discountCents: Number(line.discountCents ?? 0),
     estimatedMinutes:
@@ -248,10 +253,15 @@ export async function POST(request: Request) {
       title: line.title.trim(),
       description: line.description,
       line_type: line.lineType ?? "article",
+      article_id: line.articleId,
       quantity: line.quantity,
       unit: line.unit,
       unit_price_cents:
         line.unitPriceCents === null ? null : Math.round(line.unitPriceCents),
+      cost_price_cents:
+        line.costPriceCents === null || line.costPriceCents === undefined
+          ? null
+          : Math.round(line.costPriceCents),
       vat_rate_bps: line.vatRateBps,
       discount_cents: line.discountCents,
       estimated_minutes: line.estimatedMinutes,
@@ -267,9 +277,11 @@ export async function POST(request: Request) {
         title: "Marge",
         description: null,
         line_type: "article" as const,
+        article_id: null,
         quantity: 1,
         unit: "post",
         unit_price_cents: totals.marginCents,
+        cost_price_cents: null,
         vat_rate_bps: 2100,
         discount_cents: 0,
         estimated_minutes: null,

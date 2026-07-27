@@ -23,8 +23,13 @@ import {
   type AssignmentWizardState,
 } from "@/features/assignments/lib/wizard-state";
 import { PageCard } from "@/features/shell/components/page-card";
+import type { ArticleRow } from "@/features/materials/lib/materials";
 
-export function NewAssignmentWizard() {
+export function NewAssignmentWizard({
+  articles = [],
+}: {
+  articles?: ArticleRow[];
+}) {
   const t = useTranslations("assignment");
   const tCommon = useTranslations("common");
   const router = useRouter();
@@ -243,6 +248,7 @@ export function NewAssignmentWizard() {
           <StepCalculatie
             lines={state.calculation.lines}
             marginPercent={state.calculation.marginPercent}
+            articles={articles}
             onChangeLines={(lines) =>
               patchState({
                 calculation: { ...state.calculation, lines },
