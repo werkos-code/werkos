@@ -4,9 +4,10 @@ import { CheckCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import {
-  computeCalculationTotals,
+  computeQuoteTotals,
   formatEuro,
-} from "@/features/assignments/lib/calculation";
+  getLeafLines,
+} from "@/features/quotes/lib/quote-line";
 import type { AssignmentWizardState } from "@/features/assignments/lib/wizard-state";
 import { PageCard } from "@/features/shell/components/page-card";
 
@@ -25,7 +26,7 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
 
 export function StepAfronden({ state }: StepAfrondenProps) {
   const t = useTranslations("assignment.afronden");
-  const totals = computeCalculationTotals(
+  const totals = computeQuoteTotals(
     state.calculation.lines,
     state.calculation.marginPercent,
   );
@@ -33,7 +34,9 @@ export function StepAfronden({ state }: StepAfrondenProps) {
     state.customer.company.trim() ||
     state.customer.name.trim() ||
     "—";
-  const lineCount = state.calculation.lines.filter((l) => l.title.trim()).length;
+  const lineCount = getLeafLines(state.calculation.lines).filter((line) =>
+    line.title.trim(),
+  ).length;
 
   const checks = [
     { key: "customer", done: Boolean(state.customer.name.trim()) },
@@ -121,11 +124,11 @@ export function StepAfronden({ state }: StepAfrondenProps) {
             />
             <SummaryRow
               label={t("fields.totalExcl")}
-              value={formatEuro(totals.subtotalCents + totals.marginCents)}
+              value={formatEuro(totals.net)}
             />
             <SummaryRow
               label={t("fields.totalIncl")}
-              value={formatEuro(totals.totalCents)}
+              value={formatEuro(totals.gross)}
             />
           </dl>
         </PageCard>

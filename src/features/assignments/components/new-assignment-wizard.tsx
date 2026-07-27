@@ -179,15 +179,7 @@ export function NewAssignmentWizard() {
           },
           request: state.request,
           calculation: {
-            lines: state.calculation.lines
-              .filter((line) => line.title.trim())
-              .map((line) => ({
-                title: line.title,
-                quantity: line.quantity,
-                unit: line.unit,
-                unitPriceCents: line.unitPriceCents,
-                vatRateBps: line.vatRateBps,
-              })),
+            lines: state.calculation.lines,
             marginPercent: state.calculation.marginPercent,
           },
         }),
@@ -221,7 +213,9 @@ export function NewAssignmentWizard() {
   const isLast = state.step === "afronden";
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-6">
+    <div
+      className={`mx-auto w-full space-y-6 ${state.step === "calculatie" ? "max-w-6xl" : "max-w-4xl"}`}
+    >
       <WizardProgress current={state.step} />
 
       <PageCard className="p-6 sm:p-8">
@@ -239,7 +233,8 @@ export function NewAssignmentWizard() {
         ) : null}
         {state.step === "calculatie" ? (
           <StepCalculatie
-            state={state}
+            lines={state.calculation.lines}
+            marginPercent={state.calculation.marginPercent}
             onChangeLines={(lines) =>
               patchState({
                 calculation: { ...state.calculation, lines },

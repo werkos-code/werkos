@@ -1,4 +1,9 @@
-export const WIZARD_STORAGE_KEY = "werkos-new-assignment-wizard-v1";
+import {
+  createQuoteLine,
+  type QuoteLineRow,
+} from "@/features/quotes/lib/quote-line";
+
+export const WIZARD_STORAGE_KEY = "werkos-new-assignment-wizard-v2";
 
 export const WIZARD_STEPS = [
   "gegevens",
@@ -9,14 +14,7 @@ export const WIZARD_STEPS = [
 
 export type WizardStep = (typeof WIZARD_STEPS)[number];
 
-export type CalculationLine = {
-  id: string;
-  title: string;
-  quantity: number;
-  unit: string;
-  unitPriceCents: number;
-  vatRateBps: number;
-};
+export type CalculationLine = QuoteLineRow;
 
 export type AssignmentWizardState = {
   step: WizardStep;
@@ -38,7 +36,7 @@ export type AssignmentWizardState = {
     internalNotes: string;
   };
   calculation: {
-    lines: CalculationLine[];
+    lines: QuoteLineRow[];
     marginPercent: number;
   };
 };
@@ -83,19 +81,7 @@ export function createEmptyWizardState(): AssignmentWizardState {
   };
 }
 
-export function createCalculationLine(
-  partial?: Partial<CalculationLine>,
-): CalculationLine {
-  return {
-    id: crypto.randomUUID(),
-    title: "",
-    quantity: 1,
-    unit: "st",
-    unitPriceCents: 0,
-    vatRateBps: 2100,
-    ...partial,
-  };
-}
+export { createQuoteLine as createCalculationLine };
 
 export function suggestProjectName(input: {
   projectType: string;
@@ -110,12 +96,60 @@ export function suggestProjectName(input: {
   return `${type} - ${label}`;
 }
 
+function migrateV1Lines(raw: unknown): QuoteLineRow[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((entry, index) => {
+    const line = entry as Record<string, unknown>;
+    if ("parentId" in line) {
+      return line as QuoteLineRow;
+    }
+    return createQuoteLine({
+      sortOrder: index,
+      title: String(line.title ?? ""),
+      quantity: Number(line.quantity ?? 1),
+      unit: String(line.unit ?? "st"),
+      unitPriceCents: Number(line.unitPriceCents ?? 0),
+      vatRateBps: Number(line.vatRateBps ?? 2100),
+    });
+  });
+}
+
 export function loadWizardState(): AssignmentWizardState | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = window.localStorage.getItem(WIZARD_STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as AssignmentWizardState;
+    if (!raw) {
+      const legacy = window.localStorage.getItem(
+        "werkos-new-assignment-wizard-v1",
+      );
+      if (!legacy) return null;
+      const parsed = JSON.parse(legacy) as Partial<AssignmentWizardState>;
+      return {
+        ...createEmptyWizardState(),
+        ...parsed,
+        calculation: {
+          lines: migrateV1Lines(parsed.calculation?.lines),
+          marginPercent: parsed.calculation?.marginPercent ?? 0,
+        },
+      };
+    }
+    const parsed = JSON.parse(raw) as Partial<AssignmentWizardState>;
+    return {
+      ...createEmptyWizardState(),
+      ...parsed,
+      customer: {
+        ...createEmptyWizardState().customer,
+        ...parsed.customer,
+      },
+      request: {
+        ...createEmptyWizardState().request,
+        ...parsed.request,
+      },
+      calculation: {
+        lines: migrateV1Lines(parsed.calculation?.lines),
+        marginPercent: parsed.calculation?.marginPercent ?? 0,
+      },
+    };
   } catch {
     return null;
   }
@@ -133,6 +167,7 @@ export function saveWizardState(state: AssignmentWizardState) {
 export function clearWizardState() {
   if (typeof window === "undefined") return;
   window.localStorage.removeItem(WIZARD_STORAGE_KEY);
+  window.localStorage.removeItem("werkos-new-assignment-wizard-v1");
 }
 
 export function stepIndex(step: WizardStep) {

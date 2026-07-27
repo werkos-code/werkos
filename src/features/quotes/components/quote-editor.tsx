@@ -4,15 +4,11 @@ import { Link, useRouter } from "@/i18n/navigation";
 import {
   Calendar,
   Check,
-  ChevronDown,
-  ChevronRight,
   Copy,
   Ellipsis,
   Eye,
   ExternalLink,
   FileUp,
-  MoreVertical,
-  Plus,
   Send,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -30,16 +26,17 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { QuoteLinesWorkspace } from "@/features/quotes/components/quote-lines-workspace";
 import {
-  isQuoteEditable,
-  lineNetCents,
-  lineVatCents,
-} from "@/features/quotes/lib/quote-status";
+  QuoteTotalsPanel,
+  QuoteTotalsPanelFooterButton,
+} from "@/features/quotes/components/quote-totals-panel";
+import {
+  collectDescendants,
+  getLeafLines,
+} from "@/features/quotes/lib/quote-line";
+import { isQuoteEditable } from "@/features/quotes/lib/quote-status";
 import type { QuoteDetail, QuoteLineRow } from "@/features/quotes/quotes-actions";
-import {
-  hoursInputToMinutes,
-  minutesToHoursInput,
-} from "@/features/time/lib/time-entry";
 import {
   MetaStatCard,
   PageCard,
@@ -52,184 +49,6 @@ type QuoteEditorProps = {
 };
 
 type EditorTab = "lines" | "info" | "terms" | "notes";
-
-/** Shared line table grid — header and rows must use the exact same template. */
-const LINE_GRID_CLASS =
-  "lg:grid-cols-[1.75rem_minmax(0,1fr)_4.5rem_5.5rem_4.5rem_6rem_6.5rem_7rem]";
-
-
-function formatEuro(cents: number) {
-  return new Intl.NumberFormat("nl-NL", {
-    style: "currency",
-    currency: "EUR",
-  }).format(cents / 100);
-}
-
-function centsToDraft(cents: number | null): string {
-  if (cents === null || Number.isNaN(cents)) return "";
-  return (cents / 100).toFixed(2).replace(".", ",");
-}
-
-function draftToCents(value: string): number | null {
-  const trimmed = value.trim().replace(/\s/g, "").replace(",", ".");
-  if (!trimmed) return null;
-  const n = Number(trimmed);
-  if (Number.isNaN(n)) return null;
-  return Math.round(n * 100);
-}
-
-function parseQuantity(value: string): number | null {
-  const trimmed = value.trim().replace(",", ".");
-  if (!trimmed) return null;
-  const n = Number(trimmed);
-  return Number.isNaN(n) ? null : n;
-}
-
-function MoneyField({
-  cents,
-  disabled,
-  className,
-  onCommit,
-}: {
-  cents: number | null;
-  disabled?: boolean;
-  className?: string;
-  onCommit: (cents: number | null) => void;
-}) {
-  const [focused, setFocused] = useState(false);
-  const [draft, setDraft] = useState(centsToDraft(cents));
-
-  useEffect(() => {
-    if (!focused) setDraft(centsToDraft(cents));
-  }, [cents, focused]);
-
-  return (
-    <Input
-      inputMode="decimal"
-      disabled={disabled}
-      value={focused ? draft : centsToDraft(cents)}
-      className={cn("h-8 border-border/70 bg-background font-mono text-right tabular-nums", className)}
-      onFocus={() => {
-        setFocused(true);
-        setDraft(centsToDraft(cents));
-      }}
-      onChange={(e) => setDraft(e.target.value)}
-      onBlur={() => {
-        setFocused(false);
-        onCommit(draftToCents(draft));
-      }}
-    />
-  );
-}
-
-function QuantityField({
-  value,
-  disabled,
-  onCommit,
-}: {
-  value: number | null;
-  disabled?: boolean;
-  onCommit: (value: number | null) => void;
-}) {
-  const display =
-    value === null || value === undefined ? "" : String(value).replace(".", ",");
-  const [focused, setFocused] = useState(false);
-  const [draft, setDraft] = useState(display);
-
-  useEffect(() => {
-    if (!focused) setDraft(display);
-  }, [display, focused]);
-
-  return (
-    <Input
-      inputMode="decimal"
-      disabled={disabled}
-      value={focused ? draft : display}
-      className="h-8 border-border/70 bg-background font-mono text-right tabular-nums"
-      onFocus={() => {
-        setFocused(true);
-        setDraft(display);
-      }}
-      onChange={(e) => setDraft(e.target.value)}
-      onBlur={() => {
-        setFocused(false);
-        onCommit(parseQuantity(draft));
-      }}
-    />
-  );
-}
-
-function HoursField({
-  minutes,
-  disabled,
-  onCommit,
-}: {
-  minutes: number | null;
-  disabled?: boolean;
-  onCommit: (minutes: number | null) => void;
-}) {
-  const display = minutesToHoursInput(minutes).replace(".", ",");
-  const [focused, setFocused] = useState(false);
-  const [draft, setDraft] = useState(display);
-
-  useEffect(() => {
-    if (!focused) setDraft(display);
-  }, [display, focused]);
-
-  return (
-    <Input
-      inputMode="decimal"
-      disabled={disabled}
-      value={focused ? draft : display}
-      className="h-8 border-border/70 bg-background font-mono text-right tabular-nums"
-      onFocus={() => {
-        setFocused(true);
-        setDraft(display);
-      }}
-      onChange={(e) => setDraft(e.target.value)}
-      onBlur={() => {
-        setFocused(false);
-        onCommit(hoursInputToMinutes(draft.replace(",", ".")));
-      }}
-    />
-  );
-}
-
-function collectDescendants(lines: QuoteLineRow[], rootId: string): string[] {
-  const ids = [rootId];
-  const queue = [rootId];
-  while (queue.length > 0) {
-    const current = queue.shift()!;
-    for (const line of lines) {
-      if (line.parentId === current) {
-        ids.push(line.id);
-        queue.push(line.id);
-      }
-    }
-  }
-  return ids;
-}
-
-function sectionTotalCents(lines: QuoteLineRow[], sectionId: string): number {
-  const leafIds = new Set(
-    lines.filter((l) => !lines.some((c) => c.parentId === l.id)).map((l) => l.id),
-  );
-  const descendants = collectDescendants(lines, sectionId).filter(
-    (id) => id !== sectionId && leafIds.has(id),
-  );
-  return descendants.reduce((sum, id) => {
-    const line = lines.find((l) => l.id === id);
-    if (!line) return sum;
-    return (
-      sum +
-      lineNetCents({
-        quantity: line.quantity,
-        unitPriceCents: line.unitPriceCents,
-        discountCents: line.discountCents,
-      })
-    );
-  }, 0);
-}
 
 export function QuoteEditor({ quote }: QuoteEditorProps) {
   const t = useTranslations("quotes");
@@ -244,7 +63,6 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
   const [externalNotes, setExternalNotes] = useState(quote.externalNotes ?? "");
   const [validUntil, setValidUntil] = useState(quote.validUntil ?? "");
   const [lines, setLines] = useState(quote.lines);
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [dirty, setDirty] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">(
@@ -254,7 +72,6 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
   const [acceptOpen, setAcceptOpen] = useState(false);
   const [selectedLineIds, setSelectedLineIds] = useState<string[]>([]);
   const [setExecution, setSetExecution] = useState(true);
-  const [showInclVat, setShowInclVat] = useState(true);
 
   useEffect(() => {
     setStatusState(quote.status);
@@ -294,64 +111,11 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
     return () => document.removeEventListener("click", onClick, true);
   }, [dirty, t]);
 
-  const leafLines = useMemo(() => {
-    const parentIds = new Set(
-      lines.map((l) => l.parentId).filter(Boolean) as string[],
-    );
-    return lines.filter(
-      (l) =>
-        !parentIds.has(l.id) &&
-        !(l.quantity === null && l.unitPriceCents === null),
-    );
-  }, [lines]);
-
-  const totals = useMemo(() => {
-    let net = 0;
-    let vat = 0;
-    let discount = 0;
-    for (const line of leafLines) {
-      discount += line.discountCents || 0;
-      const lineNet = lineNetCents({
-        quantity: line.quantity,
-        unitPriceCents: line.unitPriceCents,
-        discountCents: line.discountCents,
-      });
-      net += lineNet;
-      vat += lineVatCents(lineNet, line.vatRateBps);
-    }
-    const grossBeforeDiscount = net + discount;
-    return {
-      subtotal: grossBeforeDiscount,
-      discount,
-      net,
-      vat,
-      gross: net + vat,
-    };
-  }, [leafLines]);
-
-  const roots = useMemo(
-    () =>
-      [...lines]
-        .filter((l) => !l.parentId)
-        .sort((a, b) => a.sortOrder - b.sortOrder),
-    [lines],
-  );
-
-  const childrenOf = (parentId: string) =>
-    lines
-      .filter((l) => l.parentId === parentId)
-      .sort((a, b) => a.sortOrder - b.sortOrder);
+  const leafLines = useMemo(() => getLeafLines(lines), [lines]);
 
   function markDirty() {
     setDirty(true);
     setSaveState("idle");
-  }
-
-  function updateLocalLine(id: string, patch: Partial<QuoteLineRow>) {
-    setLines((prev) =>
-      prev.map((line) => (line.id === id ? { ...line, ...patch } : line)),
-    );
-    markDirty();
   }
 
   function mapApiError(code?: string) {
@@ -564,194 +328,6 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
     { id: "notes", label: t("tabs.notes") },
   ];
 
-  function renderLineRow(line: QuoteLineRow, depth: number, indexLabel: string) {
-    const kids = childrenOf(line.id);
-    const showAsSection =
-      kids.length > 0 ||
-      (line.quantity === null && line.unitPriceCents === null);
-    const net = lineNetCents({
-      quantity: line.quantity,
-      unitPriceCents: line.unitPriceCents,
-      discountCents: line.discountCents,
-    });
-    const isCollapsed = collapsed[line.id];
-
-    if (showAsSection) {
-      const total = sectionTotalCents(lines, line.id);
-      return (
-        <div key={line.id} className="border-b border-border/70 last:border-0">
-          <div className="flex items-center gap-2 bg-muted/50 px-3 py-2.5">
-            <button
-              type="button"
-              className="text-muted-foreground"
-              onClick={() =>
-                setCollapsed((prev) => ({ ...prev, [line.id]: !prev[line.id] }))
-              }
-            >
-              {isCollapsed ? (
-                <ChevronRight className="size-4" />
-              ) : (
-                <ChevronDown className="size-4" />
-              )}
-            </button>
-            <span className="w-6 text-xs tabular-nums text-muted-foreground">
-              {indexLabel}
-            </span>
-            <Input
-              value={line.title}
-              disabled={!editable}
-              className="h-8 flex-1 border-transparent bg-transparent font-medium shadow-none focus-visible:border-input focus-visible:bg-background"
-              onChange={(e) =>
-                updateLocalLine(line.id, { title: e.target.value })
-              }
-            />
-            <span className="font-mono text-sm tabular-nums text-foreground">
-              {formatEuro(total)}
-            </span>
-            {editable ? (
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                className="text-muted-foreground"
-                disabled={busy}
-                onClick={() => void deleteLine(line.id)}
-              >
-                <MoreVertical className="size-4" />
-              </Button>
-            ) : null}
-          </div>
-          {!isCollapsed
-            ? kids.map((child, i) =>
-                renderLineRow(child, depth + 1, `${indexLabel}.${i + 1}`),
-              )
-            : null}
-          {!isCollapsed && editable ? (
-            <div className="bg-card px-3 py-2 pl-12">
-              <button
-                type="button"
-                className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-                disabled={busy}
-                onClick={() => void addLine(line.id)}
-              >
-                <Plus className="size-3.5" />
-                {t("addLine")}
-              </button>
-            </div>
-          ) : null}
-        </div>
-      );
-    }
-
-    return (
-      <div key={line.id}>
-        <div
-          className={cn(
-            "group grid grid-cols-1 items-start gap-x-2 gap-y-1 border-b border-border/60 px-3 py-3 lg:items-center",
-            LINE_GRID_CLASS,
-          )}
-        >
-          <span
-            className="hidden pt-2 text-[11px] tabular-nums text-muted-foreground lg:block"
-            style={{ paddingLeft: depth * 12 }}
-          >
-            {indexLabel}
-          </span>
-          <div
-            className="min-w-0 space-y-1"
-            style={{ paddingLeft: depth * 12 }}
-          >
-            <div className="flex items-center gap-2 lg:block">
-              <span className="w-6 shrink-0 text-[11px] tabular-nums text-muted-foreground lg:hidden">
-                {indexLabel}
-              </span>
-              <Input
-                value={line.title}
-                disabled={!editable}
-                placeholder={t("placeholders.line")}
-                className="h-8 border-transparent bg-transparent px-0 font-medium shadow-none focus-visible:border-input focus-visible:bg-background focus-visible:px-2"
-                onChange={(e) =>
-                  updateLocalLine(line.id, { title: e.target.value })
-                }
-              />
-            </div>
-            <textarea
-              rows={1}
-              value={line.description ?? ""}
-              disabled={!editable}
-              placeholder={t("placeholders.description")}
-              className="text-muted-foreground placeholder:text-muted-foreground/70 focus-visible:border-input w-full resize-y rounded-lg border border-transparent bg-transparent px-0 py-1 text-xs outline-none focus-visible:bg-background focus-visible:px-2"
-              onChange={(e) =>
-                updateLocalLine(line.id, {
-                  description: e.target.value || null,
-                })
-              }
-            />
-          </div>
-          <Input
-            disabled={!editable}
-            value={line.unit ?? ""}
-            className="h-8 border-border/70 bg-background"
-            onChange={(e) =>
-              updateLocalLine(line.id, { unit: e.target.value || null })
-            }
-          />
-          <QuantityField
-            value={line.quantity}
-            disabled={!editable}
-            onCommit={(quantity) => updateLocalLine(line.id, { quantity })}
-          />
-          <HoursField
-            minutes={line.estimatedMinutes}
-            disabled={!editable}
-            onCommit={(estimatedMinutes) =>
-              updateLocalLine(line.id, { estimatedMinutes })
-            }
-          />
-          <MoneyField
-            cents={line.unitPriceCents}
-            disabled={!editable}
-            onCommit={(cents) =>
-              updateLocalLine(line.id, { unitPriceCents: cents ?? 0 })
-            }
-          />
-          <div className="flex h-8 items-center justify-end font-mono text-sm tabular-nums">
-            {formatEuro(net)}
-          </div>
-          <div className="flex h-8 items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100">
-            {editable ? (
-              <>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 px-2 text-xs"
-                  disabled={busy}
-                  onClick={() => void addLine(line.id)}
-                >
-                  {t("addChildLine")}
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  className="text-destructive"
-                  disabled={busy}
-                  onClick={() => void deleteLine(line.id)}
-                >
-                  <MoreVertical className="size-4" />
-                </Button>
-              </>
-            ) : null}
-          </div>
-        </div>
-        {kids.map((child, i) =>
-          renderLineRow(child, depth + 1, `${indexLabel}.${i + 1}`),
-        )}
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center gap-3">
@@ -914,75 +490,17 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
 
             {tab === "lines" ? (
               <div className="space-y-0">
-                <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">
-                  {editable ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="border-primary/30 text-primary"
-                      disabled={busy}
-                      onClick={() => void addLine(null)}
-                    >
-                      <Plus className="size-3.5" />
-                      {t("addLine")}
-                    </Button>
-                  ) : null}
-                  {editable ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      disabled={busy}
-                      onClick={() => void addLine(null, true)}
-                    >
-                      {t("addSection")}
-                    </Button>
-                  ) : null}
-                  <Button type="button" variant="outline" size="sm" disabled>
-                    {t("stubs.textLine")}
-                  </Button>
-                  <Button type="button" variant="outline" size="sm" disabled>
-                    {t("stubs.discount")}
-                  </Button>
-                  <Button type="button" variant="outline" size="sm" disabled>
-                    {t("stubs.image")}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="ml-auto"
-                    disabled
-                  >
-                    {t("stubs.import")}
-                  </Button>
-                </div>
-
-                <div
-                  className={cn(
-                    "hidden gap-x-2 border-b border-border px-3 py-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase lg:grid",
-                    LINE_GRID_CLASS,
-                  )}
-                >
-                  <span aria-hidden className="block" />
-                  <span>{t("fields.lineTitle")}</span>
-                  <span className="text-center">{t("fields.unit")}</span>
-                  <span className="text-right">{t("fields.quantity")}</span>
-                  <span className="text-right">{t("fields.hours")}</span>
-                  <span className="text-right">{t("fields.unitPrice")}</span>
-                  <span className="text-right">{t("fields.lineTotal")}</span>
-                  <span aria-hidden className="block" />
-                </div>
-
-                {roots.length === 0 ? (
-                  <p className="px-4 py-10 text-sm text-muted-foreground">
-                    {t("noLines")}
-                  </p>
-                ) : (
-                  roots.map((line, i) => renderLineRow(line, 0, String(i + 1)))
-                )}
-
+                <QuoteLinesWorkspace
+                  lines={lines}
+                  onChange={(next) => {
+                    setLines(next);
+                    markDirty();
+                  }}
+                  editable={editable}
+                  busy={busy}
+                  onAddLine={addLine}
+                  onDeleteLine={deleteLine}
+                />
                 <div className="border-t border-dashed border-border px-4 py-6">
                   <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-muted/20 px-4 py-8 text-center opacity-60">
                     <FileUp className="size-6 text-primary" />
@@ -1076,64 +594,19 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
         </div>
 
         <aside className="space-y-4 xl:sticky xl:top-20 xl:self-start">
-          <PageCard className="space-y-4 p-4">
-            <div className="flex items-center justify-between gap-2">
-              <h2 className="text-sm font-medium">{t("totalsTitle")}</h2>
-              <button
-                type="button"
-                className="text-xs text-muted-foreground hover:text-foreground"
-                onClick={() => setShowInclVat((v) => !v)}
-              >
-                {showInclVat ? t("totals.showExcl") : t("totals.showIncl")}
-              </button>
-            </div>
-            <dl className="space-y-2.5 text-sm">
-              <div className="flex justify-between gap-3">
-                <dt className="text-muted-foreground">{t("totals.subtotal")}</dt>
-                <dd className="font-mono tabular-nums">
-                  {formatEuro(totals.subtotal)}
-                </dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt className="text-muted-foreground">{t("totals.discount")}</dt>
-                <dd className="font-mono tabular-nums text-emerald-700">
-                  {totals.discount > 0
-                    ? `− ${formatEuro(totals.discount)}`
-                    : formatEuro(0)}
-                </dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt className="text-muted-foreground">{t("totals.net")}</dt>
-                <dd className="font-mono tabular-nums">
-                  {formatEuro(totals.net)}
-                </dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt className="text-muted-foreground">{t("totals.vat")}</dt>
-                <dd className="font-mono tabular-nums">
-                  {formatEuro(totals.vat)}
-                </dd>
-              </div>
-              <div className="flex justify-between gap-3 border-t border-border pt-3 text-base font-semibold">
-                <dt>
-                  {showInclVat ? t("totals.gross") : t("totals.net")}
-                </dt>
-                <dd className="font-mono tabular-nums">
-                  {formatEuro(showInclVat ? totals.gross : totals.net)}
-                </dd>
-              </div>
-            </dl>
-            {editable ? (
-              <Button
-                type="button"
-                className="w-full"
-                disabled={busy || !dirty}
-                onClick={() => void saveAll()}
-              >
-                {saveState === "saving" ? tCommon("loading") : t("save")}
-              </Button>
-            ) : null}
-          </PageCard>
+          <QuoteTotalsPanel
+            lines={lines}
+            footer={
+              editable ? (
+                <QuoteTotalsPanelFooterButton
+                  disabled={busy || !dirty}
+                  onClick={() => void saveAll()}
+                >
+                  {saveState === "saving" ? tCommon("loading") : t("save")}
+                </QuoteTotalsPanelFooterButton>
+              ) : undefined
+            }
+          />
 
           <PageCard className="space-y-3 p-4 opacity-70">
             <h3 className="text-sm font-medium">{t("stubs.attachmentsList")}</h3>

@@ -41,27 +41,31 @@ Redirect naar `/projecten/[id]`.
 | --- | --- |
 | Wizard UI | `src/features/assignments/components/new-assignment-wizard.tsx` |
 | State + autosave | `src/features/assignments/lib/wizard-state.ts` |
-| Calculatie totals | `src/features/assignments/lib/calculation.ts` |
+| Gedeelde offerte-regels | `src/features/quotes/components/quote-lines-workspace.tsx` |
+| Gedeelde totalen | `src/features/quotes/components/quote-totals-panel.tsx` |
+| Regel-logica | `src/features/quotes/lib/quote-line.ts` |
 | Complete API | `src/app/api/opdrachten/complete/route.ts` |
 | Klant zoeken | `GET /api/customers/search?q=` |
 | Pagina | `src/app/[locale]/(app)/opdrachten/nieuw/page.tsx` |
 
 ## Calculatie (stap 3) — architectuur
 
-Huidige MVP:
+De wizard gebruikt dezelfde offerte-editor als het project (`/projecten/[id]/offertes/[quoteId]`):
 
-- Handmatige calculatieregels (omschrijving, eenheid, aantal, prijs)
-- Marge % → aparte regel op offerte
-- Totalen (subtotaal, btw, incl.)
+- **Secties en subregels** — hiërarchische `quote_lines` met in-/uitklappen
+- **Per regel** — omschrijving, eenheid, aantal, uren, prijs, korting, BTW %
+- **Marge %** — optioneel in wizard; wordt bij afronden een aparte regel op de offerte
+- **Totalen** — subtotaal, korting, marge, netto, BTW, incl./excl. toggle
+
+Gedeelde componenten: `QuoteLinesWorkspace` + `QuoteTotalsPanel` (zie tabel hierboven).
 
 Voorbereid voor uitbreiding:
 
 - Materiaal uit catalogus / 2BA
-- Uren en werkzaamheden
-- Sjablonen en secties
+- Sjablonen
 - Marges per regel
 
-De wizard-state en complete-API accepteren al een lijst `calculation.lines`; nieuwe brontypes kunnen daar worden toegevoegd zonder de wizard-flow te herschrijven.
+De wizard-state (v2) en complete-API accepteren volledige `QuoteLineRow`-objecten; nieuwe brontypes kunnen worden toegevoegd zonder de wizard-flow te herschrijven.
 
 ## Naamgeving
 

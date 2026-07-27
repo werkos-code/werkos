@@ -885,6 +885,8 @@
       "net": "Gesamt excl. MwSt.",
       "vat": "MwSt.",
       "gross": "Gesamt inkl. MwSt.",
+      "margin": "Marge",
+      "marginPercent": "Marge %",
       "showExcl": "Excl. MwSt.",
       "showIncl": "Inkl. MwSt."
     }

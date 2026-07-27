@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 
 import {
-  computeCalculationTotals,
-  lineNetCents,
-} from "@/features/assignments/lib/calculation";
+  billableLines,
+  computeQuoteTotals,
+} from "@/features/quotes/lib/quote-line";
 import { logProjectActivity } from "@/features/projects/lib/project-activity";
 import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import type { QuoteLineRow } from "@/features/quotes/quotes-actions";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 function emptyToNull(value: string | null | undefined) {
@@ -48,6 +49,33 @@ function buildIntakeBody(input: {
   return parts.join("\n");
 }
 
+function mapIncomingLines(
+  lines: Array<Record<string, unknown>>,
+): QuoteLineRow[] {
+  return lines.map((line, index) => ({
+    id: String(line.id ?? crypto.randomUUID()),
+    parentId: (line.parentId as string | null) ?? null,
+    sortOrder: Number(line.sortOrder ?? index),
+    title: String(line.title ?? ""),
+    description: (line.description as string | null) ?? null,
+    quantity:
+      line.quantity === null || line.quantity === undefined
+        ? null
+        : Number(line.quantity),
+    unit: (line.unit as string | null) ?? null,
+    unitPriceCents:
+      line.unitPriceCents === null || line.unitPriceCents === undefined
+        ? null
+        : Math.round(Number(line.unitPriceCents)),
+    vatRateBps: Number(line.vatRateBps ?? 2100),
+    discountCents: Number(line.discountCents ?? 0),
+    estimatedMinutes:
+      line.estimatedMinutes === null || line.estimatedMinutes === undefined
+        ? null
+        : Math.round(Number(line.estimatedMinutes)),
+  }));
+}
+
 export async function POST(request: Request) {
   try {
     const gate = await requireApiStaff();
@@ -71,13 +99,7 @@ export async function POST(request: Request) {
         internalNotes?: string;
       };
       calculation?: {
-        lines?: Array<{
-          title: string;
-          quantity: number;
-          unit: string;
-          unitPriceCents: number;
-          vatRateBps: number;
-        }>;
+        lines?: Array<Record<string, unknown>>;
         marginPercent?: number;
       };
     };
@@ -190,21 +212,10 @@ export async function POST(request: Request) {
       createdBy: gate.userId,
     });
 
-    const lines = (body.calculation?.lines ?? []).filter(
-      (line) => line.title.trim().length > 0,
-    );
     const marginPercent = body.calculation?.marginPercent ?? 0;
-    const totals = computeCalculationTotals(
-      lines.map((line) => ({
-        id: "x",
-        title: line.title,
-        quantity: line.quantity,
-        unit: line.unit,
-        unitPriceCents: line.unitPriceCents,
-        vatRateBps: line.vatRateBps,
-      })),
-      marginPercent,
-    );
+    const parsedLines = mapIncomingLines(body.calculation?.lines ?? []);
+    const lines = billableLines(parsedLines);
+    const totals = computeQuoteTotals(parsedLines, marginPercent);
 
     const quoteId = crypto.randomUUID();
     const quoteTitle =
@@ -227,37 +238,42 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: quoteError.message }, { status: 500 });
     }
 
-    if (lines.length > 0) {
-      const lineRows = lines.map((line, index) => ({
+    const lineRows = lines.map((line) => ({
+      id: line.id,
+      organization_id: gate.organizationId,
+      quote_id: quoteId,
+      parent_id: line.parentId,
+      sort_order: line.sortOrder,
+      title: line.title.trim(),
+      description: line.description,
+      quantity: line.quantity,
+      unit: line.unit,
+      unit_price_cents:
+        line.unitPriceCents === null ? null : Math.round(line.unitPriceCents),
+      vat_rate_bps: line.vatRateBps,
+      discount_cents: line.discountCents,
+      estimated_minutes: line.estimatedMinutes,
+    }));
+
+    if (marginPercent > 0 && totals.marginCents > 0) {
+      lineRows.push({
         id: crypto.randomUUID(),
         organization_id: gate.organizationId,
         quote_id: quoteId,
         parent_id: null,
-        sort_order: index,
-        title: line.title.trim(),
-        quantity: line.quantity,
-        unit: line.unit || "st",
-        unit_price_cents: Math.round(line.unitPriceCents),
-        vat_rate_bps: line.vatRateBps,
+        sort_order: lineRows.length,
+        title: "Marge",
+        description: null,
+        quantity: 1,
+        unit: "post",
+        unit_price_cents: totals.marginCents,
+        vat_rate_bps: 2100,
         discount_cents: 0,
-      }));
+        estimated_minutes: null,
+      });
+    }
 
-      if (marginPercent > 0 && totals.marginCents > 0) {
-        lineRows.push({
-          id: crypto.randomUUID(),
-          organization_id: gate.organizationId,
-          quote_id: quoteId,
-          parent_id: null,
-          sort_order: lineRows.length,
-          title: "Marge",
-          quantity: 1,
-          unit: "post",
-          unit_price_cents: totals.marginCents,
-          vat_rate_bps: 2100,
-          discount_cents: 0,
-        });
-      }
-
+    if (lineRows.length > 0) {
       const { error: linesError } = await admin
         .from("quote_lines")
         .insert(lineRows);
@@ -278,29 +294,21 @@ export async function POST(request: Request) {
         unit_price_cents: 0,
         vat_rate_bps: 2100,
         discount_cents: 0,
+        estimated_minutes: null,
       });
     }
-
-    const quoteNet = lines.reduce((sum, line) => sum + lineNetCents({
-      id: "x",
-      title: line.title,
-      quantity: line.quantity,
-      unit: line.unit,
-      unitPriceCents: line.unitPriceCents,
-      vatRateBps: line.vatRateBps,
-    }), 0) + totals.marginCents;
 
     await logProjectActivity(admin, {
       organizationId: gate.organizationId,
       projectId,
       type: "quote_created",
       title: "Conceptofferte aangemaakt",
-      body: `${quoteTitle} · ${(quoteNet / 100).toLocaleString("nl-NL", { style: "currency", currency: "EUR" })} excl. btw`,
+      body: `${quoteTitle} · ${(totals.net / 100).toLocaleString("nl-NL", { style: "currency", currency: "EUR" })} excl. btw`,
       metadata: {
         quote_id: quoteId,
         status: "draft",
         line_count: lines.length,
-        total_excl_cents: quoteNet,
+        total_excl_cents: totals.net,
         source: "new_assignment_wizard",
       },
       createdBy: gate.userId,

@@ -885,6 +885,8 @@
       "net": "Totaal excl. BTW",
       "vat": "BTW",
       "gross": "Totaal incl. BTW",
+      "margin": "Marge",
+      "marginPercent": "Marge %",
       "showExcl": "Excl. btw",
       "showIncl": "Incl. btw"
     }

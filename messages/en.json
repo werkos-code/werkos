@@ -885,6 +885,8 @@
       "net": "Total excl. VAT",
       "vat": "VAT",
       "gross": "Total incl. VAT",
+      "margin": "Margin",
+      "marginPercent": "Margin %",
       "showExcl": "Excl. VAT",
       "showIncl": "Incl. VAT"
     }
