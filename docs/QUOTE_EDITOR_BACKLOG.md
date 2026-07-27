@@ -15,7 +15,7 @@
 
 | Feature | UI nu | Nodig om te activeren |
 | --- | --- | --- |
-| Offertenummer (`OFF-…`) | Meta-kaart, disabled / “Nog niet toegekend” | Schema `quote_number` (+ generatie), API, copy-actie |
+| Offertenummer (`OFF-…`) | Meta-kaart + header | ✅ `OFF-YYYY-NNNN` via DB-trigger |
 | Voorbeeld (preview) | Disabled knop in editor-header | PDF/online representatie (domain: aparte weergave, bron = offerte) |
 | Meer-opties `⋯` | Disabled | Dupliceren, annuleren-shortcuts, export, … |
 | Tekstregel | Disabled in toolbar | Line-type of flag “alleen tekst” zonder prijs |
@@ -42,7 +42,7 @@
 
 ## Afvinklijst (voor latere sprints)
 
-- [ ] Offertenummer
+- [x] Offertenummer (`OFF-YYYY-NNNN`)
 - [ ] Voorbeeld / PDF of online preview
 - [ ] Header `⋯` acties (o.a. dupliceren)
 - [ ] Tekstregel

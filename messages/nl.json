@@ -811,9 +811,55 @@
     "confirmAccept": "Accepteren en werkzaamheden aanmaken",
     "tabs": {
       "lines": "Regels",
+      "financial": "Financiële planning",
       "info": "Informatie",
       "terms": "Voorwaarden",
       "notes": "Opmerkingen"
+    },
+    "untitledQuote": "Offerte zonder titel",
+    "financialPlanning": {
+      "title": "Financiële planning",
+      "subtitle": "Plan hoe de klant betaalt: voorschotten, fasen en slotfactuur. Per schijf maak je een conceptfactuur.",
+      "empty": "Nog geen betalingsschema. Voeg schijven toe of gebruik het standaardschema.",
+      "addPhase": "Schijf toevoegen",
+      "addTemplate": "Standaardschema (4×25%)",
+      "save": "Planning opslaan",
+      "saveBeforeInvoice": "Sla de planning eerst op voordat je factureert.",
+      "invoice": "Factureren",
+      "remove": "Verwijderen",
+      "newPhaseTitle": "Nieuwe schijf",
+      "finalAuto": "Restbedrag",
+      "unbalanced": "De geplande schijven dekken niet het offertetotaal. Controleer de percentages of bedragen.",
+      "columns": {
+        "title": "Omschrijving",
+        "type": "Type",
+        "amount": "Bedrag",
+        "net": "Excl. btw",
+        "status": "Status",
+        "action": "Actie"
+      },
+      "kinds": {
+        "standard": "Schijf",
+        "final": "Slotfactuur"
+      },
+      "status": {
+        "planned": "Gepland",
+        "invoiced": "Gefactureerd"
+      },
+      "summary": {
+        "quoteTotal": "Offerte incl. btw",
+        "planned": "Gepland excl.",
+        "invoiced": "Gefactureerd excl.",
+        "progress": "Voortgang",
+        "remaining": "resterend"
+      },
+      "errors": {
+        "generic": "Er ging iets mis. Probeer het opnieuw.",
+        "percentOver100": "De percentages van de schijven mogen samen niet meer dan 100% zijn.",
+        "multipleFinal": "Er mag maar één slotfactuur zijn.",
+        "alreadyInvoiced": "Deze schijf is al gefactureerd.",
+        "zeroAmount": "Het bedrag van deze schijf is nul."
+      }
     },
     "meta": {
       "number": "Offertenummer",

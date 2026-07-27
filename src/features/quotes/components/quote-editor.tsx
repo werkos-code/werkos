@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { QuoteFinancialPlanning } from "@/features/quotes/components/quote-financial-planning";
 import { QuoteLinesWorkspace } from "@/features/quotes/components/quote-lines-workspace";
 import {
   QuoteTotalsPanel,
@@ -48,7 +49,7 @@ type QuoteEditorProps = {
   quote: QuoteDetail;
 };
 
-type EditorTab = "lines" | "info" | "terms" | "notes";
+type EditorTab = "lines" | "financial" | "info" | "terms" | "notes";
 
 export function QuoteEditor({ quote }: QuoteEditorProps) {
   const t = useTranslations("quotes");
@@ -323,6 +324,7 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
   const busy = saveState === "saving" || pendingAction;
   const tabs: { id: EditorTab; label: string }[] = [
     { id: "lines", label: t("tabs.lines") },
+    { id: "financial", label: t("tabs.financial") },
     { id: "info", label: t("tabs.info") },
     { id: "terms", label: t("tabs.terms") },
     { id: "notes", label: t("tabs.notes") },
@@ -330,22 +332,32 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-center gap-3">
-        <Badge
-          variant={status === "draft" ? "success" : "secondary"}
-          className="h-6 px-2.5"
-        >
-          {t(`status.${status}`)}
-        </Badge>
-        {dirty ? (
-          <span className="text-xs text-amber-700">{t("unsaved")}</span>
-        ) : saveState === "saved" ? (
-          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-            <Check className="size-3.5" />
-            {t("savedJustNow")}
-          </span>
-        ) : null}
-        <div className="ml-auto flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="min-w-0 space-y-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="truncate text-lg font-semibold tracking-tight">
+              {title || t("untitledQuote")}
+            </h2>
+            <Badge
+              variant={status === "draft" ? "success" : "secondary"}
+              className="h-6 shrink-0 px-2.5"
+            >
+              {t(`status.${status}`)}
+            </Badge>
+          </div>
+          <p className="font-mono text-xs text-muted-foreground tabular-nums">
+            {quote.quoteNumber ?? t("meta.numberPending")}
+          </p>
+          {dirty ? (
+            <span className="text-xs text-amber-700">{t("unsaved")}</span>
+          ) : saveState === "saved" ? (
+            <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+              <Check className="size-3.5" />
+              {t("savedJustNow")}
+            </span>
+          ) : null}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
           {editable ? (
             <Button
               type="button"
@@ -413,9 +425,8 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <MetaStatCard
-          muted
           label={t("meta.number")}
-          value={t("meta.numberPending")}
+          value={quote.quoteNumber ?? t("meta.numberPending")}
           icon={<Copy className="size-3.5 opacity-40" />}
         />
         <MetaStatCard
@@ -513,6 +524,15 @@ export function QuoteEditor({ quote }: QuoteEditorProps) {
                   </div>
                 </div>
               </div>
+            ) : null}
+
+            {tab === "financial" ? (
+              <QuoteFinancialPlanning
+                quoteId={quote.id}
+                lines={lines}
+                quoteNumber={quote.quoteNumber}
+                editable={editable}
+              />
             ) : null}
 
             {tab === "info" ? (

@@ -466,6 +466,7 @@ export type Database = {
           project_id: string;
           title: string;
           status: QuoteStatus;
+          quote_number: string | null;
           valid_until: string | null;
           internal_notes: string | null;
           external_notes: string | null;
@@ -479,6 +480,7 @@ export type Database = {
           project_id: string;
           title: string;
           status?: QuoteStatus;
+          quote_number?: string | null;
           valid_until?: string | null;
           internal_notes?: string | null;
           external_notes?: string | null;
@@ -492,6 +494,7 @@ export type Database = {
           project_id?: string;
           title?: string;
           status?: QuoteStatus;
+          quote_number?: string | null;
           valid_until?: string | null;
           internal_notes?: string | null;
           external_notes?: string | null;
@@ -591,6 +594,51 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      quote_billing_phases: {
+        Row: {
+          id: string;
+          organization_id: string;
+          quote_id: string;
+          sort_order: number;
+          title: string;
+          kind: "standard" | "final";
+          amount_type: "percent" | "fixed_cents";
+          amount_value: number;
+          invoice_id: string | null;
+          invoiced_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          quote_id: string;
+          sort_order?: number;
+          title: string;
+          kind?: "standard" | "final";
+          amount_type?: "percent" | "fixed_cents";
+          amount_value?: number;
+          invoice_id?: string | null;
+          invoiced_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          quote_id?: string;
+          sort_order?: number;
+          title?: string;
+          kind?: "standard" | "final";
+          amount_type?: "percent" | "fixed_cents";
+          amount_value?: number;
+          invoice_id?: string | null;
+          invoiced_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
       };
       work_items: {
         Row: {

@@ -21,10 +21,11 @@
 ## Bewust later
 
 - [ ] Aanmaken vanuit geaccepteerde offerte (quote_lines kopiëren)
+- [x] **Termijnfacturen vanuit offerte** — financiële planning + factureren per schijf (MVP simpel)
 - [ ] PDF / voorbeeld / e-mail versturen
 - [ ] Herinneringen (e-mail / portaal)
 - [ ] Export / instellingen (nummerreeks, standaardtermijn, uurtarief org-default)
-- [ ] Betalingsregistratie / deelfacturen / termijnfacturen
+- [ ] Betalingsregistratie / cumulatieve slotfactuur
 - [ ] `source_type` / `source_id` op regels (traceerbaarheid naar uren/materiaal)
 - [ ] Koppeling boekhouding
 

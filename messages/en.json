@@ -811,9 +811,55 @@
     "confirmAccept": "Accept and create work items",
     "tabs": {
       "lines": "Lines",
+      "financial": "Financial planning",
       "info": "Information",
       "terms": "Terms",
       "notes": "Notes"
+    },
+    "untitledQuote": "Untitled quote",
+    "financialPlanning": {
+      "title": "Financial planning",
+      "subtitle": "Plan how the customer pays: deposits, milestones, and final invoice. Create a draft invoice per installment.",
+      "empty": "No payment schedule yet. Add installments or use the default template.",
+      "addPhase": "Add installment",
+      "addTemplate": "Default schedule (4×25%)",
+      "save": "Save schedule",
+      "saveBeforeInvoice": "Save the schedule before creating an invoice.",
+      "invoice": "Invoice",
+      "remove": "Remove",
+      "newPhaseTitle": "New installment",
+      "finalAuto": "Remainder",
+      "unbalanced": "Planned installments do not match the quote total. Check percentages or amounts.",
+      "columns": {
+        "title": "Description",
+        "type": "Type",
+        "amount": "Amount",
+        "net": "Excl. VAT",
+        "status": "Status",
+        "action": "Action"
+      },
+      "kinds": {
+        "standard": "Installment",
+        "final": "Final invoice"
+      },
+      "status": {
+        "planned": "Planned",
+        "invoiced": "Invoiced"
+      },
+      "summary": {
+        "quoteTotal": "Quote incl. VAT",
+        "planned": "Planned excl.",
+        "invoiced": "Invoiced excl.",
+        "progress": "Progress",
+        "remaining": "remaining"
+      },
+      "errors": {
+        "generic": "Something went wrong. Please try again.",
+        "percentOver100": "Installment percentages cannot exceed 100% combined.",
+        "multipleFinal": "Only one final invoice installment is allowed.",
+        "alreadyInvoiced": "This installment has already been invoiced.",
+        "zeroAmount": "This installment amount is zero."
+      }
     },
     "meta": {
       "number": "Quote number",

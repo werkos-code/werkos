@@ -31,6 +31,7 @@ export type QuoteDetail = {
   id: string;
   title: string;
   status: QuoteStatus;
+  quoteNumber: string | null;
   projectId: string;
   projectName: string;
   customerId: string | null;
@@ -133,7 +134,7 @@ export async function getQuote(quoteId: string): Promise<{
   const { data: quote, error } = await ctx.supabase
     .from("quotes")
     .select(
-      "id, title, status, project_id, valid_until, internal_notes, external_notes, created_at",
+      "id, title, status, quote_number, project_id, valid_until, internal_notes, external_notes, created_at",
     )
     .eq("organization_id", ctx.organizationId)
     .eq("id", quoteId)
@@ -179,6 +180,7 @@ export async function getQuote(quoteId: string): Promise<{
       id: quote.id,
       title: quote.title,
       status: quote.status,
+      quoteNumber: quote.quote_number,
       projectId: quote.project_id,
       projectName: project?.name ?? "—",
       customerId,

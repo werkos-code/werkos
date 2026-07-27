@@ -811,9 +811,55 @@
     "confirmAccept": "Annehmen und Arbeiten anlegen",
     "tabs": {
       "lines": "Positionen",
+      "financial": "Finanzplanung",
       "info": "Informationen",
       "terms": "Bedingungen",
       "notes": "Notizen"
+    },
+    "untitledQuote": "Angebot ohne Titel",
+    "financialPlanning": {
+      "title": "Finanzplanung",
+      "subtitle": "Planen Sie die Zahlung: Anzahlungen, Phasen und Schlussrechnung. Pro Rate eine Entwurfsrechnung erstellen.",
+      "empty": "Noch kein Zahlungsplan. Raten hinzufügen oder Standardschema verwenden.",
+      "addPhase": "Rate hinzufügen",
+      "addTemplate": "Standardschema (4×25%)",
+      "save": "Plan speichern",
+      "saveBeforeInvoice": "Speichern Sie den Plan, bevor Sie eine Rechnung erstellen.",
+      "invoice": "Fakturieren",
+      "remove": "Entfernen",
+      "newPhaseTitle": "Neue Rate",
+      "finalAuto": "Restbetrag",
+      "unbalanced": "Die geplanten Raten decken nicht die Angebotssumme. Prozentsätze oder Beträge prüfen.",
+      "columns": {
+        "title": "Beschreibung",
+        "type": "Typ",
+        "amount": "Betrag",
+        "net": "Zzgl. MwSt.",
+        "status": "Status",
+        "action": "Aktion"
+      },
+      "kinds": {
+        "standard": "Rate",
+        "final": "Schlussrechnung"
+      },
+      "status": {
+        "planned": "Geplant",
+        "invoiced": "Fakturiert"
+      },
+      "summary": {
+        "quoteTotal": "Angebot inkl. MwSt.",
+        "planned": "Geplant zzgl.",
+        "invoiced": "Fakturiert zzgl.",
+        "progress": "Fortschritt",
+        "remaining": "verbleibend"
+      },
+      "errors": {
+        "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+        "percentOver100": "Die Prozentsätze der Raten dürfen zusammen nicht mehr als 100% betragen.",
+        "multipleFinal": "Es ist nur eine Schlussrechnung erlaubt.",
+        "alreadyInvoiced": "Diese Rate wurde bereits fakturiert.",
+        "zeroAmount": "Der Betrag dieser Rate ist null."
+      }
     },
     "meta": {
       "number": "Angebotsnummer",
