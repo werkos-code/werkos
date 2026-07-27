@@ -104,7 +104,8 @@ Nieuwe pagina’s vallen in één type. Kopieer het recept; verzin geen nieuwe l
 3. Rijen: CSS-grid of tabel met rustige hover; hiërarchie via indent/groepen
 4. Klik rij → **brede Sheet** (subwerkruimte, ~70vw): hero + underline-tabs + 2-koloms overzicht
 
-**Voorbeeld:** `project-work-items-workspace.tsx`, `work-item-detail-sheet.tsx`  
+**Voorbeeld:** `project-work-items-workspace.tsx`, `work-item-detail-sheet.tsx`, `work-orders-workspace.tsx`, `invoices-workspace.tsx`  
+Detail-sheets: altijd ~`70vw` (geen smalle 28rem-sidebar).  
 Detail-rest: [`WORK_ITEM_DETAIL_BACKLOG.md`](./WORK_ITEM_DETAIL_BACKLOG.md)
 
 ### 4.4 Kalender / Planning workspace

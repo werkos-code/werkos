@@ -3,7 +3,7 @@
 Deze map bevat SQL die **al op de productie-/dev-database is gedraaid**.
 
 - Niet opnieuw uitvoeren tenzij je een lege omgeving vanaf nul opbouwt.
-- `supabase/migrations/` bevat open migratie: `20260727300000_work_order_material_usages.sql`
-- Gearchiveerd: fase A–C t/m D+ (`20260726290000` … `20260727200000`).
+- `supabase/migrations/` is leeg — open migraties staan in deze map na toepassen.
+- Gearchiveerd: fase A–C t/m E+ (`20260726290000` … `20260727300000`).
 
 Zie ook [`PHASE1_SETUP.md`](./PHASE1_SETUP.md).

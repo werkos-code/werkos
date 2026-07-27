@@ -514,7 +514,7 @@ function WorkOrderDetailSheet({
       <SheetContent
         side="right"
         showCloseButton={false}
-        className="h-full w-[min(100%,28rem)] gap-0 overflow-hidden p-0 data-[side=right]:w-[min(100%,28rem)] data-[side=right]:sm:max-w-[28rem]"
+        className="h-full w-[min(100%,70vw)] gap-0 overflow-hidden p-0 data-[side=right]:w-[min(100%,70vw)] data-[side=right]:sm:max-w-[70vw]"
       >
         <SheetHeader className="flex-row items-center justify-between space-y-0 border-b border-border px-5 py-3">
           <SheetTitle className="text-sm font-medium">
@@ -525,120 +525,161 @@ function WorkOrderDetailSheet({
           </Button>
         </SheetHeader>
 
-        <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-5">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant={statusVariant(order.status)}>{t(`status.${order.status}`)}</Badge>
-            <span className="text-sm text-muted-foreground">{formatPlan(order.plannedStart)}</span>
-          </div>
-
-          <div>
-            <Link
-              href={`/projecten/${order.projectId}`}
-              className="text-primary inline-flex items-center gap-1.5 font-medium hover:underline"
-            >
-              {order.projectName}
-              <ExternalLink className="size-3.5" />
-            </Link>
-            <p className="mt-1 text-sm text-muted-foreground">{order.projectAddress || "—"}</p>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-medium">{t("detail.description")}</h3>
-            <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">
-              {order.description?.trim() || t("detail.descriptionEmpty")}
-            </p>
-          </div>
-
-          <dl className="space-y-3 text-sm">
-            <div className="flex justify-between gap-3">
-              <dt className="text-muted-foreground">{t("columns.type")}</dt>
-              <dd>{order.workType || "—"}</dd>
-            </div>
-            <div className="flex justify-between gap-3">
-              <dt className="text-muted-foreground">{t("columns.assignee")}</dt>
-              <dd>{order.assigneeName || "—"}</dd>
-            </div>
-            <div className="flex justify-between gap-3">
-              <dt className="text-muted-foreground">{t("detail.start")}</dt>
-              <dd>{formatPlan(order.plannedStart)}</dd>
-            </div>
-            <div className="flex justify-between gap-3">
-              <dt className="text-muted-foreground">{t("detail.duration")}</dt>
-              <dd>{formatEstimatedHours(order.estimatedMinutes)}</dd>
-            </div>
-            <div className="flex justify-between gap-3">
-              <dt className="text-muted-foreground">{t("columns.priority")}</dt>
-              <dd className="inline-flex items-center gap-1.5">
-                <PriorityIcon priority={order.priority} />
-                {t(`priority.${order.priority}`)}
-              </dd>
-            </div>
-          </dl>
-
-          <div>
-            <div className="mb-2 flex items-center justify-between gap-2">
-              <h3 className="text-sm font-medium">{t("detail.subtasks")}</h3>
-              <span className="text-xs text-muted-foreground">
-                {doneCount} / {order.checklist.length}
-              </span>
-            </div>
-            {order.checklist.length > 0 ? (
-              <div className="bg-muted mb-3 h-1.5 overflow-hidden rounded-full">
-                <div
-                  className="bg-primary h-full"
-                  style={{
-                    width: `${order.checklist.length ? (doneCount / order.checklist.length) * 100 : 0}%`,
-                  }}
-                />
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <div className="space-y-3 border-b border-border bg-card px-5 py-4">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="min-w-0 space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+                    {order.title}
+                  </h2>
+                  <Badge variant={statusVariant(order.status)}>
+                    {t(`status.${order.status}`)}
+                  </Badge>
+                </div>
+                <Link
+                  href={`/projecten/${order.projectId}`}
+                  className="text-primary inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
+                >
+                  {order.projectName}
+                  <ExternalLink className="size-3.5" />
+                </Link>
+                <p className="text-sm text-muted-foreground">
+                  {order.projectAddress || "—"}
+                </p>
               </div>
-            ) : null}
-            {order.checklist.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{t("detail.subtasksEmpty")}</p>
-            ) : (
-              <ul className="space-y-2">
-                {order.checklist.map((item) => (
-                  <li key={item.id} className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      disabled={disabled}
-                      onClick={() => onToggleChecklist(order.id, item.id, !item.done)}
-                      className={cn(
-                        "flex size-5 shrink-0 items-center justify-center rounded border",
-                        item.done
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border",
-                      )}
-                    >
-                      {item.done ? <Check className="size-3" /> : null}
-                    </button>
-                    <span className={cn("text-sm", item.done && "text-muted-foreground line-through")}>
-                      {item.title}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
+              <div className="flex gap-2">
+                <Button type="button" variant="outline" size="sm" disabled>
+                  {t("detail.openFull")}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon-sm"
+                  disabled
+                  aria-label={t("rowMenu")}
+                >
+                  <MoreHorizontal className="size-4" />
+                </Button>
+              </div>
+            </div>
           </div>
 
-          <WorkOrderMaterialsSection
-            workOrderId={order.id}
-            projectId={order.projectId}
-            disabled={disabled}
-          />
+          <div className="grid gap-6 p-5 lg:grid-cols-2">
+            <div className="space-y-5">
+              <div>
+                <h3 className="text-sm font-medium">{t("detail.description")}</h3>
+                <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">
+                  {order.description?.trim() || t("detail.descriptionEmpty")}
+                </p>
+              </div>
 
-          <div>
-            <h3 className="text-sm font-medium">{t("detail.attachments")}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{t("detail.attachmentsSoon")}</p>
+              <dl className="grid gap-3 text-sm sm:grid-cols-2">
+                <div className="space-y-1">
+                  <dt className="text-[11px] uppercase text-muted-foreground">
+                    {t("columns.type")}
+                  </dt>
+                  <dd>{order.workType || "—"}</dd>
+                </div>
+                <div className="space-y-1">
+                  <dt className="text-[11px] uppercase text-muted-foreground">
+                    {t("columns.assignee")}
+                  </dt>
+                  <dd>{order.assigneeName || "—"}</dd>
+                </div>
+                <div className="space-y-1">
+                  <dt className="text-[11px] uppercase text-muted-foreground">
+                    {t("detail.start")}
+                  </dt>
+                  <dd>{formatPlan(order.plannedStart)}</dd>
+                </div>
+                <div className="space-y-1">
+                  <dt className="text-[11px] uppercase text-muted-foreground">
+                    {t("detail.duration")}
+                  </dt>
+                  <dd>{formatEstimatedHours(order.estimatedMinutes)}</dd>
+                </div>
+                <div className="space-y-1">
+                  <dt className="text-[11px] uppercase text-muted-foreground">
+                    {t("columns.priority")}
+                  </dt>
+                  <dd className="inline-flex items-center gap-1.5">
+                    <PriorityIcon priority={order.priority} />
+                    {t(`priority.${order.priority}`)}
+                  </dd>
+                </div>
+              </dl>
+
+              <div>
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <h3 className="text-sm font-medium">{t("detail.subtasks")}</h3>
+                  <span className="text-xs text-muted-foreground">
+                    {doneCount} / {order.checklist.length}
+                  </span>
+                </div>
+                {order.checklist.length > 0 ? (
+                  <div className="bg-muted mb-3 h-1.5 overflow-hidden rounded-full">
+                    <div
+                      className="bg-primary h-full"
+                      style={{
+                        width: `${order.checklist.length ? (doneCount / order.checklist.length) * 100 : 0}%`,
+                      }}
+                    />
+                  </div>
+                ) : null}
+                {order.checklist.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    {t("detail.subtasksEmpty")}
+                  </p>
+                ) : (
+                  <ul className="space-y-2">
+                    {order.checklist.map((item) => (
+                      <li key={item.id} className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          disabled={disabled}
+                          onClick={() =>
+                            onToggleChecklist(order.id, item.id, !item.done)
+                          }
+                          className={cn(
+                            "flex size-5 shrink-0 items-center justify-center rounded border",
+                            item.done
+                              ? "border-primary bg-primary text-primary-foreground"
+                              : "border-border",
+                          )}
+                        >
+                          {item.done ? <Check className="size-3" /> : null}
+                        </button>
+                        <span
+                          className={cn(
+                            "text-sm",
+                            item.done && "text-muted-foreground line-through",
+                          )}
+                        >
+                          {item.title}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium">{t("detail.attachments")}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t("detail.attachmentsSoon")}
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <WorkOrderMaterialsSection
+                workOrderId={order.id}
+                projectId={order.projectId}
+                disabled={disabled}
+              />
+            </div>
           </div>
-        </div>
-
-        <div className="flex gap-2 border-t border-border p-4">
-          <Button type="button" variant="outline" className="flex-1" disabled>
-            {t("detail.openFull")}
-          </Button>
-          <Button type="button" variant="outline" size="icon-sm" disabled aria-label={t("rowMenu")}>
-            <MoreHorizontal className="size-4" />
-          </Button>
         </div>
       </SheetContent>
     </Sheet>

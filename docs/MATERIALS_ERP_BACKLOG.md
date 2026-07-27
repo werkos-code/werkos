@@ -26,4 +26,4 @@ Zie eerdere secties in git history — artikelen, voorraad, project BOM, leveran
 
 ## Migratie
 
-Fase E+ vereist `supabase/migrations/20260727300000_work_order_material_usages.sql` — run in SQL Editor, daarna archiveren.
+Fase E+ SQL staat in `docs/sql-applied/20260727300000_work_order_material_usages.sql` (reeds toegepast).

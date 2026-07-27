@@ -265,8 +265,8 @@ Geen nieuwe SQL. Test:
 ## 24. Materiaal ERP fase E+ (direct op werkbon)
 
 1. Open **SQL Editor** in Supabase
-2. Plak en run:  
-   `supabase/migrations/20260727300000_work_order_material_usages.sql`
+2. Plak en run (indien nog niet gedaan):  
+   `docs/sql-applied/20260727300000_work_order_material_usages.sql`
 3. Test: `/werkbonnen` → werkbon → **Direct op werkbon** → verbruik boeken
 
 ## Prijsformule
