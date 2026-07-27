@@ -1,7 +1,5 @@
 "use client";
 
-import { Search } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { Input } from "@/components/ui/input";
@@ -9,7 +7,7 @@ import {
   euroFromCents,
   type ArticleRow,
 } from "@/features/materials/lib/materials";
-import type { TwobaSearchHit } from "@/features/materials/lib/twoba-client";
+import { TwobaCatalogSearchPanel } from "@/features/materials/components/twoba-catalog-search-panel";
 import { cn } from "@/lib/utils";
 
 export type PoLinePickMode = "local" | "twoba" | "adhoc";
@@ -50,103 +48,9 @@ export function PoLineArticlePicker({
   disabled,
 }: PoLineArticlePickerProps) {
   const t = useTranslations("materials.purchasing");
-  const [twobaQuery, setTwobaQuery] = useState("");
-  const [twobaResults, setTwobaResults] = useState<TwobaSearchHit[]>([]);
-  const [twobaConfigured, setTwobaConfigured] = useState<boolean | null>(null);
-  const [twobaLoading, setTwobaLoading] = useState(false);
-  const [twobaError, setTwobaError] = useState<string | null>(null);
+  const tCatalog = useTranslations("materials.catalog");
 
   const filteredArticles = articles.filter((row) => row.isActive);
-
-  useEffect(() => {
-    if (value.mode !== "twoba") return;
-    const q = twobaQuery.trim();
-    if (q.length < 2) {
-      setTwobaResults([]);
-      return;
-    }
-
-    const timer = window.setTimeout(() => {
-      void (async () => {
-        setTwobaLoading(true);
-        setTwobaError(null);
-        try {
-          const response = await fetch(
-            `/api/catalog/twoba?q=${encodeURIComponent(q)}`,
-            { signal: AbortSignal.timeout(20_000) },
-          );
-          const result = (await response.json()) as {
-            configured?: boolean;
-            results?: TwobaSearchHit[];
-            error?: string;
-          };
-          setTwobaConfigured(result.configured ?? false);
-          setTwobaResults(result.results ?? []);
-          if (result.error) setTwobaError(t("catalog.searchError"));
-        } catch {
-          setTwobaError(t("catalog.searchError"));
-          setTwobaResults([]);
-        } finally {
-          setTwobaLoading(false);
-        }
-      })();
-    }, 350);
-
-    return () => window.clearTimeout(timer);
-  }, [twobaQuery, value.mode, t]);
-
-  async function importTwobaHit(hit: TwobaSearchHit) {
-    setTwobaLoading(true);
-    setTwobaError(null);
-    try {
-      const response = await fetch("/api/catalog/twoba", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          supplierGln: hit.supplierGln,
-          tradeItemId: hit.tradeItemId,
-        }),
-        signal: AbortSignal.timeout(20_000),
-      });
-      const result = (await response.json()) as {
-        articleId?: string;
-        article?: {
-          id: string;
-          name: string;
-          unit: string;
-          purchasePriceCents: number | null;
-        };
-        error?: string;
-      };
-      if (!response.ok || !result.articleId || !result.article) {
-        setTwobaError(
-          result.error === "not_configured"
-            ? t("catalog.notConfigured")
-            : t("catalog.importError"),
-        );
-        return;
-      }
-      onChange({
-        ...value,
-        mode: "twoba",
-        articleId: result.articleId,
-        title: result.article.name,
-        unit: result.article.unit || "st",
-        unitCost:
-          result.article.purchasePriceCents != null
-            ? euroFromCents(result.article.purchasePriceCents)
-            : value.unitCost,
-        twobaSupplierGln: hit.supplierGln,
-        twobaTradeItemId: hit.tradeItemId,
-      });
-      setTwobaQuery("");
-      setTwobaResults([]);
-    } catch {
-      setTwobaError(t("catalog.importError"));
-    } finally {
-      setTwobaLoading(false);
-    }
-  }
 
   return (
     <div className="grid gap-2 rounded-lg border border-border/70 p-3 sm:grid-cols-2">
@@ -164,7 +68,7 @@ export function PoLineArticlePicker({
                 : "bg-muted text-muted-foreground hover:text-foreground",
             )}
           >
-            {t(`catalog.modes.${mode}`)}
+            {tCatalog(`modes.${mode}`)}
           </button>
         ))}
       </div>
@@ -200,50 +104,26 @@ export function PoLineArticlePicker({
 
       {value.mode === "twoba" ? (
         <div className="space-y-2 sm:col-span-2">
-          <div className="relative">
-            <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
-            <Input
-              value={twobaQuery}
-              onChange={(e) => setTwobaQuery(e.target.value)}
-              placeholder={t("catalog.searchPlaceholder")}
-              className="h-9 pl-8"
-              disabled={disabled || twobaLoading}
-            />
-          </div>
-          {twobaConfigured === false ? (
-            <p className="text-xs text-muted-foreground">
-              {t("catalog.notConfigured")}
-            </p>
-          ) : null}
-          {twobaError ? (
-            <p className="text-xs text-destructive">{twobaError}</p>
-          ) : null}
+          <TwobaCatalogSearchPanel
+            disabled={disabled}
+            onImported={(article) =>
+              onChange({
+                ...value,
+                mode: "twoba",
+                articleId: article.id,
+                title: article.name,
+                unit: article.unit || "st",
+                unitCost:
+                  article.purchasePriceCents != null
+                    ? euroFromCents(article.purchasePriceCents)
+                    : value.unitCost,
+              })
+            }
+          />
           {value.articleId ? (
-            <p className="text-xs text-primary">{t("catalog.selected", { title: value.title })}</p>
-          ) : null}
-          {twobaResults.length > 0 ? (
-            <ul className="max-h-40 divide-y divide-border/70 overflow-y-auto rounded-lg border border-border/70">
-              {twobaResults.map((hit) => (
-                <li key={`${hit.supplierGln}-${hit.tradeItemId}`}>
-                  <button
-                    type="button"
-                    className="hover:bg-muted/40 block w-full px-3 py-2 text-left text-sm"
-                    disabled={disabled || twobaLoading}
-                    onClick={() => void importTwobaHit(hit)}
-                  >
-                    <span className="font-medium">{hit.name}</span>
-                    <span className="text-muted-foreground mt-0.5 block text-xs">
-                      {hit.manufacturer ?? "—"} · {hit.tradeItemId}
-                      {hit.ean ? ` · EAN ${hit.ean}` : ""}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : twobaLoading ? (
-            <p className="text-xs text-muted-foreground">{t("loading")}</p>
-          ) : twobaQuery.trim().length >= 2 ? (
-            <p className="text-xs text-muted-foreground">{t("catalog.noResults")}</p>
+            <p className="text-xs text-primary">
+              {tCatalog("selected", { title: value.title })}
+            </p>
           ) : null}
         </div>
       ) : null}

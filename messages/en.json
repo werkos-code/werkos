@@ -1143,6 +1143,26 @@
     }
   },
   "materials": {
+    "catalog": {
+      "importButton": "2BA",
+      "importTitle": "Article from 2BA",
+      "importHint": "Search and import into your catalog. Existing 2BA articles are reused.",
+      "importedNote": "Imported from 2BA.",
+      "existingNote": "Existing 2BA article in catalog.",
+      "loading": "Loading…",
+      "searchHint": "Type at least 2 characters to search.",
+      "modes": {
+        "local": "Local catalog",
+        "twoba": "2BA",
+        "adhoc": "Manual"
+      },
+      "searchPlaceholder": "Search 2BA (name, code, EAN)…",
+      "noResults": "No results in 2BA.",
+      "selected": "Selected: {title}",
+      "notConfigured": "2BA is not configured yet. See docs/PENDING_SETUP.md.",
+      "searchError": "2BA search failed.",
+      "importError": "Failed to import article from 2BA."
+    },
     "articles": {
       "title": "Articles",
       "new": "New article",
@@ -1363,18 +1383,7 @@
         "poNotReady": "Order must be sent or received."
       },
       "catalog": {
-        "hint": "Per line: local catalog, 2BA search, or manual entry.",
-        "modes": {
-          "local": "Local catalog",
-          "twoba": "2BA",
-          "adhoc": "Manual"
-        },
-        "searchPlaceholder": "Search 2BA (name, code, EAN)…",
-        "noResults": "No results in 2BA.",
-        "selected": "Selected: {title}",
-        "notConfigured": "2BA is not configured yet. Set TWOBA_* env vars or use manual entry.",
-        "searchError": "2BA search failed.",
-        "importError": "Failed to import article from 2BA."
+        "hint": "Per line: local catalog, 2BA search, or manual entry."
       }
     },
     "workItem": {

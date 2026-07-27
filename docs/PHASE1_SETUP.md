@@ -278,9 +278,9 @@ Geen nieuwe SQL. Test:
 
 ## 26. Materiaal ERP fase G (2BA + handmatig in inkoop)
 
-1. Run SQL: `supabase/migrations/20260727320000_articles_catalog_refs.sql`
-2. Optioneel: zet `TWOBA_*` in `.env.local` / Vercel (zie `.env.example`)
-3. Test: `/materiaal/inkoop` → nieuwe order → per regel **Eigen catalogus** / **2BA** / **Handmatig**
+1. Run SQL (indien nog niet gedaan): `docs/sql-applied/20260727320000_articles_catalog_refs.sql`
+2. Optioneel: zet `TWOBA_*` in `.env.local` / Vercel — zie [`PENDING_SETUP.md`](./PENDING_SETUP.md)
+3. Test: `/materiaal/inkoop` en `/materiaal/artikelen` → **2BA**
 
 ## Prijsformule
 

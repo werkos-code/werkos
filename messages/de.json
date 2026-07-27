@@ -1143,6 +1143,26 @@
     }
   },
   "materials": {
+    "catalog": {
+      "importButton": "2BA",
+      "importTitle": "Artikel aus 2BA",
+      "importHint": "Suchen und in den Katalog importieren. Vorhandene 2BA-Artikel werden wiederverwendet.",
+      "importedNote": "Aus 2BA importiert.",
+      "existingNote": "Vorhandener 2BA-Artikel im Katalog.",
+      "loading": "Laden…",
+      "searchHint": "Mindestens 2 Zeichen eingeben.",
+      "modes": {
+        "local": "Eigener Katalog",
+        "twoba": "2BA",
+        "adhoc": "Manuell"
+      },
+      "searchPlaceholder": "In 2BA suchen (Name, Code, EAN)…",
+      "noResults": "Keine Ergebnisse in 2BA.",
+      "selected": "Ausgewählt: {title}",
+      "notConfigured": "2BA ist noch nicht konfiguriert. Siehe docs/PENDING_SETUP.md.",
+      "searchError": "2BA-Suche fehlgeschlagen.",
+      "importError": "Artikelimport aus 2BA fehlgeschlagen."
+    },
     "articles": {
       "title": "Artikel",
       "new": "Neuer Artikel",
@@ -1363,18 +1383,7 @@
         "poNotReady": "Bestellung muss gesendet oder empfangen sein."
       },
       "catalog": {
-        "hint": "Pro Zeile: eigener Katalog, 2BA-Suche oder manuelle Eingabe.",
-        "modes": {
-          "local": "Eigener Katalog",
-          "twoba": "2BA",
-          "adhoc": "Manuell"
-        },
-        "searchPlaceholder": "In 2BA suchen (Name, Code, EAN)…",
-        "noResults": "Keine Ergebnisse in 2BA.",
-        "selected": "Ausgewählt: {title}",
-        "notConfigured": "2BA ist noch nicht konfiguriert. TWOBA_* env-vars setzen oder manuell eingeben.",
-        "searchError": "2BA-Suche fehlgeschlagen.",
-        "importError": "Artikelimport aus 2BA fehlgeschlagen."
+        "hint": "Pro Zeile: eigener Katalog, 2BA-Suche oder manuelle Eingabe."
       }
     },
     "workItem": {

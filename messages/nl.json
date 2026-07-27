@@ -1143,6 +1143,26 @@
     }
   },
   "materials": {
+    "catalog": {
+      "importButton": "2BA",
+      "importTitle": "Artikel uit 2BA",
+      "importHint": "Zoek en importeer naar je catalogus. Bestaande 2BA-artikelen worden hergebruikt.",
+      "importedNote": "Geïmporteerd vanuit 2BA.",
+      "existingNote": "Bestaand 2BA-artikel in catalogus.",
+      "loading": "Laden…",
+      "searchHint": "Typ minimaal 2 tekens om te zoeken.",
+      "modes": {
+        "local": "Eigen catalogus",
+        "twoba": "2BA",
+        "adhoc": "Handmatig"
+      },
+      "searchPlaceholder": "Zoek in 2BA (naam, artikelcode, EAN)…",
+      "noResults": "Geen resultaten in 2BA.",
+      "selected": "Geselecteerd: {title}",
+      "notConfigured": "2BA is nog niet gekoppeld. Zie docs/PENDING_SETUP.md.",
+      "searchError": "2BA-zoekopdracht mislukt.",
+      "importError": "Artikel importeren vanuit 2BA mislukt."
+    },
     "articles": {
       "title": "Artikelen",
       "new": "Nieuw artikel",
@@ -1363,18 +1383,7 @@
         "poNotReady": "Order moet verstuurd of ontvangen zijn."
       },
       "catalog": {
-        "hint": "Per regel: eigen catalogus, 2BA zoeken of handmatig invullen.",
-        "modes": {
-          "local": "Eigen catalogus",
-          "twoba": "2BA",
-          "adhoc": "Handmatig"
-        },
-        "searchPlaceholder": "Zoek in 2BA (naam, artikelcode, EAN)…",
-        "noResults": "Geen resultaten in 2BA.",
-        "selected": "Geselecteerd: {title}",
-        "notConfigured": "2BA is nog niet gekoppeld. Vul TWOBA_* env-vars in of gebruik handmatig.",
-        "searchError": "2BA-zoekopdracht mislukt.",
-        "importError": "Artikel importeren vanuit 2BA mislukt."
+        "hint": "Per regel: eigen catalogus, 2BA zoeken of handmatig invullen."
       }
     },
     "workItem": {

@@ -20,6 +20,7 @@ import {
   type ArticleRow,
 } from "@/features/materials/lib/materials";
 import { ArticleSupplierPricesPanel } from "@/features/materials/components/article-supplier-prices-panel";
+import { TwobaCatalogSearchPanel } from "@/features/materials/components/twoba-catalog-search-panel";
 import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
 import { formatEuroFromCents } from "@/utils/format";
 import { cn } from "@/lib/utils";
@@ -79,12 +80,14 @@ function fromRow(row: ArticleRow): ArticleDraft {
 
 export function ArticlesWorkspace({ articles, suppliers }: ArticlesWorkspaceProps) {
   const t = useTranslations("materials.articles");
+  const tCatalog = useTranslations("materials.catalog");
   const tCommon = useTranslations("common");
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [barcode, setBarcode] = useState("");
   const [activeOnly, setActiveOnly] = useState(true);
   const [open, setOpen] = useState(false);
+  const [twobaOpen, setTwobaOpen] = useState(false);
   const [draft, setDraft] = useState<ArticleDraft>(emptyDraft());
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -185,10 +188,15 @@ export function ArticlesWorkspace({ articles, suppliers }: ArticlesWorkspaceProp
           <MetaStatCard label={t("kpiActive")} value={String(activeCount)} />
           <MetaStatCard label={t("kpiTracked")} value={String(trackedCount)} />
         </div>
-        <Button type="button" onClick={openCreate}>
-          <Plus className="size-4" />
-          {t("new")}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" variant="outline" onClick={() => setTwobaOpen(true)}>
+            {tCatalog("importButton")}
+          </Button>
+          <Button type="button" onClick={openCreate}>
+            <Plus className="size-4" />
+            {t("new")}
+          </Button>
+        </div>
       </div>
 
       <PageCard className="flex flex-wrap items-center gap-3 p-3">
@@ -432,6 +440,61 @@ export function ArticlesWorkspace({ articles, suppliers }: ArticlesWorkspaceProp
             </Button>
             <Button type="button" disabled={isPending} onClick={save}>
               {tCommon("save")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={twobaOpen} onOpenChange={setTwobaOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{tCatalog("importTitle")}</DialogTitle>
+          </DialogHeader>
+          <p className="text-xs text-muted-foreground">{tCatalog("importHint")}</p>
+          <TwobaCatalogSearchPanel
+            onImported={(article) => {
+              setTwobaOpen(false);
+              const existing = articles.find((row) => row.id === article.id);
+              if (existing) {
+                openEdit(existing);
+              } else {
+                setDraft({
+                  id: article.id,
+                  code: "",
+                  name: article.name,
+                  description: "",
+                  unit: article.unit,
+                  category: "2BA",
+                  barcode: "",
+                  trackStock: true,
+                  purchasePrice:
+                    article.purchasePriceCents != null
+                      ? euroFromCents(article.purchasePriceCents)
+                      : "",
+                  salePrice:
+                    article.purchasePriceCents != null
+                      ? euroFromCents(
+                          Math.round(article.purchasePriceCents * 1.3),
+                        )
+                      : "",
+                  isActive: true,
+                  notes: article.created
+                    ? tCatalog("importedNote")
+                    : tCatalog("existingNote"),
+                });
+                setError(null);
+                setOpen(true);
+              }
+              router.refresh();
+            }}
+          />
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setTwobaOpen(false)}
+            >
+              {tCommon("close")}
             </Button>
           </DialogFooter>
         </DialogContent>
