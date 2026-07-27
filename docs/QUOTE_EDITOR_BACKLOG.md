@@ -43,7 +43,7 @@
 ## Afvinklijst (voor latere sprints)
 
 - [x] Offertenummer (`OFF-YYYY-NNNN`)
-- [ ] Voorbeeld / PDF of online preview
+- [ ] Voorbeeld / PDF of online preview (fase 4)
 - [ ] Header `⋯` acties (o.a. dupliceren)
 - [x] Tekstregel (`line_type = text`)
 - [ ] Toolbar-korting (offerte-niveau)
@@ -55,4 +55,3 @@
 - [x] Betaaltermijn + betalingsvoorwaarden (fase 3)
 - [ ] Sneltoetsen
 - [x] Catalogus / Bereken prijzen (fase 2)
-- [ ] Voorbeeld / PDF of online preview (fase 4)
