@@ -5,10 +5,10 @@ import {
 import type {
   QuoteLineRow,
   QuoteLineType,
-} from "@/features/quotes/quotes-actions";
+} from "@/features/quotes/lib/quote-types";
 
 export type { QuoteLineRow, QuoteLineType };
-export { QUOTE_LINE_TYPES } from "@/features/quotes/quotes-actions";
+export { QUOTE_LINE_TYPES } from "@/features/quotes/lib/quote-types";
 
 export function formatEuro(cents: number) {
   return new Intl.NumberFormat("nl-NL", {

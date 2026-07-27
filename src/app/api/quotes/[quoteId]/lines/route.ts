@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { QUOTE_LINE_TYPES } from "@/features/quotes/quotes-actions";
-import type { QuoteLineType } from "@/features/quotes/quotes-actions";
+import { QUOTE_LINE_TYPES } from "@/features/quotes/lib/quote-types";
+import type { QuoteLineType } from "@/features/quotes/lib/quote-types";
 import { isQuoteEditable } from "@/features/quotes/lib/quote-status";
 import { requireApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
