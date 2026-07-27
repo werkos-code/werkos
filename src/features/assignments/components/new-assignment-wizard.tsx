@@ -143,6 +143,14 @@ export function NewAssignmentWizard() {
     if (next) patchState({ step: next });
   }
 
+  function skipCalculatie() {
+    setError(null);
+    patchState({
+      calculation: { lines: [], marginPercent: 0 },
+      step: "afronden",
+    });
+  }
+
   function goBack() {
     setError(null);
     const previous = prevStep(state.step);
@@ -266,6 +274,16 @@ export function NewAssignmentWizard() {
             {t("back")}
           </Button>
           <div className="flex gap-2">
+            {state.step === "calculatie" ? (
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={submitting}
+                onClick={skipCalculatie}
+              >
+                {t("skipCalculatie")}
+              </Button>
+            ) : null}
             {isLast ? (
               <Button
                 type="button"

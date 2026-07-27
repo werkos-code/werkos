@@ -333,6 +333,7 @@
     },
     "back": "Terug",
     "next": "Volgende",
+    "skipCalculatie": "Overslaan",
     "openProject": "Project openen",
     "autosaveHint": "Je voortgang wordt automatisch bewaard op dit apparaat.",
     "errors": {

@@ -333,6 +333,7 @@
     },
     "back": "Back",
     "next": "Next",
+    "skipCalculatie": "Skip",
     "openProject": "Open project",
     "autosaveHint": "Your progress is saved automatically on this device.",
     "errors": {

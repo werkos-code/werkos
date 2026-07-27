@@ -333,6 +333,7 @@
     },
     "back": "Zurück",
     "next": "Weiter",
+    "skipCalculatie": "Überspringen",
     "openProject": "Projekt öffnen",
     "autosaveHint": "Dein Fortschritt wird auf diesem Gerät automatisch gespeichert.",
     "errors": {
