@@ -3,7 +3,8 @@
 > Laatst bijgewerkt: 2026-07-28  
 > Context: UI-modernisering naar mock “Offerte bewerken”. Onderstaande items staan als **disabled stubs** in de UI of zijn bewust weggelaten tot schema/API klaar is.  
 > **Niet vergeten:** wanneer je een stub activeert, haal hem hier weg en update `docs/DESIGN_SYSTEM.md` indien nodig.  
-> Fase 7: [`QUOTE_EDITOR_PHASE7.md`](./QUOTE_EDITOR_PHASE7.md) (logo + dupliceren).
+> Fase 7: [`QUOTE_EDITOR_PHASE7.md`](./QUOTE_EDITOR_PHASE7.md) (logo + dupliceren).  
+> Fase 8: [`QUOTE_EDITOR_PHASE8.md`](./QUOTE_EDITOR_PHASE8.md) (bijlagen + factuur vanuit offerte).
 
 ## Beslissingen (vastgelegd)
 
@@ -25,7 +26,7 @@
 | Importeren | Disabled | Importflow (Excel/CSV) + mapping |
 | Drag-and-drop herordenen | Root-niveau DnD | ✅ Fase 1 (child-DnD later) |
 | Thumbnails op regels | Niet getoond | Zelfde als afbeeldingen |
-| Bijlagen / dropzone | Disabled dropzone + lege bijlagenlijst | Storage bucket, `quote_attachments` (of generiek), RLS, upload API |
+| Bijlagen / dropzone | Upload + lijst in tab | ✅ Fase 8 (`quote_attachments`) |
 | Winstmarge-kaart | KPI toont % bij kostprijs-snapshot | ✅ Fase 2 |
 | Betaaltermijn | Select 0–90 dagen op offerte | ✅ Fase 3 (`payment_terms_days`) |
 | Betalingsvoorwaarden | Vrij tekstveld op offerte | ✅ Fase 3 (`payment_conditions`); catalogus later |
@@ -51,7 +52,7 @@
 - [ ] Regel-afbeeldingen + thumbnails
 - [ ] Importeren
 - [x] Drag-and-drop sort (root)
-- [ ] Bijlagen upload + lijst
+- [x] Bijlagen upload + lijst
 - [x] Winstmarge (kostprijs-snapshot op regels)
 - [x] Betaaltermijn + betalingsvoorwaarden (fase 3)
 - [ ] Sneltoetsen
@@ -60,3 +61,4 @@
 - [x] Org-briefpapier (KvK, adres, IBAN — fase 5; logo later)
 - [x] Org-logo upload
 - [x] Factuur-voorbeeld (zelfde printpatroon — fase 6)
+- [x] Factuur vanuit geaccepteerde offerte (fase 8)

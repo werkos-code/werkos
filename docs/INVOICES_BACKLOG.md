@@ -20,7 +20,7 @@
 
 ## Bewust later
 
-- [ ] Aanmaken vanuit geaccepteerde offerte (quote_lines kopiëren)
+- [x] Aanmaken vanuit geaccepteerde offerte (quote_lines kopiëren)
 - [x] **Termijnfacturen vanuit offerte** — financiële planning + factureren per schijf (MVP simpel)
 - [x] **Voorbeeld / Afdrukken-PDF** (fase 6 — browser print + letterhead)
 - [ ] E-mail versturen / herinneringen

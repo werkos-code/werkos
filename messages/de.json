@@ -978,9 +978,9 @@
       "image": "Bild",
       "import": "Importieren",
       "attachmentsTitle": "Anhänge",
-      "attachmentsHint": "PDF, JPG, PNG, Excel · Upload folgt in einer späteren Version",
+      "attachmentsHint": "Dateien über den Anhänge-Tab hochladen.",
       "attachmentsList": "Anhänge",
-      "attachmentsEmpty": "Noch keine Anhänge. Upload folgt in einer späteren Version."
+      "attachmentsEmpty": "Noch keine Anhänge."
     },
     "errors": {
       "notEditable": "Dieses Angebot ist nicht mehr bearbeitbar (nur Entwurf).",
@@ -1009,7 +1009,24 @@
       "preview": "Vorschau",
       "menu": "Aktionen",
       "duplicate": "Duplizieren",
-      "duplicateUnsaved": "Es gibt ungespeicherte Änderungen. Trotzdem die gespeicherte Version duplizieren?"
+      "duplicateUnsaved": "Es gibt ungespeicherte Änderungen. Trotzdem die gespeicherte Version duplizieren?",
+      "createInvoice": "Rechnung erstellen",
+      "createInvoiceUnsaved": "Es gibt ungespeicherte Änderungen. Trotzdem Rechnung aus dem gespeicherten Angebot erstellen?",
+      "createInvoiceNotAccepted": "Nur angenommene Angebote können in eine Rechnung umgewandelt werden.",
+      "createInvoiceNoLines": "Keine fakturierbaren Positionen in diesem Angebot gefunden."
+    },
+    "attachments": {
+      "title": "Anhänge",
+      "hint": "PDFs, Bilder oder Tabellen zu diesem Angebot. Max. 50 MB pro Datei.",
+      "upload": "Hochladen",
+      "dropHint": "Dateien hierher ziehen oder Hochladen nutzen.",
+      "empty": "Noch keine Anhänge.",
+      "download": "Herunterladen",
+      "delete": "Löschen",
+      "deleteConfirm": "Diesen Anhang löschen?",
+      "tooLarge": "Datei ist größer als 50 MB.",
+      "notEditable": "Anhänge können nur bei einem Angebotsentwurf geändert werden.",
+      "fileRequired": "Bitte eine Datei wählen."
     },
     "fields": {
       "title": "Titel",

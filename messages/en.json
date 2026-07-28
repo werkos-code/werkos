@@ -978,9 +978,9 @@
       "image": "Image",
       "import": "Import",
       "attachmentsTitle": "Attachments",
-      "attachmentsHint": "PDF, JPG, PNG, Excel · upload coming in a later version",
+      "attachmentsHint": "Upload files via the Attachments tab.",
       "attachmentsList": "Attachments",
-      "attachmentsEmpty": "No attachments yet. Upload comes in a later version."
+      "attachmentsEmpty": "No attachments yet."
     },
     "errors": {
       "notEditable": "This quote can no longer be edited (draft only).",
@@ -1009,7 +1009,24 @@
       "preview": "Preview",
       "menu": "Actions",
       "duplicate": "Duplicate",
-      "duplicateUnsaved": "You have unsaved changes. Duplicate the saved version anyway?"
+      "duplicateUnsaved": "You have unsaved changes. Duplicate the saved version anyway?",
+      "createInvoice": "Create invoice",
+      "createInvoiceUnsaved": "You have unsaved changes. Create an invoice from the saved quote anyway?",
+      "createInvoiceNotAccepted": "Only accepted quotes can be turned into an invoice.",
+      "createInvoiceNoLines": "No billable lines found on this quote."
+    },
+    "attachments": {
+      "title": "Attachments",
+      "hint": "PDFs, images or spreadsheets for this quote. Max 50 MB per file.",
+      "upload": "Upload",
+      "dropHint": "Drop files here or use Upload.",
+      "empty": "No attachments yet.",
+      "download": "Download",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this attachment?",
+      "tooLarge": "File is larger than 50 MB.",
+      "notEditable": "Attachments can only be changed on a draft quote.",
+      "fileRequired": "Choose a file."
     },
     "fields": {
       "title": "Title",

@@ -1172,6 +1172,60 @@ export type Database = {
           },
         ];
       };
+      quote_attachments: {
+        Row: {
+          id: string;
+          organization_id: string;
+          quote_id: string;
+          name: string;
+          storage_path: string;
+          mime_type: string | null;
+          size_bytes: number;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          quote_id: string;
+          name: string;
+          storage_path: string;
+          mime_type?: string | null;
+          size_bytes?: number;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          quote_id?: string;
+          name?: string;
+          storage_path?: string;
+          mime_type?: string | null;
+          size_bytes?: number;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "quote_attachments_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "quote_attachments_quote_id_fkey";
+            columns: ["quote_id"];
+            isOneToOne: false;
+            referencedRelation: "quotes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       time_entries: {
         Row: {
           id: string;

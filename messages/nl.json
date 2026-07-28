@@ -978,9 +978,9 @@
       "image": "Afbeelding",
       "import": "Importeren",
       "attachmentsTitle": "Bijlagen",
-      "attachmentsHint": "PDF, JPG, PNG, Excel · upload volgt in een volgende versie",
+      "attachmentsHint": "Upload bestanden via de Bijlagen-tab.",
       "attachmentsList": "Bijlagen",
-      "attachmentsEmpty": "Nog geen bijlagen. Upload volgt in een volgende versie."
+      "attachmentsEmpty": "Nog geen bijlagen."
     },
     "errors": {
       "notEditable": "Deze offerte is niet meer bewerkbaar (alleen concept).",
@@ -1009,7 +1009,24 @@
       "preview": "Voorbeeld",
       "menu": "Acties",
       "duplicate": "Dupliceren",
-      "duplicateUnsaved": "Er zijn niet-opgeslagen wijzigingen. Toch dupliceren van de opgeslagen versie?"
+      "duplicateUnsaved": "Er zijn niet-opgeslagen wijzigingen. Toch dupliceren van de opgeslagen versie?",
+      "createInvoice": "Factuur aanmaken",
+      "createInvoiceUnsaved": "Er zijn niet-opgeslagen wijzigingen. Toch factuur maken van de opgeslagen offerte?",
+      "createInvoiceNotAccepted": "Alleen geaccepteerde offertes kunnen worden omgezet naar een factuur.",
+      "createInvoiceNoLines": "Geen factureerbare regels gevonden op deze offerte."
+    },
+    "attachments": {
+      "title": "Bijlagen",
+      "hint": "PDF, afbeeldingen of spreadsheets bij deze offerte. Max. 50 MB per bestand.",
+      "upload": "Uploaden",
+      "dropHint": "Sleep bestanden hierheen of gebruik Uploaden.",
+      "empty": "Nog geen bijlagen.",
+      "download": "Downloaden",
+      "delete": "Verwijderen",
+      "deleteConfirm": "Deze bijlage verwijderen?",
+      "tooLarge": "Bestand is groter dan 50 MB.",
+      "notEditable": "Bijlagen kun je alleen wijzigen bij een conceptofferte.",
+      "fileRequired": "Kies een bestand."
     },
     "fields": {
       "title": "Titel",

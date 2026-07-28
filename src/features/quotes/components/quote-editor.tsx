@@ -8,8 +8,8 @@ import {
   Ellipsis,
   Eye,
   FileText,
-  Paperclip,
   Pencil,
+  Receipt,
   Send,
   X,
 } from "lucide-react";
@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { QuoteAttachmentsPanel } from "@/features/quotes/components/quote-attachments-panel";
 import { QuoteEditorRail } from "@/features/quotes/components/quote-editor-rail";
 import { QuoteFinancialPlanning } from "@/features/quotes/components/quote-financial-planning";
 import { QuoteLinesWorkspace } from "@/features/quotes/components/quote-lines-workspace";
@@ -304,6 +305,42 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
       }
       setDirty(false);
       router.push(`/projecten/${result.projectId}/offertes/${result.quoteId}`);
+      router.refresh();
+    } catch {
+      setError(tCommon("error"));
+    } finally {
+      setPendingAction(false);
+    }
+  }
+
+  async function createInvoiceFromQuote() {
+    if (status !== "accepted") return;
+    if (dirty) {
+      const leave = window.confirm(t("actions.createInvoiceUnsaved"));
+      if (!leave) return;
+    }
+    setPendingAction(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/quotes/${quote.id}/create-invoice`, {
+        method: "POST",
+        signal: AbortSignal.timeout(30_000),
+      });
+      const result = (await response.json()) as {
+        error?: string;
+        invoiceId?: string;
+      };
+      if (!response.ok || result.error || !result.invoiceId) {
+        setError(
+          result.error === "quote_not_accepted"
+            ? t("actions.createInvoiceNotAccepted")
+            : result.error === "no_billable_lines"
+              ? t("actions.createInvoiceNoLines")
+              : result.error || tCommon("error"),
+        );
+        return;
+      }
+      router.push(`/facturen/${result.invoiceId}`);
       router.refresh();
     } catch {
       setError(tCommon("error"));
@@ -637,6 +674,15 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
                 <Copy className="size-3.5" />
                 {t("actions.duplicate")}
               </DropdownMenuItem>
+              {status === "accepted" ? (
+                <DropdownMenuItem
+                  disabled={busy}
+                  onClick={() => void createInvoiceFromQuote()}
+                >
+                  <Receipt className="size-3.5" />
+                  {t("actions.createInvoice")}
+                </DropdownMenuItem>
+              ) : null}
             </DropdownMenuContent>
           </DropdownMenu>
           <Button type="button" variant="outline" size="sm" asChild>
@@ -932,10 +978,9 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
             ) : null}
 
             {tab === "attachments" ? (
-              <ComingSoon
-                icon={<Paperclip className="size-6 text-primary" />}
-                title={t("stubs.attachmentsTitle")}
-                hint={t("stubs.attachmentsHint")}
+              <QuoteAttachmentsPanel
+                quoteId={quote.id}
+                editable={editable}
               />
             ) : null}
 
