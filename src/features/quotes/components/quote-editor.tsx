@@ -10,6 +10,7 @@ import {
   Paperclip,
   Pencil,
   Send,
+  X,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
@@ -24,6 +25,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { QuoteEditorRail } from "@/features/quotes/components/quote-editor-rail";
@@ -941,22 +948,42 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
         ) : null}
       </div>
 
-      <Dialog open={planningOpen} onOpenChange={setPlanningOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>{t("financialPlanning.title")}</DialogTitle>
-            <DialogDescription>
-              {t("financialPlanning.subtitle")}
-            </DialogDescription>
-          </DialogHeader>
-          <QuoteFinancialPlanning
-            quoteId={quote.id}
-            lines={lines}
-            quoteNumber={quote.quoteNumber}
-            editable={editable}
-          />
-        </DialogContent>
-      </Dialog>
+      <Sheet open={planningOpen} onOpenChange={setPlanningOpen}>
+        <SheetContent
+          side="right"
+          showCloseButton={false}
+          className="h-full w-[min(100%,70vw)] gap-0 overflow-hidden p-0 data-[side=right]:w-[min(100%,70vw)] data-[side=right]:sm:max-w-[70vw]"
+        >
+          <SheetHeader className="flex-row items-start justify-between space-y-0 border-b border-border px-5 py-3">
+            <div className="space-y-1">
+              <SheetTitle className="text-sm font-medium">
+                {t("financialPlanning.title")}
+              </SheetTitle>
+              <p className="max-w-2xl text-sm text-muted-foreground">
+                {t("financialPlanning.subtitle")}
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => setPlanningOpen(false)}
+              aria-label={tCommon("close")}
+            >
+              <X className="size-4" />
+            </Button>
+          </SheetHeader>
+
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <QuoteFinancialPlanning
+              quoteId={quote.id}
+              lines={lines}
+              quoteNumber={quote.quoteNumber}
+              editable={editable}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
 
       <Dialog open={acceptOpen} onOpenChange={setAcceptOpen}>
         <DialogContent className="sm:max-w-md" showCloseButton>

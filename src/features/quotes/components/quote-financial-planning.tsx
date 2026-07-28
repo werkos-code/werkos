@@ -245,7 +245,7 @@ export function QuoteFinancialPlanning({
         </PageCard>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[44rem] text-sm">
+          <table className="w-full min-w-[40rem] text-sm">
             <thead>
               <tr className="border-b border-border text-left text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
                 <th className="px-2 py-2">{t("columns.title")}</th>
@@ -389,7 +389,7 @@ function PhaseRow({
       <td className="px-2 py-3">
         {editable && !locked ? (
           <select
-            className={`${selectClass} w-[9rem]`}
+            className={`${selectClass} w-full min-w-0`}
             value={draft?.kind ?? "standard"}
             onChange={(e) =>
               onChange({
@@ -412,7 +412,7 @@ function PhaseRow({
         ) : editable && !locked ? (
           <div className="flex items-center justify-end gap-1">
             <select
-              className={`${selectClass} w-[5.5rem]`}
+              className={`${selectClass} w-[4.75rem]`}
               value={draft?.amountType ?? "percent"}
               onChange={(e) =>
                 onChange({
@@ -425,7 +425,7 @@ function PhaseRow({
             </select>
             <Input
               inputMode="decimal"
-              className="h-8 w-20 font-mono text-right tabular-nums"
+              className="h-8 w-16 font-mono text-right tabular-nums"
               value={
                 draft?.amountType === "fixed_cents"
                   ? String((draft.amountValue / 100).toFixed(2)).replace(".", ",")
