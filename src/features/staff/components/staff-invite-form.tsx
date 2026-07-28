@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import {
   STAFF_ASSIGNABLE_ROLES,
   type StaffAssignableRole,
-} from "@/features/staff/staff-actions";
+} from "@/features/staff/lib/staff-roles";
 import { USER_ROLES } from "@/config/roles";
 
 export function StaffInviteForm() {

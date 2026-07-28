@@ -8,10 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { USER_ROLES } from "@/config/roles";
-import {
-  STAFF_ASSIGNABLE_ROLES,
-  type StaffMemberRow,
-} from "@/features/staff/staff-actions";
+import { STAFF_ASSIGNABLE_ROLES } from "@/features/staff/lib/staff-roles";
+import type { StaffMemberRow } from "@/features/staff/staff-actions";
 
 type StaffMemberFormProps = {
   member: StaffMemberRow;

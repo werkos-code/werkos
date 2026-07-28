@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { USER_ROLES } from "@/config/roles";
-import { STAFF_ASSIGNABLE_ROLES } from "@/features/staff/staff-actions";
+import { STAFF_ASSIGNABLE_ROLES } from "@/features/staff/lib/staff-roles";
 import { getAppSession } from "@/features/shell/lib/require-organization";
 import { createAdminClient } from "@/lib/supabase/admin";
 
