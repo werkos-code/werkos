@@ -30,7 +30,7 @@ function statusChipClass(status: WorkItemStatus, overdue: boolean) {
 export function OrgWorkItemsWorkspace({
   workItems,
 }: OrgWorkItemsWorkspaceProps) {
-  const t = useTranslations("workItems");
+  const t = useTranslations("projects.workItems");
   const tOrg = useTranslations("orgWorkItems");
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -92,7 +92,7 @@ export function OrgWorkItemsWorkspace({
 
   return (
     <div className="space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <MetaStatCard label={tOrg("kpiTotal")} value={String(stats.total)} />
         <MetaStatCard label={tOrg("kpiOpen")} value={String(stats.open)} />
         <MetaStatCard
@@ -100,6 +100,11 @@ export function OrgWorkItemsWorkspace({
           value={String(stats.inProgress)}
         />
         <MetaStatCard label={tOrg("kpiDone")} value={String(stats.done)} />
+        <MetaStatCard
+          label={tOrg("kpiOverdue")}
+          value={String(stats.overdue)}
+          muted={stats.overdue === 0}
+        />
       </div>
 
       <PageCard className="p-3">
@@ -182,6 +187,9 @@ export function OrgWorkItemsWorkspace({
                   <th className="px-4 py-3 font-medium">
                     {tOrg("columns.hours")}
                   </th>
+                  <th className="px-4 py-3 font-medium">
+                    {tOrg("columns.actions")}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -232,6 +240,14 @@ export function OrgWorkItemsWorkspace({
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">
                         {formatEstimatedHours(item.estimatedMinutes)}
+                      </td>
+                      <td className="px-4 py-3">
+                        <Link
+                          href={`/projecten/${item.projectId}?tab=tasks`}
+                          className="text-sm font-medium text-primary hover:underline"
+                        >
+                          {tOrg("open")}
+                        </Link>
                       </td>
                     </tr>
                   );

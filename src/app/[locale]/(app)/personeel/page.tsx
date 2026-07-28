@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import { StaffTable } from "@/features/staff/components/staff-table";
+import { StaffWorkspace } from "@/features/staff/components/staff-workspace";
 import { listOrgStaffMembers } from "@/features/staff/staff-actions";
 import { ShellPage } from "@/features/shell/components/shell-page";
 
@@ -17,7 +17,11 @@ export default async function PersoneelPage({ params }: Props) {
       {result.error ? (
         <p className="text-sm text-destructive">{result.error}</p>
       ) : (
-        <StaffTable members={result.members ?? []} />
+        <StaffWorkspace
+          members={result.members ?? []}
+          canManage={Boolean(result.canManage)}
+          currentUserId={result.currentUserId ?? ""}
+        />
       )}
     </ShellPage>
   );

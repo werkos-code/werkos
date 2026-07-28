@@ -341,6 +341,11 @@
     "newSubcontractor": "New subcontractor",
     "newTitle": "New subcontractor",
     "empty": "No subcontractors yet. Add your first subcontractor.",
+    "emptyFiltered": "No subcontractors match this search.",
+    "searchPlaceholder": "Search by name, email, phone or CoC…",
+    "kpiTotal": "Total",
+    "kpiWithEmail": "With email",
+    "kpiWithPhone": "With phone",
     "create": "Save subcontractor",
     "save": "Save changes",
     "open": "Open",
@@ -371,22 +376,61 @@
     "kpiOpen": "Open",
     "kpiInProgress": "In progress",
     "kpiDone": "Done",
+    "kpiOverdue": "Overdue",
+    "open": "Open",
     "filters": {
       "projectAll": "Project: All",
       "unassigned": "Unassigned"
     },
     "columns": {
       "project": "Project",
-      "hours": "Estimated"
+      "hours": "Estimated",
+      "actions": "Actions"
     }
   },
   "staff": {
     "title": "Staff",
     "empty": "No team members in this organization yet.",
+    "emptyFiltered": "No team members match these filters.",
+    "searchPlaceholder": "Search by name or email…",
+    "invite": "Add team member",
+    "inviteTitle": "Add team member",
+    "inviteHint": "Only the owner can add team members. Share the temporary password securely.",
+    "create": "Create team member",
+    "save": "Save changes",
+    "open": "Open",
+    "remove": "Remove",
+    "deleteConfirm": "Are you sure you want to remove {name} from the team?",
+    "you": "you",
+    "passwordHint": "At least 8 characters. The team member can sign in with this password.",
+    "emailReadonly": "Changing email comes later.",
+    "kpiTotal": "Total",
+    "kpiOffice": "Office",
+    "kpiField": "Field",
+    "kpiOwners": "Owner",
+    "filters": {
+      "roleAll": "Role: All"
+    },
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "password": "Temporary password",
+      "role": "Role"
+    },
     "columns": {
       "name": "Name",
       "email": "Email",
-      "role": "Role"
+      "role": "Role",
+      "joined": "Joined",
+      "actions": "Actions"
+    },
+    "errors": {
+      "invalidInput": "Check name, email, password and role.",
+      "emailTaken": "This email address is already in use.",
+      "forbidden": "Only the owner can manage staff.",
+      "cannotRemoveOwner": "The owner cannot be removed.",
+      "cannotRemoveSelf": "You cannot remove yourself.",
+      "cannotChangeOwnerRole": "The owner's role cannot be changed."
     }
   },
   "suppliers": {

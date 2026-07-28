@@ -45,7 +45,7 @@
 | Onderaannemers | `/onderaannemers` | Done | CRUD zoals klanten; SQL `20260728120000_subcontractors.sql` |
 | Materiaal → Installaties | `/materiaal/installaties` | Stub | Ook onder Materiaal ERP |
 | Bedrijf → Rapportages | `/rapportages` | Stub | |
-| Personeel | `/personeel` | Done | Teamlijst (naam, e-mail, rol); geen invite/edit MVP |
+| Personeel | `/personeel` | Done | KPI’s, zoeken, invite (owner), rol wijzigen, verwijderen |
 | Inbox | `/inbox` | Stub | Domein: communicatie in operational flow |
 | Notificaties (pagina) | `/notificaties` | Stub | Domein: notificaties in operational/domain model |
 
@@ -72,7 +72,7 @@
 - [x] Onderaannemers (`/onderaannemers`) — lijst + detail (zoals klanten/leveranciers)
 - [ ] Materiaal → Installaties (`/materiaal/installaties`)
 - [ ] Rapportages (`/rapportages`) — eerste KPI/rapport-set
-- [x] Personeel (`/personeel`) — teamleden / rollen in org
+- [x] Personeel (`/personeel`) — teamleden / rollen in org (invite + beheer door owner)
 - [ ] Inbox (`/inbox`) — gesprekken-overzicht (MVP)
 - [ ] Notificaties-pagina (`/notificaties`) — voorkeuren + geschiedenis (MVP)
 

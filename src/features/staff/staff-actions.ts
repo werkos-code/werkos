@@ -1,6 +1,7 @@
 "use server";
 
 import { USER_ROLES, type OrganizationRole } from "@/config/roles";
+import { getAppSession } from "@/features/shell/lib/require-organization";
 import { getStaffOrgContext } from "@/features/shell/lib/staff-org-context";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -9,6 +10,7 @@ export type StaffMemberRow = {
   name: string;
   email: string | null;
   role: OrganizationRole;
+  createdAt: string;
 };
 
 const STAFF_MEMBER_ROLES = [
@@ -17,38 +19,61 @@ const STAFF_MEMBER_ROLES = [
   USER_ROLES.FIELD_EMPLOYEE,
 ] as const;
 
+export type StaffAssignableRole =
+  | typeof USER_ROLES.OFFICE_EMPLOYEE
+  | typeof USER_ROLES.FIELD_EMPLOYEE;
+
+export const STAFF_ASSIGNABLE_ROLES: StaffAssignableRole[] = [
+  USER_ROLES.OFFICE_EMPLOYEE,
+  USER_ROLES.FIELD_EMPLOYEE,
+];
+
 export async function listOrgStaffMembers(): Promise<{
   members?: StaffMemberRow[];
+  canManage?: boolean;
+  currentUserId?: string;
   error?: string;
 }> {
   const ctx = await getStaffOrgContext();
   if ("error" in ctx) return { error: ctx.error };
 
+  const session = await getAppSession();
+  const canManage = session?.role === USER_ROLES.OWNER;
+
   const { data: memberships, error } = await ctx.supabase
     .from("organization_memberships")
-    .select("user_id, role")
+    .select("user_id, role, created_at")
     .eq("organization_id", ctx.organizationId)
     .in("role", [...STAFF_MEMBER_ROLES]);
 
   if (error) return { error: error.message };
 
   const rows = memberships ?? [];
-  if (rows.length === 0) return { members: [] };
+  if (rows.length === 0) {
+    return {
+      members: [],
+      canManage,
+      currentUserId: ctx.userId,
+    };
+  }
 
   const userIds = rows.map((m) => m.user_id);
-  const [{ data: profiles }, authUsers] = await Promise.all([
+  const admin = createAdminClient();
+  const [{ data: profiles }, authLookups] = await Promise.all([
     ctx.supabase.from("profiles").select("id, full_name").in("id", userIds),
-    createAdminClient().auth.admin.listUsers({ perPage: 200 }),
+    Promise.all(
+      userIds.map(async (id) => {
+        const { data, error: authError } = await admin.auth.admin.getUserById(id);
+        if (authError || !data.user) return [id, null] as const;
+        return [id, data.user.email ?? null] as const;
+      }),
+    ),
   ]);
 
   const nameById = new Map(
     (profiles ?? []).map((p) => [p.id, p.full_name?.trim() || "—"] as const),
   );
-  const emailById = new Map(
-    (authUsers.data.users ?? [])
-      .filter((u) => userIds.includes(u.id))
-      .map((u) => [u.id, u.email ?? null] as const),
-  );
+  const emailById = new Map(authLookups);
 
   const roleRank: Record<string, number> = {
     [USER_ROLES.OWNER]: 0,
@@ -63,11 +88,31 @@ export async function listOrgStaffMembers(): Promise<{
         name: nameById.get(row.user_id) ?? "—",
         email: emailById.get(row.user_id) ?? null,
         role: row.role as OrganizationRole,
+        createdAt: row.created_at,
       }))
       .sort((a, b) => {
         const rankDiff = (roleRank[a.role] ?? 9) - (roleRank[b.role] ?? 9);
         if (rankDiff !== 0) return rankDiff;
         return a.name.localeCompare(b.name, "nl");
       }),
+    canManage,
+    currentUserId: ctx.userId,
+  };
+}
+
+export async function getOrgStaffMember(memberId: string): Promise<{
+  member?: StaffMemberRow;
+  canManage?: boolean;
+  currentUserId?: string;
+  error?: string;
+}> {
+  const result = await listOrgStaffMembers();
+  if (result.error) return { error: result.error };
+  const member = (result.members ?? []).find((row) => row.id === memberId);
+  if (!member) return { error: "not_found" };
+  return {
+    member,
+    canManage: result.canManage,
+    currentUserId: result.currentUserId,
   };
 }

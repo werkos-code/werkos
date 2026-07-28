@@ -341,6 +341,11 @@
     "newSubcontractor": "Neuer Subunternehmer",
     "newTitle": "Neuer Subunternehmer",
     "empty": "Noch keine Subunternehmer. Füge den ersten hinzu.",
+    "emptyFiltered": "Keine Subunternehmer passen zu dieser Suche.",
+    "searchPlaceholder": "Suche nach Name, E-Mail, Telefon oder HR…",
+    "kpiTotal": "Gesamt",
+    "kpiWithEmail": "Mit E-Mail",
+    "kpiWithPhone": "Mit Telefon",
     "create": "Subunternehmer speichern",
     "save": "Änderungen speichern",
     "open": "Öffnen",
@@ -371,22 +376,61 @@
     "kpiOpen": "Offen",
     "kpiInProgress": "In Arbeit",
     "kpiDone": "Erledigt",
+    "kpiOverdue": "Überfällig",
+    "open": "Öffnen",
     "filters": {
       "projectAll": "Projekt: Alle",
       "unassigned": "Nicht zugewiesen"
     },
     "columns": {
       "project": "Projekt",
-      "hours": "Geschätzt"
+      "hours": "Geschätzt",
+      "actions": "Aktionen"
     }
   },
   "staff": {
     "title": "Personal",
     "empty": "Noch keine Teammitglieder in dieser Organisation.",
+    "emptyFiltered": "Keine Teammitglieder passen zu diesen Filtern.",
+    "searchPlaceholder": "Suche nach Name oder E-Mail…",
+    "invite": "Mitarbeiter hinzufügen",
+    "inviteTitle": "Mitarbeiter hinzufügen",
+    "inviteHint": "Nur der Eigentümer kann Mitarbeiter hinzufügen. Teile das temporäre Passwort sicher.",
+    "create": "Mitarbeiter anlegen",
+    "save": "Änderungen speichern",
+    "open": "Öffnen",
+    "remove": "Entfernen",
+    "deleteConfirm": "Möchtest du {name} wirklich aus dem Team entfernen?",
+    "you": "du",
+    "passwordHint": "Mindestens 8 Zeichen. Der Mitarbeiter kann sich damit anmelden.",
+    "emailReadonly": "E-Mail ändern folgt später.",
+    "kpiTotal": "Gesamt",
+    "kpiOffice": "Büro",
+    "kpiField": "Außendienst",
+    "kpiOwners": "Eigentümer",
+    "filters": {
+      "roleAll": "Rolle: Alle"
+    },
+    "fields": {
+      "name": "Name",
+      "email": "E-Mail",
+      "password": "Temporäres Passwort",
+      "role": "Rolle"
+    },
     "columns": {
       "name": "Name",
       "email": "E-Mail",
-      "role": "Rolle"
+      "role": "Rolle",
+      "joined": "Seit",
+      "actions": "Aktionen"
+    },
+    "errors": {
+      "invalidInput": "Prüfe Name, E-Mail, Passwort und Rolle.",
+      "emailTaken": "Diese E-Mail-Adresse wird bereits verwendet.",
+      "forbidden": "Nur der Eigentümer kann Personal verwalten.",
+      "cannotRemoveOwner": "Der Eigentümer kann nicht entfernt werden.",
+      "cannotRemoveSelf": "Du kannst dich nicht selbst entfernen.",
+      "cannotChangeOwnerRole": "Die Rolle des Eigentümers kann nicht geändert werden."
     }
   },
   "suppliers": {

@@ -341,6 +341,11 @@
     "newSubcontractor": "Nieuwe onderaannemer",
     "newTitle": "Nieuwe onderaannemer",
     "empty": "Nog geen onderaannemers. Voeg je eerste onderaannemer toe.",
+    "emptyFiltered": "Geen onderaannemers die aan deze zoekopdracht voldoen.",
+    "searchPlaceholder": "Zoek op naam, e-mail, telefoon of KvK…",
+    "kpiTotal": "Totaal",
+    "kpiWithEmail": "Met e-mail",
+    "kpiWithPhone": "Met telefoon",
     "create": "Onderaannemer opslaan",
     "save": "Wijzigingen opslaan",
     "open": "Openen",
@@ -371,22 +376,61 @@
     "kpiOpen": "Open",
     "kpiInProgress": "In uitvoering",
     "kpiDone": "Voltooid",
+    "kpiOverdue": "Te laat",
+    "open": "Openen",
     "filters": {
       "projectAll": "Project: Alle",
       "unassigned": "Niet toegewezen"
     },
     "columns": {
       "project": "Project",
-      "hours": "Verwacht"
+      "hours": "Verwacht",
+      "actions": "Acties"
     }
   },
   "staff": {
     "title": "Personeel",
     "empty": "Nog geen teamleden in deze organisatie.",
+    "emptyFiltered": "Geen teamleden die aan deze filters voldoen.",
+    "searchPlaceholder": "Zoek op naam of e-mail…",
+    "invite": "Medewerker toevoegen",
+    "inviteTitle": "Medewerker toevoegen",
+    "inviteHint": "Alleen de eigenaar kan medewerkers toevoegen. Deel het tijdelijke wachtwoord veilig.",
+    "create": "Medewerker aanmaken",
+    "save": "Wijzigingen opslaan",
+    "open": "Openen",
+    "remove": "Verwijderen",
+    "deleteConfirm": "Weet je zeker dat je {name} wilt verwijderen uit het team?",
+    "you": "jij",
+    "passwordHint": "Minimaal 8 tekens. De medewerker kan later inloggen met dit wachtwoord.",
+    "emailReadonly": "E-mailadres wijzigen volgt later.",
+    "kpiTotal": "Totaal",
+    "kpiOffice": "Kantoor",
+    "kpiField": "Uitvoerend",
+    "kpiOwners": "Eigenaar",
+    "filters": {
+      "roleAll": "Rol: Alle"
+    },
+    "fields": {
+      "name": "Naam",
+      "email": "E-mail",
+      "password": "Tijdelijk wachtwoord",
+      "role": "Rol"
+    },
     "columns": {
       "name": "Naam",
       "email": "E-mail",
-      "role": "Rol"
+      "role": "Rol",
+      "joined": "Sinds",
+      "actions": "Acties"
+    },
+    "errors": {
+      "invalidInput": "Controleer naam, e-mail, wachtwoord en rol.",
+      "emailTaken": "Dit e-mailadres is al in gebruik.",
+      "forbidden": "Alleen de eigenaar kan personeel beheren.",
+      "cannotRemoveOwner": "De eigenaar kan niet worden verwijderd.",
+      "cannotRemoveSelf": "Je kunt jezelf niet verwijderen.",
+      "cannotChangeOwnerRole": "De rol van de eigenaar kan niet worden gewijzigd."
     }
   },
   "suppliers": {
