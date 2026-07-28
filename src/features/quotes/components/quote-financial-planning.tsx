@@ -3,7 +3,7 @@
 import { Link, useRouter } from "@/i18n/navigation";
 import { ExternalLink, Loader2, Plus, Receipt } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -244,34 +244,52 @@ export function QuoteFinancialPlanning({
           ) : null}
         </PageCard>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[40rem] text-sm">
-            <thead>
-              <tr className="border-b border-border text-left text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                <th className="px-2 py-2">{t("columns.title")}</th>
-                <th className="px-2 py-2">{t("columns.type")}</th>
-                <th className="px-2 py-2 text-right">{t("columns.amount")}</th>
-                <th className="px-2 py-2 text-right">{t("columns.net")}</th>
-                <th className="px-2 py-2">{t("columns.status")}</th>
-                <th className="px-2 py-2 text-right">{t("columns.action")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {preview.phases.map((phase, index) => (
-                <PhaseRow
-                  key={phase.id}
-                  phase={phase}
-                  index={index}
-                  editable={editable}
-                  draft={draftPhases[index]}
-                  invoicing={invoicingId === phase.id}
-                  onChange={(patch) => updatePhase(index, patch)}
-                  onRemove={() => removePhase(index)}
-                  onInvoice={() => void invoicePhase(phase.id)}
-                />
-              ))}
-            </tbody>
-          </table>
+        <div className="space-y-3">
+          <div className="space-y-3 lg:hidden">
+            {preview.phases.map((phase, index) => (
+              <PhaseCard
+                key={phase.id}
+                phase={phase}
+                index={index}
+                editable={editable}
+                draft={draftPhases[index]}
+                invoicing={invoicingId === phase.id}
+                onChange={(patch) => updatePhase(index, patch)}
+                onRemove={() => removePhase(index)}
+                onInvoice={() => void invoicePhase(phase.id)}
+              />
+            ))}
+          </div>
+
+          <div className="hidden overflow-x-auto lg:block">
+            <table className="w-full min-w-[40rem] text-sm">
+              <thead>
+                <tr className="border-b border-border text-left text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                  <th className="px-2 py-2">{t("columns.title")}</th>
+                  <th className="px-2 py-2">{t("columns.type")}</th>
+                  <th className="px-2 py-2 text-right">{t("columns.amount")}</th>
+                  <th className="px-2 py-2 text-right">{t("columns.net")}</th>
+                  <th className="px-2 py-2">{t("columns.status")}</th>
+                  <th className="px-2 py-2 text-right">{t("columns.action")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {preview.phases.map((phase, index) => (
+                  <PhaseRow
+                    key={phase.id}
+                    phase={phase}
+                    index={index}
+                    editable={editable}
+                    draft={draftPhases[index]}
+                    invoicing={invoicingId === phase.id}
+                    onChange={(patch) => updatePhase(index, patch)}
+                    onRemove={() => removePhase(index)}
+                    onInvoice={() => void invoicePhase(phase.id)}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -348,6 +366,184 @@ function Stat({
         <p className="text-xs text-muted-foreground">{hint}</p>
       ) : null}
     </div>
+  );
+}
+
+function FieldLabel({ children }: { children: ReactNode }) {
+  return (
+    <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+      {children}
+    </p>
+  );
+}
+
+function PhaseCard({
+  phase,
+  index,
+  editable,
+  draft,
+  invoicing,
+  onChange,
+  onRemove,
+  onInvoice,
+}: {
+  phase: ComputedBillingPhase;
+  index: number;
+  editable: boolean;
+  draft?: DraftPhase;
+  invoicing: boolean;
+  onChange: (patch: Partial<DraftPhase>) => void;
+  onRemove: () => void;
+  onInvoice: () => void;
+}) {
+  const t = useTranslations("quotes.financialPlanning");
+  const locked = phase.isInvoiced;
+
+  return (
+    <PageCard className="space-y-4 p-4">
+      <div className="space-y-2">
+        <FieldLabel>{t("columns.title")}</FieldLabel>
+        {editable && !locked ? (
+          <Input
+            value={draft?.title ?? phase.title}
+            className="h-9"
+            onChange={(e) => onChange({ title: e.target.value })}
+          />
+        ) : (
+          <p className="font-medium">{phase.title}</p>
+        )}
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="space-y-2">
+          <FieldLabel>{t("columns.type")}</FieldLabel>
+          {editable && !locked ? (
+            <select
+              className={`${selectClass} h-9 w-full min-w-0`}
+              value={draft?.kind ?? "standard"}
+              onChange={(e) =>
+                onChange({
+                  kind: e.target.value as "standard" | "final",
+                })
+              }
+            >
+              <option value="standard">{t("kinds.standard")}</option>
+              <option value="final">{t("kinds.final")}</option>
+            </select>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              {phase.kind === "final" ? t("kinds.final") : t("kinds.standard")}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <FieldLabel>{t("columns.amount")}</FieldLabel>
+          {phase.kind === "final" ? (
+            <p className="text-sm text-muted-foreground">{t("finalAuto")}</p>
+          ) : editable && !locked ? (
+            <div className="flex items-center gap-2">
+              <select
+                className={`${selectClass} h-9 w-[4.75rem] shrink-0`}
+                value={draft?.amountType ?? "percent"}
+                onChange={(e) =>
+                  onChange({
+                    amountType: e.target.value as "percent" | "fixed_cents",
+                  })
+                }
+              >
+                <option value="percent">%</option>
+                <option value="fixed_cents">€</option>
+              </select>
+              <Input
+                inputMode="decimal"
+                className="h-9 min-w-0 flex-1 font-mono text-right tabular-nums"
+                value={
+                  draft?.amountType === "fixed_cents"
+                    ? String((draft.amountValue / 100).toFixed(2)).replace(
+                        ".",
+                        ",",
+                      )
+                    : String((draft?.amountValue ?? 0) / 100).replace(".", ",")
+                }
+                onChange={(e) => {
+                  const raw = e.target.value.replace(",", ".");
+                  const n = Number(raw);
+                  if (Number.isNaN(n)) return;
+                  onChange({
+                    amountValue:
+                      draft?.amountType === "fixed_cents"
+                        ? Math.round(n * 100)
+                        : Math.round(n * 100),
+                  });
+                }}
+              />
+            </div>
+          ) : (
+            <p className="font-mono text-sm tabular-nums">
+              {phase.percentLabel ?? formatEuro(phase.amountValue)}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="space-y-2">
+          <FieldLabel>{t("columns.net")}</FieldLabel>
+          <p className="font-mono text-sm tabular-nums">{formatEuro(phase.netCents)}</p>
+        </div>
+
+        <div className="space-y-2">
+          <FieldLabel>{t("columns.status")}</FieldLabel>
+          {locked ? (
+            <div className="inline-flex items-center gap-1 text-xs text-primary">
+              <span>{phase.invoiceNumber ?? t("status.invoiced")}</span>
+              {phase.invoiceId ? (
+                <Link
+                  href={`/facturen/${phase.invoiceId}`}
+                  className="text-primary hover:underline"
+                >
+                  <ExternalLink className="size-3.5" />
+                </Link>
+              ) : null}
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground">{t("status.planned")}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-wrap justify-end gap-2 border-t border-border pt-3">
+        {editable && !locked ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="text-destructive"
+            onClick={onRemove}
+          >
+            {t("remove")}
+          </Button>
+        ) : null}
+        {!locked ? (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="border-primary/30 text-primary"
+            disabled={invoicing || phase.netCents <= 0}
+            onClick={onInvoice}
+          >
+            {invoicing ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : (
+              <Receipt className="size-3.5" />
+            )}
+            {t("invoice")}
+          </Button>
+        ) : null}
+      </div>
+    </PageCard>
   );
 }
 
