@@ -190,7 +190,7 @@
       },
       "subcontractors": {
         "title": "Onderaannemers",
-        "description": "Onderaannemers worden gebouwd in een volgende fase."
+        "description": "Beheer onderaannemers van je bedrijf."
       },
       "inbox": {
         "title": "Inbox",
@@ -218,11 +218,11 @@
       },
       "workItems": {
         "title": "Werkzaamheden",
-        "description": "Een centraal overzicht van werkzaamheden volgt in een volgende stap. Werk nu via projecten."
+        "description": "Org-breed overzicht van werkzaamheden."
       },
       "staff": {
         "title": "Personeel",
-        "description": "Personeelsbeheer volgt in een volgende fase."
+        "description": "Teamleden van je organisatie."
       },
       "documents": {
         "title": "Documenten",
@@ -335,6 +335,59 @@
       "actions": "Acties"
     },
     "openProjects": "Bekijk projecten"
+  },
+  "subcontractors": {
+    "title": "Onderaannemers",
+    "newSubcontractor": "Nieuwe onderaannemer",
+    "newTitle": "Nieuwe onderaannemer",
+    "empty": "Nog geen onderaannemers. Voeg je eerste onderaannemer toe.",
+    "create": "Onderaannemer opslaan",
+    "save": "Wijzigingen opslaan",
+    "open": "Openen",
+    "delete": "Verwijderen",
+    "deleteConfirm": "Weet je zeker dat je {name} wilt verwijderen?",
+    "nameRequired": "Vul een naam in.",
+    "fields": {
+      "name": "Naam",
+      "email": "E-mail",
+      "phone": "Telefoon",
+      "address": "Adres",
+      "kvk": "KvK-nummer",
+      "notes": "Notities"
+    },
+    "columns": {
+      "name": "Naam",
+      "email": "E-mail",
+      "phone": "Telefoon",
+      "kvk": "KvK",
+      "actions": "Acties"
+    }
+  },
+  "orgWorkItems": {
+    "title": "Werkzaamheden",
+    "empty": "Nog geen werkzaamheden. Voeg ze toe via een project.",
+    "emptyFiltered": "Geen werkzaamheden die aan deze filters voldoen.",
+    "kpiTotal": "Totaal",
+    "kpiOpen": "Open",
+    "kpiInProgress": "In uitvoering",
+    "kpiDone": "Voltooid",
+    "filters": {
+      "projectAll": "Project: Alle",
+      "unassigned": "Niet toegewezen"
+    },
+    "columns": {
+      "project": "Project",
+      "hours": "Verwacht"
+    }
+  },
+  "staff": {
+    "title": "Personeel",
+    "empty": "Nog geen teamleden in deze organisatie.",
+    "columns": {
+      "name": "Naam",
+      "email": "E-mail",
+      "role": "Rol"
+    }
   },
   "suppliers": {
     "title": "Leveranciers",

@@ -190,7 +190,7 @@
       },
       "subcontractors": {
         "title": "Subunternehmer",
-        "description": "Subunternehmer werden in einer späteren Phase gebaut."
+        "description": "Subunternehmer deines Unternehmens verwalten."
       },
       "inbox": {
         "title": "Posteingang",
@@ -218,11 +218,11 @@
       },
       "workItems": {
         "title": "Arbeitsposten",
-        "description": "Eine zentrale Übersicht folgt später. Verwalte Arbeitsposten vorerst in Projekten."
+        "description": "Organisationsweite Übersicht der Arbeitsposten."
       },
       "staff": {
         "title": "Personal",
-        "description": "Personalverwaltung folgt in einer späteren Phase."
+        "description": "Teammitglieder deiner Organisation."
       },
       "documents": {
         "title": "Dokumente",
@@ -335,6 +335,59 @@
       "actions": "Aktionen"
     },
     "openProjects": "Projekte anzeigen"
+  },
+  "subcontractors": {
+    "title": "Subunternehmer",
+    "newSubcontractor": "Neuer Subunternehmer",
+    "newTitle": "Neuer Subunternehmer",
+    "empty": "Noch keine Subunternehmer. Füge den ersten hinzu.",
+    "create": "Subunternehmer speichern",
+    "save": "Änderungen speichern",
+    "open": "Öffnen",
+    "delete": "Löschen",
+    "deleteConfirm": "Möchtest du {name} wirklich löschen?",
+    "nameRequired": "Gib einen Namen ein.",
+    "fields": {
+      "name": "Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "address": "Adresse",
+      "kvk": "Handelsregisternr.",
+      "notes": "Notizen"
+    },
+    "columns": {
+      "name": "Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "kvk": "HR",
+      "actions": "Aktionen"
+    }
+  },
+  "orgWorkItems": {
+    "title": "Arbeitsposten",
+    "empty": "Noch keine Arbeitsposten. Füge sie über ein Projekt hinzu.",
+    "emptyFiltered": "Keine Arbeitsposten passen zu diesen Filtern.",
+    "kpiTotal": "Gesamt",
+    "kpiOpen": "Offen",
+    "kpiInProgress": "In Arbeit",
+    "kpiDone": "Erledigt",
+    "filters": {
+      "projectAll": "Projekt: Alle",
+      "unassigned": "Nicht zugewiesen"
+    },
+    "columns": {
+      "project": "Projekt",
+      "hours": "Geschätzt"
+    }
+  },
+  "staff": {
+    "title": "Personal",
+    "empty": "Noch keine Teammitglieder in dieser Organisation.",
+    "columns": {
+      "name": "Name",
+      "email": "E-Mail",
+      "role": "Rolle"
+    }
   },
   "suppliers": {
     "title": "Lieferanten",

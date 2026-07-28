@@ -333,6 +333,56 @@ export type Database = {
           },
         ];
       };
+      subcontractors: {
+        Row: {
+          id: string;
+          organization_id: string;
+          name: string;
+          email: string | null;
+          phone: string | null;
+          address: string | null;
+          kvk_number: string | null;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          name: string;
+          email?: string | null;
+          phone?: string | null;
+          address?: string | null;
+          kvk_number?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          name?: string;
+          email?: string | null;
+          phone?: string | null;
+          address?: string | null;
+          kvk_number?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "subcontractors_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       projects: {
         Row: {
           id: string;

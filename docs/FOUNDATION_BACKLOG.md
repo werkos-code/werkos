@@ -41,11 +41,11 @@
 
 | Module | Route | Status | Notities |
 | --- | --- | --- | --- |
-| Werkzaamheden (hoofdpagina) | `/werkzaamheden` | Stub | Alleen project-tab bestaat; org-brede lijstwerkruimte nog bouwen |
-| Onderaannemers | `/onderaannemers` | Stub | Nav-label: **Onderaannemers** |
+| Werkzaamheden (hoofdpagina) | `/werkzaamheden` | Done | Org-brede lijst + filters; rij → project `?tab=tasks` |
+| Onderaannemers | `/onderaannemers` | Done | CRUD zoals klanten; SQL `20260728120000_subcontractors.sql` |
 | Materiaal → Installaties | `/materiaal/installaties` | Stub | Ook onder Materiaal ERP |
 | Bedrijf → Rapportages | `/rapportages` | Stub | |
-| Personeel | `/personeel` | Stub | Deels geraakt door uren/planning; geen org-HR-pagina |
+| Personeel | `/personeel` | Done | Teamlijst (naam, e-mail, rol); geen invite/edit MVP |
 | Inbox | `/inbox` | Stub | Domein: communicatie in operational flow |
 | Notificaties (pagina) | `/notificaties` | Stub | Domein: notificaties in operational/domain model |
 
@@ -68,11 +68,11 @@
 
 **Pagina’s**
 
-- [ ] Werkzaamheden hoofdpagina (`/werkzaamheden`) — org-breed overzicht, koppeling project-detail
-- [ ] Onderaannemers (`/onderaannemers`) — lijst + detail (zoals klanten/leveranciers)
+- [x] Werkzaamheden hoofdpagina (`/werkzaamheden`) — org-breed overzicht, koppeling project-detail
+- [x] Onderaannemers (`/onderaannemers`) — lijst + detail (zoals klanten/leveranciers)
 - [ ] Materiaal → Installaties (`/materiaal/installaties`)
 - [ ] Rapportages (`/rapportages`) — eerste KPI/rapport-set
-- [ ] Personeel (`/personeel`) — teamleden / rollen in org
+- [x] Personeel (`/personeel`) — teamleden / rollen in org
 - [ ] Inbox (`/inbox`) — gesprekken-overzicht (MVP)
 - [ ] Notificaties-pagina (`/notificaties`) — voorkeuren + geschiedenis (MVP)
 
@@ -295,7 +295,7 @@
 
 ### Org-brede hoofdpagina
 
-- [ ] `/werkzaamheden` als echte org-lijstwerkruimte (nu stub) — zie [§1](#1-basisvorm--stubs--shell)
+- [x] `/werkzaamheden` als echte org-lijstwerkruimte — zie [§1](#1-basisvorm--stubs--shell)
 
 ---
 

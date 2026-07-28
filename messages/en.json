@@ -190,7 +190,7 @@
       },
       "subcontractors": {
         "title": "Subcontractors",
-        "description": "Subcontractors will be built in a later phase."
+        "description": "Manage your company's subcontractors."
       },
       "inbox": {
         "title": "Inbox",
@@ -218,11 +218,11 @@
       },
       "workItems": {
         "title": "Work items",
-        "description": "A central work-items overview comes later. For now, manage them inside projects."
+        "description": "Organization-wide work items overview."
       },
       "staff": {
         "title": "Staff",
-        "description": "Staff management will be built in a later phase."
+        "description": "Team members of your organization."
       },
       "documents": {
         "title": "Documents",
@@ -335,6 +335,59 @@
       "actions": "Actions"
     },
     "openProjects": "View projects"
+  },
+  "subcontractors": {
+    "title": "Subcontractors",
+    "newSubcontractor": "New subcontractor",
+    "newTitle": "New subcontractor",
+    "empty": "No subcontractors yet. Add your first subcontractor.",
+    "create": "Save subcontractor",
+    "save": "Save changes",
+    "open": "Open",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete {name}?",
+    "nameRequired": "Enter a name.",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "kvk": "Chamber of commerce no.",
+      "notes": "Notes"
+    },
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "kvk": "CoC",
+      "actions": "Actions"
+    }
+  },
+  "orgWorkItems": {
+    "title": "Work items",
+    "empty": "No work items yet. Add them from a project.",
+    "emptyFiltered": "No work items match these filters.",
+    "kpiTotal": "Total",
+    "kpiOpen": "Open",
+    "kpiInProgress": "In progress",
+    "kpiDone": "Done",
+    "filters": {
+      "projectAll": "Project: All",
+      "unassigned": "Unassigned"
+    },
+    "columns": {
+      "project": "Project",
+      "hours": "Estimated"
+    }
+  },
+  "staff": {
+    "title": "Staff",
+    "empty": "No team members in this organization yet.",
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role"
+    }
   },
   "suppliers": {
     "title": "Suppliers",
