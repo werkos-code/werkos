@@ -55,8 +55,8 @@ Auto `OFF-YYYY-NNNN` per organisatie (zelfde patroon als `INV-` / `PRJ-`).
 
 ## UI (offerte-editor)
 
-**Fase 0:** Betalingsplanning zit in de **rechter rail** (timeline), niet als primaire tab.
-Volledige fase-tabel opent via **Planning bewerken** (dialog).
+**MVP:** Betalingsplanning zit in de **rechter rail** (timeline), niet als primaire tab.
+Volledige fase-tabel opent via **Planning bewerken** (rechter Sheet).
 
 Rail-sectie:
 
@@ -64,7 +64,7 @@ Rail-sectie:
 - Voortgang / 100%-totaal
 - Knop “Termijn toevoegen” / standaardschema
 
-Zie `QUOTE_EDITOR_PHASE0.md`.
+Editor-recept: [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) §4.5. Open refine: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) §2–§3.
 
 ## Roadmap
 

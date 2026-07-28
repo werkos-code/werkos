@@ -91,7 +91,9 @@
 
 ## 2. Offertes
 
-> UI: offerte-editor · fases: `QUOTE_EDITOR_PHASE*.md` · financiële planning: `QUOTE_FINANCIAL_PLANNING.md`
+> UI: offerte-editor · financiële planning: [`QUOTE_FINANCIAL_PLANNING.md`](./QUOTE_FINANCIAL_PLANNING.md)  
+> **MVP afgerond** (fases 0–8): shell, regels, catalogus/marge, voorwaarden, voorbeeld, briefpapier/logo, dupliceren, bijlagen, factuur-vanuit-offerte.  
+> Historische fasenotes: `docs/archive/quote-editor-phases/`
 
 ### Beslissingen (vastgelegd)
 
