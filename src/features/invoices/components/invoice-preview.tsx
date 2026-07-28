@@ -69,39 +69,49 @@ export function InvoicePreview({
 
       <PageCard className="document-preview-print overflow-hidden p-6 sm:p-8">
         <header className="flex flex-wrap items-start justify-between gap-6 border-b border-border pb-6">
-          <div className="max-w-sm space-y-1">
-            <p className="text-lg font-semibold tracking-tight">{orgName}</p>
-            {addressLines.map((line) => (
-              <p key={line} className="text-sm text-muted-foreground">
-                {line}
+          <div className="flex max-w-md items-start gap-4">
+            {org?.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={org.logoUrl}
+                alt={orgName}
+                className="h-14 w-auto max-w-[9rem] object-contain"
+              />
+            ) : null}
+            <div className="space-y-1">
+              <p className="text-lg font-semibold tracking-tight">{orgName}</p>
+              {addressLines.map((line) => (
+                <p key={line} className="text-sm text-muted-foreground">
+                  {line}
+                </p>
+              ))}
+              {org?.phone ? (
+                <p className="text-sm text-muted-foreground">{org.phone}</p>
+              ) : null}
+              {org?.email ? (
+                <p className="text-sm text-muted-foreground">{org.email}</p>
+              ) : null}
+              <div className="space-y-0.5 pt-2 text-xs text-muted-foreground">
+                {org?.kvkNumber ? (
+                  <p>
+                    {t("preview.kvk")}: {org.kvkNumber}
+                  </p>
+                ) : null}
+                {org?.vatNumber ? (
+                  <p>
+                    {t("preview.vat")}: {org.vatNumber}
+                  </p>
+                ) : null}
+                {org?.iban ? (
+                  <p>
+                    {t("preview.iban")}: {org.iban}
+                  </p>
+                ) : null}
+              </div>
+              <p className="pt-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                {t("preview.documentLabel")}
               </p>
-            ))}
-            {org?.phone ? (
-              <p className="text-sm text-muted-foreground">{org.phone}</p>
-            ) : null}
-            {org?.email ? (
-              <p className="text-sm text-muted-foreground">{org.email}</p>
-            ) : null}
-            <div className="space-y-0.5 pt-2 text-xs text-muted-foreground">
-              {org?.kvkNumber ? (
-                <p>
-                  {t("preview.kvk")}: {org.kvkNumber}
-                </p>
-              ) : null}
-              {org?.vatNumber ? (
-                <p>
-                  {t("preview.vat")}: {org.vatNumber}
-                </p>
-              ) : null}
-              {org?.iban ? (
-                <p>
-                  {t("preview.iban")}: {org.iban}
-                </p>
-              ) : null}
             </div>
-            <p className="pt-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-              {t("preview.documentLabel")}
-            </p>
           </div>
           <div className="text-right text-sm">
             <p className="font-mono text-xs tabular-nums text-muted-foreground">

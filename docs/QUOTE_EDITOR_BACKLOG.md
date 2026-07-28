@@ -1,8 +1,9 @@
 # Offerte-editor — uitgesteld (stubs)
 
-> Laatst bijgewerkt: 2026-07-26  
+> Laatst bijgewerkt: 2026-07-28  
 > Context: UI-modernisering naar mock “Offerte bewerken”. Onderstaande items staan als **disabled stubs** in de UI of zijn bewust weggelaten tot schema/API klaar is.  
-> **Niet vergeten:** wanneer je een stub activeert, haal hem hier weg en update `docs/DESIGN_SYSTEM.md` indien nodig.
+> **Niet vergeten:** wanneer je een stub activeert, haal hem hier weg en update `docs/DESIGN_SYSTEM.md` indien nodig.  
+> Fase 7: [`QUOTE_EDITOR_PHASE7.md`](./QUOTE_EDITOR_PHASE7.md) (logo + dupliceren).
 
 ## Beslissingen (vastgelegd)
 
@@ -17,7 +18,7 @@
 | --- | --- | --- |
 | Offertenummer (`OFF-…`) | Meta-kaart + header | ✅ `OFF-YYYY-NNNN` via DB-trigger |
 | Voorbeeld (preview) | Voorbeeldpagina + Afdrukken/PDF | ✅ Fase 4 (browser-PDF; geen server-PDF) |
-| Meer-opties `⋯` | Disabled | Dupliceren, annuleren-shortcuts, export, … |
+| Meer-opties `⋯` | Dropdown met Dupliceren | ✅ Fase 7 (meer acties later) |
 | Tekstregel | Type `text` in type-select | ✅ Fase 1 (`line_type`) |
 | Korting (regel- of offerte-niveau in toolbar) | Regel-korting in kolom; offerte-niveau later | Eventueel quote-level `discount`; toolbar-actie |
 | Afbeelding op regel | Disabled in toolbar | Storage + `image_url` / attachment op `quote_lines` |
@@ -44,7 +45,7 @@
 
 - [x] Offertenummer (`OFF-YYYY-NNNN`)
 - [x] Voorbeeld / PDF of online preview (fase 4 — browser print)
-- [ ] Header `⋯` acties (o.a. dupliceren)
+- [x] Header `⋯` acties (o.a. dupliceren)
 - [x] Tekstregel (`line_type = text`)
 - [ ] Toolbar-korting (offerte-niveau)
 - [ ] Regel-afbeeldingen + thumbnails
@@ -57,5 +58,5 @@
 - [x] Catalogus / Bereken prijzen (fase 2)
 - [ ] Echte e-mailprovider / publieke klantlink
 - [x] Org-briefpapier (KvK, adres, IBAN — fase 5; logo later)
-- [ ] Org-logo upload
+- [x] Org-logo upload
 - [x] Factuur-voorbeeld (zelfde printpatroon — fase 6)

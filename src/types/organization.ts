@@ -18,6 +18,7 @@ export type Organization = {
   kvkNumber: string | null;
   vatNumber: string | null;
   iban: string | null;
+  logoPath: string | null;
   createdAt: string;
   updatedAt: string;
 };

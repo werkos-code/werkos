@@ -1,3 +1,5 @@
+import { organizationLogoPublicUrl } from "@/features/organization/lib/organization-logo";
+
 export type OrganizationLetterhead = {
   name: string;
   industry: string | null;
@@ -10,10 +12,12 @@ export type OrganizationLetterhead = {
   kvkNumber: string | null;
   vatNumber: string | null;
   iban: string | null;
+  logoPath: string | null;
+  logoUrl: string | null;
 };
 
 export const ORGANIZATION_LETTERHEAD_SELECT =
-  "id, name, slug, industry, address, postal_code, city, country, phone, email, kvk_number, vat_number, iban, updated_at";
+  "id, name, slug, industry, address, postal_code, city, country, phone, email, kvk_number, vat_number, iban, logo_path, updated_at";
 
 export function mapOrganizationLetterhead(row: {
   name: string;
@@ -27,6 +31,7 @@ export function mapOrganizationLetterhead(row: {
   kvk_number: string | null;
   vat_number: string | null;
   iban: string | null;
+  logo_path: string | null;
 }): OrganizationLetterhead {
   return {
     name: row.name,
@@ -40,6 +45,8 @@ export function mapOrganizationLetterhead(row: {
     kvkNumber: row.kvk_number,
     vatNumber: row.vat_number,
     iban: row.iban,
+    logoPath: row.logo_path,
+    logoUrl: organizationLogoPublicUrl(row.logo_path),
   };
 }
 

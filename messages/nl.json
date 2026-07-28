@@ -274,11 +274,21 @@
     "sections": {
       "identity": "Identiteit",
       "identityHint": "Naam zoals die op offertes moet staan.",
+      "logo": "Logo",
+      "logoHint": "Verschijnt op offertes en facturen.",
       "address": "Adres",
       "addressHint": "Voor het briefhoofd op offertes.",
       "contact": "Contact",
       "legal": "Registratie",
       "legalHint": "KvK, btw en rekeningnummer (optioneel)."
+    },
+    "logo": {
+      "upload": "Logo uploaden",
+      "uploading": "Uploaden…",
+      "remove": "Verwijderen",
+      "hint": "JPG, PNG, WebP of GIF · max. 5 MB",
+      "invalidType": "Kies een JPG, PNG, WebP of GIF.",
+      "tooLarge": "Bestand is groter dan 5 MB."
     },
     "fields": {
       "name": "Bedrijfsnaam",
@@ -997,7 +1007,9 @@
       "reject": "Afwijzen",
       "cancel": "Annuleren",
       "preview": "Voorbeeld",
-      "menu": "Acties"
+      "menu": "Acties",
+      "duplicate": "Dupliceren",
+      "duplicateUnsaved": "Er zijn niet-opgeslagen wijzigingen. Toch dupliceren van de opgeslagen versie?"
     },
     "fields": {
       "title": "Titel",

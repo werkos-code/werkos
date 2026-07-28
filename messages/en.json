@@ -274,11 +274,21 @@
     "sections": {
       "identity": "Identity",
       "identityHint": "Name as it should appear on quotes.",
+      "logo": "Logo",
+      "logoHint": "Appears on quotes and invoices.",
       "address": "Address",
       "addressHint": "For the letterhead on quotes.",
       "contact": "Contact",
       "legal": "Registration",
       "legalHint": "Chamber of commerce, VAT and bank account (optional)."
+    },
+    "logo": {
+      "upload": "Upload logo",
+      "uploading": "Uploading…",
+      "remove": "Remove",
+      "hint": "JPG, PNG, WebP or GIF · max 5 MB",
+      "invalidType": "Choose a JPG, PNG, WebP or GIF.",
+      "tooLarge": "File is larger than 5 MB."
     },
     "fields": {
       "name": "Company name",
@@ -997,7 +1007,9 @@
       "reject": "Reject",
       "cancel": "Cancel",
       "preview": "Preview",
-      "menu": "Actions"
+      "menu": "Actions",
+      "duplicate": "Duplicate",
+      "duplicateUnsaved": "You have unsaved changes. Duplicate the saved version anyway?"
     },
     "fields": {
       "title": "Title",

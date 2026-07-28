@@ -133,6 +133,7 @@ export type Database = {
           kvk_number: string | null;
           vat_number: string | null;
           iban: string | null;
+          logo_path: string | null;
           created_by: string | null;
           created_at: string;
           updated_at: string;
@@ -151,6 +152,7 @@ export type Database = {
           kvk_number?: string | null;
           vat_number?: string | null;
           iban?: string | null;
+          logo_path?: string | null;
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -169,6 +171,7 @@ export type Database = {
           kvk_number?: string | null;
           vat_number?: string | null;
           iban?: string | null;
+          logo_path?: string | null;
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;

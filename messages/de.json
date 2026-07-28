@@ -274,11 +274,21 @@
     "sections": {
       "identity": "Identität",
       "identityHint": "Name wie er auf Angeboten stehen soll.",
+      "logo": "Logo",
+      "logoHint": "Erscheint auf Angeboten und Rechnungen.",
       "address": "Adresse",
       "addressHint": "Für den Briefkopf auf Angeboten.",
       "contact": "Kontakt",
       "legal": "Registrierung",
       "legalHint": "Handelsregister, USt-IdNr. und Bankkonto (optional)."
+    },
+    "logo": {
+      "upload": "Logo hochladen",
+      "uploading": "Hochladen…",
+      "remove": "Entfernen",
+      "hint": "JPG, PNG, WebP oder GIF · max. 5 MB",
+      "invalidType": "Bitte JPG, PNG, WebP oder GIF wählen.",
+      "tooLarge": "Datei ist größer als 5 MB."
     },
     "fields": {
       "name": "Unternehmensname",
@@ -997,7 +1007,9 @@
       "reject": "Ablehnen",
       "cancel": "Stornieren",
       "preview": "Vorschau",
-      "menu": "Aktionen"
+      "menu": "Aktionen",
+      "duplicate": "Duplizieren",
+      "duplicateUnsaved": "Es gibt ungespeicherte Änderungen. Trotzdem die gespeicherte Version duplizieren?"
     },
     "fields": {
       "title": "Titel",

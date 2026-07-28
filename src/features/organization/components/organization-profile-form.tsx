@@ -1,8 +1,9 @@
 "use client";
 
 import { useRouter } from "@/i18n/navigation";
+import { ImagePlus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useRef, useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,9 +21,68 @@ export function OrganizationProfileForm({
   const t = useTranslations("organizationSettings");
   const tCommon = useTranslations("common");
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
+  const [logoError, setLogoError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [logoPending, startLogoTransition] = useTransition();
+
+  function uploadLogo(file: File | undefined) {
+    if (!file) return;
+    setLogoError(null);
+    startLogoTransition(() => {
+      void (async () => {
+        try {
+          const form = new FormData();
+          form.append("file", file);
+          const response = await fetch("/api/organization/logo", {
+            method: "POST",
+            body: form,
+            signal: AbortSignal.timeout(30_000),
+          });
+          const result = (await response.json()) as { error?: string };
+          if (!response.ok || result.error) {
+            setLogoError(
+              result.error === "invalid_type"
+                ? t("logo.invalidType")
+                : result.error === "file_too_large"
+                  ? t("logo.tooLarge")
+                  : result.error || tCommon("error"),
+            );
+            return;
+          }
+          router.refresh();
+        } catch {
+          setLogoError(tCommon("error"));
+        } finally {
+          if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+      })();
+    });
+  }
+
+  function removeLogo() {
+    setLogoError(null);
+    startLogoTransition(() => {
+      void (async () => {
+        try {
+          const response = await fetch("/api/organization/logo", {
+            method: "DELETE",
+            signal: AbortSignal.timeout(20_000),
+          });
+          const result = (await response.json()) as { error?: string };
+          if (!response.ok || result.error) {
+            setLogoError(result.error || tCommon("error"));
+            return;
+          }
+          router.refresh();
+        } catch {
+          setLogoError(tCommon("error"));
+        }
+      })();
+    });
+  }
 
   return (
     <PageCard className="max-w-2xl p-5">
@@ -100,6 +160,63 @@ export function OrganizationProfileForm({
               defaultValue={initial.industry ?? ""}
               disabled={pending}
             />
+          </div>
+        </div>
+
+        <div className="space-y-1 border-t border-border pt-5">
+          <h2 className="text-sm font-medium">{t("sections.logo")}</h2>
+          <p className="text-sm text-muted-foreground">{t("sections.logoHint")}</p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex h-20 w-32 items-center justify-center overflow-hidden rounded-xl border border-border bg-muted/30">
+            {initial.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={initial.logoUrl}
+                alt={initial.name}
+                className="max-h-full max-w-full object-contain p-2"
+              />
+            ) : (
+              <ImagePlus className="size-6 text-muted-foreground" />
+            )}
+          </div>
+          <div className="space-y-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              className="hidden"
+              onChange={(event) => uploadLogo(event.target.files?.[0])}
+            />
+            <div className="flex flex-wrap gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={logoPending}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {logoPending ? t("logo.uploading") : t("logo.upload")}
+              </Button>
+              {initial.logoUrl ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  disabled={logoPending}
+                  className="text-destructive"
+                  onClick={removeLogo}
+                >
+                  <Trash2 className="size-3.5" />
+                  {t("logo.remove")}
+                </Button>
+              ) : null}
+            </div>
+            <p className="text-xs text-muted-foreground">{t("logo.hint")}</p>
+            {logoError ? (
+              <p className="text-sm text-destructive">{logoError}</p>
+            ) : null}
           </div>
         </div>
 

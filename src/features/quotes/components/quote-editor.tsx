@@ -4,6 +4,7 @@ import { Link, useRouter } from "@/i18n/navigation";
 import {
   Activity,
   Check,
+  Copy,
   Ellipsis,
   Eye,
   FileText,
@@ -25,6 +26,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
@@ -266,6 +273,37 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
           );
         }
       }
+      router.refresh();
+    } catch {
+      setError(tCommon("error"));
+    } finally {
+      setPendingAction(false);
+    }
+  }
+
+  async function duplicateQuote() {
+    if (dirty) {
+      const leave = window.confirm(t("actions.duplicateUnsaved"));
+      if (!leave) return;
+    }
+    setPendingAction(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/quotes/${quote.id}/duplicate`, {
+        method: "POST",
+        signal: AbortSignal.timeout(30_000),
+      });
+      const result = (await response.json()) as {
+        error?: string;
+        quoteId?: string;
+        projectId?: string;
+      };
+      if (!response.ok || result.error || !result.quoteId || !result.projectId) {
+        setError(result.error || tCommon("error"));
+        return;
+      }
+      setDirty(false);
+      router.push(`/projecten/${result.projectId}/offertes/${result.quoteId}`);
       router.refresh();
     } catch {
       setError(tCommon("error"));
@@ -579,16 +617,28 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
               {saveLabel}
             </Button>
           ) : null}
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            disabled
-            title={t("stubs.more")}
-          >
-            {t("actions.menu")}
-            <Ellipsis className="size-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={busy}
+              >
+                {t("actions.menu")}
+                <Ellipsis className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-44">
+              <DropdownMenuItem
+                disabled={busy}
+                onClick={() => void duplicateQuote()}
+              >
+                <Copy className="size-3.5" />
+                {t("actions.duplicate")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button type="button" variant="outline" size="sm" asChild>
             <Link
               href={`/projecten/${quote.projectId}/offertes/${quote.id}/voorbeeld`}

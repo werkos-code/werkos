@@ -1,3 +1,4 @@
+import { organizationLogoPublicUrl } from "@/features/organization/lib/organization-logo";
 import { getStaffOrgContext } from "@/features/shell/lib/staff-org-context";
 import type {
   InvoiceCustomerOption,
@@ -34,6 +35,7 @@ export type InvoiceDetail = {
     kvkNumber: string | null;
     vatNumber: string | null;
     iban: string | null;
+    logoUrl: string | null;
   } | null;
   customerId: string | null;
   customerName: string | null;
@@ -189,7 +191,7 @@ export async function getInvoice(invoiceId: string): Promise<{
   const { data: organization } = await ctx.supabase
     .from("organizations")
     .select(
-      "name, address, postal_code, city, country, phone, email, kvk_number, vat_number, iban",
+      "name, address, postal_code, city, country, phone, email, kvk_number, vat_number, iban, logo_path",
     )
     .eq("id", ctx.organizationId)
     .maybeSingle();
@@ -235,6 +237,7 @@ export async function getInvoice(invoiceId: string): Promise<{
             kvkNumber: organization.kvk_number,
             vatNumber: organization.vat_number,
             iban: organization.iban,
+            logoUrl: organizationLogoPublicUrl(organization.logo_path),
           }
         : null,
       customerId,

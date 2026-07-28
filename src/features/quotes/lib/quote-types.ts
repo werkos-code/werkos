@@ -62,6 +62,7 @@ export type QuoteDetail = {
     kvkNumber: string | null;
     vatNumber: string | null;
     iban: string | null;
+    logoUrl: string | null;
   } | null;
   customerId: string | null;
   customerName: string | null;
