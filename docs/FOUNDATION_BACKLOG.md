@@ -44,7 +44,7 @@
 | Werkzaamheden (hoofdpagina) | `/werkzaamheden` | Done | Org-brede lijst + filters; rij → project `?tab=tasks` |
 | Onderaannemers | `/onderaannemers` | Done | CRUD zoals klanten; SQL `20260728120000_subcontractors.sql` |
 | Materiaal → Installaties | `/materiaal/installaties` | Stub | Ook onder Materiaal ERP |
-| Bedrijf → Rapportages | `/rapportages` | Stub | |
+| Bedrijf → Rapportages | `/rapportages` | Done | KPI-strip + open projecten / te late werkzaamheden / openstaande facturen |
 | Personeel | `/personeel` | Done | KPI’s, zoeken, invite (owner), rol wijzigen, verwijderen |
 | Inbox | `/inbox` | Done | Interne gesprekken per project; thread + nieuw gesprek |
 | Notificaties (pagina) | `/notificaties` | Done | Notificatiecentrum + gelezen status |
@@ -61,8 +61,8 @@
 
 | Module | Route | Status | Notities |
 | --- | --- | --- | --- |
-| Account | `/instellingen/account` | Stub | Via accountmenu |
-| Abonnement en facturatie | `/instellingen/abonnement` | Stub | Onboarding heeft al payment-stappen |
+| Account | `/instellingen/account` | Done | Naam + wachtwoord wijzigen |
+| Abonnement en facturatie | `/instellingen/abonnement` | Done | Status/seats + Stripe Customer Portal (owner) |
 
 ### Afvinklijst basisvorm
 
@@ -71,7 +71,7 @@
 - [x] Werkzaamheden hoofdpagina (`/werkzaamheden`) — org-breed overzicht, koppeling project-detail
 - [x] Onderaannemers (`/onderaannemers`) — lijst + detail (zoals klanten/leveranciers)
 - [ ] Materiaal → Installaties (`/materiaal/installaties`)
-- [ ] Rapportages (`/rapportages`) — eerste KPI/rapport-set
+- [x] Rapportages (`/rapportages`) — eerste KPI/rapport-set
 - [x] Personeel (`/personeel`) — teamleden / rollen in org (invite + beheer door owner)
 - [x] Inbox (`/inbox`) — gesprekken-overzicht (MVP)
 - [x] Notificaties-pagina (`/notificaties`) — voorkeuren + geschiedenis (MVP)
@@ -84,8 +84,8 @@
 
 **Instellingen**
 
-- [ ] Account (profiel, wachtwoord, voorkeuren)
-- [ ] Abonnement en facturatie (plan, seats, facturen SaaS)
+- [x] Account (profiel, wachtwoord, voorkeuren)
+- [x] Abonnement en facturatie (plan, seats, facturen SaaS)
 
 ---
 

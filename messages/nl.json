@@ -235,15 +235,15 @@
       },
       "reports": {
         "title": "Rapportages",
-        "description": "Rapportages worden gebouwd in een volgende fase."
+        "description": "KPI’s en overzichten van je bedrijf."
       },
       "settings": {
         "title": "Instellingen",
         "description": "Beheer bedrijfs- en accountinstellingen.",
         "accountTitle": "Account",
-        "accountSoon": "Volgt in een volgende versie.",
+        "accountSoon": "Profiel en wachtwoord.",
         "billingTitle": "Abonnement",
-        "billingSoon": "Volgt in een volgende versie."
+        "billingSoon": "Plan, seats en facturatie."
       },
       "workItems": {
         "title": "Werkzaamheden",
@@ -263,11 +263,11 @@
       },
       "settingsAccount": {
         "title": "Account",
-        "description": "Accountinstellingen volgen in een volgende fase."
+        "description": "Profiel en wachtwoord."
       },
       "settingsBilling": {
         "title": "Abonnement",
-        "description": "Abonnement en facturatie volgen in een volgende fase."
+        "description": "Plan, seats en Stripe-beheer."
       }
     },
     "navLabel": "Hoofdnavigatie",
@@ -331,6 +331,105 @@
       "kvkNumber": "KvK-nummer",
       "vatNumber": "Btw-nummer",
       "iban": "IBAN"
+    }
+  },
+  "accountSettings": {
+    "title": "Account",
+    "subtitle": "Beheer je naam en wachtwoord.",
+    "open": "Openen",
+    "profileTitle": "Profiel",
+    "passwordTitle": "Wachtwoord",
+    "saveProfile": "Profiel opslaan",
+    "savePassword": "Wachtwoord wijzigen",
+    "saved": "Profiel opgeslagen.",
+    "passwordSaved": "Wachtwoord gewijzigd.",
+    "emailHint": "E-mailadres wijzigen volgt later.",
+    "passwordHint": "Minimaal 8 tekens.",
+    "fields": {
+      "name": "Naam",
+      "email": "E-mail",
+      "password": "Nieuw wachtwoord",
+      "confirmPassword": "Bevestig wachtwoord"
+    },
+    "errors": {
+      "nameRequired": "Vul een naam in.",
+      "passwordTooShort": "Wachtwoord moet minstens 8 tekens zijn.",
+      "passwordMismatch": "Wachtwoorden komen niet overeen."
+    }
+  },
+  "billingSettings": {
+    "title": "Abonnement",
+    "subtitle": "Overzicht van je plan, seats en facturatie.",
+    "open": "Openen",
+    "planTitle": "Huidig plan",
+    "planHint": "Owner zit in de basis. Seats zijn extra kantoor- en uitvoerende medewerkers.",
+    "perMonth": " / maand",
+    "manage": "Beheer in Stripe",
+    "noPortalHint": "Nog geen Stripe-klant gekoppeld. Rond eerst de onboarding-betaling af.",
+    "ownerOnly": "Alleen de eigenaar kan het abonnement beheren.",
+    "noTrial": "Geen actieve trial",
+    "yes": "Ja",
+    "no": "Nee",
+    "kpi": {
+      "status": "Status",
+      "officeSeats": "Kantoorseats",
+      "fieldSeats": "Uitvoerende seats",
+      "monthly": "Maandbedrag"
+    },
+    "fields": {
+      "base": "Basis",
+      "officeSeat": "Kantoorseat",
+      "fieldSeat": "Uitvoerende seat",
+      "trial": "Trial tot",
+      "periodEnd": "Periode tot",
+      "cancel": "Opzeggen aan einde periode"
+    },
+    "status": {
+      "missing": "Geen abonnement",
+      "trialing": "Proefperiode",
+      "active": "Actief",
+      "past_due": "Achterstallig",
+      "canceled": "Opgezegd",
+      "incomplete": "Onvolledig",
+      "incomplete_expired": "Verlopen",
+      "unpaid": "Onbetaald",
+      "paused": "Gepauzeerd"
+    },
+    "errors": {
+      "noStripeCustomer": "Geen Stripe-klant gevonden voor dit bedrijf.",
+      "forbidden": "Alleen de eigenaar kan dit beheren."
+    }
+  },
+  "reports": {
+    "title": "Rapportages",
+    "overdue": "Te laat",
+    "kpi": {
+      "projectsActive": "Actieve projecten",
+      "projectsTotal": "Projecten totaal",
+      "quotesOpen": "Open offertes",
+      "invoicesUnpaid": "Openstaande facturen",
+      "outstanding": "Openstaand bedrag",
+      "workItemsOverdue": "Te late werkzaamheden",
+      "workOrdersOpen": "Open werkbonnen",
+      "timeEntries": "Urenregels"
+    },
+    "tables": {
+      "openProjects": "Lopende projecten",
+      "overdueWorkItems": "Te late werkzaamheden",
+      "unpaidInvoices": "Openstaande facturen"
+    },
+    "columns": {
+      "project": "Project",
+      "status": "Status",
+      "workItem": "Werkzaamheid",
+      "due": "Deadline",
+      "invoice": "Factuur",
+      "amount": "Bedrag"
+    },
+    "empty": {
+      "projects": "Geen lopende projecten.",
+      "workItems": "Geen te late werkzaamheden.",
+      "invoices": "Geen openstaande facturen."
     }
   },
   "customers": {

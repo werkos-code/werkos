@@ -11,6 +11,8 @@ export default async function InstellingenPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("shell.pages.settings");
   const tOrg = await getTranslations("organizationSettings");
+  const tAccount = await getTranslations("accountSettings");
+  const tBilling = await getTranslations("billingSettings");
 
   return (
     <ShellPage title={t("title")}>
@@ -27,17 +29,29 @@ export default async function InstellingenPage({ params }: Props) {
             {tOrg("open")}
           </Link>
         </PageCard>
-        <PageCard className="p-4 opacity-70">
-          <h2 className="text-sm font-medium">{t("accountTitle")}</h2>
+        <PageCard className="p-4">
+          <h2 className="text-sm font-medium">{tAccount("title")}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {t("accountSoon")}
+            {tAccount("subtitle")}
           </p>
+          <Link
+            href="/instellingen/account"
+            className="mt-3 inline-flex text-sm font-medium text-primary hover:underline"
+          >
+            {tAccount("open")}
+          </Link>
         </PageCard>
-        <PageCard className="p-4 opacity-70">
-          <h2 className="text-sm font-medium">{t("billingTitle")}</h2>
+        <PageCard className="p-4">
+          <h2 className="text-sm font-medium">{tBilling("title")}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {t("billingSoon")}
+            {tBilling("subtitle")}
           </p>
+          <Link
+            href="/instellingen/abonnement"
+            className="mt-3 inline-flex text-sm font-medium text-primary hover:underline"
+          >
+            {tBilling("open")}
+          </Link>
         </PageCard>
       </div>
     </ShellPage>

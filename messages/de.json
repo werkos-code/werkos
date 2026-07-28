@@ -235,15 +235,15 @@
       },
       "reports": {
         "title": "Berichte",
-        "description": "Berichte werden in einer späteren Phase gebaut."
+        "description": "KPIs und Übersichten für dein Unternehmen."
       },
       "settings": {
         "title": "Einstellungen",
         "description": "Unternehmens- und Kontoeinstellungen verwalten.",
         "accountTitle": "Konto",
-        "accountSoon": "Folgt in einer späteren Version.",
+        "accountSoon": "Profil und Passwort.",
         "billingTitle": "Abo",
-        "billingSoon": "Folgt in einer späteren Version."
+        "billingSoon": "Plan, Sitze und Abrechnung."
       },
       "workItems": {
         "title": "Arbeitsposten",
@@ -263,11 +263,11 @@
       },
       "settingsAccount": {
         "title": "Konto",
-        "description": "Kontoeinstellungen folgen in einer späteren Phase."
+        "description": "Profil und Passwort."
       },
       "settingsBilling": {
         "title": "Abo",
-        "description": "Abo-Einstellungen folgen in einer späteren Phase."
+        "description": "Plan, Sitze und Stripe-Verwaltung."
       }
     },
     "navLabel": "Hauptnavigation",
@@ -331,6 +331,105 @@
       "kvkNumber": "Handelsregisternr.",
       "vatNumber": "USt-IdNr.",
       "iban": "IBAN"
+    }
+  },
+  "accountSettings": {
+    "title": "Konto",
+    "subtitle": "Verwalte deinen Namen und dein Passwort.",
+    "open": "Öffnen",
+    "profileTitle": "Profil",
+    "passwordTitle": "Passwort",
+    "saveProfile": "Profil speichern",
+    "savePassword": "Passwort ändern",
+    "saved": "Profil gespeichert.",
+    "passwordSaved": "Passwort aktualisiert.",
+    "emailHint": "E-Mail ändern folgt später.",
+    "passwordHint": "Mindestens 8 Zeichen.",
+    "fields": {
+      "name": "Name",
+      "email": "E-Mail",
+      "password": "Neues Passwort",
+      "confirmPassword": "Passwort bestätigen"
+    },
+    "errors": {
+      "nameRequired": "Gib einen Namen ein.",
+      "passwordTooShort": "Passwort muss mindestens 8 Zeichen haben.",
+      "passwordMismatch": "Passwörter stimmen nicht überein."
+    }
+  },
+  "billingSettings": {
+    "title": "Abo",
+    "subtitle": "Übersicht über Plan, Sitze und Abrechnung.",
+    "open": "Öffnen",
+    "planTitle": "Aktueller Plan",
+    "planHint": "Der Eigentümer ist im Basisplan enthalten. Sitze sind zusätzliche Büro- und Außendienstmitarbeiter.",
+    "perMonth": " / Monat",
+    "manage": "In Stripe verwalten",
+    "noPortalHint": "Noch kein Stripe-Kunde verknüpft. Schließe zuerst die Onboarding-Zahlung ab.",
+    "ownerOnly": "Nur der Eigentümer kann das Abo verwalten.",
+    "noTrial": "Keine aktive Testphase",
+    "yes": "Ja",
+    "no": "Nein",
+    "kpi": {
+      "status": "Status",
+      "officeSeats": "Bürositze",
+      "fieldSeats": "Außendienstsitze",
+      "monthly": "Monatsbetrag"
+    },
+    "fields": {
+      "base": "Basis",
+      "officeSeat": "Bürositz",
+      "fieldSeat": "Außendienstsitz",
+      "trial": "Testphase bis",
+      "periodEnd": "Periode bis",
+      "cancel": "Zum Periodenende kündigen"
+    },
+    "status": {
+      "missing": "Kein Abo",
+      "trialing": "Testphase",
+      "active": "Aktiv",
+      "past_due": "Überfällig",
+      "canceled": "Gekündigt",
+      "incomplete": "Unvollständig",
+      "incomplete_expired": "Abgelaufen",
+      "unpaid": "Unbezahlt",
+      "paused": "Pausiert"
+    },
+    "errors": {
+      "noStripeCustomer": "Kein Stripe-Kunde für dieses Unternehmen gefunden.",
+      "forbidden": "Nur der Eigentümer kann das verwalten."
+    }
+  },
+  "reports": {
+    "title": "Berichte",
+    "overdue": "Überfällig",
+    "kpi": {
+      "projectsActive": "Aktive Projekte",
+      "projectsTotal": "Projekte gesamt",
+      "quotesOpen": "Offene Angebote",
+      "invoicesUnpaid": "Offene Rechnungen",
+      "outstanding": "Offener Betrag",
+      "workItemsOverdue": "Überfällige Arbeitsposten",
+      "workOrdersOpen": "Offene Arbeitsaufträge",
+      "timeEntries": "Zeiteinträge"
+    },
+    "tables": {
+      "openProjects": "Laufende Projekte",
+      "overdueWorkItems": "Überfällige Arbeitsposten",
+      "unpaidInvoices": "Offene Rechnungen"
+    },
+    "columns": {
+      "project": "Projekt",
+      "status": "Status",
+      "workItem": "Arbeitsposten",
+      "due": "Frist",
+      "invoice": "Rechnung",
+      "amount": "Betrag"
+    },
+    "empty": {
+      "projects": "Keine laufenden Projekte.",
+      "workItems": "Keine überfälligen Arbeitsposten.",
+      "invoices": "Keine offenen Rechnungen."
     }
   },
   "customers": {

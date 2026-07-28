@@ -235,15 +235,15 @@
       },
       "reports": {
         "title": "Reports",
-        "description": "Reports will be built in a later phase."
+        "description": "KPIs and overviews for your company."
       },
       "settings": {
         "title": "Settings",
         "description": "Manage company and account settings.",
         "accountTitle": "Account",
-        "accountSoon": "Coming in a later version.",
+        "accountSoon": "Profile and password.",
         "billingTitle": "Subscription",
-        "billingSoon": "Coming in a later version."
+        "billingSoon": "Plan, seats and billing."
       },
       "workItems": {
         "title": "Work items",
@@ -263,11 +263,11 @@
       },
       "settingsAccount": {
         "title": "Account",
-        "description": "Account settings will follow in a later phase."
+        "description": "Profile and password."
       },
       "settingsBilling": {
         "title": "Subscription",
-        "description": "Billing settings will follow in a later phase."
+        "description": "Plan, seats and Stripe management."
       }
     },
     "navLabel": "Main navigation",
@@ -331,6 +331,105 @@
       "kvkNumber": "Company number",
       "vatNumber": "VAT number",
       "iban": "IBAN"
+    }
+  },
+  "accountSettings": {
+    "title": "Account",
+    "subtitle": "Manage your name and password.",
+    "open": "Open",
+    "profileTitle": "Profile",
+    "passwordTitle": "Password",
+    "saveProfile": "Save profile",
+    "savePassword": "Change password",
+    "saved": "Profile saved.",
+    "passwordSaved": "Password updated.",
+    "emailHint": "Changing email comes later.",
+    "passwordHint": "At least 8 characters.",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "password": "New password",
+      "confirmPassword": "Confirm password"
+    },
+    "errors": {
+      "nameRequired": "Enter a name.",
+      "passwordTooShort": "Password must be at least 8 characters.",
+      "passwordMismatch": "Passwords do not match."
+    }
+  },
+  "billingSettings": {
+    "title": "Subscription",
+    "subtitle": "Overview of your plan, seats and billing.",
+    "open": "Open",
+    "planTitle": "Current plan",
+    "planHint": "The owner is included in the base plan. Seats are extra office and field staff.",
+    "perMonth": " / month",
+    "manage": "Manage in Stripe",
+    "noPortalHint": "No Stripe customer linked yet. Complete onboarding payment first.",
+    "ownerOnly": "Only the owner can manage the subscription.",
+    "noTrial": "No active trial",
+    "yes": "Yes",
+    "no": "No",
+    "kpi": {
+      "status": "Status",
+      "officeSeats": "Office seats",
+      "fieldSeats": "Field seats",
+      "monthly": "Monthly total"
+    },
+    "fields": {
+      "base": "Base",
+      "officeSeat": "Office seat",
+      "fieldSeat": "Field seat",
+      "trial": "Trial until",
+      "periodEnd": "Period ends",
+      "cancel": "Cancel at period end"
+    },
+    "status": {
+      "missing": "No subscription",
+      "trialing": "Trial",
+      "active": "Active",
+      "past_due": "Past due",
+      "canceled": "Canceled",
+      "incomplete": "Incomplete",
+      "incomplete_expired": "Expired",
+      "unpaid": "Unpaid",
+      "paused": "Paused"
+    },
+    "errors": {
+      "noStripeCustomer": "No Stripe customer found for this company.",
+      "forbidden": "Only the owner can manage this."
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "overdue": "Overdue",
+    "kpi": {
+      "projectsActive": "Active projects",
+      "projectsTotal": "Projects total",
+      "quotesOpen": "Open quotes",
+      "invoicesUnpaid": "Unpaid invoices",
+      "outstanding": "Outstanding amount",
+      "workItemsOverdue": "Overdue work items",
+      "workOrdersOpen": "Open work orders",
+      "timeEntries": "Time entries"
+    },
+    "tables": {
+      "openProjects": "Open projects",
+      "overdueWorkItems": "Overdue work items",
+      "unpaidInvoices": "Unpaid invoices"
+    },
+    "columns": {
+      "project": "Project",
+      "status": "Status",
+      "workItem": "Work item",
+      "due": "Due",
+      "invoice": "Invoice",
+      "amount": "Amount"
+    },
+    "empty": {
+      "projects": "No open projects.",
+      "workItems": "No overdue work items.",
+      "invoices": "No unpaid invoices."
     }
   },
   "customers": {
