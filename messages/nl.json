@@ -123,7 +123,7 @@
     "installations": "Installaties",
     "customers": "Klanten",
     "suppliers": "Leveranciers",
-    "subcontractors": "Onderaannemers / ZZP'ers",
+    "subcontractors": "Onderaannemers",
     "inbox": "Inbox",
     "communications": "Communicatie",
     "finance": "Financiën",
@@ -189,8 +189,8 @@
         "description": "Beheer leveranciers van je bedrijf."
       },
       "subcontractors": {
-        "title": "Onderaannemers / ZZP'ers",
-        "description": "Onderaannemers en ZZP'ers worden gebouwd in een volgende fase."
+        "title": "Onderaannemers",
+        "description": "Onderaannemers worden gebouwd in een volgende fase."
       },
       "inbox": {
         "title": "Inbox",

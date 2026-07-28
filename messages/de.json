@@ -123,7 +123,7 @@
     "installations": "Installationen",
     "customers": "Kunden",
     "suppliers": "Lieferanten",
-    "subcontractors": "Subunternehmer / Freelancer",
+    "subcontractors": "Subunternehmer",
     "inbox": "Posteingang",
     "communications": "Kommunikation",
     "finance": "Finanzen",
@@ -189,8 +189,8 @@
         "description": "Lieferanten deines Unternehmens verwalten."
       },
       "subcontractors": {
-        "title": "Subunternehmer / Freelancer",
-        "description": "Subunternehmer und Freelancer werden in einer späteren Phase gebaut."
+        "title": "Subunternehmer",
+        "description": "Subunternehmer werden in einer späteren Phase gebaut."
       },
       "inbox": {
         "title": "Posteingang",

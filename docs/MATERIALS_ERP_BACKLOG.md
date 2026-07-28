@@ -17,11 +17,13 @@ Artikelen, voorraad, BOM, leveranciers, inkoop, ontvangst, reserveringen, werkbo
 ## Open
 
 - [ ] **2BA credentials activeren** — zie [`PENDING_SETUP.md`](./PENDING_SETUP.md)
+- [ ] **Installaties** (`/materiaal/installaties`) — stub; nog geen domein/UI (zie ook [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md))
 
 ## Volgende
 
 - [ ] Veld/portaal (scan + offline)
 - [ ] 2BA: nettoprijzen / voorraad per leverancier (optioneel)
+- [ ] Installaties (basisvorm)
 
 ## Migratie
 

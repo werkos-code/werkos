@@ -40,6 +40,10 @@
 - [ ] Interactieve donut (filter bij klik categorie)
 - [ ] Export / print werkzaamheden
 
+## Org-brede hoofdpagina
+
+- [ ] `/werkzaamheden` als echte org-lijstwerkruimte (nu coming-soon stub) — zie [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md)
+
 ## Header / shell op mock
 
 - [x] Split-button op “+ Toevoegen” (groep vs item)

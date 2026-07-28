@@ -123,7 +123,7 @@
     "installations": "Installations",
     "customers": "Customers",
     "suppliers": "Suppliers",
-    "subcontractors": "Subcontractors / freelancers",
+    "subcontractors": "Subcontractors",
     "inbox": "Inbox",
     "communications": "Communications",
     "finance": "Finance",
@@ -189,8 +189,8 @@
         "description": "Manage your company's suppliers."
       },
       "subcontractors": {
-        "title": "Subcontractors / freelancers",
-        "description": "Subcontractors and freelancers will be built in a later phase."
+        "title": "Subcontractors",
+        "description": "Subcontractors will be built in a later phase."
       },
       "inbox": {
         "title": "Inbox",

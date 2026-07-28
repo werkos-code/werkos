@@ -277,6 +277,7 @@ Rijker: titel + korte uitleg + primaire actie. Nooit een “lege” dode pagina.
 | Detail + tabs + hero | `src/features/projects/components/project-detail-workspace.tsx` |
 | Workspace-lijst | `src/features/projects/components/project-work-items-workspace.tsx` |
 | Editor | `src/features/quotes/components/quote-editor.tsx` |
+| Basisvorm (open stubs) | [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) |
 
 ---
 
