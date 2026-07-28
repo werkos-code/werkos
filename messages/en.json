@@ -136,9 +136,38 @@
     "newRequest": "New assignment",
     "accountMenu": "Account menu",
     "back": "Back",
-    "search": "Search",
-    "notifications": "Notifications",
-    "help": "Help",
+    "searchButton": "Search",
+    "notificationsButton": "Notifications",
+    "helpButton": "Help",
+    "search": {
+      "title": "Search",
+      "placeholder": "Search projects, customers, quotes…",
+      "hint": "Tip: ⌘K or Ctrl+K",
+      "minChars": "Type at least 2 characters.",
+      "loading": "Searching…",
+      "empty": "No results.",
+      "openInbox": "Open inbox",
+      "groups": {
+        "projects": "Projects",
+        "customers": "Customers",
+        "quotes": "Quotes",
+        "workItems": "Work items",
+        "invoices": "Invoices"
+      }
+    },
+    "help": {
+      "title": "Help",
+      "description": "Quick links to frequently used areas.",
+      "shortcut": "Use ⌘K / Ctrl+K to search anywhere.",
+      "links": {
+        "projects": "Projects",
+        "workItems": "Work items",
+        "planning": "Planning",
+        "inbox": "Inbox",
+        "notifications": "Notifications",
+        "settings": "Company settings"
+      }
+    },
     "pages": {
       "dashboard": {
         "title": "Dashboard",
@@ -194,7 +223,7 @@
       },
       "inbox": {
         "title": "Inbox",
-        "description": "Inbox will be built in a later phase."
+        "description": "Internal conversations per project."
       },
       "newRequest": {
         "title": "New assignment",
@@ -230,7 +259,7 @@
       },
       "notificationsSettings": {
         "title": "Notifications",
-        "description": "Templates, customer preferences and mail domain come later."
+        "description": "Overview of system notifications and read status."
       },
       "settingsAccount": {
         "title": "Account",
@@ -432,6 +461,39 @@
       "cannotRemoveSelf": "You cannot remove yourself.",
       "cannotChangeOwnerRole": "The owner's role cannot be changed."
     }
+  },
+  "inbox": {
+    "title": "Inbox",
+    "empty": "No conversations yet. Start one for a project.",
+    "emptyFiltered": "No conversations match this search.",
+    "searchPlaceholder": "Search by subject or project…",
+    "newConversation": "New conversation",
+    "create": "Start conversation",
+    "send": "Send",
+    "selectHint": "Select a conversation to read messages.",
+    "replyPlaceholder": "Write a message…",
+    "kpiTotal": "Conversations",
+    "kpiProjects": "Projects",
+    "kpiRecent": "This week",
+    "fields": {
+      "project": "Project",
+      "projectPlaceholder": "Choose a project",
+      "subject": "Subject",
+      "message": "Message"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "panelTitle": "Notifications",
+    "empty": "No notifications.",
+    "markAllRead": "Mark all read",
+    "openCenter": "Notification center",
+    "open": "Open",
+    "unread": "Unread",
+    "kpiTotal": "Total",
+    "kpiUnread": "Unread",
+    "kpiRead": "Read",
+    "preferencesHint": "Per-channel notification preferences come in a later version."
   },
   "suppliers": {
     "title": "Suppliers",

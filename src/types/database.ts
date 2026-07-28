@@ -518,6 +518,117 @@ export type Database = {
         };
         Relationships: [];
       };
+      notifications: {
+        Row: {
+          id: string;
+          organization_id: string;
+          recipient_user_id: string;
+          actor_user_id: string | null;
+          type: string;
+          title: string;
+          body: string | null;
+          entity_type: string | null;
+          entity_id: string | null;
+          project_id: string | null;
+          metadata: Json;
+          read_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          recipient_user_id: string;
+          actor_user_id?: string | null;
+          type: string;
+          title: string;
+          body?: string | null;
+          entity_type?: string | null;
+          entity_id?: string | null;
+          project_id?: string | null;
+          metadata?: Json;
+          read_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          recipient_user_id?: string;
+          actor_user_id?: string | null;
+          type?: string;
+          title?: string;
+          body?: string | null;
+          entity_type?: string | null;
+          entity_id?: string | null;
+          project_id?: string | null;
+          metadata?: Json;
+          read_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      conversations: {
+        Row: {
+          id: string;
+          organization_id: string;
+          project_id: string;
+          visibility: "internal" | "external";
+          subject: string;
+          created_by: string | null;
+          last_message_at: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          project_id: string;
+          visibility?: "internal" | "external";
+          subject: string;
+          created_by?: string | null;
+          last_message_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          project_id?: string;
+          visibility?: "internal" | "external";
+          subject?: string;
+          created_by?: string | null;
+          last_message_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      conversation_messages: {
+        Row: {
+          id: string;
+          organization_id: string;
+          conversation_id: string;
+          author_user_id: string | null;
+          body: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          conversation_id: string;
+          author_user_id?: string | null;
+          body: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          conversation_id?: string;
+          author_user_id?: string | null;
+          body?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       project_favorites: {
         Row: {
           organization_id: string;

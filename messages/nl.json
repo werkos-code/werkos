@@ -136,9 +136,38 @@
     "newRequest": "Nieuwe opdracht",
     "accountMenu": "Accountmenu",
     "back": "Terug",
-    "search": "Zoeken",
-    "notifications": "Notificaties",
-    "help": "Help",
+    "searchButton": "Zoeken",
+    "notificationsButton": "Notificaties",
+    "helpButton": "Help",
+    "search": {
+      "title": "Zoeken",
+      "placeholder": "Zoek projecten, klanten, offertes…",
+      "hint": "Tip: ⌘K of Ctrl+K",
+      "minChars": "Typ minimaal 2 tekens.",
+      "loading": "Zoeken…",
+      "empty": "Geen resultaten.",
+      "openInbox": "Open inbox",
+      "groups": {
+        "projects": "Projecten",
+        "customers": "Klanten",
+        "quotes": "Offertes",
+        "workItems": "Werkzaamheden",
+        "invoices": "Facturen"
+      }
+    },
+    "help": {
+      "title": "Help",
+      "description": "Snelle links naar veelgebruikte onderdelen.",
+      "shortcut": "Gebruik ⌘K / Ctrl+K om overal te zoeken.",
+      "links": {
+        "projects": "Projecten",
+        "workItems": "Werkzaamheden",
+        "planning": "Planning",
+        "inbox": "Inbox",
+        "notifications": "Notificaties",
+        "settings": "Bedrijfsinstellingen"
+      }
+    },
     "pages": {
       "dashboard": {
         "title": "Dashboard",
@@ -194,7 +223,7 @@
       },
       "inbox": {
         "title": "Inbox",
-        "description": "Inbox wordt gebouwd in een volgende fase."
+        "description": "Interne gesprekken per project."
       },
       "newRequest": {
         "title": "Nieuwe opdracht",
@@ -230,7 +259,7 @@
       },
       "notificationsSettings": {
         "title": "Notificaties",
-        "description": "Templates, klantkeuzes en maildomein volgen in een volgende fase."
+        "description": "Overzicht van systeemnotificaties en gelezen status."
       },
       "settingsAccount": {
         "title": "Account",
@@ -432,6 +461,39 @@
       "cannotRemoveSelf": "Je kunt jezelf niet verwijderen.",
       "cannotChangeOwnerRole": "De rol van de eigenaar kan niet worden gewijzigd."
     }
+  },
+  "inbox": {
+    "title": "Inbox",
+    "empty": "Nog geen gesprekken. Start een nieuw gesprek bij een project.",
+    "emptyFiltered": "Geen gesprekken die aan deze zoekopdracht voldoen.",
+    "searchPlaceholder": "Zoek op onderwerp of project…",
+    "newConversation": "Nieuw gesprek",
+    "create": "Gesprek starten",
+    "send": "Versturen",
+    "selectHint": "Selecteer een gesprek om berichten te lezen.",
+    "replyPlaceholder": "Schrijf een bericht…",
+    "kpiTotal": "Gesprekken",
+    "kpiProjects": "Projecten",
+    "kpiRecent": "Deze week",
+    "fields": {
+      "project": "Project",
+      "projectPlaceholder": "Kies een project",
+      "subject": "Onderwerp",
+      "message": "Bericht"
+    }
+  },
+  "notifications": {
+    "title": "Notificaties",
+    "panelTitle": "Notificaties",
+    "empty": "Geen notificaties.",
+    "markAllRead": "Alles gelezen",
+    "openCenter": "Notificatiecentrum",
+    "open": "Openen",
+    "unread": "Ongelezen",
+    "kpiTotal": "Totaal",
+    "kpiUnread": "Ongelezen",
+    "kpiRead": "Gelezen",
+    "preferencesHint": "Notificatievoorkeuren per kanaal volgen in een volgende versie."
   },
   "suppliers": {
     "title": "Leveranciers",

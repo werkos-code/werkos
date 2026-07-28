@@ -136,9 +136,38 @@
     "newRequest": "Neuer Auftrag",
     "accountMenu": "Konto-Menü",
     "back": "Zurück",
-    "search": "Suchen",
-    "notifications": "Benachrichtigungen",
-    "help": "Hilfe",
+    "searchButton": "Suchen",
+    "notificationsButton": "Benachrichtigungen",
+    "helpButton": "Hilfe",
+    "search": {
+      "title": "Suchen",
+      "placeholder": "Projekte, Kunden, Angebote suchen…",
+      "hint": "Tipp: ⌘K oder Strg+K",
+      "minChars": "Mindestens 2 Zeichen eingeben.",
+      "loading": "Suche…",
+      "empty": "Keine Ergebnisse.",
+      "openInbox": "Posteingang öffnen",
+      "groups": {
+        "projects": "Projekte",
+        "customers": "Kunden",
+        "quotes": "Angebote",
+        "workItems": "Arbeitsposten",
+        "invoices": "Rechnungen"
+      }
+    },
+    "help": {
+      "title": "Hilfe",
+      "description": "Schnelllinks zu häufig genutzten Bereichen.",
+      "shortcut": "⌘K / Strg+K zum Suchen überall.",
+      "links": {
+        "projects": "Projekte",
+        "workItems": "Arbeitsposten",
+        "planning": "Planung",
+        "inbox": "Posteingang",
+        "notifications": "Benachrichtigungen",
+        "settings": "Unternehmenseinstellungen"
+      }
+    },
     "pages": {
       "dashboard": {
         "title": "Dashboard",
@@ -194,7 +223,7 @@
       },
       "inbox": {
         "title": "Posteingang",
-        "description": "Posteingang wird in einer späteren Phase gebaut."
+        "description": "Interne Gespräche pro Projekt."
       },
       "newRequest": {
         "title": "Neuer Auftrag",
@@ -230,7 +259,7 @@
       },
       "notificationsSettings": {
         "title": "Benachrichtigungen",
-        "description": "Vorlagen, Kundenauswahl und Maildomain folgen später."
+        "description": "Übersicht der Systembenachrichtigungen und Lesestatus."
       },
       "settingsAccount": {
         "title": "Konto",
@@ -432,6 +461,39 @@
       "cannotRemoveSelf": "Du kannst dich nicht selbst entfernen.",
       "cannotChangeOwnerRole": "Die Rolle des Eigentümers kann nicht geändert werden."
     }
+  },
+  "inbox": {
+    "title": "Posteingang",
+    "empty": "Noch keine Gespräche. Starte eines für ein Projekt.",
+    "emptyFiltered": "Keine Gespräche passen zu dieser Suche.",
+    "searchPlaceholder": "Nach Betreff oder Projekt suchen…",
+    "newConversation": "Neues Gespräch",
+    "create": "Gespräch starten",
+    "send": "Senden",
+    "selectHint": "Wähle ein Gespräch, um Nachrichten zu lesen.",
+    "replyPlaceholder": "Nachricht schreiben…",
+    "kpiTotal": "Gespräche",
+    "kpiProjects": "Projekte",
+    "kpiRecent": "Diese Woche",
+    "fields": {
+      "project": "Projekt",
+      "projectPlaceholder": "Projekt wählen",
+      "subject": "Betreff",
+      "message": "Nachricht"
+    }
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "panelTitle": "Benachrichtigungen",
+    "empty": "Keine Benachrichtigungen.",
+    "markAllRead": "Alle gelesen",
+    "openCenter": "Benachrichtigungszentrum",
+    "open": "Öffnen",
+    "unread": "Ungelesen",
+    "kpiTotal": "Gesamt",
+    "kpiUnread": "Ungelesen",
+    "kpiRead": "Gelesen",
+    "preferencesHint": "Kanal-Einstellungen folgen in einer späteren Version."
   },
   "suppliers": {
     "title": "Lieferanten",

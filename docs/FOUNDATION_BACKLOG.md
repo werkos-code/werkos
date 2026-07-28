@@ -46,16 +46,16 @@
 | Materiaal → Installaties | `/materiaal/installaties` | Stub | Ook onder Materiaal ERP |
 | Bedrijf → Rapportages | `/rapportages` | Stub | |
 | Personeel | `/personeel` | Done | KPI’s, zoeken, invite (owner), rol wijzigen, verwijderen |
-| Inbox | `/inbox` | Stub | Domein: communicatie in operational flow |
-| Notificaties (pagina) | `/notificaties` | Stub | Domein: notificaties in operational/domain model |
+| Inbox | `/inbox` | Done | Interne gesprekken per project; thread + nieuw gesprek |
+| Notificaties (pagina) | `/notificaties` | Done | Notificatiecentrum + gelezen status |
 
 ### Shell-header (rechtsboven)
 
 | Element | Status | Notities |
 | --- | --- | --- |
-| Zoekfunctie | Partial | Icoon in `app-page-header.tsx`, geen actie/zoek-UI |
-| Notificatie-icoon | Partial | Icoon aanwezig, geen panel/badge/lijst |
-| Help-icoon | Partial | Icoon aanwezig, geen help-content |
+| Zoekfunctie | Done | ⌘K / header-icoon → globale zoekdialog |
+| Notificatie-icoon | Done | Sheet + badge + link naar `/notificaties` |
+| Help-icoon | Done | Help-dialog met snelle links |
 
 ### Account & abonnement
 
@@ -73,14 +73,14 @@
 - [ ] Materiaal → Installaties (`/materiaal/installaties`)
 - [ ] Rapportages (`/rapportages`) — eerste KPI/rapport-set
 - [x] Personeel (`/personeel`) — teamleden / rollen in org (invite + beheer door owner)
-- [ ] Inbox (`/inbox`) — gesprekken-overzicht (MVP)
-- [ ] Notificaties-pagina (`/notificaties`) — voorkeuren + geschiedenis (MVP)
+- [x] Inbox (`/inbox`) — gesprekken-overzicht (MVP)
+- [x] Notificaties-pagina (`/notificaties`) — voorkeuren + geschiedenis (MVP)
 
 **Shell-chrome**
 
-- [ ] Globale zoekfunctie (header)
-- [ ] Notificatie-icoon → panel / badge
-- [ ] Help-icoon → help/docs overlay of link
+- [x] Globale zoekfunctie (header)
+- [x] Notificatie-icoon → panel / badge
+- [x] Help-icoon → help/docs overlay of link
 
 **Instellingen**
 

@@ -4,6 +4,7 @@ import { Bell, CircleHelp, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
+import { useShellChrome } from "@/features/shell/components/shell-chrome-provider";
 import { Link } from "@/i18n/navigation";
 import { ArrowLeft } from "lucide-react";
 
@@ -21,6 +22,7 @@ export function AppPageHeader({
   actions,
 }: AppPageHeaderProps) {
   const t = useTranslations("shell");
+  const chrome = useShellChrome();
 
   return (
     <header className="sticky top-0 z-20 border-b border-border/80 bg-background/90 backdrop-blur-sm">
@@ -53,7 +55,8 @@ export function AppPageHeader({
               variant="ghost"
               size="icon-sm"
               className="text-muted-foreground"
-              aria-label={t("search")}
+              aria-label={t("searchButton")}
+              onClick={chrome.openSearch}
             >
               <Search className="size-4" />
             </Button>
@@ -61,17 +64,24 @@ export function AppPageHeader({
               type="button"
               variant="ghost"
               size="icon-sm"
-              className="text-muted-foreground"
-              aria-label={t("notifications")}
+              className="relative text-muted-foreground"
+              aria-label={t("notificationsButton")}
+              onClick={chrome.openNotifications}
             >
               <Bell className="size-4" />
+              {chrome.unreadCount > 0 ? (
+                <span className="absolute top-1 right-1 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
+                  {chrome.unreadCount > 9 ? "9+" : chrome.unreadCount}
+                </span>
+              ) : null}
             </Button>
             <Button
               type="button"
               variant="ghost"
               size="icon-sm"
               className="text-muted-foreground"
-              aria-label={t("help")}
+              aria-label={t("helpButton")}
+              onClick={chrome.openHelp}
             >
               <CircleHelp className="size-4" />
             </Button>

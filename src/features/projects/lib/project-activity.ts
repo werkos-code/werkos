@@ -1,5 +1,6 @@
 import type { createAdminClient } from "@/lib/supabase/admin";
 import type { Json, ProjectActivityType } from "@/types/database";
+import { notifyOrgStaff } from "@/features/notifications/lib/notify-org-staff";
 
 type AdminClient = ReturnType<typeof createAdminClient>;
 
@@ -13,6 +14,8 @@ export async function logProjectActivity(
     body?: string | null;
     metadata?: Record<string, unknown>;
     createdBy?: string | null;
+    entityType?: string | null;
+    entityId?: string | null;
   },
 ) {
   const { error } = await admin.from("project_activities").insert({
@@ -27,7 +30,20 @@ export async function logProjectActivity(
 
   if (error) {
     console.error("logProjectActivity failed", error.message);
+    return;
   }
+
+  await notifyOrgStaff(admin, {
+    organizationId: input.organizationId,
+    actorUserId: input.createdBy ?? null,
+    type: input.type,
+    title: input.title,
+    body: input.body ?? null,
+    entityType: input.entityType ?? input.type.split("_")[0] ?? null,
+    entityId: input.entityId ?? null,
+    projectId: input.projectId,
+    metadata: input.metadata,
+  });
 }
 
 export function quoteStatusActivityType(
