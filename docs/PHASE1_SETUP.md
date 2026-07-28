@@ -159,7 +159,7 @@ Na Phase 1 / Super Admin:
    - Taken → klik rij → brede overlay
    - Overzicht: beschrijving, prioriteit, labels, planning, subtaken
    - Tabs Tijd/Bestanden/Communicatie = placeholders
-4. Rest: [`WORK_ITEM_DETAIL_BACKLOG.md`](./WORK_ITEM_DETAIL_BACKLOG.md)
+4. Rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§7 Werkzaamheid-detail)
 
 ## 15. Planning — centrale kalender
 
@@ -171,7 +171,7 @@ Na Phase 1 / Super Admin:
    - + Nieuwe afspraak
    - Klik “Niet gepland” → werkzaamheid inplannen
    - Filters project / persoon
-4. Rest: [`PLANNING_BACKLOG.md`](./PLANNING_BACKLOG.md)
+4. Rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§8 Planning)
 
 ## 16. Werkbonnen
 
@@ -183,7 +183,7 @@ Na Phase 1 / Super Admin:
    - + Nieuwe werkbon (met project + subtaken)
    - Klik rij → detail sheet
    - Projectdetail → tab Werkbonnen
-4. Rest: [`WORK_ORDERS_BACKLOG.md`](./WORK_ORDERS_BACKLOG.md)
+4. Rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§9 Werkbonnen)
 
 ## 17. Facturen
 
@@ -195,7 +195,7 @@ Na Phase 1 / Super Admin:
    - + Nieuwe factuur (project + bedrag)
    - Tabs Concepten / Herinneringen / Verzonden / Betaald
    - Klik rij → detail sheet + status wijzigen
-4. Rest: [`INVOICES_BACKLOG.md`](./INVOICES_BACKLOG.md)
+4. Rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§3 Facturen)
 
 ## 18. Documenten (bestandenbibliotheek)
 
@@ -206,7 +206,7 @@ Na Phase 1 / Super Admin:
    - `/documenten` — projectmappen → upload / submap
    - Projectdetail → tab Bestanden
 4. Eerdere SQL staat in [`sql-applied/`](./sql-applied/) (niet opnieuw draaien op productie)
-5. Rest: [`FILES_BACKLOG.md`](./FILES_BACKLOG.md)
+5. Rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§10 Documenten)
 
 ## 19. Uren (verwacht vs werkelijk)
 
@@ -217,7 +217,7 @@ Na Phase 1 / Super Admin:
    - Project → Taken → open blad-werkzaamheid → tab **Tijd & uren** → boek uren
    - Taken-lijst + project-KPI tonen verwacht / werkelijk
    - Offerte-editor: kolom **Uren** op regels; bij acceptatie kopie naar werkzaamheid
-4. Rest: [`TIME_BACKLOG.md`](./TIME_BACKLOG.md)
+4. Rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§11 Uren)
 
 ## 20. Materiaal ERP (artikelen + voorraad + project)
 
@@ -228,7 +228,7 @@ Na Phase 1 / Super Admin:
    - `/materiaal/artikelen` — artikel aanmaken
    - `/materiaal/voorraad` — locatie + ontvangstmutatie
    - Project → Taken → werkzaamheid → tab **Materiaal** — begroot + verbruik (ad-hoc mag)
-4. Rest: [`MATERIALS_ERP_BACKLOG.md`](./MATERIALS_ERP_BACKLOG.md)
+4. Rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§12 Materiaal)
 
 ## 21. Materiaal ERP fase D (leveranciers + inkoop)
 
@@ -242,7 +242,7 @@ Na Phase 1 / Super Admin:
    - `/materiaal/voorraad` — min/max op saldo
    - Werkzaamheid → tab **Materiaal** → verbruik met voorraad-aftrek
    - `/materiaal/inkoop` — inkooporder aanmaken
-4. Rest: [`MATERIALS_ERP_BACKLOG.md`](./MATERIALS_ERP_BACKLOG.md)
+4. Rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§12 Materiaal)
 
 ## 22. Materiaal ERP fase D+ (ontvangst + reserveringen)
 
@@ -252,7 +252,7 @@ Na Phase 1 / Super Admin:
 3. Test:
    - `/materiaal/inkoop` — order versturen → **Ontvangen** → locatie + aantallen → voorraad stijgt
    - `/materiaal/voorraad` — **Reserveren** op saldo → actieve reserveringen → **Vrijgeven**
-4. Rest: [`MATERIALS_ERP_BACKLOG.md`](./MATERIALS_ERP_BACKLOG.md)
+4. Rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§12 Materiaal)
 
 ## 23. Materiaal ERP fase E (werkbon + BOM-reserveringen)
 

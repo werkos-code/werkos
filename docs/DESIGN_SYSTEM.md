@@ -106,7 +106,7 @@ Nieuwe pagina’s vallen in één type. Kopieer het recept; verzin geen nieuwe l
 
 **Voorbeeld:** `project-work-items-workspace.tsx`, `work-item-detail-sheet.tsx`, `work-orders-workspace.tsx`, `invoices-workspace.tsx`  
 Detail-sheets: altijd ~`70vw` (geen smalle 28rem-sidebar).  
-Detail-rest: [`WORK_ITEM_DETAIL_BACKLOG.md`](./WORK_ITEM_DETAIL_BACKLOG.md)
+Detail-rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§7)
 
 ### 4.4 Kalender / Planning workspace
 
@@ -118,7 +118,7 @@ Detail-rest: [`WORK_ITEM_DETAIL_BACKLOG.md`](./WORK_ITEM_DETAIL_BACKLOG.md)
 6. Planning is een **weergave** van `appointments` + geplande `work_items` — geen gedupliceerde administratie
 
 **Voorbeeld:** `src/features/planning/components/planning-workspace.tsx`  
-Rest: [`PLANNING_BACKLOG.md`](./PLANNING_BACKLOG.md)
+Rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§8)
 
 ### 4.5 Offerte-editor (workspace-dicht)
 
@@ -277,7 +277,7 @@ Rijker: titel + korte uitleg + primaire actie. Nooit een “lege” dode pagina.
 | Detail + tabs + hero | `src/features/projects/components/project-detail-workspace.tsx` |
 | Workspace-lijst | `src/features/projects/components/project-work-items-workspace.tsx` |
 | Editor | `src/features/quotes/components/quote-editor.tsx` |
-| Basisvorm (open stubs) | [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) |
+| Mega backlog (open + afgerond) | [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) |
 
 ---
 
@@ -287,4 +287,4 @@ Rijker: titel + korte uitleg + primaire actie. Nooit een “lege” dode pagina.
 2. Zo niet: voeg het patroon hier toe (recept + canonical pad).
 3. Bouw daarna het scherm.
 
-Feature-backlogs (`*_BACKLOG.md`) beschrijven *wat* later komt; dit document beschrijft *hoe* het eruitziet.
+De mega backlog ([`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md)) beschrijft *wat* later komt; dit document beschrijft *hoe* het eruitziet. Oude losse `*_BACKLOG.md`-bestanden staan in `docs/archive/backlogs/`.

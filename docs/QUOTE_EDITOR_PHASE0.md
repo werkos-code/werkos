@@ -35,4 +35,4 @@ QuoteEditor
 - [x] Fase 3 — betaaltermijn & voorwaarden → [`QUOTE_EDITOR_PHASE3.md`](./QUOTE_EDITOR_PHASE3.md)
 - [x] Fase 4 — voorbeeld / versturen → [`QUOTE_EDITOR_PHASE4.md`](./QUOTE_EDITOR_PHASE4.md)
 - [x] Fase 5 — org-briefpapier → [`QUOTE_EDITOR_PHASE5.md`](./QUOTE_EDITOR_PHASE5.md)
-- Zie ook `QUOTE_FINANCIAL_PLANNING.md` / `QUOTE_EDITOR_BACKLOG.md`.
+- Zie ook `QUOTE_FINANCIAL_PLANNING.md` / [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§2 Offertes).

@@ -37,7 +37,7 @@ Auto `OFF-YYYY-NNNN` per organisatie (zelfde patroon als `INV-` / `PRJ-`).
 
 - **Standaard schijf:** één factuurregel met omschrijving + bedrag (simpel, Robaws-strategie 1)
 - **Slotfactuur:** resterend netto − reeds gefactureerde schijven; één regel “Slotfactuur”
-- **Cumulatief op PDF:** v2 (zie `INVOICES_BACKLOG.md`)
+- **Cumulatief op PDF:** v2 (zie [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) §3 Facturen)
 
 ### Validatie
 
@@ -75,4 +75,4 @@ Zie `QUOTE_EDITOR_PHASE0.md`.
 | v3 | Org-templates, sync naar project na acceptatie |
 | v4 | Koppeling werkzaamheden / planning-item per schijf |
 
-Zie ook: `QUOTE_EDITOR_BACKLOG.md`, `INVOICES_BACKLOG.md`, `OPERATIONAL_FLOW.md`.
+Zie ook: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§2 Offertes, §3 Facturen), `OPERATIONAL_FLOW.md`.

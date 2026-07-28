@@ -14,7 +14,7 @@
 
 - [x] Designinventaris (`WORK_ITEMS_TAB_DESIGN.md`)
 - [x] Dit werkplan
-- [x] Backlog voor rest (`WORK_ITEMS_TAB_BACKLOG.md`)
+- [x] Backlog voor rest ([`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) §6)
 
 ## Fase B — Schema ✅
 
@@ -50,4 +50,4 @@
 
 ## Rest
 
-Zie `WORK_ITEMS_TAB_BACKLOG.md`.
+Zie [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§6 Werkzaamheden).
