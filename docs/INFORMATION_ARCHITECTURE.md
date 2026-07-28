@@ -51,7 +51,7 @@ De gebruiker denkt alleen:
 
 - Klanten
 - Leveranciers
-- Onderaannemers / ZZP'ers
+- Onderaannemers
 - Materieel
 
 ## Bedrijf
