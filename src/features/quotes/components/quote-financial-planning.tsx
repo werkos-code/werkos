@@ -192,38 +192,30 @@ export function QuoteFinancialPlanning({
 
   return (
     <div className="space-y-5 p-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="space-y-1">
-          <h3 className="text-sm font-medium">{t("title")}</h3>
-          <p className="max-w-xl text-sm text-muted-foreground">
-            {t("subtitle")}
-          </p>
+      {editable ? (
+        <div className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={addTemplate}
+          >
+            {t("addTemplate")}
+          </Button>
+          <Button type="button" variant="outline" size="sm" onClick={addPhase}>
+            <Plus className="size-3.5" />
+            {t("addPhase")}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            disabled={!dirty || saving}
+            onClick={() => void savePhases()}
+          >
+            {saving ? tCommon("loading") : t("save")}
+          </Button>
         </div>
-        {editable ? (
-          <div className="flex flex-wrap gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={addTemplate}
-            >
-              {t("addTemplate")}
-            </Button>
-            <Button type="button" variant="outline" size="sm" onClick={addPhase}>
-              <Plus className="size-3.5" />
-              {t("addPhase")}
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              disabled={!dirty || saving}
-              onClick={() => void savePhases()}
-            >
-              {saving ? tCommon("loading") : t("save")}
-            </Button>
-          </div>
-        ) : null}
-      </div>
+      ) : null}
 
       <PlanningSummaryBar summary={preview.summary} quoteNumber={quoteNumber} />
 
