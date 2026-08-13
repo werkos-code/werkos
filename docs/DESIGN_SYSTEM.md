@@ -148,6 +148,28 @@ Open refine: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§2). Financië
 `PageCard p-8` · icoon · `h3 text-sm font-medium` · één zin muted · optioneel outline-CTA.  
 Geen nepcijfers.
 
+### 4.7 Home / dashboard (uniek)
+
+Landingspagina. Zelfde app-frame (sidebar + header), **geen** lijst/detail/workspace-recept.
+
+```
+Greeting in content (niet in de chrome)
+3× PageCard: Aandacht · Vandaag · Mijn taken
+grid xl:[minmax(0,1.7fr)_minmax(18rem,0.9fr)]
+  ├─ Actieve projecten (tabel in PageCard)
+  └─ rail: Financieel + Snelle acties
+```
+
+| Regel | Detail |
+| --- | --- |
+| Chrome-titel | `Dashboard` — groet staat in de content |
+| Greeting | `text-2xl font-semibold tracking-tight` + datum `text-sm text-muted-foreground` |
+| Widgets | Alleen `PageCard`; footer-link `text-sm text-primary` |
+| Data | Echte signalen of lege state — geen nep-KPI’s |
+| Snelle acties | Compacte tegels (icoon `bg-primary/10`); geen sidebar-CTA-gradient |
+
+**Canonical:** `src/features/dashboard/components/dashboard-workspace.tsx`
+
 ---
 
 ## 5. Typografie-schaal

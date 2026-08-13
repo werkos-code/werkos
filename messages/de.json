@@ -171,7 +171,7 @@
     "pages": {
       "dashboard": {
         "title": "Dashboard",
-        "description": "Dein operatives Cockpit. Widgets und Übersichten folgen in einer späteren Phase."
+        "description": "Dein operatives Cockpit für den Arbeitstag."
       },
       "allProjects": {
         "title": "Alle Projekte",
@@ -398,6 +398,111 @@
     "errors": {
       "noStripeCustomer": "Kein Stripe-Kunde für dieses Unternehmen gefunden.",
       "forbidden": "Nur der Eigentümer kann das verwalten."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "greetingFallback": "dort",
+    "greeting": {
+      "morning": "Guten Morgen, {name}",
+      "afternoon": "Guten Tag, {name}",
+      "evening": "Guten Abend, {name}"
+    },
+    "relative": {
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "daysAgo": "{count, plural, one {vor # Tag} other {vor # Tagen}}"
+    },
+    "attention": {
+      "title": "Braucht Aufmerksamkeit",
+      "empty": "Nichts braucht gerade Aufmerksamkeit.",
+      "viewAll": "Alles ansehen"
+    },
+    "today": {
+      "title": "Heute",
+      "empty": "Heute nichts geplant.",
+      "viewAll": "Planung ansehen",
+      "allDay": "Ganztägig"
+    },
+    "tasks": {
+      "title": "Meine Aufgaben",
+      "empty": "Noch keine Aufgaben für dich.",
+      "addPlaceholder": "Neues To-do…",
+      "viewAll": "Alle Aufgaben ansehen",
+      "todosUnavailable": "Persönliche To-dos sind noch nicht verfügbar. Führe die SQL-Migration aus."
+    },
+    "projects": {
+      "title": "Aktive Projekte",
+      "empty": "Keine aktiven Projekte.",
+      "viewAll": "Alle Projekte ansehen",
+      "columns": {
+        "project": "Projekt",
+        "customer": "Kunde",
+        "status": "Status",
+        "progress": "Fortschritt"
+      }
+    },
+    "finance": {
+      "title": "Finanzübersicht",
+      "paidThisMonth": "Diesen Monat erhalten",
+      "outstanding": "Offen",
+      "overdue": "Überfällig",
+      "drafts": "Entwürfe",
+      "viewAll": "Berichte ansehen"
+    },
+    "quickActions": {
+      "title": "Schnellaktionen",
+      "project": {
+        "title": "Neues Projekt",
+        "hint": "Neuen Auftrag starten"
+      },
+      "quote": {
+        "title": "Neues Angebot",
+        "hint": "Angebot zu einem Projekt"
+      },
+      "customer": {
+        "title": "Neuer Kunde",
+        "hint": "Auftraggeber hinzufügen"
+      },
+      "hours": {
+        "title": "Stunden erfassen",
+        "hint": "Zeit auf eine Tätigkeit buchen"
+      },
+      "invoice": {
+        "title": "Rechnung erstellen",
+        "hint": "Entwurf starten"
+      },
+      "schedule": {
+        "title": "Aufgabe oder Termin",
+        "hint": "Arbeit oder Zeitpunkt planen"
+      }
+    },
+    "dialogs": {
+      "submit": "Weiter",
+      "project": "Projekt",
+      "selectProject": "Projekt wählen",
+      "projectOptional": "Kein Projekt (optional)",
+      "projectRequired": "Bitte ein Projekt wählen.",
+      "titleRequired": "Bitte einen Titel eingeben.",
+      "titleLabel": "Titel",
+      "invoiceTitle": "Rechnungstitel",
+      "invoiceRequired": "Projekt wählen und Titel eingeben.",
+      "workItem": "Tätigkeit",
+      "selectWorkItem": "Tätigkeit wählen",
+      "noWorkItems": "Dieses Projekt hat noch keine offenen Tätigkeiten.",
+      "hoursAmount": "Stunden",
+      "date": "Datum",
+      "hoursRequired": "Tätigkeit wählen und Stunden eingeben.",
+      "startsAt": "Start",
+      "endsAt": "Ende",
+      "kind": {
+        "task": "Aufgabe",
+        "appointment": "Termin"
+      },
+      "quote": { "title": "Neues Angebot" },
+      "invoice": { "title": "Rechnung erstellen" },
+      "hours": { "title": "Stunden erfassen" },
+      "schedule": { "title": "Aufgabe oder Termin" }
     }
   },
   "reports": {

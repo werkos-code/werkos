@@ -171,7 +171,7 @@
     "pages": {
       "dashboard": {
         "title": "Dashboard",
-        "description": "Your operational cockpit. Widgets and overviews will follow in a later phase."
+        "description": "Your operational cockpit for the workday."
       },
       "allProjects": {
         "title": "All projects",
@@ -398,6 +398,111 @@
     "errors": {
       "noStripeCustomer": "No Stripe customer found for this company.",
       "forbidden": "Only the owner can manage this."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "greetingFallback": "there",
+    "greeting": {
+      "morning": "Good morning, {name}",
+      "afternoon": "Good afternoon, {name}",
+      "evening": "Good evening, {name}"
+    },
+    "relative": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "daysAgo": "{count, plural, one {# day ago} other {# days ago}}"
+    },
+    "attention": {
+      "title": "Needs your attention",
+      "empty": "Nothing needs attention right now.",
+      "viewAll": "View all"
+    },
+    "today": {
+      "title": "Today",
+      "empty": "Nothing planned today.",
+      "viewAll": "View planning",
+      "allDay": "All day"
+    },
+    "tasks": {
+      "title": "My tasks",
+      "empty": "No tasks for you yet.",
+      "addPlaceholder": "New to-do…",
+      "viewAll": "View all tasks",
+      "todosUnavailable": "Personal to-dos are not available yet. Run the SQL migration."
+    },
+    "projects": {
+      "title": "Active projects",
+      "empty": "No active projects.",
+      "viewAll": "View all projects",
+      "columns": {
+        "project": "Project",
+        "customer": "Customer",
+        "status": "Status",
+        "progress": "Progress"
+      }
+    },
+    "finance": {
+      "title": "Financial overview",
+      "paidThisMonth": "Received this month",
+      "outstanding": "Outstanding",
+      "overdue": "Overdue",
+      "drafts": "Drafts",
+      "viewAll": "View reports"
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "project": {
+        "title": "New project",
+        "hint": "Start a new assignment"
+      },
+      "quote": {
+        "title": "New quote",
+        "hint": "Create a quote on a project"
+      },
+      "customer": {
+        "title": "New customer",
+        "hint": "Add a client"
+      },
+      "hours": {
+        "title": "Log hours",
+        "hint": "Book time on a work item"
+      },
+      "invoice": {
+        "title": "Create invoice",
+        "hint": "Start a draft invoice"
+      },
+      "schedule": {
+        "title": "Task or appointment",
+        "hint": "Plan work or a timeslot"
+      }
+    },
+    "dialogs": {
+      "submit": "Continue",
+      "project": "Project",
+      "selectProject": "Choose a project",
+      "projectOptional": "No project (optional)",
+      "projectRequired": "Choose a project.",
+      "titleRequired": "Enter a title.",
+      "titleLabel": "Title",
+      "invoiceTitle": "Invoice title",
+      "invoiceRequired": "Choose a project and enter a title.",
+      "workItem": "Work item",
+      "selectWorkItem": "Choose a work item",
+      "noWorkItems": "This project has no open work items yet.",
+      "hoursAmount": "Hours",
+      "date": "Date",
+      "hoursRequired": "Choose a work item and enter hours.",
+      "startsAt": "Start",
+      "endsAt": "End",
+      "kind": {
+        "task": "Task",
+        "appointment": "Appointment"
+      },
+      "quote": { "title": "New quote" },
+      "invoice": { "title": "Create invoice" },
+      "hours": { "title": "Log hours" },
+      "schedule": { "title": "Task or appointment" }
     }
   },
   "reports": {

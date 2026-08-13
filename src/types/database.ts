@@ -1454,6 +1454,50 @@ export type Database = {
           },
         ];
       };
+      user_todos: {
+        Row: {
+          id: string;
+          organization_id: string;
+          user_id: string;
+          title: string;
+          due_date: string | null;
+          completed_at: string | null;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          user_id: string;
+          title: string;
+          due_date?: string | null;
+          completed_at?: string | null;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          user_id?: string;
+          title?: string;
+          due_date?: string | null;
+          completed_at?: string | null;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_todos_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       invoices: {
         Row: {
           id: string;

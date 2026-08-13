@@ -171,7 +171,7 @@
     "pages": {
       "dashboard": {
         "title": "Dashboard",
-        "description": "Je operationele cockpit. Widgets en overzichten volgen in een volgende fase."
+        "description": "Je operationele cockpit voor de werkdag."
       },
       "allProjects": {
         "title": "Alle projecten",
@@ -398,6 +398,111 @@
     "errors": {
       "noStripeCustomer": "Geen Stripe-klant gevonden voor dit bedrijf.",
       "forbidden": "Alleen de eigenaar kan dit beheren."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "greetingFallback": "daar",
+    "greeting": {
+      "morning": "Goedemorgen, {name}",
+      "afternoon": "Goedemiddag, {name}",
+      "evening": "Goedenavond, {name}"
+    },
+    "relative": {
+      "today": "Vandaag",
+      "yesterday": "Gisteren",
+      "daysAgo": "{count, plural, one {# dag geleden} other {# dagen geleden}}"
+    },
+    "attention": {
+      "title": "Vraagt je aandacht",
+      "empty": "Niets dat nu om aandacht vraagt.",
+      "viewAll": "Bekijk alles"
+    },
+    "today": {
+      "title": "Vandaag",
+      "empty": "Niets gepland vandaag.",
+      "viewAll": "Bekijk planning",
+      "allDay": "Hele dag"
+    },
+    "tasks": {
+      "title": "Mijn taken",
+      "empty": "Nog geen taken voor jou.",
+      "addPlaceholder": "Nieuwe to-do…",
+      "viewAll": "Bekijk alle taken",
+      "todosUnavailable": "Persoonlijke to-do’s zijn nog niet beschikbaar. Voer de SQL-migratie uit."
+    },
+    "projects": {
+      "title": "Actieve projecten",
+      "empty": "Geen actieve projecten.",
+      "viewAll": "Bekijk alle projecten",
+      "columns": {
+        "project": "Project",
+        "customer": "Klant",
+        "status": "Status",
+        "progress": "Voortgang"
+      }
+    },
+    "finance": {
+      "title": "Financieel overzicht",
+      "paidThisMonth": "Ontvangen deze maand",
+      "outstanding": "Openstaand",
+      "overdue": "Achterstallig",
+      "drafts": "Concepten",
+      "viewAll": "Bekijk rapportages"
+    },
+    "quickActions": {
+      "title": "Snelle acties",
+      "project": {
+        "title": "Nieuw project",
+        "hint": "Start een nieuwe opdracht"
+      },
+      "quote": {
+        "title": "Nieuwe offerte",
+        "hint": "Maak een offerte bij een project"
+      },
+      "customer": {
+        "title": "Nieuwe klant",
+        "hint": "Voeg een opdrachtgever toe"
+      },
+      "hours": {
+        "title": "Uren registreren",
+        "hint": "Boek tijd op een werkzaamheid"
+      },
+      "invoice": {
+        "title": "Factuur maken",
+        "hint": "Start een conceptfactuur"
+      },
+      "schedule": {
+        "title": "Taak of afspraak",
+        "hint": "Plan werk of een moment"
+      }
+    },
+    "dialogs": {
+      "submit": "Doorgaan",
+      "project": "Project",
+      "selectProject": "Kies een project",
+      "projectOptional": "Geen project (optioneel)",
+      "projectRequired": "Kies een project.",
+      "titleRequired": "Vul een titel in.",
+      "titleLabel": "Titel",
+      "invoiceTitle": "Factuurtitel",
+      "invoiceRequired": "Kies een project en vul een titel in.",
+      "workItem": "Werkzaamheid",
+      "selectWorkItem": "Kies een werkzaamheid",
+      "noWorkItems": "Dit project heeft nog geen open werkzaamheden.",
+      "hoursAmount": "Uren",
+      "date": "Datum",
+      "hoursRequired": "Kies een werkzaamheid en vul uren in.",
+      "startsAt": "Start",
+      "endsAt": "Einde",
+      "kind": {
+        "task": "Taak",
+        "appointment": "Afspraak"
+      },
+      "quote": { "title": "Nieuwe offerte" },
+      "invoice": { "title": "Factuur maken" },
+      "hours": { "title": "Uren registreren" },
+      "schedule": { "title": "Taak of afspraak" }
     }
   },
   "reports": {
