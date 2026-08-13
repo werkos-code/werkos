@@ -90,7 +90,7 @@ Nieuwe pagina’s vallen in één type. Kopieer het recept; verzin geen nieuwe l
 Chrome-titel is de lijst (`Projecten`), niet de projectnaam — identity staat in de hero.
 
 ```
-Cover-hero (foto of navy #09133A)
+Cover-hero (foto of fallback `/brand/project-hero-fallback.jpg`)
 Modus-chips: Overzicht · Werk · Offertes · Bestanden · Geld
   + link “Open in planning” rechts (geen tab)
 Default Overzicht = 2-koloms cockpit
@@ -98,11 +98,12 @@ Diep werk = bestaande workspace / lijst / editor
 ```
 
 1. Cover-hero `rounded-xl overflow-hidden`, overlay-gradient, witte tekst:
+   - Achtergrond: projectcover, anders de navy/blauw fallback-graphic
    - Titel + status-pill · meta `PRJ-… · klant`
    - Dunne voortgangsbalk (echte % of muted leeg)
    - 3 eerlijke stats: werkzaamheden · offertes · gefactureerd — **geen** verzonnen bedragen
    - Primaire CTA + `⋯` **in** de hero, rechtsboven — niet op een volle regel erboven
-2. Modus-chips: grote `rounded-xl` knoppen met icoon; actief `bg-primary/10 text-primary`. Geen underline-tabs op dit scherm. Planning is een link, geen modus.
+2. Modus-chips: `rounded-lg border px-4 py-2.5` met icoon. Inactief `border-border bg-card text-foreground`; actief `border-primary bg-primary/10 text-primary`. Planning = blauwe link rechts, geen modus.
 3. Overzicht-cockpit `grid xl:[minmax(0,1.6fr)_minmax(18rem,0.9fr)]`:
    - Links: Aandacht · Werk-preview · Recente activiteit
    - Rechts: Commercieel · Klant & locatie (Bel / Route)
@@ -218,7 +219,7 @@ grid xl:[minmax(0,1.7fr)_minmax(18rem,0.9fr)]
 
 | Variant | Gebruik | Patroon |
 | --- | --- | --- |
-| Mode chips | Projectdetail | `rounded-xl border bg-card px-3.5 py-2` · actief `bg-primary/10 text-primary` |
+| Mode chips | Projectdetail | `rounded-lg border px-4 py-2.5` · inactief `border-border bg-card` · actief `border-primary bg-primary/10 text-primary` |
 | Underline | Editor / sheets | `border-b-2 border-primary text-primary` + count-pill |
 | Segmented | View-switch (lijst/boom/kanban) | `rounded-lg border bg-card p-0.5` · actief `bg-primary/10 text-primary` |
 | Card-top | Editor-secties | `border-b-2` op tab binnen card |

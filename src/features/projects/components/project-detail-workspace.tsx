@@ -1,13 +1,15 @@
 "use client";
 
 import {
+  ArrowUpRight,
+  Calendar,
   Camera,
   ClipboardList,
   Ellipsis,
-  ExternalLink,
+  Euro,
   FileText,
   FolderOpen,
-  LayoutDashboard,
+  Home,
   Pencil,
   Plus,
   Send,
@@ -17,6 +19,7 @@ import {
   Wallet,
   X,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 
@@ -151,13 +154,13 @@ export function ProjectDetailWorkspace({
   const modeItems: Array<{
     id: ProjectDetailMode;
     label: string;
-    icon: typeof LayoutDashboard;
+    icon: LucideIcon;
   }> = [
-    { id: "overview", label: t("detail.modes.overview"), icon: LayoutDashboard },
-    { id: "work", label: t("detail.modes.work"), icon: ClipboardList },
+    { id: "overview", label: t("detail.modes.overview"), icon: Home },
+    { id: "work", label: t("detail.modes.work"), icon: Calendar },
     { id: "quotes", label: t("detail.modes.quotes"), icon: FileText },
     { id: "files", label: t("detail.modes.files"), icon: FolderOpen },
-    { id: "money", label: t("detail.modes.money"), icon: Wallet },
+    { id: "money", label: t("detail.modes.money"), icon: Euro },
   ];
 
   function toggleFavorite() {
@@ -403,20 +406,18 @@ export function ProjectDetailWorkspace({
       />
 
       <div className="relative overflow-hidden rounded-xl bg-[#09133A]">
-        {project.coverUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={project.coverUrl}
-            alt=""
-            className="absolute inset-0 size-full object-cover"
-          />
-        ) : null}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={project.coverUrl ?? "/brand/project-hero-fallback.jpg"}
+          alt=""
+          className="absolute inset-0 size-full object-cover"
+        />
         <div
           className={cn(
             "absolute inset-0",
             project.coverUrl
               ? "bg-gradient-to-t from-black/80 via-black/45 to-black/25"
-              : "bg-[#09133A]",
+              : "bg-gradient-to-t from-[#09133A]/80 via-[#09133A]/35 to-black/20",
           )}
         />
 
@@ -579,13 +580,18 @@ export function ProjectDetailWorkspace({
                 type="button"
                 onClick={() => setMode(item.id)}
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-xl border px-3.5 py-2 text-sm transition-colors",
+                  "inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm transition-colors",
                   active
-                    ? "border-transparent bg-primary/10 font-medium text-primary"
-                    : "border-border bg-card text-muted-foreground hover:text-foreground",
+                    ? "border-primary bg-primary/10 font-medium text-primary"
+                    : "border-border bg-card text-foreground hover:bg-muted/40",
                 )}
               >
-                <Icon className="size-4" />
+                <Icon
+                  className={cn(
+                    "size-4",
+                    active ? "text-primary" : "text-muted-foreground",
+                  )}
+                />
                 {item.label}
               </button>
             );
@@ -593,10 +599,10 @@ export function ProjectDetailWorkspace({
         </div>
         <Link
           href="/planning"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
         >
           {t("detail.openInPlanning")}
-          <ExternalLink className="size-3.5" />
+          <ArrowUpRight className="size-3.5" />
         </Link>
       </div>
 
