@@ -22,6 +22,7 @@ Bij elke nieuwe of gewijzigde UI: volg `docs/DESIGN_SYSTEM.md`. Geen screenshot 
 | Lijst | KPI-strip → filter `PageCard p-3` → tabel-card | `projects-workspace.tsx` |
 | Detail | Cover-hero (titel + stats in banner; CTA in hero) → modus-chips → overzicht-cockpit | `project-detail-workspace.tsx` |
 | Workspace | Toolbar (segmented + filters + split-add) → list-card + optionele rail | `project-work-items-workspace.tsx` |
+| Overlay | Hero + modus-chips + cockpit | `work-item-detail-sheet.tsx` |
 | Kalender | View-tabs + filters → niet-gepland rail + weekgrid + detailpaneel | `planning-workspace.tsx` |
 | Editor | MetaStat-rij → main card + sticky totals | `quote-editor.tsx` |
 

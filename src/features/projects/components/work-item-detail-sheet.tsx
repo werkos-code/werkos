@@ -6,7 +6,6 @@ import {
   useState,
   useTransition,
   type FormEvent,
-  type ReactNode,
 } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -14,17 +13,26 @@ import {
   Check,
   ClipboardList,
   Clock,
+  Ellipsis,
   Flag,
-  Folder,
-  MoreHorizontal,
+  Home,
+  Package,
   Pencil,
   Plus,
+  User,
   X,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
@@ -50,15 +58,7 @@ import type { ArticleRow } from "@/features/materials/lib/materials";
 import { cn } from "@/lib/utils";
 import type { WorkItemStatus } from "@/types/database";
 
-type DetailTab =
-  | "overview"
-  | "subtasks"
-  | "planning"
-  | "hours"
-  | "materials"
-  | "files"
-  | "communication"
-  | "activity";
+type DetailTab = "overview" | "planning" | "hours" | "materials";
 
 type WorkItemDetailSheetProps = {
   item: WorkItemRow | null;
@@ -141,8 +141,6 @@ export function WorkItemDetailSheet({
   const [tab, setTab] = useState<DetailTab>("overview");
   const [draft, setDraft] = useState<WorkItemRow | null>(item);
   const [editingDescription, setEditingDescription] = useState(false);
-  const [editingPlanning, setEditingPlanning] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [labelDraft, setLabelDraft] = useState("");
   const [subtaskTitle, setSubtaskTitle] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -151,8 +149,6 @@ export function WorkItemDetailSheet({
   useEffect(() => {
     setDraft(item);
     setEditingDescription(false);
-    setEditingPlanning(false);
-    setMenuOpen(false);
     setError(null);
     if (item) setTab("overview");
   }, [item?.id]);
@@ -189,23 +185,11 @@ export function WorkItemDetailSheet({
     });
   }, [activities, draft]);
 
-  const tabs: { id: DetailTab; label: string; count?: number }[] = [
-    { id: "overview", label: t("detail.tabs.overview") },
-    {
-      id: "subtasks",
-      label: t("detail.tabs.subtasks"),
-      count: children.length || undefined,
-    },
-    { id: "planning", label: t("detail.tabs.planning") },
-    { id: "hours", label: t("detail.tabs.hours") },
-    { id: "materials", label: t("detail.tabs.materials") },
-    { id: "files", label: t("detail.tabs.files") },
-    { id: "communication", label: t("detail.tabs.communication") },
-    {
-      id: "activity",
-      label: t("detail.tabs.activity"),
-      count: linkedActivities.length || undefined,
-    },
+  const modes: Array<{ id: DetailTab; label: string; icon: LucideIcon }> = [
+    { id: "overview", label: t("detail.tabs.overview"), icon: Home },
+    { id: "planning", label: t("detail.tabs.planning"), icon: Calendar },
+    { id: "hours", label: t("detail.tabs.hours"), icon: Clock },
+    { id: "materials", label: t("detail.tabs.materials"), icon: Package },
   ];
 
   function patchLocal(partial: Partial<WorkItemRow>) {
@@ -362,10 +346,7 @@ export function WorkItemDetailSheet({
         ) : (
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
             <div className="space-y-4 border-b border-border bg-card px-5 py-4">
-              <div className="flex items-start gap-3">
-                <div className="bg-primary/10 text-primary flex size-11 shrink-0 items-center justify-center rounded-xl">
-                  <ClipboardList className="size-5" />
-                </div>
+              <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1 space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
                     <input
@@ -387,97 +368,101 @@ export function WorkItemDetailSheet({
                     <Badge variant={statusVariant(draft.status)}>
                       {t(`status.${draft.status}`)}
                     </Badge>
-                    <div className="relative">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        disabled={isPending}
-                        onClick={() => setMenuOpen((v) => !v)}
-                        aria-label={t("rowMenu")}
-                      >
-                        <MoreHorizontal className="size-4" />
-                      </Button>
-                      {menuOpen ? (
-                        <div className="absolute top-full right-0 z-20 mt-1 w-44 rounded-lg border border-border bg-card p-1 shadow-md">
-                          {WORK_ITEM_STATUSES.map((status) => (
-                            <button
-                              key={status}
-                              type="button"
-                              className="hover:bg-muted block w-full rounded-md px-2.5 py-1.5 text-left text-sm"
-                              onClick={() => {
-                                setMenuOpen(false);
-                                persist({ status }, { status });
-                              }}
-                            >
-                              {t(`status.${status}`)}
-                            </button>
-                          ))}
-                          <button
-                            type="button"
-                            className="text-destructive hover:bg-destructive/10 block w-full rounded-md px-2.5 py-1.5 text-left text-sm"
-                            onClick={() => {
-                              setMenuOpen(false);
-                              deleteItem();
-                            }}
-                          >
-                            {t("delete")}
-                          </button>
-                        </div>
-                      ) : null}
-                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-                    <span className="inline-flex items-center gap-1.5">
-                      <Folder className="size-3.5" />
-                      {parent?.title ?? t("detail.noGroup")}
-                    </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <Calendar className="size-3.5" />
-                      {formatRange(
-                        draft.plannedStart,
-                        draft.plannedEnd,
-                        locale,
-                      )}
-                    </span>
+                  <p className="text-sm text-muted-foreground">
+                    {parent?.title ?? t("detail.noGroup")}
+                    {" · "}
+                    {formatRange(draft.plannedStart, draft.plannedEnd, locale)}
+                  </p>
+                  <div className="space-y-1.5">
+                    <div className="h-1 overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="h-full rounded-full bg-primary"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {t("detail.progress")} · {progress}%
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
                     <span className="inline-flex items-center gap-1.5">
                       <Clock className="size-3.5" />
-                      {formatEstimatedHours(draft.estimatedMinutes)}
+                      {formatEstimatedHours(
+                        actualMinutes > 0 ? actualMinutes : draft.estimatedMinutes,
+                      )}
+                      {actualMinutes > 0 && draft.estimatedMinutes
+                        ? ` / ${formatEstimatedHours(draft.estimatedMinutes)}`
+                        : null}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <User className="size-3.5" />
+                      {draft.assigneeName || t("detail.unassigned")}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <ClipboardList className="size-3.5" />
+                      {t("detail.subtasksTitle", { count: children.length })}
                     </span>
                   </div>
                 </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon-sm"
+                      disabled={isPending}
+                      aria-label={t("rowMenu")}
+                    >
+                      <Ellipsis className="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="min-w-44">
+                    {WORK_ITEM_STATUSES.map((status) => (
+                      <DropdownMenuItem
+                        key={status}
+                        onClick={() => persist({ status }, { status })}
+                      >
+                        {t(`status.${status}`)}
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      variant="destructive"
+                      onClick={deleteItem}
+                    >
+                      {t("delete")}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
 
-              <div className="overflow-x-auto">
-                <div className="flex min-w-max gap-1">
-                  {tabs.map((entry) => (
+              <div className="flex flex-wrap gap-2">
+                {modes.map((entry) => {
+                  const Icon = entry.icon;
+                  const active = tab === entry.id;
+                  return (
                     <button
                       key={entry.id}
                       type="button"
                       onClick={() => setTab(entry.id)}
                       className={cn(
-                        "inline-flex items-center gap-1.5 px-3 py-2 text-sm transition-colors",
-                        tab === entry.id
-                          ? "border-b-2 border-primary font-medium text-primary"
-                          : "text-muted-foreground hover:text-foreground",
+                        "inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm transition-colors",
+                        active
+                          ? "border-primary bg-primary/10 font-medium text-primary"
+                          : "border-border bg-card text-foreground hover:bg-muted/40",
                       )}
                     >
+                      <Icon
+                        className={cn(
+                          "size-4",
+                          active ? "text-primary" : "text-muted-foreground",
+                        )}
+                      />
                       {entry.label}
-                      {entry.count !== undefined ? (
-                        <span
-                          className={cn(
-                            "rounded-full px-1.5 py-0.5 text-[10px] font-medium",
-                            tab === entry.id
-                              ? "bg-primary/10 text-primary"
-                              : "bg-muted text-muted-foreground",
-                          )}
-                        >
-                          {entry.count}
-                        </span>
-                      ) : null}
                     </button>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -489,10 +474,10 @@ export function WorkItemDetailSheet({
 
             <div className="min-h-0 flex-1 overflow-y-auto bg-background p-5">
               {tab === "overview" ? (
-                <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(17rem,0.9fr)]">
+                <div className="grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(18rem,0.9fr)]">
                   <div className="space-y-5">
-                    <PageCard className="p-4">
-                      <div className="mb-3 flex items-center justify-between gap-2">
+                    <PageCard className="overflow-hidden p-0">
+                      <div className="flex items-center justify-between gap-2 px-5 py-3">
                         <h3 className="text-sm font-medium">
                           {t("detail.description")}
                         </h3>
@@ -509,255 +494,99 @@ export function WorkItemDetailSheet({
                           <Pencil className="size-3.5" />
                         </Button>
                       </div>
-                      {editingDescription ? (
-                        <div className="space-y-2">
-                          <textarea
-                            value={draft.description ?? ""}
-                            disabled={isPending}
-                            rows={6}
-                            onChange={(event) =>
-                              patchLocal({ description: event.target.value })
-                            }
-                            className="border-input bg-background w-full rounded-lg border px-3 py-2 text-sm outline-none"
-                            placeholder={t("detail.descriptionPlaceholder")}
-                          />
-                          <div className="flex gap-2">
-                            <Button
-                              type="button"
-                              size="sm"
+                      <div className="px-5 pb-5">
+                        {editingDescription ? (
+                          <div className="space-y-2">
+                            <textarea
+                              value={draft.description ?? ""}
                               disabled={isPending}
-                              onClick={() => {
-                                persist(
-                                  { description: draft.description },
-                                  { description: draft.description },
-                                );
-                                setEditingDescription(false);
-                              }}
-                            >
-                              {tCommon("save")}
-                            </Button>
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="outline"
-                              disabled={isPending}
-                              onClick={() => {
-                                patchLocal({
-                                  description: item?.description ?? null,
-                                });
-                                setEditingDescription(false);
-                              }}
-                            >
-                              {tCommon("cancel")}
-                            </Button>
-                          </div>
-                        </div>
-                      ) : (
-                        <p className="whitespace-pre-wrap text-sm text-muted-foreground">
-                          {draft.description?.trim()
-                            ? draft.description
-                            : t("detail.descriptionEmpty")}
-                        </p>
-                      )}
-                    </PageCard>
-
-                    <PageCard className="divide-y divide-border/80 p-0">
-                      <DetailRow label={t("columns.category")}>
-                        <input
-                          value={draft.category ?? ""}
-                          disabled={isPending}
-                          onChange={(event) =>
-                            patchLocal({ category: event.target.value })
-                          }
-                          onBlur={() =>
-                            persist(
-                              { category: draft.category },
-                              { category: draft.category },
-                            )
-                          }
-                          placeholder="—"
-                          className="w-full bg-transparent text-sm outline-none"
-                        />
-                      </DetailRow>
-                      <DetailRow label={t("columns.status")}>
-                        <select
-                          value={draft.status}
-                          disabled={isPending}
-                          onChange={(event) => {
-                            const status = event.target
-                              .value as WorkItemStatus;
-                            persist({ status }, { status });
-                          }}
-                          className="rounded-lg border border-border bg-background px-2 py-1 text-sm"
-                        >
-                          {WORK_ITEM_STATUSES.map((status) => (
-                            <option key={status} value={status}>
-                              {t(`status.${status}`)}
-                            </option>
-                          ))}
-                        </select>
-                      </DetailRow>
-                      <DetailRow label={t("detail.priority")}>
-                        <select
-                          value={draft.priority}
-                          disabled={isPending}
-                          onChange={(event) => {
-                            const priority = event.target
-                              .value as WorkItemPriority;
-                            persist({ priority }, { priority });
-                          }}
-                          className="rounded-lg border border-border bg-background px-2 py-1 text-sm"
-                        >
-                          {WORK_ITEM_PRIORITIES.map((priority) => (
-                            <option key={priority} value={priority}>
-                              {t(`detail.priorities.${priority}`)}
-                            </option>
-                          ))}
-                        </select>
-                        <span
-                          className={cn(
-                            "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium",
-                            draft.priority === "high"
-                              ? "bg-destructive/10 text-destructive"
-                              : draft.priority === "low"
-                                ? "bg-muted text-muted-foreground"
-                                : "bg-primary/10 text-primary",
-                          )}
-                        >
-                          <Flag className="size-3" />
-                          {t(`detail.priorities.${draft.priority}`)}
-                        </span>
-                      </DetailRow>
-                      <DetailRow label={t("detail.estimatedHours")}>
-                        {draft.isGroup ? (
-                          <span className="text-sm tabular-nums">
-                            {formatEstimatedHours(
-                              children.reduce(
-                                (sum, child) =>
-                                  sum + (child.estimatedMinutes ?? 0),
-                                0,
-                              ) || null,
-                            )}
-                          </span>
-                        ) : (
-                          <Input
-                            type="number"
-                            min={0}
-                            step={0.5}
-                            disabled={isPending}
-                            value={
-                              draft.estimatedMinutes == null
-                                ? ""
-                                : draft.estimatedMinutes / 60
-                            }
-                            onChange={(event) => {
-                              const raw = event.target.value;
-                              patchLocal({
-                                estimatedMinutes:
-                                  raw === ""
-                                    ? null
-                                    : Math.round(Number(raw) * 60),
-                              });
-                            }}
-                            onBlur={() =>
-                              persist(
-                                { estimatedMinutes: draft.estimatedMinutes },
-                                {
-                                  estimatedMinutes: draft.estimatedMinutes,
-                                },
-                              )
-                            }
-                            className="h-8 w-28 font-mono tabular-nums"
-                            placeholder="—"
-                          />
-                        )}
-                      </DetailRow>
-                      <DetailRow label={t("detail.realizedHours")}>
-                        <span className="text-sm tabular-nums">
-                          {formatEstimatedHours(
-                            actualMinutes > 0 ? actualMinutes : null,
-                          )}
-                        </span>
-                      </DetailRow>
-                      <DetailRow label={t("detail.progress")}>
-                        <div className="flex min-w-0 flex-1 items-center gap-3">
-                          <div className="bg-muted h-2 flex-1 overflow-hidden rounded-full">
-                            <div
-                              className="bg-primary h-full rounded-full transition-[width]"
-                              style={{ width: `${progress}%` }}
-                            />
-                          </div>
-                          <span className="text-sm font-medium tabular-nums">
-                            {progress}%
-                          </span>
-                        </div>
-                      </DetailRow>
-                      <DetailRow label={t("detail.labels")}>
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          {draft.labels.map((label) => (
-                            <span
-                              key={label}
-                              className="bg-primary/10 text-primary inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium"
-                            >
-                              {label}
-                              <button
-                                type="button"
-                                disabled={isPending}
-                                className="rounded-full p-0.5 hover:bg-primary/15"
-                                onClick={() => removeLabel(label)}
-                                aria-label={t("detail.removeLabel")}
-                              >
-                                <X className="size-3" />
-                              </button>
-                            </span>
-                          ))}
-                          <input
-                            value={labelDraft}
-                            disabled={isPending}
-                            onChange={(event) =>
-                              setLabelDraft(event.target.value)
-                            }
-                            onKeyDown={(event) => {
-                              if (event.key === "Enter") {
-                                event.preventDefault();
-                                addLabel();
+                              rows={6}
+                              onChange={(event) =>
+                                patchLocal({ description: event.target.value })
                               }
-                            }}
-                            placeholder="+"
-                            className="border-input h-7 w-16 rounded-full border px-2 text-xs outline-none"
-                          />
-                        </div>
-                      </DetailRow>
+                              className="border-input bg-background w-full rounded-lg border px-3 py-2 text-sm outline-none"
+                              placeholder={t("detail.descriptionPlaceholder")}
+                            />
+                            <div className="flex gap-2">
+                              <Button
+                                type="button"
+                                size="sm"
+                                disabled={isPending}
+                                onClick={() => {
+                                  persist(
+                                    { description: draft.description },
+                                    { description: draft.description },
+                                  );
+                                  setEditingDescription(false);
+                                }}
+                              >
+                                {tCommon("save")}
+                              </Button>
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                disabled={isPending}
+                                onClick={() => {
+                                  patchLocal({
+                                    description: item?.description ?? null,
+                                  });
+                                  setEditingDescription(false);
+                                }}
+                              >
+                                {tCommon("cancel")}
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+                            {draft.description?.trim()
+                              ? draft.description
+                              : t("detail.descriptionEmpty")}
+                          </p>
+                        )}
+                      </div>
                     </PageCard>
 
-                    <PageCard className="p-4">
-                      <div className="mb-3 flex items-center justify-between gap-2">
+                    <SubtasksCard
+                      children={children}
+                      subtaskTitle={subtaskTitle}
+                      setSubtaskTitle={setSubtaskTitle}
+                      onAdd={addSubtask}
+                      onCycleStatus={cycleChildStatus}
+                      disabled={isPending}
+                    />
+                  </div>
+
+                  <div className="space-y-5">
+                    <PageCard className="overflow-hidden p-0">
+                      <div className="px-5 py-3">
                         <h3 className="text-sm font-medium">
                           {t("detail.personnel", {
                             count: draft.assigneeUserId ? 1 : 0,
                           })}
                         </h3>
                       </div>
-                      {draft.assigneeUserId && draft.assigneeName ? (
-                        <div className="flex items-center gap-3">
-                          <span className="bg-muted flex size-8 items-center justify-center rounded-full text-xs font-medium">
-                            {initials(draft.assigneeName)}
-                          </span>
-                          <div className="min-w-0">
-                            <p className="truncate text-sm font-medium">
-                              {draft.assigneeName}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {t("detail.assigneeRole")}
-                            </p>
+                      <div className="space-y-3 px-5 pb-5">
+                        {draft.assigneeUserId && draft.assigneeName ? (
+                          <div className="flex items-center gap-3">
+                            <span className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+                              {initials(draft.assigneeName)}
+                            </span>
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-medium">
+                                {draft.assigneeName}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {t("detail.assigneeRole")}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      ) : (
-                        <p className="text-sm text-muted-foreground">
-                          {t("detail.noAssignee")}
-                        </p>
-                      )}
-                      <div className="mt-3 flex flex-wrap items-center gap-2">
+                        ) : (
+                          <p className="text-sm text-muted-foreground">
+                            {t("detail.noAssignee")}
+                          </p>
+                        )}
                         <select
                           value={draft.assigneeUserId ?? ""}
                           disabled={isPending}
@@ -775,7 +604,7 @@ export function WorkItemDetailSheet({
                               },
                             );
                           }}
-                          className="h-8 max-w-full rounded-lg border border-border bg-background px-2.5 text-sm"
+                          className="h-9 w-full rounded-lg border border-border bg-background px-2.5 text-sm"
                         >
                           <option value="">{t("detail.unassigned")}</option>
                           {staff.map((member) => (
@@ -784,202 +613,212 @@ export function WorkItemDetailSheet({
                             </option>
                           ))}
                         </select>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="text-primary"
-                          disabled
-                        >
-                          <Plus className="size-3.5" />
-                          {t("detail.addPerson")}
-                        </Button>
                       </div>
-                      <p className="mt-2 text-xs text-muted-foreground">
-                        {t("detail.multiAssigneeSoon")}
-                      </p>
                     </PageCard>
-                  </div>
 
-                  <div className="space-y-5">
-                    <PageCard className="p-4">
-                      <div className="mb-3 flex items-center gap-2">
-                        <Calendar className="size-4 text-muted-foreground" />
+                    <PageCard className="overflow-hidden p-0">
+                      <div className="flex items-center justify-between gap-2 px-5 py-3">
                         <h3 className="text-sm font-medium">
                           {t("detail.planningTitle")}
                         </h3>
-                      </div>
-                      {editingPlanning ? (
-                        <div className="space-y-3">
-                          <label className="block space-y-1 text-sm">
-                            <span className="text-muted-foreground">
-                              {t("detail.startDate")}
-                            </span>
-                            <input
-                              type="date"
-                              value={draft.plannedStart ?? ""}
-                              disabled={isPending}
-                              onChange={(event) =>
-                                patchLocal({
-                                  plannedStart: event.target.value || null,
-                                })
-                              }
-                              className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
-                            />
-                          </label>
-                          <label className="block space-y-1 text-sm">
-                            <span className="text-muted-foreground">
-                              {t("detail.endDate")}
-                            </span>
-                            <input
-                              type="date"
-                              value={draft.plannedEnd ?? ""}
-                              disabled={isPending}
-                              onChange={(event) =>
-                                patchLocal({
-                                  plannedEnd: event.target.value || null,
-                                })
-                              }
-                              className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
-                            />
-                          </label>
-                          <div className="flex gap-2">
-                            <Button
-                              type="button"
-                              size="sm"
-                              disabled={isPending}
-                              onClick={() => {
-                                persist(
-                                  {
-                                    plannedStart: draft.plannedStart,
-                                    plannedEnd: draft.plannedEnd,
-                                  },
-                                  {
-                                    plannedStart: draft.plannedStart,
-                                    plannedEnd: draft.plannedEnd,
-                                  },
-                                );
-                                setEditingPlanning(false);
-                              }}
-                            >
-                              {tCommon("save")}
-                            </Button>
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="outline"
-                              onClick={() => {
-                                patchLocal({
-                                  plannedStart: item?.plannedStart ?? null,
-                                  plannedEnd: item?.plannedEnd ?? null,
-                                });
-                                setEditingPlanning(false);
-                              }}
-                            >
-                              {tCommon("cancel")}
-                            </Button>
-                          </div>
-                        </div>
-                      ) : (
-                        <dl className="space-y-2 text-sm">
-                          <div className="flex justify-between gap-3">
-                            <dt className="text-muted-foreground">
-                              {t("detail.startDate")}
-                            </dt>
-                            <dd>
-                              {formatLongDate(draft.plannedStart, locale)}
-                            </dd>
-                          </div>
-                          <div className="flex justify-between gap-3">
-                            <dt className="text-muted-foreground">
-                              {t("detail.endDate")}
-                            </dt>
-                            <dd>
-                              {formatLongDate(draft.plannedEnd, locale)}
-                            </dd>
-                          </div>
-                          <div className="flex justify-between gap-3">
-                            <dt className="text-muted-foreground">
-                              {t("detail.duration")}
-                            </dt>
-                            <dd>
-                              {durationDays == null
-                                ? "—"
-                                : t("detail.durationDays", {
-                                    count: durationDays,
-                                  })}
-                            </dd>
-                          </div>
-                        </dl>
-                      )}
-                      {!editingPlanning ? (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="mt-4 w-full"
-                          disabled={isPending}
-                          onClick={() => setEditingPlanning(true)}
-                        >
-                          <Calendar className="size-3.5" />
-                          {t("detail.editPlanning")}
-                        </Button>
-                      ) : null}
-                    </PageCard>
-
-                    <SubtasksCard
-                      children={children}
-                      subtaskTitle={subtaskTitle}
-                      setSubtaskTitle={setSubtaskTitle}
-                      onAdd={addSubtask}
-                      onCycleStatus={cycleChildStatus}
-                      disabled={isPending}
-                      onOpenAll={() => setTab("subtasks")}
-                    />
-
-                    <PageCard className="p-4">
-                      <div className="mb-3 flex items-center justify-between gap-2">
-                        <h3 className="text-sm font-medium">
-                          {t("detail.communicationTitle")}
-                        </h3>
                         <button
                           type="button"
-                          className="text-primary text-xs font-medium"
-                          onClick={() => setTab("communication")}
+                          className="text-sm font-medium text-primary hover:underline"
+                          onClick={() => setTab("planning")}
                         >
-                          {t("detail.viewAll")}
+                          {t("detail.editPlanning")}
                         </button>
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        {t("detail.communicationSoon")}
-                      </p>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="text-primary mt-3 px-0"
-                        disabled
-                      >
-                        <Plus className="size-3.5" />
-                        {t("detail.sendMessage")}
-                      </Button>
+                      <dl className="space-y-2 px-5 pb-5 text-sm">
+                        <div className="flex justify-between gap-3">
+                          <dt className="text-muted-foreground">
+                            {t("detail.startDate")}
+                          </dt>
+                          <dd>
+                            {formatLongDate(draft.plannedStart, locale)}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between gap-3">
+                          <dt className="text-muted-foreground">
+                            {t("detail.endDate")}
+                          </dt>
+                          <dd>{formatLongDate(draft.plannedEnd, locale)}</dd>
+                        </div>
+                        <div className="flex justify-between gap-3">
+                          <dt className="text-muted-foreground">
+                            {t("detail.duration")}
+                          </dt>
+                          <dd>
+                            {durationDays == null
+                              ? "—"
+                              : t("detail.durationDays", {
+                                  count: durationDays,
+                                })}
+                          </dd>
+                        </div>
+                      </dl>
+                    </PageCard>
+
+                    <PageCard className="overflow-hidden p-0">
+                      <div className="px-5 py-3">
+                        <h3 className="text-sm font-medium">
+                          {t("detail.properties")}
+                        </h3>
+                      </div>
+                      <div className="space-y-4 px-5 pb-5">
+                        <label className="block space-y-1 text-sm">
+                          <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                            {t("columns.status")}
+                          </span>
+                          <select
+                            value={draft.status}
+                            disabled={isPending}
+                            onChange={(event) => {
+                              const status = event.target
+                                .value as WorkItemStatus;
+                              persist({ status }, { status });
+                            }}
+                            className="h-9 w-full rounded-lg border border-border bg-background px-2.5 text-sm"
+                          >
+                            {WORK_ITEM_STATUSES.map((status) => (
+                              <option key={status} value={status}>
+                                {t(`status.${status}`)}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <label className="block space-y-1 text-sm">
+                          <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                            {t("detail.priority")}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <select
+                              value={draft.priority}
+                              disabled={isPending}
+                              onChange={(event) => {
+                                const priority = event.target
+                                  .value as WorkItemPriority;
+                                persist({ priority }, { priority });
+                              }}
+                              className="h-9 min-w-0 flex-1 rounded-lg border border-border bg-background px-2.5 text-sm"
+                            >
+                              {WORK_ITEM_PRIORITIES.map((priority) => (
+                                <option key={priority} value={priority}>
+                                  {t(`detail.priorities.${priority}`)}
+                                </option>
+                              ))}
+                            </select>
+                            <span
+                              className={cn(
+                                "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium",
+                                draft.priority === "high"
+                                  ? "bg-destructive/10 text-destructive"
+                                  : draft.priority === "low"
+                                    ? "bg-muted text-muted-foreground"
+                                    : "bg-primary/10 text-primary",
+                              )}
+                            >
+                              <Flag className="size-3" />
+                              {t(`detail.priorities.${draft.priority}`)}
+                            </span>
+                          </div>
+                        </label>
+                        <label className="block space-y-1 text-sm">
+                          <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                            {t("columns.category")}
+                          </span>
+                          <input
+                            value={draft.category ?? ""}
+                            disabled={isPending}
+                            onChange={(event) =>
+                              patchLocal({ category: event.target.value })
+                            }
+                            onBlur={() =>
+                              persist(
+                                { category: draft.category },
+                                { category: draft.category },
+                              )
+                            }
+                            placeholder="—"
+                            className="border-input bg-background h-9 w-full rounded-lg border px-2.5 text-sm outline-none"
+                          />
+                        </label>
+                        <div className="space-y-1.5">
+                          <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                            {t("detail.labels")}
+                          </p>
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            {draft.labels.map((label) => (
+                              <span
+                                key={label}
+                                className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary"
+                              >
+                                {label}
+                                <button
+                                  type="button"
+                                  disabled={isPending}
+                                  className="rounded-full p-0.5 hover:bg-primary/15"
+                                  onClick={() => removeLabel(label)}
+                                  aria-label={t("detail.removeLabel")}
+                                >
+                                  <X className="size-3" />
+                                </button>
+                              </span>
+                            ))}
+                            <input
+                              value={labelDraft}
+                              disabled={isPending}
+                              onChange={(event) =>
+                                setLabelDraft(event.target.value)
+                              }
+                              onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                  event.preventDefault();
+                                  addLabel();
+                                }
+                              }}
+                              placeholder="+"
+                              className="border-input h-7 w-16 rounded-full border px-2 text-xs outline-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </PageCard>
+
+                    <PageCard className="overflow-hidden p-0">
+                      <div className="px-5 py-3">
+                        <h3 className="text-sm font-medium">
+                          {t("detail.tabs.activity")}
+                        </h3>
+                      </div>
+                      <div className="px-5 pb-5">
+                        {linkedActivities.length === 0 ? (
+                          <p className="text-sm text-muted-foreground">
+                            {t("detail.activityEmpty")}
+                          </p>
+                        ) : (
+                          <ul className="space-y-3">
+                            {linkedActivities.slice(0, 6).map((event) => (
+                              <li key={event.id}>
+                                <p className="text-sm font-medium">
+                                  {event.title}
+                                </p>
+                                {event.body ? (
+                                  <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">
+                                    {event.body}
+                                  </p>
+                                ) : null}
+                                <p className="mt-0.5 text-xs text-muted-foreground">
+                                  {formatActivityWhen(event.createdAt, locale)}
+                                </p>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                     </PageCard>
                   </div>
                 </div>
-              ) : null}
-
-              {tab === "subtasks" ? (
-                <PageCard className="p-4">
-                  <SubtasksCard
-                    children={children}
-                    subtaskTitle={subtaskTitle}
-                    setSubtaskTitle={setSubtaskTitle}
-                    onAdd={addSubtask}
-                    onCycleStatus={cycleChildStatus}
-                    disabled={isPending}
-                    expanded
-                  />
-                </PageCard>
               ) : null}
 
               {tab === "planning" ? (
@@ -1031,9 +870,6 @@ export function WorkItemDetailSheet({
                       className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
                     />
                   </label>
-                  <p className="text-sm text-muted-foreground">
-                    {t("detail.planningAppointmentsSoon")}
-                  </p>
                 </PageCard>
               ) : null}
 
@@ -1071,75 +907,11 @@ export function WorkItemDetailSheet({
                 />
               ) : null}
 
-              {tab === "files" || tab === "communication" ? (
-                <ComingSoonCard
-                  title={t(`detail.tabs.${tab}`)}
-                  body={t(`detail.soon.${tab}`)}
-                />
-              ) : null}
-
-              {tab === "activity" ? (
-                <PageCard className="p-4">
-                  <h3 className="mb-3 text-sm font-medium">
-                    {t("detail.tabs.activity")}
-                  </h3>
-                  {linkedActivities.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">
-                      {t("detail.activityEmpty")}
-                    </p>
-                  ) : (
-                    <ul className="space-y-3">
-                      {linkedActivities.map((event) => (
-                        <li
-                          key={event.id}
-                          className="border-b border-border/70 pb-3 last:border-0 last:pb-0"
-                        >
-                          <p className="text-sm font-medium">{event.title}</p>
-                          {event.body ? (
-                            <p className="mt-0.5 text-sm text-muted-foreground">
-                              {event.body}
-                            </p>
-                          ) : null}
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            {formatActivityWhen(event.createdAt, locale)}
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </PageCard>
-              ) : null}
             </div>
           </div>
         )}
       </SheetContent>
     </Sheet>
-  );
-}
-
-function DetailRow({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className="flex flex-wrap items-center gap-3 px-4 py-3 sm:flex-nowrap">
-      <dt className="w-36 shrink-0 text-sm text-muted-foreground">{label}</dt>
-      <dd className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-        {children}
-      </dd>
-    </div>
-  );
-}
-
-function ComingSoonCard({ title, body }: { title: string; body: string }) {
-  return (
-    <PageCard className="mx-auto max-w-lg space-y-2 p-8 text-center">
-      <h3 className="text-sm font-medium">{title}</h3>
-      <p className="text-sm text-muted-foreground">{body}</p>
-    </PageCard>
   );
 }
 
@@ -1150,8 +922,6 @@ function SubtasksCard({
   onAdd,
   onCycleStatus,
   disabled,
-  onOpenAll,
-  expanded,
 }: {
   children: WorkItemRow[];
   subtaskTitle: string;
@@ -1159,97 +929,62 @@ function SubtasksCard({
   onAdd: (event?: FormEvent) => void;
   onCycleStatus: (child: WorkItemRow) => void;
   disabled?: boolean;
-  onOpenAll?: () => void;
-  expanded?: boolean;
 }) {
   const t = useTranslations("projects.workItems");
   const done = children.filter((child) => child.status === "done").length;
-  const visible = expanded ? children : children.slice(0, 6);
 
   return (
-    <div className={cn(!expanded && "space-y-0")}>
-      {!expanded ? (
-        <PageCard className="p-4">
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <h3 className="text-sm font-medium">
-              {t("detail.subtasksTitle", { count: children.length })}
-            </h3>
-            {onOpenAll ? (
-              <button
-                type="button"
-                className="text-primary text-xs font-medium"
-                onClick={onOpenAll}
-              >
-                {t("detail.viewAll")}
-              </button>
-            ) : null}
-          </div>
-          <SubtaskList
-            items={visible}
-            onCycleStatus={onCycleStatus}
-            disabled={disabled}
-          />
-          <form
-            className="mt-3 flex flex-wrap items-center gap-2"
-            onSubmit={onAdd}
-          >
-            <input
-              value={subtaskTitle}
-              disabled={disabled}
-              onChange={(event) => setSubtaskTitle(event.target.value)}
-              placeholder={t("detail.subtaskPlaceholder")}
-              className="border-input bg-background h-8 min-w-[12rem] flex-1 rounded-lg border px-2.5 text-sm outline-none"
+    <PageCard className="overflow-hidden p-0">
+      <div className="flex items-center justify-between gap-2 px-5 py-3">
+        <h3 className="text-sm font-medium">
+          {t("detail.subtasksTitle", { count: children.length })}
+        </h3>
+        {children.length > 0 ? (
+          <span className="text-xs tabular-nums text-muted-foreground">
+            {done} / {children.length}
+          </span>
+        ) : null}
+      </div>
+      <div className="px-5 pb-5">
+        {children.length > 0 ? (
+          <div className="mb-3 h-1 overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full bg-primary"
+              style={{
+                width: `${(done / children.length) * 100}%`,
+              }}
             />
-            <Button type="submit" size="sm" variant="ghost" className="text-primary" disabled={disabled}>
-              <Plus className="size-3.5" />
-              {t("detail.addSubtask")}
-            </Button>
-          </form>
-          {children.length > 0 ? (
-            <div className="mt-3 flex items-center justify-end gap-2 text-xs text-muted-foreground">
-              <div className="bg-muted flex h-1.5 w-20 overflow-hidden rounded-full">
-                <div
-                  className="bg-success-foreground/80 h-full"
-                  style={{
-                    width: `${children.length ? (done / children.length) * 100 : 0}%`,
-                  }}
-                />
-              </div>
-              {done} / {children.length}
-            </div>
-          ) : null}
-        </PageCard>
-      ) : (
-        <>
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <h3 className="text-sm font-medium">
-              {t("detail.subtasksTitle", { count: children.length })}
-            </h3>
           </div>
-          <SubtaskList
-            items={visible}
-            onCycleStatus={onCycleStatus}
+        ) : null}
+        <SubtaskList
+          items={children}
+          onCycleStatus={onCycleStatus}
+          disabled={disabled}
+        />
+        <form
+          className="mt-3 flex flex-wrap items-center gap-2"
+          onSubmit={onAdd}
+        >
+          <input
+            value={subtaskTitle}
             disabled={disabled}
+            onChange={(event) => setSubtaskTitle(event.target.value)}
+            placeholder={t("detail.subtaskPlaceholder")}
+            className="border-input bg-background h-8 min-w-[12rem] flex-1 rounded-lg border px-2.5 text-sm outline-none"
           />
-          <form
-            className="mt-3 flex flex-wrap items-center gap-2"
-            onSubmit={onAdd}
+          <Button
+            type="submit"
+            size="sm"
+            variant="ghost"
+            className="text-primary"
+            disabled={disabled}
           >
-            <input
-              value={subtaskTitle}
-              disabled={disabled}
-              onChange={(event) => setSubtaskTitle(event.target.value)}
-              placeholder={t("detail.subtaskPlaceholder")}
-              className="border-input bg-background h-8 min-w-[12rem] flex-1 rounded-lg border px-2.5 text-sm outline-none"
-            />
-            <Button type="submit" size="sm" disabled={disabled}>
-              <Plus className="size-3.5" />
-              {t("detail.addSubtask")}
-            </Button>
-          </form>
-        </>
-      )}
-    </div>
+            <Plus className="size-3.5" />
+            {t("detail.addSubtask")}
+          </Button>
+        </form>
+      </div>
+    </PageCard>
   );
 }
 

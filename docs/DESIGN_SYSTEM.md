@@ -117,10 +117,23 @@ Diep werk = bestaande workspace / lijst / editor
 1. Toolbar: segmented view · zoek · filters · split primary-add
 2. Hoofdlijst `PageCard p-0` (+ optionele rechterrail ~`17.5rem`)
 3. Rijen: CSS-grid of tabel met rustige hover; hiërarchie via indent/groepen
-4. Klik rij → **brede Sheet** (subwerkruimte, ~70vw): hero + underline-tabs + 2-koloms overzicht
+4. Klik rij → **brede Sheet** (subwerkruimte, ~70vw). Geen underline-tabs en geen coming-soon-tabs.
+
+```
+Hero (titel + status · meta · dunne voortgang · stats · ⋯)
+Modus-chips: Overzicht · Planning · Tijd & uren · Materiaal
+Default Overzicht = 2-koloms cockpit
+Diepe modi = bestaande panelen
+```
+
+   - Hero in de sheet: titel + status-pill, meta, dunne balk, 3 stats (uren · toegewezen · subtaken), `⋯` rechts
+   - Modus-chips: zelfde classes als projectdetail (`rounded-lg border px-4 py-2.5`)
+   - Overzicht-cockpit: links beschrijving + subtaken; rechts toegewezen · planning-samenvatting (link naar Planning) · gegevens · recente activiteit
+   - Planning / uren / materiaal hergebruiken bestaande panelen
 
 **Voorbeeld:** `project-work-items-workspace.tsx`, `work-item-detail-sheet.tsx`, `work-orders-workspace.tsx`, `invoices-workspace.tsx`  
 Detail-sheets: altijd ~`70vw` (geen smalle 28rem-sidebar).  
+Canonical overlay: `src/features/projects/components/work-item-detail-sheet.tsx`  
 Detail-rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§7)
 
 ### 4.4 Kalender / Planning workspace
@@ -219,8 +232,8 @@ grid xl:[minmax(0,1.7fr)_minmax(18rem,0.9fr)]
 
 | Variant | Gebruik | Patroon |
 | --- | --- | --- |
-| Mode chips | Projectdetail | `rounded-lg border px-4 py-2.5` · inactief `border-border bg-card` · actief `border-primary bg-primary/10 text-primary` |
-| Underline | Editor / sheets | `border-b-2 border-primary text-primary` + count-pill |
+| Mode chips | Projectdetail / module-sheets | `rounded-lg border px-4 py-2.5` · inactief `border-border bg-card` · actief `border-primary bg-primary/10 text-primary` |
+| Underline | Editor | `border-b-2 border-primary text-primary` + count-pill |
 | Segmented | View-switch (lijst/boom/kanban) | `rounded-lg border bg-card p-0.5` · actief `bg-primary/10 text-primary` |
 | Card-top | Editor-secties | `border-b-2` op tab binnen card |
 
