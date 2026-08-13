@@ -1216,7 +1216,7 @@ export function ProjectDetailWorkspace({
         />
       ) : null}
 
-      <div className="fixed right-0 bottom-0 left-0 z-10 border-t border-border bg-background/95 p-3 backdrop-blur-sm md:left-[calc(var(--sidebar-width)+1.5rem)]">
+      <div className="fixed right-0 bottom-0 left-0 z-10 border-t border-border bg-background/95 p-3 backdrop-blur-sm md:left-[var(--sidebar-width)]">
         <div className="mx-auto flex w-[90%] max-w-5xl items-center gap-2">
           <StickyNote className="size-4 shrink-0 text-muted-foreground" />
           <input

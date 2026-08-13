@@ -227,7 +227,7 @@ export function AppSidebar({
 
   return (
     <aside
-      className="fixed top-3 bottom-3 left-3 z-40 flex w-[var(--sidebar-width)] flex-col rounded-2xl rounded-tr-3xl rounded-br-3xl bg-sidebar text-sidebar-foreground"
+      className="fixed inset-y-0 left-0 z-40 flex w-[var(--sidebar-width)] flex-col bg-sidebar text-sidebar-foreground"
       aria-label={t("navLabel")}
     >
       <div className="flex flex-col gap-5 px-4 pt-6 pb-4">

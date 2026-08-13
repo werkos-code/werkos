@@ -22,7 +22,7 @@ export function AppShell({
           userName={userName}
           isSuperAdmin={isSuperAdmin}
         />
-        <div className="min-h-dvh pl-[calc(var(--sidebar-width)+1.5rem)]">
+        <div className="min-h-dvh pl-[var(--sidebar-width)]">
           {children}
         </div>
       </div>

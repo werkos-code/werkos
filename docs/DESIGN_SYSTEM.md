@@ -63,7 +63,7 @@ AppShell (navy sidebar)
 | Geen page-description | `description` op `ShellPage` wordt niet gerenderd; uitleg via tooltip of weglaten |
 | Surfaces | Gebruik `PageCard` / `MetaStatCard` — niet shadcn `Card` in product-UI |
 | Secties | `space-y-5` of `space-y-6` |
-| Sidebar | Altijd zichtbaar; organisatie-switcher bovenaan; **inklappbare** sectiekoppen; Bedrijf default dicht; subtiele active state |
+| Sidebar | Vast tegen links/boven/onder; geen zwevende inset of linker afronding; organisatie-switcher bovenaan; **inklappbare** sectiekoppen; Bedrijf default dicht; subtiele active state |
 | Sidebar CTA | Alleen “Nieuwe opdracht”: lichte blauwe gradient `#2563EB` → `#60A5FA` — nergens anders hergebruiken |
 | Eén app-context | Geen dual-context switch — één navigatiestructuur |
 
