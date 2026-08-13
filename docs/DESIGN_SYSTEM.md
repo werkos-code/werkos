@@ -64,7 +64,7 @@ AppShell (navy sidebar)
 | Surfaces | Gebruik `PageCard` / `MetaStatCard` — niet shadcn `Card` in product-UI |
 | Secties | `space-y-5` of `space-y-6` |
 | Sidebar | Altijd zichtbaar; organisatie-switcher bovenaan; **inklappbare** sectiekoppen; Bedrijf default dicht; subtiele active state |
-| Sidebar CTA | Alleen “Nieuwe opdracht”: gradient `#00b09b` → `#96c93d` — nergens anders hergebruiken |
+| Sidebar CTA | Alleen “Nieuwe opdracht”: lichte blauwe gradient `#2563EB` → `#60A5FA` — nergens anders hergebruiken |
 | Eén app-context | Geen dual-context switch — één navigatiestructuur |
 
 **Canonical:**  

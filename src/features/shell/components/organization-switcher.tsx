@@ -34,7 +34,7 @@ export function OrganizationSwitcher({
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "group flex w-full items-start gap-2 rounded-xl px-1 py-1 text-left outline-none",
+          "group flex w-full items-start gap-2 rounded-xl px-2.5 py-2.5 text-left outline-none",
           "hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-white/20",
           className,
         )}
@@ -46,9 +46,9 @@ export function OrganizationSwitcher({
             width={300}
             height={63}
             priority
-            className="h-7 w-auto max-w-[11.5rem] object-contain object-left"
+            className="h-6 w-auto max-w-[10rem] object-contain object-left"
           />
-          <p className="mt-1.5 flex items-center gap-1 truncate text-xs text-sidebar-muted">
+          <p className="mt-2 flex items-center gap-1 truncate text-xs text-sidebar-muted">
             <span className="truncate">{name}</span>
             <ChevronsUpDown className="size-3 shrink-0 opacity-70 transition-opacity group-hover:opacity-100" />
           </p>

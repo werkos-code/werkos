@@ -230,12 +230,12 @@ export function AppSidebar({
       className="fixed top-3 bottom-3 left-3 z-40 flex w-[var(--sidebar-width)] flex-col rounded-2xl rounded-tr-3xl rounded-br-3xl bg-sidebar text-sidebar-foreground"
       aria-label={t("navLabel")}
     >
-      <div className="flex flex-col gap-4 px-3.5 pt-5 pb-3">
+      <div className="flex flex-col gap-5 px-4 pt-6 pb-4">
         <OrganizationSwitcher organizationName={organizationName} />
 
         <Button
           asChild
-          className="h-10 w-full justify-center gap-2 rounded-xl border-0 bg-linear-to-r from-[#00b09b] to-[#96c93d] text-sm font-medium text-white shadow-none hover:from-[#00a08c] hover:to-[#87b836]"
+          className="h-10 w-full justify-center gap-2 rounded-xl border-0 bg-linear-to-r from-[#2563EB] to-[#60A5FA] text-sm font-medium text-white shadow-none hover:from-[#1D4ED8] hover:to-[#3B82F6]"
         >
           <Link href={NEW_REQUEST_HREF}>
             <Plus className="size-4" />
