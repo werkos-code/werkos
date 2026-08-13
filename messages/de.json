@@ -1037,6 +1037,7 @@
       "planningModuleHint": "Zentrale Planung ansehen und verwalten.",
       "openPlanning": "Planung öffnen",
       "chromeTitle": "Projekte",
+      "projectMetaTitle": "Projektdaten",
       "modes": {
         "overview": "Übersicht",
         "work": "Arbeit",
@@ -1912,6 +1913,12 @@
     "project": {
       "outstanding": "Offen in diesem Projekt",
       "createFromProject": "Rechnung aus Projekt",
+      "createCustom": "Neue Rechnung",
+      "planningTitle": "Finanzplanung",
+      "planningPickQuote": "Angebot",
+      "planningEmpty": "Noch kein Angebot, an das ein Zahlungsplan gekoppelt werden kann.",
+      "openQuotes": "Angebote öffnen",
+      "invoicesTitle": "Rechnungen",
       "empty": "Noch keine Rechnungen für dieses Projekt.",
       "columns": {
         "invoice": "Rechnung",

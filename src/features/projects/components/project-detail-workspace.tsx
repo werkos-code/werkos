@@ -58,7 +58,10 @@ import {
 import { ProjectFinancialPanel } from "@/features/invoices/components/project-financial-panel";
 import type { InvoiceListItem } from "@/features/invoices/invoices-actions";
 import { QuotesList } from "@/features/quotes/components/quotes-list";
-import type { QuoteListItem } from "@/features/quotes/quotes-actions";
+import type {
+  QuoteListItem,
+  QuotePlanningSource,
+} from "@/features/quotes/quotes-actions";
 import type { WorkOrderRow } from "@/features/work-orders/lib/work-order";
 import { PageCard } from "@/features/shell/components/page-card";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -80,6 +83,7 @@ type ProjectDetailWorkspaceProps = {
   minutesByWorkItem?: Record<string, number>;
   articles?: import("@/features/materials/lib/materials").ArticleRow[];
   invoices?: InvoiceListItem[];
+  planningQuotes?: QuotePlanningSource[];
   initialTab?: string;
 };
 
@@ -111,6 +115,7 @@ export function ProjectDetailWorkspace({
   minutesByWorkItem = {},
   articles = [],
   invoices = [],
+  planningQuotes = [],
   initialTab = "overview",
 }: ProjectDetailWorkspaceProps) {
   const t = useTranslations("projects");
@@ -676,6 +681,7 @@ export function ProjectDetailWorkspace({
           invoices={invoices}
           taskStats={taskStats}
           onOpenMode={setMode}
+          onEdit={() => setEditing(true)}
         />
       ) : null}
 
@@ -685,18 +691,22 @@ export function ProjectDetailWorkspace({
 
       {mode === "work" ? (
         <div className="space-y-5">
-          {workOrders.length > 0 ? (
-            <PageCard className="p-5">
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                <h3 className="text-sm font-medium">
-                  {t("detail.tabs.workOrders")}
-                </h3>
-                <Button type="button" size="sm" variant="outline" asChild>
-                  <Link href="/werkbonnen">
-                    {t("detail.viewAllWorkOrders")}
-                  </Link>
-                </Button>
-              </div>
+          <PageCard className="p-5">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+              <h3 className="text-sm font-medium">
+                {t("detail.tabs.workOrders")}
+              </h3>
+              <Button type="button" size="sm" variant="outline" asChild>
+                <Link href="/werkbonnen">
+                  {t("detail.viewAllWorkOrders")}
+                </Link>
+              </Button>
+            </div>
+            {workOrders.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                {t("detail.workOrdersEmpty")}
+              </p>
+            ) : (
               <ul className="divide-y divide-border/80">
                 {workOrders.map((order) => (
                   <li
@@ -725,8 +735,8 @@ export function ProjectDetailWorkspace({
                   </li>
                 ))}
               </ul>
-            </PageCard>
-          ) : null}
+            )}
+          </PageCard>
           <ProjectWorkItemsWorkspace
             projectId={project.id}
             workItems={workItems}
@@ -751,6 +761,8 @@ export function ProjectDetailWorkspace({
           projectId={project.id}
           projectName={project.name}
           invoices={invoices}
+          planningQuotes={planningQuotes}
+          onOpenQuotes={() => setMode("quotes")}
         />
       ) : null}
 

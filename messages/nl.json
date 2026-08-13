@@ -1037,6 +1037,7 @@
       "planningModuleHint": "Bekijk en beheer de centrale planning.",
       "openPlanning": "Open planning",
       "chromeTitle": "Projecten",
+      "projectMetaTitle": "Projectgegevens",
       "modes": {
         "overview": "Overzicht",
         "work": "Werk",
@@ -1912,6 +1913,12 @@
     "project": {
       "outstanding": "Openstaand op dit project",
       "createFromProject": "Factuur vanuit project",
+      "createCustom": "Nieuwe factuur",
+      "planningTitle": "Financiële planning",
+      "planningPickQuote": "Offerte",
+      "planningEmpty": "Nog geen offerte om een betalingsschema aan te koppelen.",
+      "openQuotes": "Open offertes",
+      "invoicesTitle": "Facturen",
       "empty": "Nog geen facturen voor dit project.",
       "columns": {
         "invoice": "Factuur",

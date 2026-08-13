@@ -2,15 +2,19 @@
 
 import {
   AlertCircle,
+  Calendar,
   CheckCircle2,
   Circle,
   ExternalLink,
   FileText,
   ImageIcon,
+  Mail,
   MapPin,
+  Pencil,
   Phone,
   Receipt,
   StickyNote,
+  User,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
@@ -53,6 +57,7 @@ type ProjectDetailOverviewProps = {
   invoices: InvoiceListItem[];
   taskStats: ReturnType<typeof workItemStats>;
   onOpenMode: (mode: ProjectDetailMode) => void;
+  onEdit?: () => void;
 };
 
 type ActivityFilter = "all" | "notes" | "quotes" | "tasks" | "project";
@@ -66,6 +71,20 @@ type AttentionItem = {
   href?: string;
   mode?: ProjectDetailMode;
 };
+
+function formatDate(iso: string | null | undefined) {
+  if (!iso) return "—";
+  try {
+    const value = iso.length === 10 ? `${iso}T12:00:00` : iso;
+    return new Intl.DateTimeFormat("nl-NL", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(value));
+  } catch {
+    return iso.slice(0, 10);
+  }
+}
 
 function formatDateTime(iso: string) {
   try {
@@ -181,6 +200,7 @@ export function ProjectDetailOverview({
   invoices,
   taskStats,
   onOpenMode,
+  onEdit,
 }: ProjectDetailOverviewProps) {
   const t = useTranslations("projects");
   const tQuotes = useTranslations("quotes");
@@ -433,7 +453,7 @@ export function ProjectDetailOverview({
             <h3 className="text-sm font-medium">
               {t("detail.timelineTitle")}
             </h3>
-            {activities.length > 6 ? (
+            {activities.length > 0 ? (
               <button
                 type="button"
                 onClick={() => setShowAllActivity((value) => !value)}
@@ -605,6 +625,12 @@ export function ProjectDetailOverview({
               {phone}
             </p>
           ) : null}
+          {customer?.email || project.contactEmail ? (
+            <p className="mt-1.5 flex items-center gap-2 text-sm text-muted-foreground">
+              <Mail className="size-3.5 shrink-0" />
+              {project.contactEmail || customer?.email}
+            </p>
+          ) : null}
           {address ? (
             <p className="mt-1.5 flex items-start gap-2 text-sm text-muted-foreground">
               <MapPin className="size-3.5 mt-0.5 shrink-0" />
@@ -659,6 +685,59 @@ export function ProjectDetailOverview({
               )}
             </Button>
           </div>
+        </PageCard>
+
+        <PageCard className="p-5">
+          <div className="mb-4 flex items-center justify-between gap-2">
+            <h3 className="text-sm font-medium">{t("detail.projectMetaTitle")}</h3>
+            {onEdit ? (
+              <button
+                type="button"
+                onClick={onEdit}
+                className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+              >
+                <Pencil className="size-3.5" />
+                {t("detail.edit")}
+              </button>
+            ) : null}
+          </div>
+          <dl className="space-y-3 text-sm">
+            <div className="flex gap-2">
+              <User className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
+              <div>
+                <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                  {t("detail.leader")}
+                </dt>
+                <dd>{project.leadName || "—"}</dd>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Calendar className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
+              <div>
+                <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                  {t("detail.startDate")}
+                </dt>
+                <dd>{formatDate(project.startDate)}</dd>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Calendar className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
+              <div>
+                <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                  {t("detail.endDate")}
+                </dt>
+                <dd>{formatDate(project.endDate)}</dd>
+              </div>
+            </div>
+          </dl>
+          {project.notes ? (
+            <div className="mt-4 border-t border-border pt-4">
+              <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                {t("fields.notes")}
+              </p>
+              <p className="mt-1 whitespace-pre-wrap text-sm">{project.notes}</p>
+            </div>
+          ) : null}
         </PageCard>
       </div>
     </div>

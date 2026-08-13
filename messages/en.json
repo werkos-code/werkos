@@ -1037,6 +1037,7 @@
       "planningModuleHint": "View and manage the central schedule.",
       "openPlanning": "Open planning",
       "chromeTitle": "Projects",
+      "projectMetaTitle": "Project details",
       "modes": {
         "overview": "Overview",
         "work": "Work",
@@ -1912,6 +1913,12 @@
     "project": {
       "outstanding": "Outstanding on this project",
       "createFromProject": "Invoice from project",
+      "createCustom": "New invoice",
+      "planningTitle": "Financial planning",
+      "planningPickQuote": "Quote",
+      "planningEmpty": "No quote yet to attach a payment schedule to.",
+      "openQuotes": "Open quotes",
+      "invoicesTitle": "Invoices",
       "empty": "No invoices for this project yet.",
       "columns": {
         "invoice": "Invoice",

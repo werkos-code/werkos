@@ -12,6 +12,7 @@ import {
   listProjectActivities,
 } from "@/features/projects/projects-actions";
 import {
+  listQuotePlanningForProject,
   listQuotesForProject,
   listWorkItemsForProject,
 } from "@/features/quotes/quotes-actions";
@@ -39,6 +40,7 @@ export default async function ProjectDetailPage({
     customersResult,
     staffResult,
     quotesResult,
+    planningQuotesResult,
     workItemsResult,
     activitiesResult,
     workOrdersResult,
@@ -50,6 +52,7 @@ export default async function ProjectDetailPage({
     listCustomerOptions(),
     listOrgStaffOptions(),
     listQuotesForProject(projectId),
+    listQuotePlanningForProject(projectId),
     listWorkItemsForProject(projectId),
     listProjectActivities(projectId),
     listWorkOrders({ projectId }),
@@ -82,6 +85,7 @@ export default async function ProjectDetailPage({
         minutesByWorkItem={timeResult.minutesByWorkItem ?? {}}
         articles={articlesResult.articles ?? []}
         invoices={invoicesResult.invoices ?? []}
+        planningQuotes={planningQuotesResult.quotes ?? []}
         initialTab={tab}
       />
     </ShellPage>

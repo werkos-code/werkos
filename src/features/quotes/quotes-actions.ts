@@ -7,6 +7,7 @@ import type {
   QuoteLineRow,
   QuoteListItem,
 } from "@/features/quotes/lib/quote-types";
+import type { QuoteStatus } from "@/types/database";
 
 export type {
   QuoteDetail,
@@ -14,6 +15,14 @@ export type {
   QuoteLineType,
   QuoteListItem,
 } from "@/features/quotes/lib/quote-types";
+
+export type QuotePlanningSource = {
+  id: string;
+  title: string;
+  quoteNumber: string | null;
+  status: QuoteStatus;
+  lines: QuoteLineRow[];
+};
 
 export async function listQuotesForProject(projectId: string): Promise<{
   quotes?: QuoteListItem[];
@@ -51,6 +60,92 @@ export async function listQuotesForProject(projectId: string): Promise<{
       updatedAt: row.updated_at,
       validUntil: row.valid_until,
     })),
+  };
+}
+
+export async function listQuotePlanningForProject(projectId: string): Promise<{
+  quotes?: QuotePlanningSource[];
+  error?: string;
+}> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const { data: project } = await ctx.supabase
+    .from("projects")
+    .select("id")
+    .eq("organization_id", ctx.organizationId)
+    .eq("id", projectId)
+    .maybeSingle();
+
+  if (!project) return { error: "project_not_found" };
+
+  const { data, error } = await ctx.supabase
+    .from("quotes")
+    .select("id, title, status, quote_number")
+    .eq("organization_id", ctx.organizationId)
+    .eq("project_id", projectId)
+    .in("status", ["draft", "sent", "accepted"])
+    .order("updated_at", { ascending: false });
+
+  if (error) return { error: error.message };
+
+  const quotes = data ?? [];
+  if (quotes.length === 0) return { quotes: [] };
+
+  const { data: lines, error: linesError } = await ctx.supabase
+    .from("quote_lines")
+    .select(
+      "id, quote_id, parent_id, sort_order, title, description, line_type, article_id, quantity, unit, unit_price_cents, cost_price_cents, vat_rate_bps, discount_cents, estimated_minutes",
+    )
+    .eq("organization_id", ctx.organizationId)
+    .in(
+      "quote_id",
+      quotes.map((quote) => quote.id),
+    )
+    .order("sort_order", { ascending: true });
+
+  if (linesError) return { error: linesError.message };
+
+  const linesByQuote = new Map<string, QuoteLineRow[]>();
+  for (const line of lines ?? []) {
+    const mapped: QuoteLineRow = {
+      id: line.id,
+      parentId: line.parent_id,
+      sortOrder: line.sort_order,
+      title: line.title,
+      description: line.description,
+      lineType: (line.line_type as QuoteLineRow["lineType"]) ?? "article",
+      articleId: line.article_id,
+      quantity: line.quantity === null ? null : Number(line.quantity),
+      unit: line.unit,
+      unitPriceCents: line.unit_price_cents,
+      costPriceCents: line.cost_price_cents,
+      vatRateBps: line.vat_rate_bps,
+      discountCents: line.discount_cents,
+      estimatedMinutes: line.estimated_minutes,
+    };
+    const bucket = linesByQuote.get(line.quote_id) ?? [];
+    bucket.push(mapped);
+    linesByQuote.set(line.quote_id, bucket);
+  }
+
+  const rank = (status: QuoteStatus) => {
+    if (status === "accepted") return 0;
+    if (status === "sent") return 1;
+    return 2;
+  };
+
+  return {
+    quotes: quotes
+      .slice()
+      .sort((a, b) => rank(a.status as QuoteStatus) - rank(b.status as QuoteStatus))
+      .map((quote) => ({
+        id: quote.id,
+        title: quote.title,
+        quoteNumber: quote.quote_number,
+        status: quote.status as QuoteStatus,
+        lines: linesByQuote.get(quote.id) ?? [],
+      })),
   };
 }
 
