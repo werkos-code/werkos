@@ -34,7 +34,6 @@ export default async function OnboardingTeamPage({ params }: Props) {
       step={4}
       title={t("title")}
       description={t("description")}
-      align="start"
       backHref="/onboarding/company"
     >
       <TeamStepForm

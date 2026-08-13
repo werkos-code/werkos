@@ -30,6 +30,9 @@
   },
   "onboarding": {
     "progress": "Schritt {current} von {total}",
+    "brand": {
+      "backToWebsite": "Zur Website"
+    },
     "atmosphere": {
       "tagline": "Mehr Ruhe. Mehr Überblick. Weniger Verwaltung."
     },

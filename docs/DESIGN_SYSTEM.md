@@ -198,6 +198,23 @@ grid xl:[minmax(0,1.7fr)_minmax(18rem,0.9fr)]
 
 **Canonical:** `src/features/dashboard/components/dashboard-workspace.tsx`
 
+### 4.8 Onboarding (split, buiten de app-shell)
+
+Geen sidebar. Zelfde 2-koloms split op elke stap — content mag niet verspringen tussen center en start.
+
+```
+Links: vaste chrome (logo + “Naar website”) → progress → titel → formulier
+Rechts: navy `#09133A` + foto + overlay + tagline (verborgen op mobiel)
+```
+
+1. Chrome `h-14 border-b bg-card`: logo in navy-chip (linkt naar `siteConfig.marketingUrl`) + tekstlink “Naar website”
+2. Content altijd `justify-start`; terug-link in een gereserveerde regel; titelblok met `min-h`
+3. Formulieren in `PageCard`; primaire CTA `size="lg" w-full` eronder
+4. Branche-chips: zelfde classes als modus-chips; extra veld reserveert hoogte
+5. Atmosphere: geen interactie, geen tweede formulier
+
+**Canonical:** `src/features/onboarding/components/onboarding-shell.tsx`
+
 ---
 
 ## 5. Typografie-schaal

@@ -9,6 +9,7 @@ import {
   formatEurFromCents,
 } from "@/config/pricing";
 import { createCheckoutSessionAction } from "@/features/onboarding/checkout-action";
+import { PageCard } from "@/features/shell/components/page-card";
 
 type PaymentStepProps = {
   officeSeats: number;
@@ -27,9 +28,9 @@ export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
   const total = calculateMonthlyTotalCents(officeSeats, fieldSeats);
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-6">
-      <div className="rounded-2xl border border-border px-5 py-5 text-sm">
-        <p className="text-base font-semibold">{t("plan")}</p>
+    <div className="flex w-full flex-col gap-5">
+      <PageCard className="px-5 py-4 text-sm">
+        <p className="text-sm font-medium">{t("plan")}</p>
         <div className="mt-4 space-y-2 text-muted-foreground">
           <p>{t("ownerIncluded")}</p>
           {officeSeats > 0 ? (
@@ -40,14 +41,14 @@ export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
           ) : null}
           <div className="flex justify-between border-t border-border pt-3 text-foreground">
             <span className="font-medium">{t("total")}</span>
-            <span className="font-semibold">
+            <span className="font-semibold tabular-nums">
               {formatEurFromCents(total, numberLocale)} {tCommon("perMonth")}
             </span>
           </div>
         </div>
         <p className="mt-4 font-medium text-foreground">{t("trial")}</p>
         <p className="mt-1 text-muted-foreground">{t("trialNote")}</p>
-      </div>
+      </PageCard>
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
 

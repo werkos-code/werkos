@@ -12,8 +12,8 @@ export async function OnboardingProgress({
   const t = await getTranslations("onboarding");
 
   return (
-    <div className="mb-10">
-      <p className="mb-3 text-sm text-muted-foreground">
+    <div className="mb-6">
+      <p className="mb-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
         {t("progress", { current, total })}
       </p>
       <div className="flex gap-1.5" aria-hidden="true">
@@ -21,7 +21,7 @@ export async function OnboardingProgress({
           <div
             key={index}
             className={`h-0.5 flex-1 rounded-full ${
-              index < current ? "bg-foreground" : "bg-border"
+              index < current ? "bg-primary" : "bg-border"
             }`}
           />
         ))}

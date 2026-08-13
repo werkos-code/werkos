@@ -11,7 +11,7 @@ type OnboardingAtmosphereProps = {
 };
 
 /**
- * Right-hand atmosphere panel — trust and calm only.
+ * Right-hand atmosphere panel — navy chrome + photo, matching the app sidebar.
  * No interactive content.
  */
 export async function OnboardingAtmosphere({
@@ -21,7 +21,7 @@ export async function OnboardingAtmosphere({
 
   return (
     <aside
-      className="relative hidden min-h-0 overflow-hidden bg-muted md:block"
+      className="relative hidden min-h-0 overflow-hidden bg-sidebar md:block"
       aria-hidden="true"
     >
       <Image
@@ -29,12 +29,12 @@ export async function OnboardingAtmosphere({
         alt={asset.alt}
         fill
         priority
-        sizes="(min-width: 768px) 40vw, 0px"
+        sizes="(min-width: 768px) 37vw, 0px"
         className="object-cover"
       />
-      <div className="absolute inset-0 bg-foreground/35" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#09133A] via-[#09133A]/70 to-[#09133A]/35" />
       <div className="absolute inset-x-0 bottom-0 p-8 lg:p-10">
-        <p className="max-w-xs text-sm leading-relaxed text-primary-foreground/90">
+        <p className="max-w-xs text-sm leading-relaxed text-sidebar-foreground/90">
           {t("tagline")}
         </p>
       </div>

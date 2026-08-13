@@ -1,11 +1,14 @@
 "use client";
 
+import { Check, Circle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import { userHasOrganization } from "@/features/onboarding/actions";
 import { syncProvisioningFromCheckoutSession } from "@/features/onboarding/sync-provisioning-action";
+import { PageCard } from "@/features/shell/components/page-card";
 import { useRouter } from "@/i18n/navigation";
+import { cn } from "@/lib/utils";
 
 const STEPS = ["company", "team", "environment", "almost"] as const;
 
@@ -88,30 +91,36 @@ export function ProvisioningView({ sessionId }: ProvisioningViewProps) {
   }, [router, sessionId]);
 
   return (
-    <div className="flex w-full flex-col gap-6">
+    <PageCard className="p-5">
       <ul className="space-y-3 text-sm">
-        {STEPS.map((key, index) => (
-          <li
-            key={key}
-            className={
-              index < visibleCount
-                ? "text-foreground"
-                : "text-muted-foreground/50"
-            }
-          >
-            {index < visibleCount ? "✓ " : "○ "}
-            {t(key)}
-          </li>
-        ))}
+        {STEPS.map((key, index) => {
+          const done = index < visibleCount;
+          return (
+            <li
+              key={key}
+              className={cn(
+                "flex items-center gap-2.5",
+                done ? "text-foreground" : "text-muted-foreground/50",
+              )}
+            >
+              {done ? (
+                <Check className="size-4 text-primary" />
+              ) : (
+                <Circle className="size-4" />
+              )}
+              {t(key)}
+            </li>
+          );
+        })}
       </ul>
       {failed ? (
-        <div className="space-y-1">
+        <div className="mt-4 space-y-1">
           <p className="text-sm text-destructive">{t("failed")}</p>
           {errorDetail ? (
             <p className="text-xs text-muted-foreground">{errorDetail}</p>
           ) : null}
         </div>
       ) : null}
-    </div>
+    </PageCard>
   );
 }

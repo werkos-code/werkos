@@ -30,6 +30,9 @@
   },
   "onboarding": {
     "progress": "Stap {current} van {total}",
+    "brand": {
+      "backToWebsite": "Naar website"
+    },
     "atmosphere": {
       "tagline": "Meer rust. Meer overzicht. Minder administratie."
     },

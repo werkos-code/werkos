@@ -34,7 +34,6 @@ export default async function OnboardingPaymentPage({ params }: Props) {
       step={5}
       title={t("title")}
       description={t("description")}
-      align="start"
       backHref="/onboarding/team"
     >
       <PaymentStepForm

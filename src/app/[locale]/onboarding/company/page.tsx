@@ -33,7 +33,6 @@ export default async function OnboardingCompanyPage({ params }: Props) {
       step={3}
       title={t("title")}
       description={t("description")}
-      align="start"
       backHref="/onboarding/account"
     >
       <CompanyStepForm

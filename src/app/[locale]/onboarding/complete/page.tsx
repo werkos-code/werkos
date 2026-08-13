@@ -29,7 +29,7 @@ export default async function OnboardingCompletePage({ params }: Props) {
       title={t("title")}
       description={t("description")}
     >
-      <Button asChild size="lg" className="mt-2">
+      <Button asChild size="lg" className="w-full">
         <Link href="/dashboard">{t("cta")}</Link>
       </Button>
     </OnboardingStepFrame>
