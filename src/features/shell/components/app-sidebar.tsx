@@ -63,7 +63,7 @@ function NavItemLink({
     <Link
       href={href}
       className={cn(
-        "relative flex items-center gap-2.5 rounded-lg text-[13px] transition-colors",
+        "relative flex items-center gap-2.5 rounded-lg text-sm transition-colors",
         nested ? "px-2.5 py-1.5" : "px-2.5 py-2 font-medium",
         active
           ? "bg-white/10 font-medium text-white"
@@ -118,7 +118,7 @@ function NavGroup({
         type="button"
         onClick={() => setManualOpen((value) => !value)}
         className={cn(
-          "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors",
+          "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
           containsActive
             ? "text-sidebar-foreground"
             : "text-sidebar-foreground/85 hover:bg-white/[0.06] hover:text-sidebar-foreground",
