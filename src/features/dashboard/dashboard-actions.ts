@@ -202,7 +202,7 @@ export async function loadDashboardSnapshot(): Promise<{
       kind: "workItem",
       title: item.title,
       subtitle: item.projectName,
-      href: `/projecten/${item.projectId}?tab=tasks`,
+          href: `/projecten/${item.projectId}?tab=work`,
       dueDate: item.plannedEnd,
       overdue: true,
     });

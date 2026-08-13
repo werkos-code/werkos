@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import {
@@ -33,6 +33,7 @@ export default async function ProjectDetailPage({
   const { locale, projectId } = await params;
   const { tab } = await searchParams;
   setRequestLocale(locale);
+  const t = await getTranslations("projects");
   const [
     projectResult,
     customersResult,
@@ -66,9 +67,8 @@ export default async function ProjectDetailPage({
 
   return (
     <ShellPage
-      title={project.name}
+      title={t("detail.chromeTitle")}
       backHref="/projecten"
-      contentClassName="max-w-none w-[94%]"
     >
       <ProjectDetailWorkspace
         project={project}

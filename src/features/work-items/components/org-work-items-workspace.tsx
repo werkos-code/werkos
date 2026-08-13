@@ -202,7 +202,7 @@ export function OrgWorkItemsWorkspace({
                     >
                       <td className="px-4 py-3">
                         <Link
-                          href={`/projecten/${item.projectId}?tab=tasks`}
+                          href={`/projecten/${item.projectId}?tab=work`}
                           className="font-medium text-foreground hover:text-primary hover:underline"
                         >
                           {item.title}
@@ -243,7 +243,7 @@ export function OrgWorkItemsWorkspace({
                       </td>
                       <td className="px-4 py-3">
                         <Link
-                          href={`/projecten/${item.projectId}?tab=tasks`}
+                          href={`/projecten/${item.projectId}?tab=work`}
                           className="text-sm font-medium text-primary hover:underline"
                         >
                           {tOrg("open")}

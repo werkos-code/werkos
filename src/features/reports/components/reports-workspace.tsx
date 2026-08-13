@@ -121,7 +121,7 @@ export function ReportsWorkspace({ snapshot }: ReportsWorkspaceProps) {
                   >
                     <td className="px-4 py-2.5">
                       <Link
-                        href={`/projecten/${item.projectId}?tab=tasks`}
+                        href={`/projecten/${item.projectId}?tab=work`}
                         className="font-medium hover:text-primary hover:underline"
                       >
                         {item.title}

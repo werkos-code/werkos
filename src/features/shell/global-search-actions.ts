@@ -117,7 +117,7 @@ export async function globalSearch(query: string): Promise<{
       id: row.id,
       label: row.title,
       subtitle: project.name,
-      href: `/projecten/${row.project_id}?tab=tasks`,
+      href: `/projecten/${row.project_id}?tab=work`,
       group: "workItems",
     });
     if (results.filter((r) => r.group === "workItems").length >= 6) break;

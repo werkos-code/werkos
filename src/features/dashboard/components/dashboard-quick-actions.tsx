@@ -262,7 +262,7 @@ export function DashboardQuickActions({
               return;
             }
             setDialog(null);
-            router.push(`/projecten/${projectId}?tab=tasks`);
+            router.push(`/projecten/${projectId}?tab=work`);
             return;
           }
           const response = await fetch("/api/appointments", {

@@ -218,7 +218,7 @@ export function DashboardTasksCard({
                   aria-label={task.title}
                 />
                 <Link
-                  href={`/projecten/${task.projectId}?tab=tasks`}
+                  href={`/projecten/${task.projectId}?tab=work`}
                   className="min-w-0 flex-1"
                 >
                   <p className="truncate text-sm font-medium">{task.title}</p>

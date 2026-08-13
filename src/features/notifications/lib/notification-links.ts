@@ -9,7 +9,7 @@ export function notificationHref(notification: NotificationRow): string | null {
     return `/projecten/${notification.projectId}/offertes/${notification.entityId}`;
   }
   if (notification.projectId && notification.entityType === "work_item") {
-    return `/projecten/${notification.projectId}?tab=tasks`;
+    return `/projecten/${notification.projectId}?tab=work`;
   }
   if (notification.projectId) {
     return `/projecten/${notification.projectId}`;

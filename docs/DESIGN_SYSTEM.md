@@ -85,17 +85,31 @@ Nieuwe pagina’s vallen in één type. Kopieer het recept; verzin geen nieuwe l
 
 **Voorbeeld:** `projects-workspace.tsx`, `customers-table.tsx`, `quotes-list.tsx`
 
-### 4.2 Detailpagina
+### 4.2 Detailpagina (project)
 
-1. Hero `PageCard p-5` op één compositie:
-   - Links: cover/thumbnail · titel · status-badge · favoriet · meta-rij · labels
-   - Rechts (zelfde rij op `xl`): KPI’s (ring + metrics) — **niet** op een aparte regel onder de identity
-   - Acties (Delen / Bewerken) **in** de hero-card, rechtsboven — niet op een volle regel erboven
-2. Underline-tabs onder de hero
-3. Tab-body: `PageCard`-panelen; 1–2 kolommen waar nodig
-4. Optioneel: vaste bottom-composer (notities)
+Chrome-titel is de lijst (`Projecten`), niet de projectnaam — identity staat in de hero.
 
-**Voorbeeld:** `project-detail-workspace.tsx`
+```
+Cover-hero (foto of navy #09133A)
+Modus-chips: Overzicht · Werk · Offertes · Bestanden · Geld
+  + link “Open in planning” rechts (geen tab)
+Default Overzicht = 2-koloms cockpit
+Diep werk = bestaande workspace / lijst / editor
+```
+
+1. Cover-hero `rounded-xl overflow-hidden`, overlay-gradient, witte tekst:
+   - Titel + status-pill · meta `PRJ-… · klant`
+   - Dunne voortgangsbalk (echte % of muted leeg)
+   - 3 eerlijke stats: werkzaamheden · offertes · gefactureerd — **geen** verzonnen bedragen
+   - Primaire CTA + `⋯` **in** de hero, rechtsboven — niet op een volle regel erboven
+2. Modus-chips: grote `rounded-xl` knoppen met icoon; actief `bg-primary/10 text-primary`. Geen underline-tabs op dit scherm. Planning is een link, geen modus.
+3. Overzicht-cockpit `grid xl:[minmax(0,1.6fr)_minmax(18rem,0.9fr)]`:
+   - Links: Aandacht · Werk-preview · Recente activiteit
+   - Rechts: Commercieel · Klant & locatie (Bel / Route)
+4. Werk / Offertes / Bestanden / Geld hergebruiken bestaande panelen; werkzaamheden-detail blijft ~70vw sheet
+5. Optioneel: vaste bottom-composer (notities)
+
+**Canonical:** `src/features/projects/components/project-detail-workspace.tsx` · overview: `project-detail-overview.tsx`
 
 ### 4.3 Operationele workspace (lijst in context)
 
@@ -204,7 +218,8 @@ grid xl:[minmax(0,1.7fr)_minmax(18rem,0.9fr)]
 
 | Variant | Gebruik | Patroon |
 | --- | --- | --- |
-| Underline | Pagina-secties (detail) | `border-b-2 border-primary text-primary` + count-pill |
+| Mode chips | Projectdetail | `rounded-xl border bg-card px-3.5 py-2` · actief `bg-primary/10 text-primary` |
+| Underline | Editor / sheets | `border-b-2 border-primary text-primary` + count-pill |
 | Segmented | View-switch (lijst/boom/kanban) | `rounded-lg border bg-card p-0.5` · actief `bg-primary/10 text-primary` |
 | Card-top | Editor-secties | `border-b-2` op tab binnen card |
 
@@ -258,7 +273,7 @@ Rijker: titel + korte uitleg + primaire actie. Nooit een “lege” dode pagina.
 ## 9. Responsive
 
 - Desktop leidend; tablet zelfde recept
-- Detail-hero: identity + KPI’s stacken onder `xl`; op `xl` één rij
+- Detail-hero: cover-banner full-width; modus-chips wrappen op smal scherm
 - Functionaliteit blijft gelijk op kleinere breakpoints
 
 ---
@@ -296,7 +311,7 @@ Rijker: titel + korte uitleg + primaire actie. Nooit een “lege” dode pagina.
 | Surfaces | `page-card.tsx` |
 | UI primitives | `src/components/ui/` |
 | Lijst + KPI’s | `src/features/projects/components/projects-workspace.tsx` |
-| Detail + tabs + hero | `src/features/projects/components/project-detail-workspace.tsx` |
+| Detail + cover-hero + modus-chips | `src/features/projects/components/project-detail-workspace.tsx` |
 | Workspace-lijst | `src/features/projects/components/project-work-items-workspace.tsx` |
 | Editor | `src/features/quotes/components/quote-editor.tsx` |
 | Mega backlog (open + afgerond) | [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) |
