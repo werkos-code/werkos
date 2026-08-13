@@ -49,25 +49,13 @@ export function defaultBillingTemplate(): QuoteBillingPhaseInput[] {
       title: "Voorschot bij opdracht",
       kind: "standard",
       amountType: "percent",
-      amountValue: 2500,
-    },
-    {
-      title: "Tussentijdse factuur",
-      kind: "standard",
-      amountType: "percent",
-      amountValue: 2500,
-    },
-    {
-      title: "Tussentijdse factuur",
-      kind: "standard",
-      amountType: "percent",
-      amountValue: 2500,
+      amountValue: 2000,
     },
     {
       title: "Slotfactuur",
       kind: "final",
       amountType: "percent",
-      amountValue: 2500,
+      amountValue: 8000,
     },
   ];
 }
