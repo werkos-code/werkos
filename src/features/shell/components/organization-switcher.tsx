@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronsUpDown } from "lucide-react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 import {
@@ -11,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 type OrganizationSwitcherProps = {
@@ -38,10 +40,15 @@ export function OrganizationSwitcher({
         )}
       >
         <div className="min-w-0 flex-1">
-          <p className="text-[15px] font-semibold tracking-tight text-white">
-            WerkOS
-          </p>
-          <p className="mt-0.5 flex items-center gap-1 truncate text-xs text-sidebar-muted">
+          <Image
+            src="/brand/werkos-logo.png"
+            alt={siteConfig.name}
+            width={300}
+            height={63}
+            priority
+            className="h-7 w-auto max-w-[11.5rem] object-contain object-left"
+          />
+          <p className="mt-1.5 flex items-center gap-1 truncate text-xs text-sidebar-muted">
             <span className="truncate">{name}</span>
             <ChevronsUpDown className="size-3 shrink-0 opacity-70 transition-opacity group-hover:opacity-100" />
           </p>
