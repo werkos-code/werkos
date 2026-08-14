@@ -143,7 +143,6 @@ export const APP_NAV: ShellNavSection[] = [
           { href: "/materiaal/voorraad", labelKey: "stock" },
           { href: "/materiaal/artikelen", labelKey: "articles" },
           { href: "/materiaal/inkoop", labelKey: "purchasing" },
-          { href: "/materiaal/installaties", labelKey: "installations" },
         ],
       },
     ],

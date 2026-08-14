@@ -1,18 +1,12 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 
-import { ComingSoonPanel } from "@/features/shell/components/coming-soon-panel";
-import { ShellPage } from "@/features/shell/components/shell-page";
+import { redirect } from "@/i18n/navigation";
 
 type Props = { params: Promise<{ locale: string }> };
 
+/** Installaties is parked; keep the URL from 404-ing bookmarks. */
 export default async function InstallatiesPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations("shell.pages.installations");
-
-  return (
-    <ShellPage title={t("title")}>
-      <ComingSoonPanel message={t("description")} />
-    </ShellPage>
-  );
+  redirect({ href: "/materiaal/voorraad", locale });
 }

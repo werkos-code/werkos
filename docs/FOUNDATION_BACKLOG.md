@@ -43,7 +43,7 @@
 | --- | --- | --- | --- |
 | Werkzaamheden (hoofdpagina) | `/werkzaamheden` | Done | Org-brede lijst + filters; rij → project `?tab=tasks` |
 | Onderaannemers | `/onderaannemers` | Done | CRUD zoals klanten; SQL `20260728120000_subcontractors.sql` |
-| Materiaal → Installaties | `/materiaal/installaties` | Stub | Ook onder Materiaal ERP |
+| Materiaal → Installaties | `/materiaal/installaties` | Parked | Uit sidebar gehaald; URL redirect naar voorraad tot we dit bouwen |
 | Bedrijf → Rapportages | `/rapportages` | Done | KPI-strip + open projecten / te late werkzaamheden / openstaande facturen |
 | Personeel | `/personeel` | Done | KPI’s, zoeken, invite (owner), rol wijzigen, verwijderen |
 | Inbox | `/inbox` | Done | Interne gesprekken per project; thread + nieuw gesprek |
@@ -70,7 +70,7 @@
 
 - [x] Werkzaamheden hoofdpagina (`/werkzaamheden`) — org-breed overzicht, koppeling project-detail
 - [x] Onderaannemers (`/onderaannemers`) — lijst + detail (zoals klanten/leveranciers)
-- [ ] Materiaal → Installaties (`/materiaal/installaties`)
+- [ ] Materiaal → Installaties (`/materiaal/installaties`) — **geparkeerd** (niet in sidebar)
 - [x] Rapportages (`/rapportages`) — eerste KPI/rapport-set
 - [x] Personeel (`/personeel`) — teamleden / rollen in org (invite + beheer door owner)
 - [x] Inbox (`/inbox`) — gesprekken-overzicht (MVP)
@@ -451,7 +451,7 @@
 ### Open
 
 - [ ] **2BA credentials activeren** — zie `PENDING_SETUP.md`
-- [ ] **Installaties** (`/materiaal/installaties`) — stub; zie [§1](#1-basisvorm--stubs--shell)
+- [ ] **Installaties** (`/materiaal/installaties`) — geparkeerd; uit sidebar, redirect naar voorraad
 - [ ] Veld/portaal (scan + offline)
 - [ ] 2BA: nettoprijzen / voorraad per leverancier (optioneel)
 
