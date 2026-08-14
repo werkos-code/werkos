@@ -723,7 +723,25 @@
     "kpiTotal": "Gesamt",
     "kpiUnread": "Ungelesen",
     "kpiRead": "Gelesen",
-    "preferencesHint": "Kanal-Einstellungen folgen in einer späteren Version."
+    "events": {
+      "project_created": "Neues Projekt",
+      "status_changed": "Projektstatus geändert",
+      "quote_sent": "Angebot gesendet",
+      "quote_accepted": "Angebot angenommen",
+      "quote_rejected": "Angebot abgelehnt",
+      "quote_cancelled": "Angebot storniert",
+      "work_item_completed": "Arbeitsposten erledigt",
+      "work_item_assigned": "Arbeitsposten zugewiesen",
+      "invoice_sent": "Rechnung gesendet",
+      "invoice_paid": "Rechnung bezahlt",
+      "appointment_created": "Termin hinzugefügt",
+      "appointment_updated": "Termin geändert",
+      "appointment_assigned": "Du wurdest eingeplant",
+      "inbox_message": "Neue Inbox-Nachricht",
+      "work_order_created": "Arbeitsschein erstellt",
+      "work_order_assigned": "Arbeitsschein zugewiesen",
+      "work_order_completed": "Arbeitsschein abgeschlossen"
+    }
   },
   "suppliers": {
     "title": "Lieferanten",

@@ -1,8 +1,29 @@
+import { notifyOrgStaff } from "@/features/notifications/lib/notify-org-staff";
 import type { createAdminClient } from "@/lib/supabase/admin";
 import type { Json, ProjectActivityType } from "@/types/database";
-import { notifyOrgStaff } from "@/features/notifications/lib/notify-org-staff";
 
 type AdminClient = ReturnType<typeof createAdminClient>;
+
+/** Activity types that should appear in the in-app bell. */
+const ACTIVITY_NOTIFICATION: Partial<
+  Record<ProjectActivityType, { entityType: string }>
+> = {
+  project_created: { entityType: "project" },
+  status_changed: { entityType: "project" },
+  quote_sent: { entityType: "quote" },
+  quote_accepted: { entityType: "quote" },
+  quote_rejected: { entityType: "quote" },
+  quote_cancelled: { entityType: "quote" },
+  work_item_completed: { entityType: "work_item" },
+};
+
+function metadataId(
+  metadata: Record<string, unknown> | undefined,
+  key: string,
+): string | null {
+  const value = metadata?.[key];
+  return typeof value === "string" && value.trim() ? value : null;
+}
 
 export async function logProjectActivity(
   admin: AdminClient,
@@ -33,14 +54,24 @@ export async function logProjectActivity(
     return;
   }
 
+  const notifySpec = ACTIVITY_NOTIFICATION[input.type];
+  if (!notifySpec) return;
+
+  const entityType = input.entityType ?? notifySpec.entityType;
+  const entityId =
+    input.entityId ??
+    metadataId(input.metadata, "quote_id") ??
+    metadataId(input.metadata, "work_item_id") ??
+    (entityType === "project" ? input.projectId : null);
+
   await notifyOrgStaff(admin, {
     organizationId: input.organizationId,
     actorUserId: input.createdBy ?? null,
     type: input.type,
     title: input.title,
     body: input.body ?? null,
-    entityType: input.entityType ?? input.type.split("_")[0] ?? null,
-    entityId: input.entityId ?? null,
+    entityType,
+    entityId,
     projectId: input.projectId,
     metadata: input.metadata,
   });

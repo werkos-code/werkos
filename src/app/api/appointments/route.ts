@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { notifyOrgStaff } from "@/features/notifications/lib/notify-org-staff";
 import {
   APPOINTMENT_STATUSES,
   APPOINTMENT_TYPES,
@@ -114,6 +115,19 @@ export async function POST(request: Request) {
       endsAt,
     );
 
+    const assigneeId = emptyToNull(body.assigneeUserId);
+    await notifyOrgStaff(admin, {
+      organizationId: gate.organizationId,
+      actorUserId: gate.userId,
+      type: "appointment_created",
+      title: "Planning gewijzigd",
+      body: title,
+      entityType: "appointment",
+      entityId: data.id,
+      projectId: emptyToNull(body.projectId),
+      extraRecipientIds: assigneeId ? [assigneeId] : [],
+    });
+
     return NextResponse.json({ appointmentId: data.id });
   } catch (error) {
     const message = error instanceof Error ? error.message : "create_failed";
@@ -156,7 +170,9 @@ export async function PATCH(request: Request) {
     const admin = createAdminClient();
     const { data: existing } = await admin
       .from("appointments")
-      .select("id, starts_at, ends_at, work_item_id")
+      .select(
+        "id, title, starts_at, ends_at, work_item_id, project_id, assignee_user_id, status",
+      )
       .eq("organization_id", gate.organizationId)
       .eq("id", id)
       .maybeSingle();
@@ -221,6 +237,45 @@ export async function PATCH(request: Request) {
       startsAt,
       endsAt,
     );
+
+    const nextTitle =
+      body.title !== undefined ? body.title.trim() : existing.title;
+    const nextAssignee =
+      body.assigneeUserId !== undefined
+        ? emptyToNull(body.assigneeUserId)
+        : existing.assignee_user_id;
+    const timeChanged =
+      startsAt !== existing.starts_at || endsAt !== existing.ends_at;
+    const assigneeChanged = nextAssignee !== existing.assignee_user_id;
+    const statusChanged =
+      body.status !== undefined && body.status !== existing.status;
+
+    if (assigneeChanged && nextAssignee) {
+      await notifyOrgStaff(admin, {
+        organizationId: gate.organizationId,
+        actorUserId: gate.userId,
+        type: "appointment_assigned",
+        title: "Je bent ingepland",
+        body: nextTitle,
+        entityType: "appointment",
+        entityId: existing.id,
+        projectId: existing.project_id,
+        extraRecipientIds: [nextAssignee],
+        audience: "assignees",
+      });
+    } else if (timeChanged || statusChanged || body.title !== undefined) {
+      await notifyOrgStaff(admin, {
+        organizationId: gate.organizationId,
+        actorUserId: gate.userId,
+        type: "appointment_updated",
+        title: "Planning gewijzigd",
+        body: nextTitle,
+        entityType: "appointment",
+        entityId: existing.id,
+        projectId: existing.project_id,
+        extraRecipientIds: nextAssignee ? [nextAssignee] : [],
+      });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { notifyOrgStaff } from "@/features/notifications/lib/notify-org-staff";
 import { logProjectActivity } from "@/features/projects/lib/project-activity";
 import { WORK_ITEM_PRIORITIES, WORK_ITEM_STATUSES } from "@/features/projects/lib/work-item";
 import { requireApiStaff } from "@/features/shell/lib/api-staff";
@@ -156,7 +157,25 @@ export async function POST(request: Request) {
       body: title,
       metadata: { work_item_id: data.id, parent_id: parentId },
       createdBy: gate.userId,
+      entityType: "work_item",
+      entityId: data.id,
     });
+
+    const assigneeId = emptyToNull(body.assigneeUserId);
+    if (assigneeId) {
+      await notifyOrgStaff(admin, {
+        organizationId: gate.organizationId,
+        actorUserId: gate.userId,
+        type: "work_item_assigned",
+        title: "Werkzaamheid toegewezen",
+        body: title,
+        entityType: "work_item",
+        entityId: data.id,
+        projectId,
+        extraRecipientIds: [assigneeId],
+        audience: "assignees",
+      });
+    }
 
     return NextResponse.json({ workItem: data });
   } catch (error) {
@@ -206,7 +225,7 @@ export async function PATCH(request: Request) {
     const admin = createAdminClient();
     const { data: existing } = await admin
       .from("work_items")
-      .select("id, title, status, project_id")
+      .select("id, title, status, project_id, assignee_user_id")
       .eq("organization_id", gate.organizationId)
       .eq("id", id)
       .maybeSingle();
@@ -271,6 +290,8 @@ export async function PATCH(request: Request) {
         body: nextTitle,
         metadata: { work_item_id: id },
         createdBy: gate.userId,
+        entityType: "work_item",
+        entityId: id,
       });
     } else if (
       existing.title !== nextTitle ||
@@ -300,6 +321,29 @@ export async function PATCH(request: Request) {
           to: nextStatus,
         },
         createdBy: gate.userId,
+      });
+    }
+
+    const nextAssignee =
+      body.assigneeUserId !== undefined
+        ? emptyToNull(body.assigneeUserId)
+        : existing.assignee_user_id;
+    if (
+      body.assigneeUserId !== undefined &&
+      nextAssignee &&
+      nextAssignee !== existing.assignee_user_id
+    ) {
+      await notifyOrgStaff(admin, {
+        organizationId: gate.organizationId,
+        actorUserId: gate.userId,
+        type: "work_item_assigned",
+        title: "Werkzaamheid toegewezen",
+        body: nextTitle,
+        entityType: "work_item",
+        entityId: id,
+        projectId: existing.project_id,
+        extraRecipientIds: [nextAssignee],
+        audience: "assignees",
       });
     }
 

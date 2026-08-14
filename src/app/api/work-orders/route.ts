@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { notifyOrgStaff } from "@/features/notifications/lib/notify-org-staff";
 import {
   WORK_ORDER_PRIORITIES,
   WORK_ORDER_STATUSES,
@@ -112,6 +113,19 @@ export async function POST(request: Request) {
       );
     }
 
+    const assigneeId = emptyToNull(body.assigneeUserId);
+    await notifyOrgStaff(admin, {
+      organizationId: gate.organizationId,
+      actorUserId: gate.userId,
+      type: "work_order_created",
+      title: "Werkbon aangemaakt",
+      body: title,
+      entityType: "work_order",
+      entityId: data.id,
+      projectId,
+      extraRecipientIds: assigneeId ? [assigneeId] : [],
+    });
+
     return NextResponse.json({
       workOrderId: data.id,
       workOrderNumber: data.work_order_number,
@@ -159,7 +173,7 @@ export async function PATCH(request: Request) {
     const admin = createAdminClient();
     const { data: existing } = await admin
       .from("work_orders")
-      .select("id")
+      .select("id, title, status, project_id, assignee_user_id")
       .eq("organization_id", gate.organizationId)
       .eq("id", id)
       .maybeSingle();
@@ -232,6 +246,47 @@ export async function PATCH(request: Request) {
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    const nextTitle =
+      body.title !== undefined ? body.title.trim() : existing.title;
+    const nextAssignee =
+      body.assigneeUserId !== undefined
+        ? emptyToNull(body.assigneeUserId)
+        : existing.assignee_user_id;
+    const projectId =
+      body.projectId !== undefined
+        ? body.projectId.trim()
+        : existing.project_id;
+
+    if (
+      body.assigneeUserId !== undefined &&
+      nextAssignee &&
+      nextAssignee !== existing.assignee_user_id
+    ) {
+      await notifyOrgStaff(admin, {
+        organizationId: gate.organizationId,
+        actorUserId: gate.userId,
+        type: "work_order_assigned",
+        title: "Werkbon toegewezen",
+        body: nextTitle,
+        entityType: "work_order",
+        entityId: id,
+        projectId,
+        extraRecipientIds: [nextAssignee],
+        audience: "assignees",
+      });
+    } else if (body.status === "done" && existing.status !== "done") {
+      await notifyOrgStaff(admin, {
+        organizationId: gate.organizationId,
+        actorUserId: gate.userId,
+        type: "work_order_completed",
+        title: "Werkbon afgerond",
+        body: nextTitle,
+        entityType: "work_order",
+        entityId: id,
+        projectId,
+      });
     }
 
     return NextResponse.json({ success: true });

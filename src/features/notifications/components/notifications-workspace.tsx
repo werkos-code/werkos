@@ -1,10 +1,14 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
-import { notificationHref } from "@/features/notifications/lib/notification-links";
+import {
+  formatNotificationTime,
+  notificationEventTitle,
+  notificationHref,
+} from "@/features/notifications/lib/notification-links";
 import type { NotificationRow } from "@/features/notifications/notifications-actions";
 import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -19,8 +23,17 @@ export function NotificationsWorkspace({
   unreadCount,
 }: NotificationsWorkspaceProps) {
   const t = useTranslations("notifications");
+  const locale = useLocale();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+
+  function markRead(id: string) {
+    void fetch("/api/notifications", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+  }
 
   return (
     <div className="space-y-4">
@@ -71,14 +84,19 @@ export function NotificationsWorkspace({
                 >
                   <div className="flex items-start justify-between gap-3 px-4 py-3">
                     <div>
-                      <p className="font-medium">{notification.title}</p>
+                      <p className="font-medium">
+                        {notificationEventTitle(notification, t)}
+                      </p>
                       {notification.body ? (
                         <p className="mt-0.5 text-sm text-muted-foreground">
                           {notification.body}
                         </p>
                       ) : null}
                       <p className="mt-1 text-[11px] text-muted-foreground">
-                        {notification.createdAt.slice(0, 16).replace("T", " ")}
+                        {formatNotificationTime(
+                          notification.createdAt,
+                          locale,
+                        )}
                       </p>
                     </div>
                     <div className="flex shrink-0 flex-col items-end gap-1">
@@ -91,6 +109,7 @@ export function NotificationsWorkspace({
                         <Link
                           href={href}
                           className="text-xs font-medium text-primary hover:underline"
+                          onClick={() => markRead(notification.id)}
                         >
                           {t("open")}
                         </Link>
@@ -103,10 +122,6 @@ export function NotificationsWorkspace({
           </ul>
         </PageCard>
       )}
-
-      <PageCard className="px-5 py-4 text-sm text-muted-foreground">
-        {t("preferencesHint")}
-      </PageCard>
     </div>
   );
 }

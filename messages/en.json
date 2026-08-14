@@ -723,7 +723,25 @@
     "kpiTotal": "Total",
     "kpiUnread": "Unread",
     "kpiRead": "Read",
-    "preferencesHint": "Per-channel notification preferences come in a later version."
+    "events": {
+      "project_created": "New project",
+      "status_changed": "Project status changed",
+      "quote_sent": "Quote sent",
+      "quote_accepted": "Quote accepted",
+      "quote_rejected": "Quote declined",
+      "quote_cancelled": "Quote cancelled",
+      "work_item_completed": "Work item completed",
+      "work_item_assigned": "Work item assigned",
+      "invoice_sent": "Invoice sent",
+      "invoice_paid": "Invoice paid",
+      "appointment_created": "Planning added",
+      "appointment_updated": "Planning changed",
+      "appointment_assigned": "You were scheduled",
+      "inbox_message": "New inbox message",
+      "work_order_created": "Work order created",
+      "work_order_assigned": "Work order assigned",
+      "work_order_completed": "Work order completed"
+    }
   },
   "suppliers": {
     "title": "Suppliers",

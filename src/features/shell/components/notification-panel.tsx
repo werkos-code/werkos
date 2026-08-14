@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,11 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { notificationHref } from "@/features/notifications/lib/notification-links";
+import {
+  formatNotificationTime,
+  notificationEventTitle,
+  notificationHref,
+} from "@/features/notifications/lib/notification-links";
 import type { NotificationRow } from "@/features/notifications/notifications-actions";
 import { Link, useRouter } from "@/i18n/navigation";
 
@@ -27,10 +31,12 @@ export function NotificationPanel({
 }: NotificationPanelProps) {
   const t = useTranslations("notifications");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const router = useRouter();
   const [notifications, setNotifications] = useState<NotificationRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -50,12 +56,15 @@ export function NotificationPanel({
           }
           setError(null);
           setNotifications(result.notifications ?? []);
+          setHasLoaded(true);
         } catch {
           setError(tCommon("error"));
         }
       })();
     });
   }, [open, tCommon]);
+
+  const unreadCount = notifications.filter((item) => !item.readAt).length;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -68,7 +77,7 @@ export function NotificationPanel({
             type="button"
             variant="outline"
             size="sm"
-            disabled={isPending}
+            disabled={isPending || unreadCount === 0}
             onClick={() => {
               startTransition(() => {
                 void (async () => {
@@ -91,12 +100,23 @@ export function NotificationPanel({
             {t("markAllRead")}
           </Button>
           <Button type="button" variant="ghost" size="sm" asChild>
-            <Link href="/notificaties">{t("openCenter")}</Link>
+            <Link href="/notificaties" onClick={() => onOpenChange(false)}>
+              {t("openCenter")}
+            </Link>
           </Button>
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto">
           {error ? (
             <p className="text-sm text-destructive">{error}</p>
+          ) : !hasLoaded && isPending ? (
+            <ul className="space-y-2" aria-hidden>
+              {Array.from({ length: 5 }, (_, i) => (
+                <li
+                  key={i}
+                  className="h-[4.5rem] animate-pulse rounded-lg bg-muted"
+                />
+              ))}
+            </ul>
           ) : notifications.length === 0 ? (
             <p className="py-8 text-sm text-muted-foreground">{t("empty")}</p>
           ) : (
@@ -127,14 +147,19 @@ export function NotificationPanel({
                         });
                       }}
                     >
-                      <p className="text-sm font-medium">{notification.title}</p>
+                      <p className="text-sm font-medium">
+                        {notificationEventTitle(notification, t)}
+                      </p>
                       {notification.body ? (
                         <p className="mt-0.5 text-xs text-muted-foreground">
                           {notification.body}
                         </p>
                       ) : null}
                       <p className="mt-1 text-[11px] text-muted-foreground">
-                        {notification.createdAt.slice(0, 16).replace("T", " ")}
+                        {formatNotificationTime(
+                          notification.createdAt,
+                          locale,
+                        )}
                       </p>
                     </button>
                   </li>

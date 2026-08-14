@@ -47,14 +47,14 @@
 | Bedrijf → Rapportages | `/rapportages` | Done | KPI-strip + open projecten / te late werkzaamheden / openstaande facturen |
 | Personeel | `/personeel` | Done | KPI’s, zoeken, invite (owner), rol wijzigen, verwijderen |
 | Inbox | `/inbox` | Done | Interne gesprekken per project; thread + nieuw gesprek |
-| Notificaties (pagina) | `/notificaties` | Done | Notificatiecentrum + gelezen status |
+| Notificaties (pagina) | `/notificaties` | Done | Centrum + gelezen status; bel is live-klaar |
 
 ### Shell-header (rechtsboven)
 
 | Element | Status | Notities |
 | --- | --- | --- |
 | Zoekfunctie | Done | ⌘K / header-icoon → globale zoekdialog |
-| Notificatie-icoon | Done | Sheet + badge + link naar `/notificaties` |
+| Notificatie-icoon | Done | Sheet + live badge + link naar `/notificaties` |
 | Help-icoon | Done | Help-dialog met snelle links |
 
 ### Account & abonnement
@@ -74,7 +74,7 @@
 - [x] Rapportages (`/rapportages`) — eerste KPI/rapport-set
 - [x] Personeel (`/personeel`) — teamleden / rollen in org (invite + beheer door owner)
 - [x] Inbox (`/inbox`) — gesprekken-overzicht (MVP)
-- [x] Notificaties-pagina (`/notificaties`) — voorkeuren + geschiedenis (MVP)
+- [x] Notificaties-pagina (`/notificaties`) — geschiedenis + gelezen status
 
 **Shell-chrome**
 

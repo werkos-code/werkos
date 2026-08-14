@@ -59,6 +59,17 @@ export function ShellChromeProvider({
 
   useEffect(() => {
     refreshUnreadCount();
+    const interval = window.setInterval(refreshUnreadCount, 30_000);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") refreshUnreadCount();
+    };
+    window.addEventListener("focus", refreshUnreadCount);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("focus", refreshUnreadCount);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [refreshUnreadCount]);
 
   useEffect(() => {

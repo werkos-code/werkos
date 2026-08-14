@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { INVOICE_STATUSES } from "@/features/invoices/lib/invoice";
+import { notifyOrgStaff } from "@/features/notifications/lib/notify-org-staff";
 import { requireApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { InvoiceStatus } from "@/types/database";
@@ -113,6 +114,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    if (status === "sent" || status === "paid") {
+      await notifyOrgStaff(admin, {
+        organizationId: gate.organizationId,
+        actorUserId: gate.userId,
+        type: status === "paid" ? "invoice_paid" : "invoice_sent",
+        title: status === "paid" ? "Factuur betaald" : "Factuur verstuurd",
+        body: title,
+        entityType: "invoice",
+        entityId: data.id,
+        projectId,
+      });
+    }
+
     return NextResponse.json({
       invoiceId: data.id,
       invoiceNumber: data.invoice_number,
@@ -151,7 +165,7 @@ export async function PATCH(request: Request) {
     const admin = createAdminClient();
     const { data: existing } = await admin
       .from("invoices")
-      .select("id, status")
+      .select("id, status, title, project_id")
       .eq("organization_id", gate.organizationId)
       .eq("id", id)
       .maybeSingle();
@@ -202,6 +216,23 @@ export async function PATCH(request: Request) {
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    if (
+      body.status &&
+      body.status !== existing.status &&
+      (body.status === "sent" || body.status === "paid")
+    ) {
+      await notifyOrgStaff(admin, {
+        organizationId: gate.organizationId,
+        actorUserId: gate.userId,
+        type: body.status === "paid" ? "invoice_paid" : "invoice_sent",
+        title: body.status === "paid" ? "Factuur betaald" : "Factuur verstuurd",
+        body: existing.title,
+        entityType: "invoice",
+        entityId: existing.id,
+        projectId: existing.project_id,
+      });
     }
 
     return NextResponse.json({ success: true });

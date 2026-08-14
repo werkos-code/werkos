@@ -723,7 +723,25 @@
     "kpiTotal": "Totaal",
     "kpiUnread": "Ongelezen",
     "kpiRead": "Gelezen",
-    "preferencesHint": "Notificatievoorkeuren per kanaal volgen in een volgende versie."
+    "events": {
+      "project_created": "Nieuw project",
+      "status_changed": "Projectstatus gewijzigd",
+      "quote_sent": "Offerte verzonden",
+      "quote_accepted": "Offerte geaccepteerd",
+      "quote_rejected": "Offerte afgewezen",
+      "quote_cancelled": "Offerte geannuleerd",
+      "work_item_completed": "Werkzaamheid voltooid",
+      "work_item_assigned": "Werkzaamheid toegewezen",
+      "invoice_sent": "Factuur verstuurd",
+      "invoice_paid": "Factuur betaald",
+      "appointment_created": "Planning toegevoegd",
+      "appointment_updated": "Planning gewijzigd",
+      "appointment_assigned": "Je bent ingepland",
+      "inbox_message": "Nieuw bericht in inbox",
+      "work_order_created": "Werkbon aangemaakt",
+      "work_order_assigned": "Werkbon toegewezen",
+      "work_order_completed": "Werkbon afgerond"
+    }
   },
   "suppliers": {
     "title": "Leveranciers",

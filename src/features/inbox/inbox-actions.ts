@@ -1,5 +1,6 @@
 "use server";
 
+import { notifyOrgStaff } from "@/features/notifications/lib/notify-org-staff";
 import { getStaffOrgContext } from "@/features/shell/lib/staff-org-context";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -209,6 +210,18 @@ export async function createConversation(input: {
     });
 
   if (messageError) return { error: messageError.message };
+
+  await notifyOrgStaff(admin, {
+    organizationId: ctx.organizationId,
+    actorUserId: ctx.userId,
+    type: "inbox_message",
+    title: "Nieuw bericht in inbox",
+    body: subject,
+    entityType: "conversation",
+    entityId: conversationId,
+    projectId: input.projectId,
+  });
+
   return { conversationId };
 }
 
@@ -241,5 +254,24 @@ export async function postConversationMessage(input: {
     .eq("id", input.conversationId);
 
   if (updateError) return { error: updateError.message };
+
+  const { data: conversation } = await admin
+    .from("conversations")
+    .select("project_id, subject")
+    .eq("organization_id", ctx.organizationId)
+    .eq("id", input.conversationId)
+    .maybeSingle();
+
+  await notifyOrgStaff(admin, {
+    organizationId: ctx.organizationId,
+    actorUserId: ctx.userId,
+    type: "inbox_message",
+    title: "Nieuw bericht in inbox",
+    body: conversation?.subject ?? body.slice(0, 80),
+    entityType: "conversation",
+    entityId: input.conversationId,
+    projectId: conversation?.project_id ?? null,
+  });
+
   return {};
 }
