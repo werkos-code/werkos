@@ -4,7 +4,7 @@ import { LoginCard } from "@/features/auth/components/login-card";
 import { siteConfig } from "@/config/site";
 
 const LOGIN_BACKGROUND = {
-  src: "/auth/login-background.png",
+  src: "/auth/login-background.jpg",
   alt: "Rotterdam bij schemering",
 } as const;
 
@@ -16,6 +16,7 @@ export function LoginShell({ children }: { children: React.ReactNode }) {
         alt={LOGIN_BACKGROUND.alt}
         fill
         priority
+        quality={90}
         sizes="100vw"
         className="object-cover"
       />
