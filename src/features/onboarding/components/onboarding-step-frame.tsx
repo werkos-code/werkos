@@ -29,7 +29,7 @@ export async function OnboardingStepFrame({
   const t = await getTranslations("common");
 
   return (
-    <div className="w-full max-w-[32rem] rounded-3xl bg-white px-8 py-10 shadow-[0_24px_80px_rgba(15,23,42,0.22)] sm:px-12 sm:py-12">
+    <div className="w-full rounded-3xl bg-white px-10 py-12 shadow-[0_24px_80px_rgba(15,23,42,0.22)] sm:px-16 sm:py-16">
       {backHref ? (
         <Link
           href={backHref}

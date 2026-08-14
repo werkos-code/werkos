@@ -4,12 +4,12 @@ import { getTranslations } from "next-intl/server";
 
 import { siteConfig } from "@/config/site";
 
-/** White logo + website link above the form card on mobile/tablet. */
+/** White logo + website link above the form card. */
 export async function OnboardingMobileBrand() {
   const t = await getTranslations("onboarding.atmosphere");
 
   return (
-    <div className="mb-8 flex items-center justify-center gap-3 lg:hidden">
+    <div className="mb-8 flex items-center justify-center gap-3 sm:mb-10">
       <a
         href={siteConfig.marketingUrl}
         className="transition-opacity hover:opacity-90"
@@ -21,7 +21,7 @@ export async function OnboardingMobileBrand() {
           width={697}
           height={147}
           priority
-          className="h-7 w-auto"
+          className="h-8 w-auto sm:h-9"
         />
       </a>
       <a

@@ -198,15 +198,14 @@ grid xl:[minmax(0,1.7fr)_minmax(18rem,0.9fr)]
 
 **Canonical:** `src/features/dashboard/components/dashboard-workspace.tsx`
 
-### 4.8 Onboarding (split, buiten de app-shell)
+### 4.8 Onboarding (centered, buiten de app-shell)
 
-Full-bleed foto over de hele pagina. Twee kolommen: USPs links op de foto, zwevend wit formulierblok rechts (foto blijft zichtbaar om het blok heen).
+Full-bleed foto + navy overlay. Wit logo boven een groot gecentreerd formulierblok.
 
 ```
-Foto (full-bleed) + navy overlay
-Links (lg+): logo-white (geen pill) + Website-knop · headline + 3 USP-cards
-Rechts: wit blok rounded-3xl, geen border, royale padding
-Mobiel: logo-white boven het blok; foto-paneel (USPs) verborgen
+Foto (full-bleed) + overlay
+logo-white + Website-knop
+wit blok rounded-3xl, geen border, royale padding
 ```
 
 1. Logo: `/brand/logo-white.svg` — **geen** achtergrond achter het logo
