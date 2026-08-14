@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
+import { ONBOARDING_STEP_TOTAL } from "@/features/onboarding/atmosphere";
 import { cn } from "@/lib/utils";
 
 type OnboardingProgressProps = {
@@ -9,7 +10,7 @@ type OnboardingProgressProps = {
 
 export async function OnboardingProgress({
   current,
-  total = 7,
+  total = ONBOARDING_STEP_TOTAL,
 }: OnboardingProgressProps) {
   const t = await getTranslations("onboarding");
 

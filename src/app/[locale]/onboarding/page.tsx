@@ -1,12 +1,11 @@
 import { setRequestLocale } from "next-intl/server";
 
-import { WelcomeStep } from "@/features/onboarding/components/welcome-step";
+import { redirect } from "@/i18n/navigation";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export default async function OnboardingWelcomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-
-  return <WelcomeStep />;
+  redirect({ href: "/onboarding/account", locale });
 }

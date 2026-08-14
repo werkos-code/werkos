@@ -31,7 +31,7 @@ export default async function OnboardingTeamPage({ params }: Props) {
 
   return (
     <OnboardingStepFrame
-      step={4}
+      step={3}
       title={t("title")}
       description={t("description")}
       backHref="/onboarding/company"

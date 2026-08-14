@@ -1,6 +1,6 @@
 /**
  * Atmosphere panel assets for onboarding.
- * Swap `src` in ONBOARDING_ATMOSPHERE_ASSETS when the final construction photo is ready.
+ * Swap `src` in ONBOARDING_ATMOSPHERE_ASSETS when the photo changes.
  */
 export type OnboardingAtmosphereAsset = {
   /** Path under /public, or a remote URL once next.config allows it */
@@ -11,12 +11,14 @@ export type OnboardingAtmosphereAsset = {
 };
 
 export const ONBOARDING_ATMOSPHERE_ASSETS = {
-  tradesperson: {
-    src: "/onboarding/tradesperson.jpg",
-    alt: "Vakmensen aan het werk op de bouw",
-    credit: "Unsplash",
+  solarInstaller: {
+    src: "/onboarding/solar-installer.png",
+    alt: "Vakman installeert zonnepanelen op een dak",
+    credit: "Pexels",
   },
 } as const satisfies Record<string, OnboardingAtmosphereAsset>;
 
 export const DEFAULT_ONBOARDING_ATMOSPHERE =
-  ONBOARDING_ATMOSPHERE_ASSETS.tradesperson;
+  ONBOARDING_ATMOSPHERE_ASSETS.solarInstaller;
+
+export const ONBOARDING_STEP_TOTAL = 6;

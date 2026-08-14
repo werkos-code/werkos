@@ -33,7 +33,7 @@ export default async function OnboardingProvisioningPage({
 
   return (
     <OnboardingStepFrame
-      step={6}
+      step={5}
       title={t("title")}
       description={t("waiting")}
     >

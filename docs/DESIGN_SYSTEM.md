@@ -200,20 +200,19 @@ grid xl:[minmax(0,1.7fr)_minmax(18rem,0.9fr)]
 
 ### 4.8 Onboarding (split, buiten de app-shell)
 
-Geen sidebar. Foto + USPs links, formulier rechts — content mag niet verspringen tussen stappen.
+Full-bleed foto over de hele pagina. Twee kolommen: USPs links op de foto, zwevend wit formulierblok rechts (foto blijft zichtbaar om het blok heen).
 
 ```
-Links (lg+): full-bleed bouwfoto + navy overlay
-  logo-color op witte pill + Website-knop
-  headline + 3 USP-cards (glass)
-Rechts: progress + titel + floating PageCard met formulier
-Mobiel: compact logo + Website bovenaan, foto-paneel verborgen
+Foto (full-bleed) + navy overlay
+Links (lg+): logo-white (geen pill) + Website-knop · headline + 3 USP-cards
+Rechts: wit blok rounded-3xl, geen border, royale padding
+Mobiel: logo-white boven het blok; foto-paneel (USPs) verborgen
 ```
 
-1. Logo: `/brand/logo-color.svg` — **geen** zwarte achtergrond; op foto in witte pill
-2. Achtergrondfoto: `/onboarding/tradesperson.jpg` (vervangbaar via `atmosphere.ts`)
-3. Formulier in één `PageCard` met lichte schaduw; geen geneste cards
-4. Progress: segmented bar + `01 / 07` pill
+1. Logo: `/brand/logo-white.svg` — **geen** achtergrond achter het logo
+2. Achtergrondfoto: `/onboarding/solar-installer.png` (vervangbaar via `atmosphere.ts`)
+3. Formulier in het witte blok; geen geneste cards
+4. Progress: segmented bar — 6 stappen (account → bedrijf → team → betaling → inrichten → klaar). Geen welcome-stap.
 5. Branche-chips: modus-chip classes; extra veld reserveert hoogte
 
 **Canonical:** `src/features/onboarding/components/onboarding-shell.tsx`
