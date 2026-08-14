@@ -19,7 +19,7 @@ export function LoginForm() {
 
   return (
     <form
-      className="flex w-full max-w-sm flex-col gap-5"
+      className="flex flex-col gap-5"
       onSubmit={(event) => {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
@@ -59,7 +59,7 @@ export function LoginForm() {
         />
       </div>
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
-      <Button type="submit" disabled={pending} className="w-full">
+      <Button type="submit" size="lg" disabled={pending} className="w-full">
         {pending ? tCommon("loading") : t("submitLogin")}
       </Button>
     </form>

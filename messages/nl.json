@@ -11,15 +11,18 @@
     "perMonth": "/ maand"
   },
   "home": {
-    "eyebrow": "WerkOS",
     "title": "De cockpit van je dagelijkse operatie",
-    "description": "Alles rondom je projecten op één plek. Snel, rustig en overzichtelijk.",
-    "ctaStart": "Aan de slag",
-    "ctaLogin": "Inloggen"
+    "description": "Alles rondom je projecten op één plek. Van aanvraag tot factuur — rustig, overzichtelijk en zonder rommel.",
+    "ctaStart": "Start gratis proefperiode",
+    "ctaLogin": "Inloggen",
+    "trialNote": "14 dagen gratis · alle functies inbegrepen"
   },
   "auth": {
     "loginTitle": "Inloggen",
     "loginSubtitle": "Welkom terug bij WerkOS.",
+    "backToWebsite": "Website",
+    "panelHeadline": "Welkom terug",
+    "panelTagline": "Log in en ga verder waar je gebleven was — projecten, offertes en planning staan klaar.",
     "email": "E-mailadres",
     "password": "Wachtwoord",
     "submitLogin": "Inloggen",

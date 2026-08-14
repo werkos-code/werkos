@@ -11,22 +11,25 @@
     "close": "Schließen"
   },
   "home": {
-    "eyebrow": "WerkOS",
     "title": "Das Cockpit deiner täglichen Operation",
-    "description": "Alles rondom je projecten op één plek. Snel, rustig en overzichtelijk.",
-    "ctaStart": "Loslegen",
-    "ctaLogin": "Anmelden"
+    "description": "Alles rund um deine Projekte an einem Ort. Von der Anfrage bis zur Rechnung — ruhig, übersichtlich und ohne Chaos.",
+    "ctaStart": "Kostenlos testen",
+    "ctaLogin": "Anmelden",
+    "trialNote": "14 Tage kostenlos · alle Funktionen inklusive"
   },
   "auth": {
     "loginTitle": "Anmelden",
-    "loginSubtitle": "Welkom terug bij WerkOS.",
-    "email": "E-mailadres",
-    "password": "Wachtwoord",
-    "submitLogin": "Inloggen",
-    "noAccount": "Nog geen account?",
-    "startOnboarding": "Start met WerkOS",
+    "loginSubtitle": "Willkommen zurück bei WerkOS.",
+    "backToWebsite": "Website",
+    "panelHeadline": "Willkommen zurück",
+    "panelTagline": "Melde dich an und mache weiter — Projekte, Angebote und Planung warten auf dich.",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "submitLogin": "Anmelden",
+    "noAccount": "Noch kein Konto?",
+    "startOnboarding": "Mit WerkOS starten",
     "logout": "Abmelden",
-    "invalidCredentials": "E-mail of wachtwoord is onjuist."
+    "invalidCredentials": "E-Mail oder Passwort ist falsch."
   },
   "onboarding": {
     "progress": "Schritt {current} von {total}",

@@ -11,22 +11,25 @@
     "close": "Close"
   },
   "home": {
-    "eyebrow": "WerkOS",
     "title": "The cockpit of your daily operations",
-    "description": "Everything around your projects in one place. Fast, calm, and clear.",
-    "ctaStart": "Get started",
-    "ctaLogin": "Log in"
+    "description": "Everything around your projects in one place. From first contact to invoice — calm, clear, and without clutter.",
+    "ctaStart": "Start free trial",
+    "ctaLogin": "Log in",
+    "trialNote": "14-day free trial · all features included"
   },
   "auth": {
     "loginTitle": "Log in",
-    "loginSubtitle": "Welkom terug bij WerkOS.",
-    "email": "E-mailadres",
-    "password": "Wachtwoord",
-    "submitLogin": "Inloggen",
-    "noAccount": "Nog geen account?",
-    "startOnboarding": "Start met WerkOS",
+    "loginSubtitle": "Welcome back to WerkOS.",
+    "backToWebsite": "Website",
+    "panelHeadline": "Welcome back",
+    "panelTagline": "Sign in and pick up where you left off — projects, quotes, and planning are ready.",
+    "email": "Email address",
+    "password": "Password",
+    "submitLogin": "Log in",
+    "noAccount": "No account yet?",
+    "startOnboarding": "Get started with WerkOS",
     "logout": "Log out",
-    "invalidCredentials": "E-mail of wachtwoord is onjuist."
+    "invalidCredentials": "Email or password is incorrect."
   },
   "onboarding": {
     "progress": "Step {current} of {total}",
