@@ -140,38 +140,25 @@ export function QuotesList({
       ) : (
         <PageCard className="overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[40rem] text-left text-sm">
+            <table className="data-table min-w-[40rem]">
               <thead>
-                <tr className="border-b border-border bg-muted/40 text-muted-foreground">
-                  <th className="px-4 py-3 text-[11px] font-medium tracking-wide uppercase">
-                    {t("columns.number")}
-                  </th>
-                  <th className="px-4 py-3 text-[11px] font-medium tracking-wide uppercase">
-                    {t("columns.title")}
-                  </th>
+                <tr>
+                  <th>{t("columns.number")}</th>
+                  <th>{t("columns.title")}</th>
                   {showProject ? (
-                    <th className="px-4 py-3 text-[11px] font-medium tracking-wide uppercase">
-                      {t("columns.project")}
-                    </th>
+                    <th>{t("columns.project")}</th>
                   ) : null}
-                  <th className="px-4 py-3 text-[11px] font-medium tracking-wide uppercase">
-                    {t("columns.status")}
-                  </th>
-                  <th className="px-4 py-3 text-[11px] font-medium tracking-wide uppercase">
-                    {t("columns.updated")}
-                  </th>
+                  <th>{t("columns.status")}</th>
+                  <th>{t("columns.updated")}</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((quote) => (
-                  <tr
-                    key={quote.id}
-                    className="border-b border-border/70 last:border-0 hover:bg-muted/30"
-                  >
-                    <td className="px-4 py-3 font-mono text-xs tabular-nums text-muted-foreground">
+                  <tr key={quote.id}>
+                    <td className="font-mono text-xs tabular-nums text-muted-foreground">
                       {quote.quoteNumber || "—"}
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       <Link
                         href={`/projecten/${quote.projectId}/offertes/${quote.id}`}
                         className="font-medium text-foreground hover:text-primary hover:underline"
@@ -180,7 +167,7 @@ export function QuotesList({
                       </Link>
                     </td>
                     {showProject ? (
-                      <td className="px-4 py-3 text-muted-foreground">
+                      <td className="text-muted-foreground">
                         <Link
                           href={`/projecten/${quote.projectId}`}
                           className="hover:text-primary hover:underline"
@@ -189,7 +176,7 @@ export function QuotesList({
                         </Link>
                       </td>
                     ) : null}
-                    <td className="px-4 py-3">
+                    <td>
                       <Badge
                         variant={
                           quote.status === "draft" ? "success" : "secondary"
@@ -198,7 +185,7 @@ export function QuotesList({
                         {t(`status.${quote.status}`)}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="text-muted-foreground">
                       {formatDate(quote.updatedAt)}
                     </td>
                   </tr>

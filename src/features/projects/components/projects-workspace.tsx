@@ -374,10 +374,10 @@ export function ProjectsWorkspace({
           <p className="px-5 py-10 text-sm text-muted-foreground">{t("empty")}</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[64rem] text-left text-sm">
+            <table className="data-table min-w-[64rem]">
               <thead>
-                <tr className="border-b border-border bg-muted/40 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  <th className="w-10 px-4 py-3">
+                <tr>
+                  <th className="w-10">
                     <input
                       type="checkbox"
                       checked={allOnPageSelected}
@@ -385,24 +385,21 @@ export function ProjectsWorkspace({
                       aria-label={t("selectPage")}
                     />
                   </th>
-                  <th className="px-4 py-3">{t("columns.name")}</th>
-                  <th className="px-4 py-3">{t("columns.customer")}</th>
-                  <th className="px-4 py-3">{t("columns.status")}</th>
-                  <th className="px-4 py-3">{t("columns.leader")}</th>
-                  <th className="px-4 py-3">{t("columns.startDate")}</th>
-                  <th className="px-4 py-3">{t("columns.endDate")}</th>
-                  <th className="px-4 py-3 text-right">{t("columns.revenue")}</th>
-                  <th className="px-4 py-3">{t("columns.progress")}</th>
-                  <th className="w-10 px-4 py-3" />
+                  <th>{t("columns.name")}</th>
+                  <th>{t("columns.customer")}</th>
+                  <th>{t("columns.status")}</th>
+                  <th>{t("columns.leader")}</th>
+                  <th>{t("columns.startDate")}</th>
+                  <th>{t("columns.endDate")}</th>
+                  <th className="text-right">{t("columns.revenue")}</th>
+                  <th>{t("columns.progress")}</th>
+                  <th className="w-10" />
                 </tr>
               </thead>
               <tbody>
                 {pageItems.map((project) => (
-                  <tr
-                    key={project.id}
-                    className="border-b border-border/70 last:border-0 hover:bg-muted/30"
-                  >
-                    <td className="px-4 py-3">
+                  <tr key={project.id}>
+                    <td>
                       <input
                         type="checkbox"
                         checked={selected.has(project.id)}
@@ -412,7 +409,7 @@ export function ProjectsWorkspace({
                         aria-label={project.name}
                       />
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       <div className="flex items-center gap-3">
                         <div className="bg-muted text-muted-foreground flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg">
                           {project.coverUrl ? (
@@ -439,7 +436,7 @@ export function ProjectsWorkspace({
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Building2 className="size-3.5 shrink-0" />
                         <Link
@@ -450,30 +447,30 @@ export function ProjectsWorkspace({
                         </Link>
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       <Badge variant={statusBadgeVariant(project.status)}>
                         {t(`status.${project.status}`)}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="text-muted-foreground">
                       {project.leadName || "—"}
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="text-muted-foreground">
                       {formatDate(project.startDate, "nl-NL")}
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="text-muted-foreground">
                       {formatDate(project.endDate, "nl-NL")}
                     </td>
-                    <td className="px-4 py-3 text-right text-muted-foreground">
+                    <td className="text-right text-muted-foreground">
                       —
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       <div className="space-y-1 opacity-50">
                         <p className="text-xs text-muted-foreground">—</p>
                         <div className="bg-muted h-1.5 w-24 rounded-full" />
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       <Button
                         type="button"
                         variant="ghost"

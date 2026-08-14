@@ -33,7 +33,7 @@ Bij elke nieuwe of gewijzigde UI: volg `docs/DESIGN_SYSTEM.md`. Geen screenshot 
 - Soft chips: `bg-primary/10 text-primary rounded-full`
 - Actieve underline-tab: `border-b-2 border-primary text-primary`
 - Segmented actief: `bg-primary/10 text-primary`
-- Tabelheader: `bg-muted/40` + uppercase 11px
+- Tabelheader: rustig `text-xs font-medium text-muted-foreground` — **geen** grijze band, **geen** uppercase
 - Lege/ontbrekende data: `—` of muted — nooit nep-KPI’s
 - Motion: alleen subtiele color/opacity/short sheet — geen glow/springs
 

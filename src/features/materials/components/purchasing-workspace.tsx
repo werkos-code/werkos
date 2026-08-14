@@ -406,36 +406,33 @@ export function PurchasingWorkspace({
       ) : (
         <PageCard className="overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[48rem] text-left text-sm">
+            <table className="data-table min-w-[48rem]">
               <thead>
-                <tr className="border-b border-border bg-muted/40 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  <th className="px-4 py-3">{t("columns.supplier")}</th>
-                  <th className="px-4 py-3">{t("columns.reference")}</th>
-                  <th className="px-4 py-3">{t("columns.date")}</th>
-                  <th className="px-4 py-3 text-right">{t("columns.total")}</th>
-                  <th className="px-4 py-3">{t("columns.status")}</th>
-                  <th className="px-4 py-3">{t("columns.actions")}</th>
+                <tr>
+                  <th>{t("columns.supplier")}</th>
+                  <th>{t("columns.reference")}</th>
+                  <th>{t("columns.date")}</th>
+                  <th className="text-right">{t("columns.total")}</th>
+                  <th>{t("columns.status")}</th>
+                  <th>{t("columns.actions")}</th>
                 </tr>
               </thead>
               <tbody>
                 {orders.map((order) => (
-                  <tr
-                    key={order.id}
-                    className="border-b border-border/70 last:border-0 hover:bg-muted/30"
-                  >
-                    <td className="px-4 py-3 font-medium">{order.supplierName}</td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                  <tr key={order.id}>
+                    <td className="font-medium">{order.supplierName}</td>
+                    <td className="text-muted-foreground">
                       {order.reference || "—"}
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="text-muted-foreground">
                       {order.orderDate}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-muted-foreground">
+                    <td className="text-right tabular-nums text-muted-foreground">
                       {order.totalCents != null
                         ? formatEuroFromCents(order.totalCents)
                         : "—"}
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       <Badge
                         variant={
                           order.status === "received" ? "success" : "secondary"
@@ -448,7 +445,7 @@ export function PurchasingWorkspace({
                         {t(`status.${order.status}`)}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       <div className="flex flex-wrap gap-1">
                         {order.status === "draft" ? (
                           <Button
@@ -787,55 +784,52 @@ export function PurchasingWorkspace({
                 </Badge>
               ) : null}
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[40rem] text-left text-sm">
+                <table className="data-table min-w-[40rem]">
                   <thead>
-                    <tr className="border-b border-border bg-muted/40 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                      <th className="px-3 py-2">{t("matchColumns.line")}</th>
-                      <th className="px-3 py-2 text-right">
+                    <tr>
+                      <th>{t("matchColumns.line")}</th>
+                      <th className="text-right">
                         {t("matchColumns.ordered")}
                       </th>
-                      <th className="px-3 py-2 text-right">
+                      <th className="text-right">
                         {t("matchColumns.received")}
                       </th>
-                      <th className="px-3 py-2 text-right">
+                      <th className="text-right">
                         {t("matchColumns.invoiced")}
                       </th>
-                      <th className="px-3 py-2 text-right">
+                      <th className="text-right">
                         {t("matchColumns.poPrice")}
                       </th>
-                      <th className="px-3 py-2 text-right">
+                      <th className="text-right">
                         {t("matchColumns.invoicePrice")}
                       </th>
-                      <th className="px-3 py-2">{t("matchColumns.status")}</th>
+                      <th>{t("matchColumns.status")}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {matchLines.map((line) => (
-                      <tr
-                        key={line.purchaseOrderLineId}
-                        className="border-b border-border/70 last:border-0"
-                      >
-                        <td className="px-3 py-2 font-medium">{line.title}</td>
-                        <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                      <tr key={line.purchaseOrderLineId}>
+                        <td className="font-medium">{line.title}</td>
+                        <td className="text-right tabular-nums text-muted-foreground">
                           {formatQty(line.orderedQuantity, line.unit)}
                         </td>
-                        <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                        <td className="text-right tabular-nums text-muted-foreground">
                           {formatQty(line.receivedQuantity, line.unit)}
                         </td>
-                        <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                        <td className="text-right tabular-nums text-muted-foreground">
                           {formatQty(line.invoicedQuantity, line.unit)}
                         </td>
-                        <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                        <td className="text-right tabular-nums text-muted-foreground">
                           {line.orderedUnitCostCents != null
                             ? formatEuroFromCents(line.orderedUnitCostCents)
                             : "—"}
                         </td>
-                        <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                        <td className="text-right tabular-nums text-muted-foreground">
                           {line.invoicedUnitCostCents != null
                             ? formatEuroFromCents(line.invoicedUnitCostCents)
                             : "—"}
                         </td>
-                        <td className="px-3 py-2">
+                        <td>
                           <Badge variant={matchBadgeVariant(line.matchStatus)}>
                             {t(`lineMatch.${line.matchStatus}`)}
                           </Badge>

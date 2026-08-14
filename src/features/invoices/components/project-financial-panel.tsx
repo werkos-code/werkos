@@ -207,22 +207,19 @@ export function ProjectFinancialPanel({
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[36rem] text-sm">
+              <table className="data-table min-w-[36rem]">
                 <thead>
-                  <tr className="border-b border-border bg-muted/40 text-left text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                    <th className="px-4 py-2.5">{t("columns.invoice")}</th>
-                    <th className="px-4 py-2.5">{t("columns.date")}</th>
-                    <th className="px-4 py-2.5 text-right">{t("columns.amount")}</th>
-                    <th className="px-4 py-2.5">{t("columns.status")}</th>
+                  <tr>
+                    <th>{t("columns.invoice")}</th>
+                    <th>{t("columns.date")}</th>
+                    <th className="text-right">{t("columns.amount")}</th>
+                    <th>{t("columns.status")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {invoices.map((invoice) => (
-                    <tr
-                      key={invoice.id}
-                      className="border-b border-border/70 last:border-0"
-                    >
-                      <td className="px-4 py-3">
+                    <tr key={invoice.id}>
+                      <td>
                         <Link
                           href={`/facturen/${invoice.id}`}
                           className="font-medium text-primary hover:underline"
@@ -233,13 +230,13 @@ export function ProjectFinancialPanel({
                           {invoice.title}
                         </p>
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      <td className="text-muted-foreground">
                         {formatDate(invoice.issueDate)}
                       </td>
-                      <td className="px-4 py-3 text-right font-medium tabular-nums">
+                      <td className="text-right font-medium tabular-nums">
                         {formatEuro(invoice.totalCents)}
                       </td>
-                      <td className="px-4 py-3">
+                      <td>
                         <Badge
                           variant="outline"
                           className={cn("rounded-full", statusBadgeClass(invoice.status))}

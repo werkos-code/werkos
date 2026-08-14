@@ -265,9 +265,14 @@ wit blok rounded-3xl, geen border, royale padding
 
 ### Tabellen / grid-lijsten
 
-- Header: `bg-muted/40`, vaak `text-[11px] uppercase tracking-wide text-muted-foreground`
-- Rijen: `border-b border-border/70`, `hover:bg-muted/30`, cellen `px-4 py-3 text-sm`
-- Geen zware rasterlijnen
+Gebruik `table.data-table` (globals.css). Geen Excel-band, geen uppercase-headers.
+
+- Header: transparant, `text-xs font-medium text-muted-foreground`, hairline onderkant
+- Rijen: meer lucht (`~1rem` celpadding), zachte scheidingslijn, rustige hover
+- Geen verticale rasterlijnen, geen `bg-muted/40` op de header
+- Grid-lijsten (werkzaamheden): `.data-list-header` in plaats van uppercase + muted fill
+
+Document-previews (offerte/factuur-PDF) mogen een strakkere tabel houden.
 
 ### Filters / toolbar
 

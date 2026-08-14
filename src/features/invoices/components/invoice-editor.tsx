@@ -543,7 +543,7 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
                   <>
                     <div
                       className={cn(
-                        "hidden border-b border-border bg-muted/40 px-3 py-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground lg:grid lg:gap-x-2",
+                        "data-list-header hidden lg:grid lg:gap-x-2",
                         LINE_GRID_CLASS,
                       )}
                     >

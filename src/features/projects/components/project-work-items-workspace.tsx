@@ -613,7 +613,7 @@ export function ProjectWorkItemsWorkspace({
       ) : (
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_17.5rem]">
           <PageCard className="overflow-hidden p-0">
-            <div className="text-muted-foreground grid grid-cols-[1.5rem_1.5rem_minmax(10rem,1.6fr)_7rem_8rem_7rem_7rem_9rem_2rem] items-center gap-2 border-b border-border bg-muted/30 px-3 py-2 text-[11px] font-medium tracking-wide uppercase max-xl:hidden">
+            <div className="data-list-header grid grid-cols-[1.5rem_1.5rem_minmax(10rem,1.6fr)_7rem_8rem_7rem_7rem_9rem_2rem] items-center gap-2 max-xl:hidden">
               <span />
               <span />
               <span>{t("columns.title")}</span>
@@ -1137,7 +1137,7 @@ function SortableTaskRow({
         transition,
       }}
       className={cn(
-        "group grid grid-cols-[1.5rem_1.5rem_minmax(0,1fr)] items-center gap-2 px-3 py-2.5 transition-colors hover:bg-muted/40 sm:grid-cols-[1.5rem_1.5rem_minmax(10rem,1.6fr)_7rem_8rem_7rem_7rem_9rem_2rem]",
+        "group grid grid-cols-[1.5rem_1.5rem_minmax(0,1fr)] items-center gap-2 border-b border-border/40 px-5 py-3.5 transition-colors last:border-0 hover:bg-muted/50 sm:grid-cols-[1.5rem_1.5rem_minmax(10rem,1.6fr)_7rem_8rem_7rem_7rem_9rem_2rem]",
         isDragging && "bg-card opacity-70 shadow-md",
         item.parentId && "sm:pl-8",
       )}

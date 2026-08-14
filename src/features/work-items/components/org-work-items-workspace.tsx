@@ -166,28 +166,20 @@ export function OrgWorkItemsWorkspace({
       ) : (
         <PageCard className="overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[44rem] text-left text-sm">
+            <table className="data-table min-w-[44rem]">
               <thead>
-                <tr className="border-b border-border bg-muted/40 text-[11px] uppercase tracking-wide text-muted-foreground">
-                  <th className="px-4 py-3 font-medium">
-                    {t("columns.title")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">
+                <tr>
+                  <th>{t("columns.title")}</th>
+                  <th>
                     {tOrg("columns.project")}
                   </th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("columns.assignee")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("columns.status")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("columns.planning")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">
+                  <th>{t("columns.assignee")}</th>
+                  <th>{t("columns.status")}</th>
+                  <th>{t("columns.planning")}</th>
+                  <th>
                     {tOrg("columns.hours")}
                   </th>
-                  <th className="px-4 py-3 font-medium">
+                  <th>
                     {tOrg("columns.actions")}
                   </th>
                 </tr>
@@ -196,11 +188,8 @@ export function OrgWorkItemsWorkspace({
                 {filtered.map((item) => {
                   const overdue = isWorkItemOverdue(item);
                   return (
-                    <tr
-                      key={item.id}
-                      className="border-b border-border/70 last:border-0 hover:bg-muted/30"
-                    >
-                      <td className="px-4 py-3">
+                    <tr key={item.id}>
+                      <td>
                         <Link
                           href={`/projecten/${item.projectId}?tab=work`}
                           className="font-medium text-foreground hover:text-primary hover:underline"
@@ -213,7 +202,7 @@ export function OrgWorkItemsWorkspace({
                           </p>
                         ) : null}
                       </td>
-                      <td className="px-4 py-3">
+                      <td>
                         <Link
                           href={`/projecten/${item.projectId}`}
                           className="text-muted-foreground hover:text-primary hover:underline"
@@ -221,10 +210,10 @@ export function OrgWorkItemsWorkspace({
                           {item.projectName}
                         </Link>
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      <td className="text-muted-foreground">
                         {item.assigneeName ?? "—"}
                       </td>
-                      <td className="px-4 py-3">
+                      <td>
                         <span
                           className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${statusChipClass(item.status, overdue)}`}
                         >
@@ -233,15 +222,15 @@ export function OrgWorkItemsWorkspace({
                             : t(`status.${item.status}`)}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      <td className="text-muted-foreground">
                         {item.plannedStart || item.plannedEnd
                           ? `${item.plannedStart ?? "—"} → ${item.plannedEnd ?? "—"}`
                           : "—"}
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      <td className="text-muted-foreground">
                         {formatEstimatedHours(item.estimatedMinutes)}
                       </td>
-                      <td className="px-4 py-3">
+                      <td>
                         <Link
                           href={`/projecten/${item.projectId}?tab=work`}
                           className="text-sm font-medium text-primary hover:underline"

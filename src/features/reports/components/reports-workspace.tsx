@@ -63,20 +63,17 @@ export function ReportsWorkspace({ snapshot }: ReportsWorkspaceProps) {
               {t("empty.projects")}
             </p>
           ) : (
-            <table className="w-full text-left text-sm">
+            <table className="data-table">
               <thead>
-                <tr className="border-b border-border bg-muted/40 text-[11px] uppercase tracking-wide text-muted-foreground">
-                  <th className="px-4 py-2 font-medium">{t("columns.project")}</th>
-                  <th className="px-4 py-2 font-medium">{t("columns.status")}</th>
+                <tr>
+                  <th>{t("columns.project")}</th>
+                  <th>{t("columns.status")}</th>
                 </tr>
               </thead>
               <tbody>
                 {snapshot.openProjects.map((project) => (
-                  <tr
-                    key={project.id}
-                    className="border-b border-border/70 last:border-0"
-                  >
-                    <td className="px-4 py-2.5">
+                  <tr key={project.id}>
+                    <td>
                       <Link
                         href={`/projecten/${project.id}`}
                         className="font-medium hover:text-primary hover:underline"
@@ -87,7 +84,7 @@ export function ReportsWorkspace({ snapshot }: ReportsWorkspaceProps) {
                         {project.customerName}
                       </p>
                     </td>
-                    <td className="px-4 py-2.5 text-muted-foreground">
+                    <td className="text-muted-foreground">
                       {tProjects(`status.${project.status}`)}
                     </td>
                   </tr>
@@ -106,20 +103,17 @@ export function ReportsWorkspace({ snapshot }: ReportsWorkspaceProps) {
               {t("empty.workItems")}
             </p>
           ) : (
-            <table className="w-full text-left text-sm">
+            <table className="data-table">
               <thead>
-                <tr className="border-b border-border bg-muted/40 text-[11px] uppercase tracking-wide text-muted-foreground">
-                  <th className="px-4 py-2 font-medium">{t("columns.workItem")}</th>
-                  <th className="px-4 py-2 font-medium">{t("columns.due")}</th>
+                <tr>
+                  <th>{t("columns.workItem")}</th>
+                  <th>{t("columns.due")}</th>
                 </tr>
               </thead>
               <tbody>
                 {snapshot.overdueWorkItems.map((item) => (
-                  <tr
-                    key={item.id}
-                    className="border-b border-border/70 last:border-0"
-                  >
-                    <td className="px-4 py-2.5">
+                  <tr key={item.id}>
+                    <td>
                       <Link
                         href={`/projecten/${item.projectId}?tab=work`}
                         className="font-medium hover:text-primary hover:underline"
@@ -130,7 +124,7 @@ export function ReportsWorkspace({ snapshot }: ReportsWorkspaceProps) {
                         {item.projectName}
                       </p>
                     </td>
-                    <td className="px-4 py-2.5 text-destructive">
+                    <td className="text-destructive">
                       {item.plannedEnd ?? "—"}
                     </td>
                   </tr>
@@ -149,20 +143,17 @@ export function ReportsWorkspace({ snapshot }: ReportsWorkspaceProps) {
               {t("empty.invoices")}
             </p>
           ) : (
-            <table className="w-full text-left text-sm">
+            <table className="data-table">
               <thead>
-                <tr className="border-b border-border bg-muted/40 text-[11px] uppercase tracking-wide text-muted-foreground">
-                  <th className="px-4 py-2 font-medium">{t("columns.invoice")}</th>
-                  <th className="px-4 py-2 font-medium">{t("columns.amount")}</th>
+                <tr>
+                  <th>{t("columns.invoice")}</th>
+                  <th>{t("columns.amount")}</th>
                 </tr>
               </thead>
               <tbody>
                 {snapshot.unpaidInvoices.map((invoice) => (
-                  <tr
-                    key={invoice.id}
-                    className="border-b border-border/70 last:border-0"
-                  >
-                    <td className="px-4 py-2.5">
+                  <tr key={invoice.id}>
+                    <td>
                       <Link
                         href={`/facturen/${invoice.id}`}
                         className="font-medium hover:text-primary hover:underline"
@@ -174,7 +165,7 @@ export function ReportsWorkspace({ snapshot }: ReportsWorkspaceProps) {
                         {invoice.overdue ? ` · ${t("overdue")}` : ""}
                       </p>
                     </td>
-                    <td className="px-4 py-2.5 tabular-nums">
+                    <td className="tabular-nums">
                       {formatEurFromCents(invoice.totalCents)}
                     </td>
                   </tr>

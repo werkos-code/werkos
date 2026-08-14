@@ -297,17 +297,17 @@ export function StockWorkspace({
             </p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="data-table">
                 <thead>
-                  <tr className="border-b border-border bg-muted/40 text-[11px] text-muted-foreground uppercase">
-                    <th className="px-3 py-2">{t("columns.article")}</th>
-                    <th className="px-3 py-2">{t("columns.location")}</th>
-                    <th className="px-3 py-2 text-right">{t("columns.qty")}</th>
-                    <th className="px-3 py-2 text-right">{t("columns.reserved")}</th>
-                    <th className="px-3 py-2 text-right">{t("columns.available")}</th>
-                    <th className="px-3 py-2 text-right">{t("columns.min")}</th>
-                    <th className="px-3 py-2 text-right">{t("columns.max")}</th>
-                    <th className="px-3 py-2" />
+                  <tr>
+                    <th>{t("columns.article")}</th>
+                    <th>{t("columns.location")}</th>
+                    <th className="text-right">{t("columns.qty")}</th>
+                    <th className="text-right">{t("columns.reserved")}</th>
+                    <th className="text-right">{t("columns.available")}</th>
+                    <th className="text-right">{t("columns.min")}</th>
+                    <th className="text-right">{t("columns.max")}</th>
+                    <th />
                   </tr>
                 </thead>
                 <tbody>
@@ -317,9 +317,9 @@ export function StockWorkspace({
                     return (
                     <tr
                       key={row.id}
-                      className={`border-b border-border/70 last:border-0 ${isLow ? "bg-destructive/5" : ""}`}
+                      className={isLow ? "bg-destructive/5" : undefined}
                     >
-                      <td className="px-3 py-2">
+                      <td>
                         <span className="font-medium">{row.articleName}</span>
                         {row.articleCode ? (
                           <span className="ml-1 font-mono text-xs text-muted-foreground">
@@ -327,25 +327,25 @@ export function StockWorkspace({
                           </span>
                         ) : null}
                       </td>
-                      <td className="px-3 py-2 text-muted-foreground">
+                      <td className="text-muted-foreground">
                         {row.locationName}
                       </td>
                       <td className="px-3 py-2 text-right tabular-nums">
                         {formatQty(row.quantity, row.articleUnit)}
                       </td>
-                      <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                      <td className="text-right tabular-nums text-muted-foreground">
                         {formatQty(row.reservedQuantity)}
                       </td>
-                      <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                      <td className="text-right tabular-nums text-muted-foreground">
                         {formatQty(row.quantity - row.reservedQuantity)}
                       </td>
-                      <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                      <td className="text-right tabular-nums text-muted-foreground">
                         {formatQty(row.minQuantity)}
                       </td>
-                      <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                      <td className="text-right tabular-nums text-muted-foreground">
                         {formatQty(row.maxQuantity)}
                       </td>
-                      <td className="px-3 py-2 text-right">
+                      <td className="text-right">
                         <div className="flex flex-wrap justify-end gap-1">
                           <Button
                             type="button"

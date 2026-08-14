@@ -108,18 +108,14 @@ export function StaffWorkspace({
       ) : (
         <PageCard className="overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[36rem] text-left text-sm">
+            <table className="data-table min-w-[36rem]">
               <thead>
-                <tr className="border-b border-border bg-muted/40 text-[11px] uppercase tracking-wide text-muted-foreground">
-                  <th className="px-4 py-3 font-medium">{t("columns.name")}</th>
-                  <th className="px-4 py-3 font-medium">{t("columns.email")}</th>
-                  <th className="px-4 py-3 font-medium">{t("columns.role")}</th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("columns.joined")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("columns.actions")}
-                  </th>
+                <tr>
+                  <th>{t("columns.name")}</th>
+                  <th>{t("columns.email")}</th>
+                  <th>{t("columns.role")}</th>
+                  <th>{t("columns.joined")}</th>
+                  <th>{t("columns.actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -134,11 +130,8 @@ export function StaffWorkspace({
                     member.id !== currentUserId;
 
                   return (
-                    <tr
-                      key={member.id}
-                      className="border-b border-border/70 last:border-0 hover:bg-muted/30"
-                    >
-                      <td className="px-4 py-3">
+                    <tr key={member.id}>
+                      <td>
                         {canEdit ? (
                           <Link
                             href={`/personeel/${member.id}`}
@@ -155,18 +148,18 @@ export function StaffWorkspace({
                           </span>
                         ) : null}
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      <td className="text-muted-foreground">
                         {member.email || "—"}
                       </td>
-                      <td className="px-4 py-3">
+                      <td>
                         <span className="inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                           {tRoles(member.role)}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      <td className="text-muted-foreground">
                         {member.createdAt.slice(0, 10)}
                       </td>
-                      <td className="px-4 py-3">
+                      <td>
                         <div className="flex flex-wrap gap-1">
                           {canEdit ? (
                             <Button

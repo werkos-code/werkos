@@ -254,15 +254,15 @@ export function QuoteFinancialPlanning({
           </div>
 
           <div className="hidden overflow-x-auto lg:block">
-            <table className="w-full min-w-[40rem] text-sm">
+            <table className="data-table min-w-[40rem]">
               <thead>
-                <tr className="border-b border-border text-left text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  <th className="px-2 py-2">{t("columns.title")}</th>
-                  <th className="px-2 py-2">{t("columns.type")}</th>
-                  <th className="px-2 py-2 text-right">{t("columns.amount")}</th>
-                  <th className="px-2 py-2 text-right">{t("columns.net")}</th>
-                  <th className="px-2 py-2">{t("columns.status")}</th>
-                  <th className="px-2 py-2 text-right">{t("columns.action")}</th>
+                <tr>
+                  <th>{t("columns.title")}</th>
+                  <th>{t("columns.type")}</th>
+                  <th className="text-right">{t("columns.amount")}</th>
+                  <th className="text-right">{t("columns.net")}</th>
+                  <th>{t("columns.status")}</th>
+                  <th className="text-right">{t("columns.action")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -563,7 +563,7 @@ function PhaseRow({
 
   return (
     <tr className="border-b border-border/60">
-      <td className="px-2 py-3">
+      <td>
         {editable && !locked ? (
           <Input
             value={draft?.title ?? phase.title}
@@ -574,7 +574,7 @@ function PhaseRow({
           <span className="font-medium">{phase.title}</span>
         )}
       </td>
-      <td className="px-2 py-3">
+      <td>
         {editable && !locked ? (
           <select
             className={`${selectClass} w-full min-w-0`}
@@ -594,7 +594,7 @@ function PhaseRow({
           </span>
         )}
       </td>
-      <td className="px-2 py-3 text-right">
+      <td className="text-right">
         {phase.kind === "final" ? (
           <span className="text-muted-foreground">{t("finalAuto")}</span>
         ) : editable && !locked ? (
@@ -638,10 +638,10 @@ function PhaseRow({
           </span>
         )}
       </td>
-      <td className="px-2 py-3 text-right font-mono tabular-nums">
+      <td className="text-right font-mono tabular-nums">
         {formatEuro(phase.netCents)}
       </td>
-      <td className="px-2 py-3">
+      <td>
         {locked ? (
           <span className="inline-flex items-center gap-1 text-xs text-primary">
             {phase.invoiceNumber ?? t("status.invoiced")}
@@ -660,7 +660,7 @@ function PhaseRow({
           </span>
         )}
       </td>
-      <td className="px-2 py-3 text-right">
+      <td className="text-right">
         <div className="flex items-center justify-end gap-1">
           {editable && !locked ? (
             <Button

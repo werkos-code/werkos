@@ -37,18 +37,14 @@ export function UsersTable({ users, allowDelete = true }: UsersTableProps) {
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       <PageCard className="overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[40rem] text-left text-sm">
+          <table className="data-table min-w-[40rem]">
             <thead>
-              <tr className="border-b border-border bg-muted/40 text-muted-foreground">
-                <th className="px-4 py-3 font-medium">{t("columns.name")}</th>
-                <th className="px-4 py-3 font-medium">{t("columns.email")}</th>
-                <th className="px-4 py-3 font-medium">
-                  {t("columns.memberships")}
-                </th>
+              <tr>
+                <th>{t("columns.name")}</th>
+                <th>{t("columns.email")}</th>
+                <th>{t("columns.memberships")}</th>
                 {allowDelete ? (
-                  <th className="px-4 py-3 font-medium">
-                    {t("columns.actions")}
-                  </th>
+                  <th>{t("columns.actions")}</th>
                 ) : null}
               </tr>
             </thead>
@@ -56,15 +52,15 @@ export function UsersTable({ users, allowDelete = true }: UsersTableProps) {
               {users.map((user) => (
                 <tr
                   key={user.id}
-                  className="border-b border-border/70 align-top last:border-0 hover:bg-muted/30"
+                  className="align-top"
                 >
-                  <td className="px-4 py-3 text-foreground">
+                  <td className="text-foreground">
                     {user.fullName || "—"}
                   </td>
-                  <td className="px-4 py-3 text-foreground">
+                  <td className="text-foreground">
                     {user.email || "—"}
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">
+                  <td className="text-muted-foreground">
                     {user.memberships.length === 0
                       ? "—"
                       : user.memberships
@@ -75,7 +71,7 @@ export function UsersTable({ users, allowDelete = true }: UsersTableProps) {
                           .join(", ")}
                   </td>
                   {allowDelete ? (
-                    <td className="px-4 py-3">
+                    <td>
                       <Button
                         type="button"
                         variant="ghost"

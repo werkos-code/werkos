@@ -229,7 +229,7 @@ export function FilesWorkspace({
                   <button
                     type="button"
                     onClick={() => openProject(project)}
-                    className="flex w-full items-center gap-3 border-b border-border/70 px-5 py-3.5 text-left last:border-0 hover:bg-muted/30"
+                    className="flex w-full items-center gap-3 border-b border-border/40 px-5 py-3.5 text-left last:border-0 hover:bg-muted/50"
                   >
                     <Folder className="size-4 text-amber-600" />
                     <span className="min-w-0 flex-1">
@@ -371,7 +371,7 @@ export function FilesWorkspace({
             {folders.map((folder) => (
               <li
                 key={folder.id}
-                className="flex items-center gap-2 border-b border-border/70 px-4 py-2.5 last:border-0 hover:bg-muted/30"
+                className="flex items-center gap-2 border-b border-border/40 px-5 py-3 last:border-0 hover:bg-muted/50"
               >
                 <button
                   type="button"
@@ -396,7 +396,7 @@ export function FilesWorkspace({
             {files.map((file) => (
               <li
                 key={file.id}
-                className="flex items-center gap-2 border-b border-border/70 px-4 py-2.5 last:border-0 hover:bg-muted/30"
+                className="flex items-center gap-2 border-b border-border/40 px-5 py-3 last:border-0 hover:bg-muted/50"
               >
                 <File className="size-4 shrink-0 text-muted-foreground" />
                 <div className="min-w-0 flex-1">

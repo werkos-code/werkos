@@ -341,17 +341,17 @@ export function WorkOrdersWorkspace({
                 <p className="px-5 py-8 text-sm text-muted-foreground">{t("empty")}</p>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[64rem] text-left text-sm">
+                  <table className="data-table min-w-[64rem]">
                     <thead>
-                      <tr className="border-b border-border bg-muted/40 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                        <th className="px-4 py-3">{t("columns.workOrder")}</th>
-                        <th className="px-4 py-3">{t("columns.project")}</th>
-                        <th className="px-4 py-3">{t("columns.type")}</th>
-                        <th className="px-4 py-3">{t("columns.assignee")}</th>
-                        <th className="px-4 py-3">{t("columns.planning")}</th>
-                        <th className="px-4 py-3">{t("columns.status")}</th>
-                        <th className="px-4 py-3">{t("columns.priority")}</th>
-                        <th className="px-4 py-3" />
+                      <tr>
+                        <th>{t("columns.workOrder")}</th>
+                        <th>{t("columns.project")}</th>
+                        <th>{t("columns.type")}</th>
+                        <th>{t("columns.assignee")}</th>
+                        <th>{t("columns.planning")}</th>
+                        <th>{t("columns.status")}</th>
+                        <th>{t("columns.priority")}</th>
+                        <th />
                       </tr>
                     </thead>
                     <tbody>
@@ -359,20 +359,20 @@ export function WorkOrdersWorkspace({
                         <tr
                           key={order.id}
                           className={cn(
-                            "cursor-pointer border-b border-border/70 last:border-0 hover:bg-muted/30",
+                            "cursor-pointer",
                             selectedId === order.id && "bg-primary/5",
                           )}
                           onClick={() => setSelectedId(order.id)}
                         >
-                          <td className="px-4 py-3">
+                          <td>
                             <p className="font-medium text-primary">{order.workOrderNumber}</p>
                             <p className="text-muted-foreground">{order.title}</p>
                           </td>
-                          <td className="px-4 py-3">
+                          <td>
                             <p className="font-medium">{order.projectName}</p>
                             <p className="text-xs text-muted-foreground">{order.projectAddress || "—"}</p>
                           </td>
-                          <td className="px-4 py-3">
+                          <td>
                             {order.workType ? (
                               <span className="bg-primary/10 text-primary rounded-full px-2.5 py-1 text-xs font-medium">
                                 {order.workType}
@@ -381,7 +381,7 @@ export function WorkOrdersWorkspace({
                               "—"
                             )}
                           </td>
-                          <td className="px-4 py-3">
+                          <td>
                             {order.assigneeName ? (
                               <span className="inline-flex items-center gap-2">
                                 <span className="bg-muted flex size-7 items-center justify-center rounded-full text-[10px] font-medium">
@@ -393,8 +393,8 @@ export function WorkOrdersWorkspace({
                               <span className="text-muted-foreground">—</span>
                             )}
                           </td>
-                          <td className="px-4 py-3 text-muted-foreground">{formatPlan(order.plannedStart)}</td>
-                          <td className="px-4 py-3">
+                          <td className="text-muted-foreground">{formatPlan(order.plannedStart)}</td>
+                          <td>
                             <button
                               type="button"
                               onClick={(event) => {
@@ -407,13 +407,13 @@ export function WorkOrdersWorkspace({
                               </Badge>
                             </button>
                           </td>
-                          <td className="px-4 py-3">
+                          <td>
                             <span className="inline-flex items-center gap-1.5">
                               <PriorityIcon priority={order.priority} />
                               {t(`priority.${order.priority}`)}
                             </span>
                           </td>
-                          <td className="px-4 py-3">
+                          <td>
                             <Button type="button" variant="ghost" size="icon-sm" aria-label={t("rowMenu")}>
                               <MoreHorizontal className="size-4" />
                             </Button>

@@ -241,28 +241,25 @@ export function ArticlesWorkspace({ articles, suppliers }: ArticlesWorkspaceProp
       ) : (
         <PageCard className="overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[48rem] text-left text-sm">
+            <table className="data-table min-w-[48rem]">
               <thead>
-                <tr className="border-b border-border bg-muted/40 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  <th className="px-4 py-3">{t("columns.code")}</th>
-                  <th className="px-4 py-3">{t("columns.name")}</th>
-                  <th className="px-4 py-3">{t("columns.unit")}</th>
-                  <th className="px-4 py-3">{t("columns.category")}</th>
-                  <th className="px-4 py-3 text-right">{t("columns.purchase")}</th>
-                  <th className="px-4 py-3">{t("columns.status")}</th>
-                  <th className="px-4 py-3" />
+                <tr>
+                  <th>{t("columns.code")}</th>
+                  <th>{t("columns.name")}</th>
+                  <th>{t("columns.unit")}</th>
+                  <th>{t("columns.category")}</th>
+                  <th className="text-right">{t("columns.purchase")}</th>
+                  <th>{t("columns.status")}</th>
+                  <th />
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="border-b border-border/70 last:border-0 hover:bg-muted/30"
-                  >
-                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                  <tr key={row.id}>
+                    <td className="font-mono text-xs text-muted-foreground">
                       {row.code || "—"}
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       <button
                         type="button"
                         className="font-medium hover:text-primary"
@@ -276,16 +273,16 @@ export function ArticlesWorkspace({ articles, suppliers }: ArticlesWorkspaceProp
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">{row.unit}</td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="text-muted-foreground">{row.unit}</td>
+                    <td className="text-muted-foreground">
                       {row.category || "—"}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-muted-foreground">
+                    <td className="text-right tabular-nums text-muted-foreground">
                       {row.purchasePriceCents != null
                         ? formatEuroFromCents(row.purchasePriceCents)
                         : "—"}
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       <Badge
                         variant={row.isActive ? "success" : "secondary"}
                         className={cn(!row.isActive && "opacity-70")}
@@ -293,7 +290,7 @@ export function ArticlesWorkspace({ articles, suppliers }: ArticlesWorkspaceProp
                         {row.isActive ? t("active") : t("inactive")}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="text-right">
                       <Button
                         type="button"
                         variant="ghost"

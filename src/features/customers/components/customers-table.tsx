@@ -33,25 +33,23 @@ export function CustomersTable({ customers }: CustomersTableProps) {
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       <PageCard className="overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[36rem] text-left text-sm">
+          <table className="data-table min-w-[36rem]">
             <thead>
-              <tr className="border-b border-border bg-muted/40 text-muted-foreground">
-                <th className="px-4 py-3 font-medium">{t("columns.name")}</th>
-                <th className="px-4 py-3 font-medium">{t("columns.email")}</th>
-                <th className="px-4 py-3 font-medium">{t("columns.phone")}</th>
-                <th className="px-4 py-3 font-medium">
-                  {t("columns.projects")}
-                </th>
-                <th className="px-4 py-3 font-medium">{t("columns.actions")}</th>
+              <tr>
+                <th>{t("columns.name")}</th>
+                <th>{t("columns.email")}</th>
+                <th>{t("columns.phone")}</th>
+                <th>{t("columns.projects")}</th>
+                <th>{t("columns.actions")}</th>
               </tr>
             </thead>
             <tbody>
               {customers.map((customer) => (
                 <tr
                   key={customer.id}
-                  className="border-b border-border/70 align-top last:border-0 hover:bg-muted/30"
+                  className="align-top"
                 >
-                  <td className="px-4 py-3">
+                  <td>
                     <Link
                       href={`/klanten/${customer.id}`}
                       className="font-medium text-foreground hover:text-primary hover:underline"
@@ -59,16 +57,16 @@ export function CustomersTable({ customers }: CustomersTableProps) {
                       {customer.name}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">
+                  <td className="text-muted-foreground">
                     {customer.email || "—"}
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">
+                  <td className="text-muted-foreground">
                     {customer.phone || "—"}
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">
+                  <td className="text-muted-foreground">
                     {customer.projectCount}
                   </td>
-                  <td className="px-4 py-3">
+                  <td>
                     <div className="flex flex-wrap gap-1">
                       <Button type="button" variant="ghost" size="sm" asChild>
                         <Link href={`/klanten/${customer.id}`}>

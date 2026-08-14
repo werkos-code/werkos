@@ -81,25 +81,23 @@ export function SubcontractorsWorkspace({
       ) : (
         <PageCard className="overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[36rem] text-left text-sm">
+            <table className="data-table min-w-[36rem]">
               <thead>
-                <tr className="border-b border-border bg-muted/40 text-[11px] uppercase tracking-wide text-muted-foreground">
-                  <th className="px-4 py-3 font-medium">{t("columns.name")}</th>
-                  <th className="px-4 py-3 font-medium">{t("columns.email")}</th>
-                  <th className="px-4 py-3 font-medium">{t("columns.phone")}</th>
-                  <th className="px-4 py-3 font-medium">{t("columns.kvk")}</th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("columns.actions")}
-                  </th>
+                <tr>
+                  <th>{t("columns.name")}</th>
+                  <th>{t("columns.email")}</th>
+                  <th>{t("columns.phone")}</th>
+                  <th>{t("columns.kvk")}</th>
+                  <th>{t("columns.actions")}</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((row) => (
                   <tr
                     key={row.id}
-                    className="border-b border-border/70 align-top last:border-0 hover:bg-muted/30"
+                    className="align-top"
                   >
-                    <td className="px-4 py-3">
+                    <td>
                       <Link
                         href={`/onderaannemers/${row.id}`}
                         className="font-medium text-foreground hover:text-primary hover:underline"
@@ -107,16 +105,16 @@ export function SubcontractorsWorkspace({
                         {row.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="text-muted-foreground">
                       {row.email || "—"}
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="text-muted-foreground">
                       {row.phone || "—"}
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="text-muted-foreground">
                       {row.kvkNumber || "—"}
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       <div className="flex flex-wrap gap-1">
                         <Button type="button" variant="ghost" size="sm" asChild>
                           <Link href={`/onderaannemers/${row.id}`}>

@@ -142,6 +142,56 @@
 }
 
 @layer components {
+  /* App-wide list tables — quiet header, airy rows, no Excel band */
+  table.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    font-size: 0.875rem;
+  }
+
+  table.data-table thead th {
+    padding: 0.7rem 1.25rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--muted-foreground);
+    background: transparent;
+    border-bottom: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+    white-space: nowrap;
+  }
+
+  table.data-table tbody td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    border-bottom: 1px solid color-mix(in oklab, var(--border) 42%, transparent);
+  }
+
+  table.data-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  table.data-table tbody tr {
+    transition: background-color 150ms ease;
+  }
+
+  table.data-table tbody tr:hover td {
+    background: color-mix(in oklab, var(--muted) 50%, transparent);
+  }
+
+  .data-list-header {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted-foreground);
+    background: transparent;
+    border-bottom: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+    padding: 0.7rem 1.25rem 0.65rem;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
   @media (min-width: 64rem) {
     .quote-lines-table {
       display: grid;
@@ -158,12 +208,12 @@
     }
 
     .quote-line-header > * {
-      border-bottom: 1px solid var(--border);
-      padding: 0.5rem 0.75rem;
-      font-size: 11px;
+      border-bottom: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+      padding: 0.7rem 0.75rem;
+      font-size: 0.75rem;
       font-weight: 500;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
+      letter-spacing: 0;
+      text-transform: none;
       color: var(--muted-foreground);
     }
 
@@ -172,8 +222,8 @@
       grid-column: 1 / -1;
       grid-template-columns: subgrid;
       align-items: center;
-      border-bottom: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
-      padding: 0.75rem;
+      border-bottom: 1px solid color-mix(in oklab, var(--border) 42%, transparent);
+      padding: 0.9rem 0.75rem;
     }
 
     .quote-line-section {

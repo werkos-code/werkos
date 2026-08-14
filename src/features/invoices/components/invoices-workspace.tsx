@@ -413,17 +413,17 @@ export function InvoicesWorkspace({
               </p>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[64rem] text-left text-sm">
+                <table className="data-table min-w-[64rem]">
                   <thead>
-                    <tr className="border-b border-border bg-muted/40 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                      <th className="px-4 py-3">{t("columns.invoice")}</th>
-                      <th className="px-4 py-3">{t("columns.project")}</th>
-                      <th className="px-4 py-3">{t("columns.customer")}</th>
-                      <th className="px-4 py-3">{t("columns.issueDate")}</th>
-                      <th className="px-4 py-3">{t("columns.dueDate")}</th>
-                      <th className="px-4 py-3">{t("columns.amount")}</th>
-                      <th className="px-4 py-3">{t("columns.status")}</th>
-                      <th className="px-4 py-3" />
+                    <tr>
+                      <th>{t("columns.invoice")}</th>
+                      <th>{t("columns.project")}</th>
+                      <th>{t("columns.customer")}</th>
+                      <th>{t("columns.issueDate")}</th>
+                      <th>{t("columns.dueDate")}</th>
+                      <th>{t("columns.amount")}</th>
+                      <th>{t("columns.status")}</th>
+                      <th />
                     </tr>
                   </thead>
                   <tbody>
@@ -434,12 +434,12 @@ export function InvoicesWorkspace({
                         <tr
                           key={invoice.id}
                           className={cn(
-                            "cursor-pointer border-b border-border/70 last:border-0 hover:bg-muted/30",
+                            "cursor-pointer",
                             selectedId === invoice.id && "bg-primary/5",
                           )}
                           onClick={() => setSelectedId(invoice.id)}
                         >
-                          <td className="px-4 py-3">
+                          <td>
                             <p className="font-medium text-primary">
                               {invoice.invoiceNumber}
                             </p>
@@ -447,17 +447,17 @@ export function InvoicesWorkspace({
                               #{invoice.sequenceNumber}
                             </p>
                           </td>
-                          <td className="px-4 py-3">
+                          <td>
                             <p className="font-medium">{invoice.projectName}</p>
                             <p className="text-xs text-muted-foreground">
                               {invoice.projectNumber}
                             </p>
                           </td>
-                          <td className="px-4 py-3">{invoice.customerName}</td>
-                          <td className="px-4 py-3 text-muted-foreground">
+                          <td>{invoice.customerName}</td>
+                          <td className="text-muted-foreground">
                             {formatDate(invoice.issueDate)}
                           </td>
-                          <td className="px-4 py-3">
+                          <td>
                             <p>{formatDate(invoice.dueDate)}</p>
                             {hint ? (
                               <p
@@ -472,7 +472,7 @@ export function InvoicesWorkspace({
                               </p>
                             ) : null}
                           </td>
-                          <td className="px-4 py-3">
+                          <td>
                             <p className="font-medium tabular-nums">
                               {money(invoice.totalCents)}
                             </p>
@@ -480,7 +480,7 @@ export function InvoicesWorkspace({
                               {t("inclVat")}
                             </p>
                           </td>
-                          <td className="px-4 py-3">
+                          <td>
                             <Badge
                               variant="outline"
                               className={statusBadgeClass(display)}
@@ -488,7 +488,7 @@ export function InvoicesWorkspace({
                               {t(`status.${display}`)}
                             </Badge>
                           </td>
-                          <td className="px-4 py-3">
+                          <td>
                             <Button
                               type="button"
                               variant="ghost"

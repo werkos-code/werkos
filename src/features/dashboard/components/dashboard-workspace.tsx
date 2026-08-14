@@ -250,22 +250,19 @@ export function DashboardWorkspace({
             </p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="data-table">
                 <thead>
-                  <tr className="border-b border-border bg-muted/40 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                    <th className="px-4 py-2">{t("projects.columns.project")}</th>
-                    <th className="px-4 py-2">{t("projects.columns.customer")}</th>
-                    <th className="px-4 py-2">{t("projects.columns.status")}</th>
-                    <th className="px-4 py-2">{t("projects.columns.progress")}</th>
+                  <tr>
+                    <th>{t("projects.columns.project")}</th>
+                    <th>{t("projects.columns.customer")}</th>
+                    <th>{t("projects.columns.status")}</th>
+                    <th>{t("projects.columns.progress")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {snapshot.projects.map((project) => (
-                    <tr
-                      key={project.id}
-                      className="border-b border-border/70 last:border-0 hover:bg-muted/30"
-                    >
-                      <td className="px-4 py-3">
+                    <tr key={project.id}>
+                      <td>
                         <Link
                           href={`/projecten/${project.id}`}
                           className="flex items-center gap-3"
@@ -292,15 +289,15 @@ export function DashboardWorkspace({
                           </span>
                         </Link>
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      <td className="text-muted-foreground">
                         {project.customerName || "—"}
                       </td>
-                      <td className="px-4 py-3">
+                      <td>
                         <Badge variant={statusBadgeVariant(project.status)}>
                           {tProjects(`status.${project.status}`)}
                         </Badge>
                       </td>
-                      <td className="px-4 py-3">
+                      <td>
                         {project.progressPercent == null ? (
                           <span className="text-muted-foreground">—</span>
                         ) : (

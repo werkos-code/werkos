@@ -67,23 +67,21 @@ export function ProjectsTable({ projects }: { projects: ProjectRow[] }) {
   return (
     <PageCard className="overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[36rem] text-left text-sm">
+        <table className="data-table min-w-[36rem]">
           <thead>
-            <tr className="border-b border-border bg-muted/40 text-muted-foreground">
-              <th className="px-4 py-3 font-medium">{t("columns.name")}</th>
-              <th className="px-4 py-3 font-medium">
-                {t("columns.customer")}
-              </th>
-              <th className="px-4 py-3 font-medium">{t("columns.status")}</th>
+            <tr>
+              <th>{t("columns.name")}</th>
+              <th>{t("columns.customer")}</th>
+              <th>{t("columns.status")}</th>
             </tr>
           </thead>
           <tbody>
             {projects.map((project) => (
               <tr
                 key={project.id}
-                className="border-b border-border/70 align-top last:border-0 hover:bg-muted/30"
+                className="align-top"
               >
-                <td className="px-4 py-3">
+                <td>
                   <Link
                     href={`/projecten/${project.id}`}
                     className="font-medium text-foreground hover:text-primary hover:underline"
@@ -91,10 +89,10 @@ export function ProjectsTable({ projects }: { projects: ProjectRow[] }) {
                     {project.name}
                   </Link>
                 </td>
-                <td className="px-4 py-3 text-muted-foreground">
+                <td className="text-muted-foreground">
                   {project.customerName}
                 </td>
-                <td className="px-4 py-3">
+                <td>
                   <Badge variant="secondary">
                     {t(`status.${project.status}`)}
                   </Badge>
