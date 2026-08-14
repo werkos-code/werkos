@@ -6,7 +6,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PageCard } from "@/features/shell/components/page-card";
 import { signUpAction } from "@/features/auth/actions";
 import { useRouter } from "@/i18n/navigation";
 
@@ -19,7 +18,7 @@ export function AccountStepForm() {
 
   return (
     <form
-      className="flex w-full flex-col gap-5"
+      className="flex flex-col gap-5"
       onSubmit={(event) => {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
@@ -51,7 +50,7 @@ export function AccountStepForm() {
         })();
       }}
     >
-      <PageCard className="space-y-5 p-5">
+      <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="fullName">{t("fullName")}</Label>
           <Input id="fullName" name="fullName" required autoComplete="name" />
@@ -78,7 +77,7 @@ export function AccountStepForm() {
           />
           <p className="text-xs text-muted-foreground">{t("passwordHint")}</p>
         </div>
-      </PageCard>
+      </div>
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       <Button type="submit" size="lg" disabled={pending} className="w-full">
         {pending ? tCommon("loading") : t("submit")}

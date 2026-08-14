@@ -31,10 +31,26 @@
   "onboarding": {
     "progress": "Stap {current} van {total}",
     "brand": {
-      "backToWebsite": "Naar website"
+      "backToWebsite": "Website"
     },
     "atmosphere": {
-      "tagline": "Meer rust. Meer overzicht. Minder administratie."
+      "headline": "Alles rondom je projecten",
+      "tagline": "Van eerste contact tot factuur — rustig, overzichtelijk en zonder rommel.",
+      "backToWebsite": "Website",
+      "usps": {
+        "project": {
+          "title": "Project als centrum",
+          "body": "Offerte, werk, planning en factuur leven op één plek."
+        },
+        "speed": {
+          "title": "Snel van aanvraag naar offerte",
+          "body": "Start met Nieuwe opdracht — geen leeg project meer."
+        },
+        "overview": {
+          "title": "Eerlijk overzicht",
+          "body": "Geen nep-cijfers. Wel signalen waar je vandaag op moet letten."
+        }
+      }
     },
     "welcome": {
       "title": "Welkom bij WerkOS",

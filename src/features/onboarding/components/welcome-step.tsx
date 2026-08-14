@@ -12,6 +12,7 @@ export async function WelcomeStep() {
       step={1}
       title={t("title")}
       description={t("description")}
+      plain
     >
       <Button asChild size="lg" className="w-full">
         <Link href="/onboarding/account">{t("cta")}</Link>

@@ -1,7 +1,6 @@
 /**
  * Atmosphere panel assets for onboarding.
- * Swap `src` / `alt` here (or point `src` at your own photography/video poster)
- * without touching layout components.
+ * Swap `src` in ONBOARDING_ATMOSPHERE_ASSETS when the final construction photo is ready.
  */
 export type OnboardingAtmosphereAsset = {
   /** Path under /public, or a remote URL once next.config allows it */

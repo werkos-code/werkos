@@ -9,7 +9,6 @@ import {
   formatEurFromCents,
 } from "@/config/pricing";
 import { createCheckoutSessionAction } from "@/features/onboarding/checkout-action";
-import { PageCard } from "@/features/shell/components/page-card";
 
 type PaymentStepProps = {
   officeSeats: number;
@@ -28,8 +27,8 @@ export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
   const total = calculateMonthlyTotalCents(officeSeats, fieldSeats);
 
   return (
-    <div className="flex w-full flex-col gap-5">
-      <PageCard className="px-5 py-4 text-sm">
+    <div className="flex flex-col gap-5">
+      <div className="rounded-lg border border-border bg-muted/20 px-4 py-4 text-sm">
         <p className="text-sm font-medium">{t("plan")}</p>
         <div className="mt-4 space-y-2 text-muted-foreground">
           <p>{t("ownerIncluded")}</p>
@@ -48,7 +47,7 @@ export function PaymentStepForm({ officeSeats, fieldSeats }: PaymentStepProps) {
         </div>
         <p className="mt-4 font-medium text-foreground">{t("trial")}</p>
         <p className="mt-1 text-muted-foreground">{t("trialNote")}</p>
-      </PageCard>
+      </div>
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
 

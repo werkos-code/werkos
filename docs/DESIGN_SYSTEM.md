@@ -200,18 +200,21 @@ grid xl:[minmax(0,1.7fr)_minmax(18rem,0.9fr)]
 
 ### 4.8 Onboarding (split, buiten de app-shell)
 
-Geen sidebar. Zelfde 2-koloms split op elke stap — content mag niet verspringen tussen center en start.
+Geen sidebar. Foto + USPs links, formulier rechts — content mag niet verspringen tussen stappen.
 
 ```
-Links: vaste chrome (logo + “Naar website”) → progress → titel → formulier
-Rechts: navy `#09133A` + foto + overlay + tagline (verborgen op mobiel)
+Links (lg+): full-bleed bouwfoto + navy overlay
+  logo-color op witte pill + Website-knop
+  headline + 3 USP-cards (glass)
+Rechts: progress + titel + floating PageCard met formulier
+Mobiel: compact logo + Website bovenaan, foto-paneel verborgen
 ```
 
-1. Chrome `h-14 border-b bg-card`: logo in navy-chip (linkt naar `siteConfig.marketingUrl`) + tekstlink “Naar website”
-2. Content altijd `justify-start`; terug-link in een gereserveerde regel; titelblok met `min-h`
-3. Formulieren in `PageCard`; primaire CTA `size="lg" w-full` eronder
-4. Branche-chips: zelfde classes als modus-chips; extra veld reserveert hoogte
-5. Atmosphere: geen interactie, geen tweede formulier
+1. Logo: `/brand/logo-color.svg` — **geen** zwarte achtergrond; op foto in witte pill
+2. Achtergrondfoto: `/onboarding/tradesperson.jpg` (vervangbaar via `atmosphere.ts`)
+3. Formulier in één `PageCard` met lichte schaduw; geen geneste cards
+4. Progress: segmented bar + `01 / 07` pill
+5. Branche-chips: modus-chip classes; extra veld reserveert hoogte
 
 **Canonical:** `src/features/onboarding/components/onboarding-shell.tsx`
 

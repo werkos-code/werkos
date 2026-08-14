@@ -31,10 +31,26 @@
   "onboarding": {
     "progress": "Schritt {current} von {total}",
     "brand": {
-      "backToWebsite": "Zur Website"
+      "backToWebsite": "Website"
     },
     "atmosphere": {
-      "tagline": "Mehr Ruhe. Mehr Überblick. Weniger Verwaltung."
+      "headline": "Alles rund um deine Projekte",
+      "tagline": "Vom Erstkontakt bis zur Rechnung — ruhig, übersichtlich und ohne Ballast.",
+      "backToWebsite": "Website",
+      "usps": {
+        "project": {
+          "title": "Projekt im Mittelpunkt",
+          "body": "Angebot, Arbeit, Planung und Rechnung an einem Ort."
+        },
+        "speed": {
+          "title": "Schnell von Anfrage zu Angebot",
+          "body": "Starte mit Neuer Auftrag — kein leeres Projekt mehr."
+        },
+        "overview": {
+          "title": "Ehrlicher Überblick",
+          "body": "Keine Fake-Zahlen. Signale für das, was heute zählt."
+        }
+      }
     },
     "welcome": {
       "title": "Willkommen bei WerkOS",

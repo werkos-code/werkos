@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 
 import { userHasOrganization } from "@/features/onboarding/actions";
 import { syncProvisioningFromCheckoutSession } from "@/features/onboarding/sync-provisioning-action";
-import { PageCard } from "@/features/shell/components/page-card";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
@@ -91,7 +90,7 @@ export function ProvisioningView({ sessionId }: ProvisioningViewProps) {
   }, [router, sessionId]);
 
   return (
-    <PageCard className="p-5">
+    <div>
       <ul className="space-y-3 text-sm">
         {STEPS.map((key, index) => {
           const done = index < visibleCount;
@@ -121,6 +120,6 @@ export function ProvisioningView({ sessionId }: ProvisioningViewProps) {
           ) : null}
         </div>
       ) : null}
-    </PageCard>
+    </div>
   );
 }

@@ -10,7 +10,6 @@ import {
   PRICING,
 } from "@/config/pricing";
 import { saveTeamDraft } from "@/features/onboarding/actions";
-import { PageCard } from "@/features/shell/components/page-card";
 import { useRouter } from "@/i18n/navigation";
 
 type TeamStepFormProps = {
@@ -28,7 +27,7 @@ function SeatCounter({
   onChange: (value: number) => void;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
+    <div className="flex items-center justify-between rounded-lg border border-border bg-muted/20 px-4 py-3">
       <span className="text-sm font-medium">{label}</span>
       <div className="flex items-center gap-3">
         <Button
@@ -75,7 +74,7 @@ export function TeamStepForm({
 
   return (
     <form
-      className="flex w-full flex-col gap-5"
+      className="flex flex-col gap-5"
       onSubmit={(event) => {
         event.preventDefault();
         setError(null);
@@ -110,7 +109,7 @@ export function TeamStepForm({
         />
       </div>
 
-      <PageCard className="px-5 py-4 text-sm">
+      <div className="rounded-lg border border-border bg-muted/20 px-4 py-4 text-sm">
         <p className="mb-3 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
           {t("priceTitle")}
         </p>
@@ -150,7 +149,7 @@ export function TeamStepForm({
           <li>{t("includesAll")}</li>
           <li>{t("includesTrial")}</li>
         </ul>
-      </PageCard>
+      </div>
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       <Button type="submit" size="lg" disabled={pending} className="w-full">

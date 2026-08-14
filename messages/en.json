@@ -31,10 +31,26 @@
   "onboarding": {
     "progress": "Step {current} of {total}",
     "brand": {
-      "backToWebsite": "Back to website"
+      "backToWebsite": "Website"
     },
     "atmosphere": {
-      "tagline": "More calm. More overview. Less admin."
+      "headline": "Everything around your projects",
+      "tagline": "From first contact to invoice — calm, clear, and without clutter.",
+      "backToWebsite": "Website",
+      "usps": {
+        "project": {
+          "title": "Project at the center",
+          "body": "Quotes, work, planning, and invoices live in one place."
+        },
+        "speed": {
+          "title": "Fast from request to quote",
+          "body": "Start with New assignment — no empty project."
+        },
+        "overview": {
+          "title": "Honest overview",
+          "body": "No fake numbers. Just signals for what needs attention today."
+        }
+      }
     },
     "welcome": {
       "title": "Welcome to WerkOS",

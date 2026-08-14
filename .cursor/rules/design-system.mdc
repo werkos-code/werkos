@@ -23,7 +23,7 @@ Bij elke nieuwe of gewijzigde UI: volg `docs/DESIGN_SYSTEM.md`. Geen screenshot 
 | Detail | Cover-hero (titel + stats in banner; CTA in hero) → modus-chips → overzicht-cockpit | `project-detail-workspace.tsx` |
 | Workspace | Toolbar (segmented + filters + split-add) → list-card + optionele rail | `project-work-items-workspace.tsx` |
 | Overlay | Hero + modus-chips + cockpit | `work-item-detail-sheet.tsx` |
-| Onboarding | Split 2-koloms · vaste chrome (logo + website) · top-locked stappen | `onboarding-shell.tsx` |
+| Onboarding | Foto links + USP-cards · formulier-card rechts · logo-color | `onboarding-shell.tsx` |
 | Kalender | View-tabs + filters → niet-gepland rail + weekgrid + detailpaneel | `planning-workspace.tsx` |
 | Editor | MetaStat-rij → main card + sticky totals | `quote-editor.tsx` |
 
