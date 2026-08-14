@@ -218,11 +218,13 @@ Mobiel: compact logo + Website bovenaan, foto-paneel verborgen
 
 **Canonical:** `src/features/onboarding/components/onboarding-shell.tsx`
 
-### 4.9 Login & app-start (centered, buiten de app-shell)
+### 4.9 Login & app-start (buiten de app-shell)
 
-Gecentreerd frame: logo + **Website**-knop bovenaan, zachte navy gradient achtergrond, content in `PageCard`. Geen split-panel.
+**Login:** full-bleed achtergrondfoto, navy overlay, groot wit centrumvak (`rounded-3xl`, geen border, royale padding). Volgorde in het vak: logo → titel → subtitel → velden → CTA → account-link → website-link.
 
-**Canonical:** `src/features/auth/components/auth-entry-shell.tsx` · `src/app/[locale]/page.tsx` · `src/app/[locale]/login/page.tsx`
+**App-start:** gecentreerd frame via `AuthEntryShell` (logo, Website-knop, PageCard, USP’s).
+
+**Canonical:** `src/features/auth/components/login-shell.tsx` · `login-card.tsx` · `src/app/[locale]/page.tsx`
 
 ---
 
