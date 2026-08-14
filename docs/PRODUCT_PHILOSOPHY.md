@@ -271,6 +271,8 @@ Iedere klik moet een doel hebben.
 
 Wanneer een gebruiker moet zoeken, nadenken of twijfelen, hebben wij gefaald.
 
+Dat geldt ook voor de prijs. WerkOS is bewust eenvoudig geprijsd: geen pakketten, geen feature-locks, geen modules achter een duurder abonnement. De klant hoeft niet te begrijpen welk plan hij nodig heeft — alleen hoe hij betaalt (maandelijks of jaarlijks) en hoeveel mensen met WerkOS werken. Bedragen staan in [`PHASE1_SETUP.md`](./PHASE1_SETUP.md#prijsmodel).
+
 WerkOS moet voelen als gereedschap.
 
 Niet als administratie.
@@ -439,6 +441,7 @@ Bij iedere ontwerpbeslissing gelden de volgende uitgangspunten.
 - Integreren waar anderen beter in zijn.
 - Maatwerk mag de standaard nooit vervuilen.
 - Iedere feature moet bijdragen aan een eenvoudigere dagelijkse operatie.
+- Eén platform, één prijsvorm: de klant kiest geen pakket of module-set, alleen hoe hij betaalt en voor welke gebruikers.
 
 ---
 

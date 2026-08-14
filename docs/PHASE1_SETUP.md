@@ -24,7 +24,7 @@ Handmatige stappen om auth, database en Stripe werkend te krijgen.
 
 ## 3. Stripe — producten
 
-Maak **één product** “WerkOS” met drie recurring monthly prices:
+Huidige implementatie: **één product** “WerkOS” met drie recurring **monthly** prices (jaarlijkse vooruitbetaling is commerciële keuze, nog niet in Stripe/code).
 
 | Price | Bedrag | Env var |
 | --- | --- | --- |
@@ -33,6 +33,8 @@ Maak **één product** “WerkOS” met drie recurring monthly prices:
 | Uitvoerend seat | €15 | `STRIPE_PRICE_SEAT_FIELD` |
 
 Kopieer de `price_…` ids naar `.env.local` en Vercel env.
+
+Commercieel model (bron van waarheid, ook jaarlijks): zie [Prijsmodel](#prijsmodel).
 
 ## 4. Stripe — webhook
 
@@ -282,8 +284,53 @@ Geen nieuwe SQL. Test:
 2. Optioneel: zet `TWOBA_*` in `.env.local` / Vercel — zie [`PENDING_SETUP.md`](./PENDING_SETUP.md)
 3. Test: `/materiaal/inkoop` en `/materiaal/artikelen` → **2BA**
 
-## Prijsformule
+## Prijsmodel
 
-`totaal = €59 + (kantoor × €25) + (uitvoerend × €15)`  
-Owner zit in de basis; tellers zijn alleen extra seats.  
+Bron van waarheid voor productstrategie en toekomstige billing. **Nog niet alles hiervan zit in Stripe/UI** — de live checkout volgt nog alleen het maandelijkse tarief (zie §3).
+
+WerkOS heeft **geen** Business / Pro / Premium-tiers. Er is één compleet platform; alle modules en functionaliteit zitten in hetzelfde abonnement. De prijs hangt alleen af van:
+
+1. Betaalfrequentie (maandelijks of jaarlijks)
+2. Aantal gebruikers
+3. Type gebruiker (kantoor vs uitvoerend)
+
+De eigenaar zit in het basisbedrag. Extra medewerkers zijn seats.
+
+### Maandelijks (maandelijks opzegbaar)
+
+| Onderdeel | Prijs |
+| --- | --- |
+| WerkOS basis (incl. owner) | €59 / maand |
+| Kantoormedewerker | €25 / gebruiker / maand |
+| Uitvoerend medewerker | €15 / gebruiker / maand |
+
+`maandbedrag = €59 + (kantoor × €25) + (uitvoerend × €15)`
+
+### Jaarlijks (vooruitbetaling voor 12 maanden)
+
+Geen 1-jarig contract waarin de klant maandelijks moet blijven betalen. De klant rekent **basis + alle seats** in één keer af voor 12 maanden gebruik. Daarna opnieuw kiezen: verlengen, overstappen naar maandelijks, of stoppen.
+
+| Onderdeel | Maand-equivalent | Vooraf per jaar |
+| --- | --- | --- |
+| WerkOS basis (incl. owner) | €49 | €588 |
+| Kantoormedewerker | €20 | €240 |
+| Uitvoerend medewerker | €10 | €120 |
+
+`jaarbedrag = €588 + (kantoor × €240) + (uitvoerend × €120)`
+
+Voorbeeld — 1 basis + 2 kantoor + 5 uitvoerend:  
+€588 + 2 × €240 + 5 × €120 = **€1.668** per jaar vooraf.
+
+### Wat dit bewust niet is
+
+- Geen 2-jarige contracten of andere looptijden
+- Geen feature-locks per pakket
+- Geen losse modules achter een duurder abonnement
+- Geen discussie over “resterende maanden” bij stoppen: jaarlijks is al vooruitbetaald; maandelijks stopt na de lopende periode
+
+Uitleg naar de klant: *“€59 per maand, of €49 per maand wanneer je jaarlijks betaalt. Je betaalt daarnaast alleen voor de gebruikers die met WerkOS werken.”*
+
+### Huidige runtime (tot yearly is gebouwd)
+
+Checkout en env-vars gebruiken alleen de maandelijkse prices uit §3.  
 Trial: 14 dagen, betaalmethode verplicht, €0 tijdens trial.

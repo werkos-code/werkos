@@ -1121,6 +1121,11 @@ Deze regels vormen de contracten van het domein. Ze beschrijven niet hoe iets te
 - Een bedrijf kan meerdere klanten hebben.
 - Een bedrijf kan meerdere projecten hebben.
 - Een bedrijf kan slechts één abonnement hebben.
+- Dat abonnement is het volledige WerkOS-platform: geen feature-tiers (Business / Pro / Premium) en geen modules achter een duurder pakket.
+- De prijs van het abonnement hangt af van betaalfrequentie (maandelijks of jaarlijks), het aantal gebruikers en het type gebruiker (kantoor vs uitvoerend). Bedragen: [`PHASE1_SETUP.md` — Prijsmodel](./PHASE1_SETUP.md#prijsmodel).
+- De eigenaar zit in het basisabonnement; extra kantoor- en uitvoerende medewerkers zijn seats.
+- Maandelijks betalen is maandelijks opzegbaar.
+- Jaarlijks betalen is vooruitbetaling voor 12 maanden gebruik — geen verplichting om gedurende een contractjaar maandelijks te blijven betalen.
 - Alle bedrijfsdata binnen WerkOS behoort uiteindelijk toe aan één bedrijf.
 
 ---

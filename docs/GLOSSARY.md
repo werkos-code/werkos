@@ -24,6 +24,18 @@ Korte definities zodat product, design en engineering dezelfde taal spreken.
 | Afspraak | Appointment | Eigen object; mag met of zonder project |
 | Planning | Planning | Weergave van werkzaamheden + afspraken (geen dubbele admin) |
 | Organisatie-switcher | Org switcher | Wisselen tussen organisaties (UI-klaar; multi-org later) |
+| Basisabonnement | Base | Vast platformbedrag; owner inbegrepen; alle functionaliteit |
+| Kantoorseat | Office seat | Extra kantoormedewerker, bovenop de basis |
+| Uitvoerende seat | Field seat | Extra uitvoerend medewerker, bovenop de basis |
+| Jaarlijkse vooruitbetaling | Annual prepaid | 12 maanden gebruik in één keer; geen 1-jarig maandcontract |
+
+Prijzen en rekenregels: [`PHASE1_SETUP.md` — Prijsmodel](./PHASE1_SETUP.md#prijsmodel).
+| Basisabonnement | Base | Vast platformbedrag; owner inbegrepen; alle functionaliteit |
+| Kantoorseat | Office seat | Extra kantoormedewerker, bovenop de basis |
+| Uitvoerende seat | Field seat | Extra uitvoerend medewerker, bovenop de basis |
+| Jaarlijkse vooruitbetaling | Annual prepaid | 12 maanden gebruik in één keer; geen 1-jarig maandcontract |
+
+Prijzen en rekenregels: [`PHASE1_SETUP.md` — Prijsmodel](./PHASE1_SETUP.md#prijsmodel).
 
 ## Bewust niet gebruiken
 
@@ -34,3 +46,4 @@ Korte definities zodat product, design en engineering dezelfde taal spreken.
 | Task hierarchy / Service Order | Werkzaamheden / Werkbon |
 | Gesplitste app-contexten | Eén navigatiestructuur |
 | Modules als navigatiemodel | Werkruimtes / bestemmingen |
+| Business / Pro / Premium | Eén WerkOS-platform; prijs = frequentie + seats |
