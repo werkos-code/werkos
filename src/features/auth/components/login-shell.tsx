@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { LoginCard } from "@/features/auth/components/login-card";
+import { siteConfig } from "@/config/site";
 
 const LOGIN_BACKGROUND = {
   src: "/auth/login-background.png",
@@ -20,7 +21,7 @@ export function LoginShell({ children }: { children: React.ReactNode }) {
       />
       <div className="absolute inset-0 bg-[#09133A]/45" />
 
-      <div className="relative z-10 w-full flex justify-center">{children}</div>
+      <div className="relative z-10 flex w-full justify-center">{children}</div>
     </div>
   );
 }
@@ -28,7 +29,23 @@ export function LoginShell({ children }: { children: React.ReactNode }) {
 export function LoginPageContent() {
   return (
     <LoginShell>
-      <LoginCard />
+      <div className="flex w-full max-w-[32rem] flex-col items-center">
+        <a
+          href={siteConfig.marketingUrl}
+          className="mb-8 transition-opacity hover:opacity-90 sm:mb-10"
+          aria-label={siteConfig.name}
+        >
+          <Image
+            src="/brand/logo-white.svg"
+            alt={siteConfig.name}
+            width={697}
+            height={147}
+            priority
+            className="h-8 w-auto sm:h-9"
+          />
+        </a>
+        <LoginCard />
+      </div>
     </LoginShell>
   );
 }

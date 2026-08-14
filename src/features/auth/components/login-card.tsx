@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
@@ -20,24 +19,9 @@ export function LoginCard() {
   const [pending, startTransition] = useTransition();
 
   return (
-    <div className="w-full max-w-[28rem] rounded-3xl bg-white px-8 py-12 shadow-[0_24px_80px_rgba(15,23,42,0.22)] sm:max-w-[32rem] sm:px-12 sm:py-14">
+    <div className="w-full rounded-3xl bg-white px-8 py-12 shadow-[0_24px_80px_rgba(15,23,42,0.22)] sm:px-12 sm:py-14">
       <div className="flex flex-col items-center text-center">
-        <a
-          href={siteConfig.marketingUrl}
-          className="transition-opacity hover:opacity-90"
-          aria-label={siteConfig.name}
-        >
-          <Image
-            src="/brand/logo-color.svg"
-            alt={siteConfig.name}
-            width={697}
-            height={147}
-            priority
-            className="h-8 w-auto sm:h-9"
-          />
-        </a>
-
-        <h1 className="mt-8 text-2xl font-semibold tracking-tight text-foreground sm:text-[1.75rem]">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-[1.75rem]">
           {t("loginTitle")}
         </h1>
         <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground sm:text-base">
