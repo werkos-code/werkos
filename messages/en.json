@@ -69,7 +69,9 @@
       "password": "Wachtwoord",
       "passwordHint": "Minimaal 8 tekens",
       "submit": "Doorgaan",
-      "emailInUse": "Dit e-mailadres is al in gebruik. Log in of gebruik een ander adres."
+      "emailInUse": "Dit e-mailadres is al in gebruik. Log in of gebruik een ander adres.",
+      "hasAccount": "Already have an account?",
+      "login": "Log in"
     },
     "company": {
       "title": "Over je bedrijf",
