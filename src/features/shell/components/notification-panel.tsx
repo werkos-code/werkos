@@ -68,11 +68,11 @@ export function NotificationPanel({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="flex w-full flex-col sm:max-w-md">
-        <SheetHeader className="border-b border-border pb-4">
+      <SheetContent className="flex w-full flex-col gap-0 overflow-hidden rounded-tl-3xl rounded-bl-3xl sm:max-w-md">
+        <SheetHeader className="border-b border-border px-6 pt-6 pb-4 pr-14">
           <SheetTitle>{t("panelTitle")}</SheetTitle>
         </SheetHeader>
-        <div className="flex items-center justify-between gap-2 py-3">
+        <div className="flex items-center justify-between gap-2 px-6 py-4">
           <Button
             type="button"
             variant="outline"
@@ -105,7 +105,7 @@ export function NotificationPanel({
             </Link>
           </Button>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-6">
           {error ? (
             <p className="text-sm text-destructive">{error}</p>
           ) : !hasLoaded && isPending ? (

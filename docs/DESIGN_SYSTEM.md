@@ -65,6 +65,7 @@ AppShell (navy sidebar)
 | Surfaces | Gebruik `PageCard` / `MetaStatCard` — niet shadcn `Card` in product-UI |
 | Secties | `space-y-5` of `space-y-6` |
 | Sidebar | Vast tegen links/boven/onder; afronding alleen rechtsboven en rechtsonder (`rounded-3xl`); organisatie-switcher bovenaan; **inklappbare** sectiekoppen; Bedrijf default dicht; subtiele active state |
+| Notificatie-rail | Sheet rechts; afronding linksboven/linksonder (`rounded-tl-3xl rounded-bl-3xl`); inner padding `px-6` |
 | Sidebar CTA | Alleen “Nieuwe opdracht”: lichte blauwe gradient `#2563EB` → `#60A5FA` — nergens anders hergebruiken |
 | Eén app-context | Geen dual-context switch — één navigatiestructuur |
 
@@ -285,6 +286,7 @@ Document-previews (offerte/factuur-PDF) mogen een strakkere tabel houden.
 ### Overlays
 
 - Detail/side panel: Sheet rechts, korte fade/slide, lichte overlay
+- Notificatie-rail: `rounded-tl-3xl rounded-bl-3xl`, padding `px-6` (spiegel van de navy sidebar)
 - Bevestigen: Dialog
 - Geen grote entrance-animaties
 
