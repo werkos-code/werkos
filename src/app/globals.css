@@ -231,6 +231,33 @@
     }
   }
 
+  @keyframes werkos-page-progress {
+    0% {
+      transform: translateX(-40%);
+    }
+    100% {
+      transform: translateX(280%);
+    }
+  }
+
+  .page-skeleton-progress {
+    pointer-events: none;
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 2px;
+    overflow: hidden;
+    background: color-mix(in oklab, var(--primary) 14%, transparent);
+  }
+
+  .page-skeleton-progress > span {
+    display: block;
+    height: 100%;
+    width: 32%;
+    background: var(--primary);
+    animation: werkos-page-progress 1.1s ease-in-out infinite;
+  }
+
   @media (max-width: 63.99rem) {
     .quote-line-row {
       display: flex;

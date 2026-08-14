@@ -295,6 +295,7 @@
         "description": "Plan, seats en Stripe-beheer."
       }
     },
+    "pageLoading": "Pagina laden",
     "navLabel": "Hoofdnavigatie",
     "workItems": "Werkzaamheden",
     "staff": "Personeel",

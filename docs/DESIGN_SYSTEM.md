@@ -60,6 +60,7 @@ AppShell (navy sidebar)
 | Regel | Detail |
 | --- | --- |
 | Header-titel | `text-base font-semibold tracking-tight` — geen grote hero in de chrome |
+| Navigatie | Sidebar + header blijven staan; pagina-inhoud streamt achter `loading.tsx` (`PageSkeleton`) — geen bevroren oude pagina |
 | Geen page-description | `description` op `ShellPage` wordt niet gerenderd; uitleg via tooltip of weglaten |
 | Surfaces | Gebruik `PageCard` / `MetaStatCard` — niet shadcn `Card` in product-UI |
 | Secties | `space-y-5` of `space-y-6` |
@@ -68,7 +69,8 @@ AppShell (navy sidebar)
 | Eén app-context | Geen dual-context switch — één navigatiestructuur |
 
 **Canonical:**  
-`src/features/shell/components/{app-shell,app-sidebar,organization-switcher,shell-page,app-page-header,page-card}.tsx`
+`src/features/shell/components/{app-shell,app-sidebar,organization-switcher,shell-page,app-page-header,page-card,page-skeleton}.tsx`  
+`src/app/[locale]/(app)/loading.tsx`
 
 ---
 
@@ -311,6 +313,7 @@ Rijker: titel + korte uitleg + primaire actie. Nooit een “lege” dode pagina.
 
 - Alleen `transition-colors` / `opacity` / korte sheet-slide (`duration-100`–`200`)
 - Header/composer: `backdrop-blur-sm` is ok
+- Navigatie-skeleton: `animate-pulse` (opacity) + dunne primary-balk onder de header — geen glow of springs
 - Geen springs, glow-pulses, of decorative motion
 
 ---

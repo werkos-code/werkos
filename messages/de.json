@@ -295,6 +295,7 @@
         "description": "Plan, Sitze und Stripe-Verwaltung."
       }
     },
+    "pageLoading": "Seite wird geladen",
     "navLabel": "Hauptnavigation",
     "workItems": "Arbeitsposten",
     "staff": "Personal",

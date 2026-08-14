@@ -295,6 +295,7 @@
         "description": "Plan, seats and Stripe management."
       }
     },
+    "pageLoading": "Loading page",
     "navLabel": "Main navigation",
     "workItems": "Work items",
     "staff": "Staff",

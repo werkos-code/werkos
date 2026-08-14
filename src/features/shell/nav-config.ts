@@ -220,3 +220,42 @@ export const PLATFORM_ADMIN_NAV: ShellNavSection = {
 };
 
 export const APP_HOME_HREF = "/dashboard" as const;
+
+const EXTRA_TITLE_ROUTES: Array<{ href: string; labelKey: string }> = [
+  { href: "/instellingen/account", labelKey: "settingsAccount" },
+  { href: "/instellingen/abonnement", labelKey: "settingsBilling" },
+  { href: "/financien", labelKey: "finance" },
+  { href: NEW_REQUEST_HREF, labelKey: "newRequest" },
+];
+
+function collectTitleRoutes(sections: ShellNavSection[]) {
+  const routes: Array<{ href: string; labelKey: string }> = [];
+  for (const section of sections) {
+    for (const item of section.items) {
+      if (item.href) {
+        routes.push({ href: item.href, labelKey: item.labelKey });
+      }
+      for (const child of item.children ?? []) {
+        routes.push({ href: child.href, labelKey: child.labelKey });
+      }
+    }
+  }
+  return routes;
+}
+
+const TITLE_ROUTES = [
+  ...collectTitleRoutes(APP_NAV),
+  ...collectTitleRoutes([PLATFORM_ADMIN_NAV]),
+  ...EXTRA_TITLE_ROUTES,
+].sort((a, b) => b.href.length - a.href.length);
+
+/** Nav `labelKey` under `shell.*` for the current pathname (no locale prefix). */
+export function navLabelKeyForPathname(pathname: string): string | null {
+  for (const route of TITLE_ROUTES) {
+    if (pathname === route.href) return route.labelKey;
+    if (route.href !== APP_HOME_HREF && pathname.startsWith(`${route.href}/`)) {
+      return route.labelKey;
+    }
+  }
+  return null;
+}

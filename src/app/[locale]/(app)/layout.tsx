@@ -1,25 +1,10 @@
-import { setRequestLocale } from "next-intl/server";
-
 import { AppShell } from "@/features/shell/components/app-shell";
-import { requireOrganization } from "@/features/shell/lib/require-organization";
 
 type Props = {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 };
 
-export default async function AppLayout({ children, params }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
-  const session = await requireOrganization(locale);
-
-  return (
-    <AppShell
-      organizationName={session.organizationName}
-      userName={session.userName}
-      isSuperAdmin={session.isSuperAdmin}
-    >
-      {children}
-    </AppShell>
-  );
+export default function AppLayout({ children, params }: Props) {
+  return <AppShell params={params}>{children}</AppShell>;
 }

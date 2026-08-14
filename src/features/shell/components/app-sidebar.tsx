@@ -26,7 +26,7 @@ import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 type AppSidebarProps = {
-  userName: string;
+  userName?: string;
   organizationName?: string | null;
   isSuperAdmin?: boolean;
 };
@@ -217,9 +217,10 @@ export function AppSidebar({
     ...APP_NAV,
     ...(isSuperAdmin ? [PLATFORM_ADMIN_NAV] : []),
   ];
+  const sessionReady = Boolean(userName);
 
   const initials = useMemo(() => {
-    const parts = userName.trim().split(/\s+/).filter(Boolean);
+    const parts = userName?.trim().split(/\s+/).filter(Boolean) ?? [];
     if (parts.length === 0) return "W";
     if (parts.length === 1) return parts[0]!.slice(0, 2).toUpperCase();
     return `${parts[0]![0] ?? ""}${parts[1]![0] ?? ""}`.toUpperCase();
@@ -258,13 +259,20 @@ export function AppSidebar({
         <div className="flex items-center gap-2.5 rounded-xl px-1.5 py-1.5">
           <Avatar className="size-8 after:border-white/10">
             <AvatarFallback className="bg-white/12 text-[11px] text-white">
-              {initials}
+              {sessionReady ? initials : ""}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] font-medium text-white">
-              {userName}
-            </p>
+            {sessionReady ? (
+              <p className="truncate text-[13px] font-medium text-white">
+                {userName}
+              </p>
+            ) : (
+              <div
+                className="h-3.5 w-24 animate-pulse rounded bg-white/15"
+                aria-hidden
+              />
+            )}
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
