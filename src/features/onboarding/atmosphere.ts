@@ -12,7 +12,7 @@ export type OnboardingAtmosphereAsset = {
 
 export const ONBOARDING_ATMOSPHERE_ASSETS = {
   solarInstaller: {
-    src: "/onboarding/solar-installer.png",
+    src: "/onboarding/solar-installer.jpg",
     alt: "Vakman installeert zonnepanelen op een dak",
     credit: "Pexels",
   },

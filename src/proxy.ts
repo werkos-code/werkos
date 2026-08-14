@@ -142,12 +142,6 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
   }
 
-  if (user && pathWithoutLocale === "/login") {
-    return NextResponse.redirect(
-      new URL(`/${locale}${APP_HOME_HREF}`, request.url),
-    );
-  }
-
   const onboardingNeedsAuth =
     pathWithoutLocale.startsWith("/onboarding/") &&
     pathWithoutLocale !== "/onboarding" &&

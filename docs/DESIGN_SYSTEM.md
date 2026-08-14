@@ -209,7 +209,7 @@ wit blok rounded-3xl, geen border, royale padding
 ```
 
 1. Logo: `/brand/logo-white.svg` — **geen** achtergrond achter het logo
-2. Achtergrondfoto: `/onboarding/solar-installer.png` (vervangbaar via `atmosphere.ts`)
+2. Achtergrondfoto: `/onboarding/solar-installer.jpg` (vervangbaar via `atmosphere.ts`)
 3. Formulier in het witte blok; geen geneste cards
 4. Progress: segmented bar — 6 stappen (account → bedrijf → team → betaling → inrichten → klaar). Geen welcome-stap.
 5. Branche-chips: modus-chip classes; extra veld reserveert hoogte

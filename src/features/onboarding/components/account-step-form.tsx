@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signUpAction } from "@/features/auth/actions";
+import { logoutAction, signUpAction } from "@/features/auth/actions";
 import { Link, useRouter } from "@/i18n/navigation";
 
 export function AccountStepForm() {
@@ -86,7 +86,17 @@ export function AccountStepForm() {
       </form>
       <p className="mt-8 text-center text-sm text-muted-foreground">
         {t("hasAccount")}{" "}
-        <Link href="/login" className="font-medium text-primary hover:underline">
+        <Link
+          href="/login"
+          className="font-medium text-primary hover:underline"
+          onClick={(event) => {
+            event.preventDefault();
+            void (async () => {
+              await logoutAction();
+              router.push("/login");
+            })();
+          }}
+        >
           {t("login")}
         </Link>
       </p>

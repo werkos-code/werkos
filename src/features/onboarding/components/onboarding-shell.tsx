@@ -20,6 +20,7 @@ export function OnboardingShell({ children }: OnboardingShellProps) {
         alt={asset.alt}
         fill
         priority
+        quality={90}
         sizes="100vw"
         className="object-cover"
       />
