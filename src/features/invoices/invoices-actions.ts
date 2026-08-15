@@ -265,9 +265,7 @@ export async function getInvoice(invoiceId: string): Promise<{
         unitPriceCents: line.unit_price_cents,
         vatRateBps: line.vat_rate_bps,
         discountCents: line.discount_cents,
-        isGroup: Boolean(
-          "is_group" in line ? (line as { is_group?: boolean }).is_group : false,
-        ),
+        isGroup: Boolean(line.is_group),
       })),
     },
   };
