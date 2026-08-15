@@ -1,18 +1,10 @@
 "use client";
 
-import {
-  Euro,
-  FileText,
-  Inbox,
-  type LucideIcon,
-} from "lucide-react";
+import { Euro, FileText, Inbox, type LucideIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { formatEurFromCents } from "@/config/pricing";
-import {
-  DashboardEmptyCta,
-  DashboardSurface,
-} from "@/features/dashboard/components/dashboard-surface";
+import { DashboardSurface } from "@/features/dashboard/components/dashboard-surface";
 import type { DashboardKpis } from "@/features/dashboard/dashboard-actions";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -67,45 +59,37 @@ export function DashboardKpiStrip({ kpis }: { kpis: DashboardKpis }) {
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid items-stretch gap-4 md:grid-cols-3">
       {cards.map((card) => {
         const meta = KPI_META[card.key];
         const Icon = meta.icon;
         const isEmpty = card.raw === 0;
-
-        if (isEmpty) {
-          return (
-            <DashboardSurface
-              key={card.key}
-              className="flex min-h-[9.5rem] flex-col"
-            >
-              <DashboardEmptyCta
-                icon={Icon}
-                title={t(`${card.key}.emptyTitle`)}
-                description={t(`${card.key}.emptyDescription`)}
-                ctaLabel={t(`${card.key}.cta`)}
-                href={meta.emptyHref}
-              />
-            </DashboardSurface>
-          );
-        }
+        const href = isEmpty ? meta.emptyHref : meta.href;
 
         return (
-          <Link key={card.key} href={meta.href} className="group block">
-            <DashboardSurface className="relative min-h-[9.5rem] p-5 transition-colors group-hover:bg-muted/20">
+          <Link key={card.key} href={href} className="group block h-full">
+            <DashboardSurface
+              className={cn(
+                "relative flex h-full flex-col p-5 transition-colors group-hover:bg-muted/20",
+              )}
+            >
               <div className="flex items-start justify-between gap-3">
                 <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
                   {t(`${card.key}.label`)}
                 </p>
-                <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <Icon className="size-4" strokeWidth={1.75} />
-                </span>
+                {!isEmpty ? (
+                  <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <Icon className="size-4" strokeWidth={1.75} />
+                  </span>
+                ) : (
+                  <span className="size-9 shrink-0" aria-hidden />
+                )}
               </div>
               <p className="mt-6 text-3xl font-semibold tracking-tight tabular-nums text-foreground">
-                {card.value}
+                {isEmpty ? "—" : card.value}
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
-                {t(`${card.key}.hint`)}
+                {isEmpty ? t(`${card.key}.cta`) : t(`${card.key}.hint`)}
               </p>
               <div
                 className={cn(
