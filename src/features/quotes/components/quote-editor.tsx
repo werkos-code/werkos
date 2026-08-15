@@ -2,12 +2,10 @@
 
 import { Link, useRouter } from "@/i18n/navigation";
 import {
-  Activity,
   Check,
   Copy,
   Ellipsis,
   Eye,
-  FileText,
   Pencil,
   Receipt,
   Send,
@@ -66,13 +64,7 @@ type QuoteEditorProps = {
   articles?: ArticleRow[];
 };
 
-type EditorTab =
-  | "overview"
-  | "editor"
-  | "terms"
-  | "attachments"
-  | "notes"
-  | "activity";
+type EditorTab = "editor" | "terms" | "attachments" | "notes";
 
 export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
   const t = useTranslations("quotes");
@@ -553,15 +545,13 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
     saveState === "saving" ? tCommon("loading") : t("save");
 
   const tabs: { id: EditorTab; label: string }[] = [
-    { id: "overview", label: t("tabs.overview") },
     { id: "editor", label: t("tabs.editor") },
     { id: "terms", label: t("tabs.terms") },
     { id: "attachments", label: t("tabs.attachments") },
     { id: "notes", label: t("tabs.notes") },
-    { id: "activity", label: t("tabs.activity") },
   ];
 
-  const showRail = tab === "overview" || tab === "editor";
+  const showRail = tab === "editor";
 
   return (
     <div className="space-y-5">
@@ -817,49 +807,6 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
               ))}
             </div>
 
-            {tab === "overview" ? (
-              <div className="space-y-4 p-5">
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <OverviewRow
-                    label={t("meta.customer")}
-                    value={quote.customerName ?? "—"}
-                  />
-                  <OverviewRow
-                    label={t("meta.project")}
-                    value={quote.projectName}
-                  />
-                  <OverviewRow
-                    label={t("meta.number")}
-                    value={quote.quoteNumber ?? t("meta.numberPending")}
-                  />
-                  <OverviewRow
-                    label={t("fields.validUntil")}
-                    value={validUntil || "—"}
-                  />
-                  <OverviewRow
-                    label={t("kpi.net")}
-                    value={formatEuro(totals.net)}
-                  />
-                  <OverviewRow
-                    label={t("kpi.gross")}
-                    value={formatEuro(totals.gross)}
-                  />
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {t("overview.hint")}
-                </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setTab("editor")}
-                >
-                  <FileText className="size-3.5" />
-                  {t("overview.openEditor")}
-                </Button>
-              </div>
-            ) : null}
-
             {tab === "editor" ? (
               <div className="space-y-0">
                 <QuoteLinesWorkspace
@@ -1002,14 +949,6 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
                 />
               </div>
             ) : null}
-
-            {tab === "activity" ? (
-              <ComingSoon
-                icon={<Activity className="size-6 text-primary" />}
-                title={t("activity.title")}
-                hint={t("activity.hint")}
-              />
-            ) : null}
           </PageCard>
         </div>
 
@@ -1130,35 +1069,6 @@ export function QuoteEditor({ quote, articles = [] }: QuoteEditorProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
-  );
-}
-
-function OverviewRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border bg-muted/20 px-3 py-2.5">
-      <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-        {label}
-      </p>
-      <p className="mt-0.5 text-sm font-medium">{value}</p>
-    </div>
-  );
-}
-
-function ComingSoon({
-  icon,
-  title,
-  hint,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  hint: string;
-}) {
-  return (
-    <div className="flex flex-col items-center gap-2 px-4 py-12 text-center">
-      {icon}
-      <p className="text-sm font-medium">{title}</p>
-      <p className="max-w-sm text-xs text-muted-foreground">{hint}</p>
     </div>
   );
 }

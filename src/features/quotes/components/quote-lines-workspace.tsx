@@ -16,16 +16,28 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
+  Box,
   Calculator,
   ChevronDown,
   ChevronRight,
+  Clock,
   Copy,
+  FolderPlus,
   GripVertical,
   Plus,
   Trash2,
+  Type,
+  Wrench,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Fragment, useMemo, useState } from "react";
+import {
+  createContext,
+  Fragment,
+  useContext,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,8 +72,45 @@ import type {
 import type { ArticleRow } from "@/features/materials/lib/materials";
 import { cn } from "@/lib/utils";
 
+const VAT_PRESETS = [
+  { bps: 2100, label: "21%" },
+  { bps: 900, label: "9%" },
+  { bps: 0, label: "0%" },
+] as const;
+
 const selectClass =
-  "border-input bg-background h-8 w-full rounded-lg border px-1.5 text-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+  "border-input bg-background h-8 rounded-lg border px-2 text-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+
+const ADD_CHIPS: Array<{
+  type: QuoteLineType;
+  icon: typeof Box;
+  asSection?: boolean;
+  labelKey:
+    | "addArticle"
+    | "addHours"
+    | "addLabor"
+    | "addText"
+    | "addSection";
+}> = [
+  { type: "article", icon: Box, labelKey: "addArticle" },
+  { type: "hours", icon: Clock, labelKey: "addHours" },
+  { type: "labor", icon: Wrench, labelKey: "addLabor" },
+  { type: "text", icon: Type, labelKey: "addText" },
+  {
+    type: "section",
+    icon: FolderPlus,
+    asSection: true,
+    labelKey: "addSection",
+  },
+];
+
+type DragHandleContextValue = {
+  attributes: ReturnType<typeof useSortable>["attributes"];
+  listeners: ReturnType<typeof useSortable>["listeners"];
+  disabled?: boolean;
+} | null;
+
+const DragHandleContext = createContext<DragHandleContextValue>(null);
 
 export type QuoteLinesWorkspaceProps = {
   lines: QuoteLineRow[];
@@ -100,6 +149,9 @@ export function QuoteLinesWorkspace({
   const t = useTranslations("quotes");
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [expandedDetails, setExpandedDetails] = useState<Set<string>>(
+    new Set(),
+  );
 
   const roots = useMemo(() => getRootLines(lines), [lines]);
   const stats = useMemo(() => aggregateQuoteLineStats(lines), [lines]);
@@ -121,6 +173,15 @@ export function QuoteLinesWorkspace({
 
   function toggleSelected(id: string) {
     setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleDetails(id: string) {
+    setExpandedDetails((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
@@ -204,7 +265,9 @@ export function QuoteLinesWorkspace({
 
   function handleRecalculatePrices() {
     if (linkedArticleCount === 0) return;
-    if (!window.confirm(t("recalculateConfirm", { count: linkedArticleCount }))) {
+    if (
+      !window.confirm(t("recalculateConfirm", { count: linkedArticleCount }))
+    ) {
       return;
     }
     const onlyLineIds =
@@ -237,11 +300,7 @@ export function QuoteLinesWorkspace({
     const line = lines.find((row) => row.id === lineId);
     if (!line) return;
     onChange(
-      updateLineInTree(
-        lines,
-        lineId,
-        applyArticleToLine(line, article),
-      ),
+      updateLineInTree(lines, lineId, applyArticleToLine(line, article)),
     );
   }
 
@@ -264,250 +323,68 @@ export function QuoteLinesWorkspace({
     }
   }
 
-  function renderLineRow(
-    line: QuoteLineRow,
-    depth: number,
-    indexLabel: string,
-  ) {
+  function renderLine(line: QuoteLineRow, depth: number) {
     const kids = childrenOf(lines, line.id);
     const showAsSection = isSectionLine(line, lines);
+    const isCollapsed = collapsed[line.id];
+    const detailsOpen = expandedDetails.has(line.id);
+    const priced = isPricedLineType(line.lineType);
     const net = lineNetCents({
       quantity: line.quantity,
       unitPriceCents: line.unitPriceCents,
       discountCents: line.discountCents,
     });
-    const isCollapsed = collapsed[line.id];
-    const priced = isPricedLineType(line.lineType);
 
     if (showAsSection) {
       const total = sectionTotalCents(lines, line.id);
-      return (
-        <Fragment key={line.id}>
-          <SortableSection
-            id={line.id}
-            disabled={!editable || busy}
-            selected={selected.has(line.id)}
-            onToggleSelect={() => toggleSelected(line.id)}
-          >
-            <div className="flex flex-1 items-center gap-2">
-              <button
-                type="button"
-                className="text-muted-foreground"
-                onClick={() =>
-                  setCollapsed((prev) => ({
-                    ...prev,
-                    [line.id]: !prev[line.id],
-                  }))
-                }
-              >
-                {isCollapsed ? (
-                  <ChevronRight className="size-4" />
-                ) : (
-                  <ChevronDown className="size-4" />
-                )}
-              </button>
-              <span className="w-6 text-xs tabular-nums text-muted-foreground">
-                {indexLabel}
-              </span>
-              <Input
-                value={line.title}
-                disabled={!editable}
-                placeholder={t("placeholders.section")}
-                className="h-8 flex-1 border-transparent bg-transparent font-medium shadow-none focus-visible:border-input focus-visible:bg-background"
-                onChange={(e) =>
-                  updateLocalLine(line.id, { title: e.target.value })
-                }
+      const sectionBody = (
+        <div className="flex items-center gap-2 px-4 py-3 sm:px-5">
+          {editable ? (
+            <>
+              <DragHandleButton />
+              <input
+                type="checkbox"
+                checked={selected.has(line.id)}
+                onChange={() => toggleSelected(line.id)}
+                className="size-3.5 accent-primary"
               />
-              <LineTypeBadge type="section" label={t("lineTypes.section")} />
-              <span className="font-mono text-sm tabular-nums text-foreground">
-                {formatEuro(total)}
-              </span>
-              {editable ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  className="text-destructive"
-                  disabled={busy}
-                  onClick={() => void handleDeleteLine(line.id)}
-                >
-                  <Trash2 className="size-4" />
-                </Button>
-              ) : null}
-            </div>
-          </SortableSection>
-          {!isCollapsed
-            ? kids.map((child, index) =>
-                renderLineRow(
-                  child,
-                  depth + 1,
-                  `${indexLabel}.${index + 1}`,
-                ),
-              )
-            : null}
-          {!isCollapsed && editable ? (
-            <div className="quote-line-section bg-card px-3 py-2 pl-12">
-              <button
-                type="button"
-                className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-                disabled={busy}
-                onClick={() => void handleAddLine(line.id)}
-              >
-                <Plus className="size-3.5" />
-                {t("addLine")}
-              </button>
-            </div>
+            </>
           ) : null}
-        </Fragment>
-      );
-    }
-
-    return (
-      <LineRowFrame
-        key={line.id}
-        id={line.id}
-        indexLabel={indexLabel}
-        depth={depth}
-        sortable={depth === 0}
-        disabled={!editable || busy}
-        selected={selected.has(line.id)}
-        onToggleSelect={() => toggleSelected(line.id)}
-      >
-        <div className="min-w-0 space-y-1">
-          <div className="flex items-center gap-2 lg:block">
-            <span className="w-6 shrink-0 text-[11px] tabular-nums text-muted-foreground lg:hidden">
-              {indexLabel}
-            </span>
-            <Input
-              value={line.title}
-              disabled={!editable}
-              placeholder={t("placeholders.line")}
-              className="h-8 w-full border-transparent bg-transparent px-0 font-medium shadow-none focus-visible:border-input focus-visible:bg-background focus-visible:px-2"
-              onChange={(e) =>
-                updateLocalLine(line.id, { title: e.target.value })
-              }
-            />
-          </div>
-          {line.lineType === "article" && activeArticles.length > 0 ? (
-            <select
-              className={cn(selectClass, "text-muted-foreground")}
-              value={line.articleId ?? ""}
-              disabled={!editable || busy}
-              onChange={(e) => pickArticle(line.id, e.target.value)}
-            >
-              <option value="">{t("articlePick")}</option>
-              {activeArticles.map((article) => (
-                <option key={article.id} value={article.id}>
-                  {article.code ? `${article.code} · ` : ""}
-                  {article.name}
-                </option>
-              ))}
-            </select>
-          ) : null}
-          {line.lineType !== "text" ? (
-            <textarea
-              rows={1}
-              value={line.description ?? ""}
-              disabled={!editable}
-              placeholder={t("placeholders.description")}
-              className="text-muted-foreground placeholder:text-muted-foreground/70 focus-visible:border-input w-full resize-y rounded-lg border border-transparent bg-transparent px-0 py-1 text-xs outline-none focus-visible:bg-background focus-visible:px-2"
-              onChange={(e) =>
-                updateLocalLine(line.id, {
-                  description: e.target.value || null,
-                })
-              }
-            />
-          ) : null}
-        </div>
-
-        {editable ? (
-          <select
-            className={selectClass}
-            value={line.lineType}
-            disabled={busy}
-            onChange={(e) => {
-              const lineType = e.target.value as QuoteLineType;
-              updateLocalLine(line.id, {
-                ...defaultsForLineType(lineType),
-                title: line.title,
-                description: line.description,
-                articleId: lineType === "article" ? line.articleId : null,
-                costPriceCents:
-                  lineType === "article" ? line.costPriceCents : null,
-              });
-            }}
+          <button
+            type="button"
+            className="text-muted-foreground"
+            onClick={() =>
+              setCollapsed((prev) => ({
+                ...prev,
+                [line.id]: !prev[line.id],
+              }))
+            }
           >
-            <option value="article">{t("lineTypes.article")}</option>
-            <option value="hours">{t("lineTypes.hours")}</option>
-            <option value="labor">{t("lineTypes.labor")}</option>
-            <option value="text">{t("lineTypes.text")}</option>
-          </select>
-        ) : (
-          <LineTypeBadge
-            type={line.lineType}
-            label={t(`lineTypes.${line.lineType}`)}
+            {isCollapsed ? (
+              <ChevronRight className="size-4" />
+            ) : (
+              <ChevronDown className="size-4" />
+            )}
+          </button>
+          <TypeChip type="section" label={t("lineTypes.section")} />
+          <Input
+            value={line.title}
+            disabled={!editable}
+            placeholder={t("placeholders.section")}
+            className="h-9 flex-1 border-transparent bg-transparent px-1 text-sm font-semibold shadow-none focus-visible:border-input focus-visible:bg-background focus-visible:px-2"
+            onChange={(e) =>
+              updateLocalLine(line.id, { title: e.target.value })
+            }
           />
-        )}
-
-        {priced ? (
-          <>
-            <QuantityField
-              value={line.quantity}
-              disabled={!editable}
-              onCommit={(quantity) => {
-                const patch: Partial<QuoteLineRow> = { quantity };
-                if (
-                  (line.lineType === "hours" || line.lineType === "labor") &&
-                  quantity != null
-                ) {
-                  patch.estimatedMinutes = Math.round(quantity * 60);
-                }
-                updateLocalLine(line.id, patch);
-              }}
-            />
-            <Input
-              disabled={!editable}
-              value={line.unit ?? ""}
-              className="h-8 w-full border-border/70 bg-background"
-              onChange={(e) =>
-                updateLocalLine(line.id, { unit: e.target.value || null })
-              }
-            />
-            <MoneyField
-              cents={line.unitPriceCents}
-              disabled={!editable}
-              onCommit={(cents) =>
-                updateLocalLine(line.id, { unitPriceCents: cents ?? 0 })
-              }
-            />
-            <MoneyField
-              cents={line.discountCents}
-              disabled={!editable}
-              onCommit={(cents) =>
-                updateLocalLine(line.id, { discountCents: cents ?? 0 })
-              }
-            />
-            <div className="flex h-8 items-center justify-end font-mono text-sm tabular-nums">
-              {formatEuro(net)}
-            </div>
-          </>
-        ) : (
-          <>
-            <span className="text-muted-foreground">—</span>
-            <span className="text-muted-foreground">—</span>
-            <span className="text-muted-foreground">—</span>
-            <span className="text-muted-foreground">—</span>
-            <span className="text-muted-foreground">—</span>
-          </>
-        )}
-
-        <div className="flex h-8 items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100">
+          <span className="hidden font-mono text-sm tabular-nums sm:inline">
+            {formatEuro(total)}
+          </span>
           {editable ? (
             <Button
               type="button"
               variant="ghost"
               size="icon-sm"
-              className="text-destructive"
+              className="text-muted-foreground hover:text-destructive"
               disabled={busy}
               onClick={() => void handleDeleteLine(line.id)}
             >
@@ -515,7 +392,321 @@ export function QuoteLinesWorkspace({
             </Button>
           ) : null}
         </div>
-      </LineRowFrame>
+      );
+
+      return (
+        <Fragment key={line.id}>
+          {depth === 0 ? (
+            <SortableRow
+              id={line.id}
+              disabled={!editable || busy}
+              selected={selected.has(line.id)}
+              className="bg-muted/25"
+            >
+              {sectionBody}
+            </SortableRow>
+          ) : (
+            <div
+              className={cn(
+                "border-b border-border/70 bg-muted/25",
+                selected.has(line.id) && "bg-primary/5",
+              )}
+            >
+              {sectionBody}
+            </div>
+          )}
+          {!isCollapsed
+            ? kids.map((child) => renderLine(child, depth + 1))
+            : null}
+          {!isCollapsed && editable ? (
+            <div className="border-b border-border/70 bg-card px-4 py-2.5 sm:pl-14">
+              <button
+                type="button"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+                disabled={busy}
+                onClick={() => void handleAddLine(line.id)}
+              >
+                <Plus className="size-3.5" />
+                {t("addChildLine")}
+              </button>
+            </div>
+          ) : null}
+        </Fragment>
+      );
+    }
+
+    const body = (
+      <div
+        className={cn(
+          "space-y-3 px-4 py-4 sm:px-5",
+          depth > 0 && "pl-8 sm:pl-12",
+        )}
+      >
+        <div className="flex items-start gap-2">
+          {editable && depth === 0 ? <DragHandleButton className="mt-2.5" /> : null}
+          {editable ? (
+            <input
+              type="checkbox"
+              checked={selected.has(line.id)}
+              onChange={() => toggleSelected(line.id)}
+              className="mt-2.5 size-3.5 accent-primary"
+            />
+          ) : null}
+          <div className="min-w-0 flex-1 space-y-2.5">
+            <div className="flex flex-wrap items-center gap-2">
+              {editable ? (
+                <select
+                  className={cn(selectClass, "w-auto")}
+                  value={line.lineType}
+                  disabled={busy}
+                  onChange={(e) => {
+                    const lineType = e.target.value as QuoteLineType;
+                    updateLocalLine(line.id, {
+                      ...defaultsForLineType(lineType),
+                      title: line.title,
+                      description: line.description,
+                      articleId:
+                        lineType === "article" ? line.articleId : null,
+                      costPriceCents:
+                        lineType === "article" ? line.costPriceCents : null,
+                    });
+                  }}
+                >
+                  <option value="article">{t("lineTypes.article")}</option>
+                  <option value="hours">{t("lineTypes.hours")}</option>
+                  <option value="labor">{t("lineTypes.labor")}</option>
+                  <option value="text">{t("lineTypes.text")}</option>
+                </select>
+              ) : (
+                <TypeChip
+                  type={line.lineType}
+                  label={t(`lineTypes.${line.lineType}`)}
+                />
+              )}
+              <Input
+                value={line.title}
+                disabled={!editable}
+                placeholder={t("placeholders.line")}
+                className="h-9 min-w-[12rem] flex-1 border-transparent bg-transparent px-1 text-sm font-medium shadow-none focus-visible:border-input focus-visible:bg-background focus-visible:px-2"
+                onChange={(e) =>
+                  updateLocalLine(line.id, { title: e.target.value })
+                }
+              />
+              {priced ? (
+                <p className="ml-auto font-mono text-sm font-medium tabular-nums">
+                  {formatEuro(net)}
+                </p>
+              ) : null}
+              {editable ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  className="text-muted-foreground hover:text-destructive"
+                  disabled={busy}
+                  onClick={() => void handleDeleteLine(line.id)}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              ) : null}
+            </div>
+
+            {line.lineType === "article" && activeArticles.length > 0 ? (
+              <select
+                className={cn(
+                  selectClass,
+                  "w-full max-w-md text-muted-foreground",
+                )}
+                value={line.articleId ?? ""}
+                disabled={!editable || busy}
+                onChange={(e) => pickArticle(line.id, e.target.value)}
+              >
+                <option value="">{t("articlePick")}</option>
+                {activeArticles.map((article) => (
+                  <option key={article.id} value={article.id}>
+                    {article.code ? `${article.code} · ` : ""}
+                    {article.name}
+                  </option>
+                ))}
+              </select>
+            ) : null}
+
+            {priced ? (
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] text-muted-foreground">
+                    {t("fields.quantity")}
+                  </span>
+                  <QuantityField
+                    value={line.quantity}
+                    disabled={!editable}
+                    className="h-9 w-[4.5rem] rounded-lg border-border/60"
+                    onCommit={(quantity) => {
+                      const patch: Partial<QuoteLineRow> = { quantity };
+                      if (
+                        (line.lineType === "hours" ||
+                          line.lineType === "labor") &&
+                        quantity != null
+                      ) {
+                        patch.estimatedMinutes = Math.round(quantity * 60);
+                      }
+                      updateLocalLine(line.id, patch);
+                    }}
+                  />
+                </div>
+                <span className="text-muted-foreground">×</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] text-muted-foreground">
+                    {t("fields.unit")}
+                  </span>
+                  <Input
+                    disabled={!editable}
+                    value={line.unit ?? ""}
+                    className="h-9 w-16 rounded-lg border-border/60"
+                    onChange={(e) =>
+                      updateLocalLine(line.id, {
+                        unit: e.target.value || null,
+                      })
+                    }
+                  />
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] text-muted-foreground">
+                    {t("fields.unitPrice")}
+                  </span>
+                  <MoneyField
+                    cents={line.unitPriceCents}
+                    disabled={!editable}
+                    className="h-9 w-[6.5rem] rounded-lg border-border/60"
+                    onCommit={(cents) =>
+                      updateLocalLine(line.id, {
+                        unitPriceCents: cents ?? 0,
+                      })
+                    }
+                  />
+                </div>
+                <div className="flex items-center gap-1">
+                  {VAT_PRESETS.map((preset) => (
+                    <button
+                      key={preset.bps}
+                      type="button"
+                      disabled={!editable || busy}
+                      onClick={() =>
+                        updateLocalLine(line.id, { vatRateBps: preset.bps })
+                      }
+                      className={cn(
+                        "rounded-full px-2 py-0.5 text-[11px] transition-colors",
+                        line.vatRateBps === preset.bps
+                          ? "bg-primary/10 font-medium text-primary"
+                          : "text-muted-foreground hover:bg-muted",
+                      )}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                className="text-xs text-muted-foreground hover:text-foreground"
+                onClick={() => toggleDetails(line.id)}
+              >
+                {detailsOpen ? t("hideDetails") : t("showDetails")}
+              </button>
+              {line.discountCents > 0 ? (
+                <span className="text-xs text-emerald-700">
+                  − {formatEuro(line.discountCents)}{" "}
+                  {t("fields.discount").toLowerCase()}
+                </span>
+              ) : null}
+            </div>
+
+            {detailsOpen ? (
+              <div className="grid gap-3 rounded-xl border border-border/70 bg-muted/20 p-3 sm:grid-cols-2">
+                <div className="space-y-1.5 sm:col-span-2">
+                  <label className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                    {t("fields.description")}
+                  </label>
+                  <textarea
+                    rows={line.lineType === "text" ? 3 : 2}
+                    value={line.description ?? ""}
+                    disabled={!editable}
+                    placeholder={t("placeholders.description")}
+                    className="w-full resize-y rounded-lg border border-border/60 bg-background px-2.5 py-2 text-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                    onChange={(e) =>
+                      updateLocalLine(line.id, {
+                        description: e.target.value || null,
+                      })
+                    }
+                  />
+                </div>
+                {priced ? (
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                      {t("fields.discount")}
+                    </label>
+                    <MoneyField
+                      cents={line.discountCents}
+                      disabled={!editable}
+                      className="h-9 rounded-lg border-border/60"
+                      onCommit={(cents) =>
+                        updateLocalLine(line.id, {
+                          discountCents: cents ?? 0,
+                        })
+                      }
+                    />
+                  </div>
+                ) : null}
+                {line.lineType === "article" ? (
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                      {t("fields.costPrice")}
+                    </label>
+                    <MoneyField
+                      cents={line.costPriceCents}
+                      disabled={!editable}
+                      className="h-9 rounded-lg border-border/60"
+                      onCommit={(cents) =>
+                        updateLocalLine(line.id, {
+                          costPriceCents: cents,
+                        })
+                      }
+                    />
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    );
+
+    if (depth === 0) {
+      return (
+        <SortableRow
+          key={line.id}
+          id={line.id}
+          disabled={!editable || busy}
+          selected={selected.has(line.id)}
+        >
+          {body}
+        </SortableRow>
+      );
+    }
+
+    return (
+      <div
+        key={line.id}
+        className={cn(
+          "border-b border-border/70 bg-card",
+          selected.has(line.id) && "bg-primary/5",
+        )}
+      >
+        {body}
+      </div>
     );
   }
 
@@ -523,58 +714,65 @@ export function QuoteLinesWorkspace({
 
   return (
     <div className="space-y-0">
-      <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3 sm:px-5">
         {editable ? (
           <>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="border-primary/30 text-primary"
-              disabled={busy}
-              onClick={() => void handleAddLine(null, { lineType: "article" })}
-            >
-              <Plus className="size-3.5" />
-              {t("addLine")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={busy}
-              onClick={() => void handleAddLine(null, { asSection: true })}
-            >
-              <Plus className="size-3.5" />
-              {t("addSection")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={busy || selected.size === 0}
-              onClick={() => void handleCopySelected()}
-            >
-              <Copy className="size-3.5" />
-              {t("toolbar.copy")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={busy || selected.size === 0}
-              onClick={() => void handleDeleteSelected()}
-            >
-              <Trash2 className="size-3.5" />
-              {t("toolbar.delete")}
-            </Button>
+            {ADD_CHIPS.map((chip) => (
+              <button
+                key={chip.labelKey}
+                type="button"
+                disabled={busy}
+                onClick={() =>
+                  void handleAddLine(null, {
+                    asSection: chip.asSection,
+                    lineType: chip.asSection ? undefined : chip.type,
+                  })
+                }
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/15 disabled:opacity-50"
+              >
+                <chip.icon className="size-3.5" />
+                {t(chip.labelKey)}
+              </button>
+            ))}
+            {selected.size > 0 ? (
+              <div className="ml-auto flex flex-wrap items-center gap-1.5">
+                <span className="mr-1 text-xs text-muted-foreground">
+                  {t("selectionCount", { count: selected.size })}
+                </span>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={busy}
+                  onClick={() => void handleCopySelected()}
+                >
+                  <Copy className="size-3.5" />
+                  {t("toolbar.copy")}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={busy}
+                  onClick={() => void handleDeleteSelected()}
+                >
+                  <Trash2 className="size-3.5" />
+                  {t("toolbar.delete")}
+                </Button>
+              </div>
+            ) : null}
           </>
         ) : null}
-        {showToolbarExtras ? (
+        {showToolbarExtras && editable ? (
           <Button
             type="button"
-            variant="outline"
+            variant="ghost"
             size="sm"
-            disabled={busy || !editable || linkedArticleCount === 0}
+            className={cn(
+              "text-muted-foreground",
+              selected.size === 0 && "ml-auto",
+            )}
+            disabled={busy || linkedArticleCount === 0}
             onClick={handleRecalculatePrices}
           >
             <Calculator className="size-3.5" />
@@ -583,54 +781,53 @@ export function QuoteLinesWorkspace({
         ) : null}
       </div>
 
-      <div className="overflow-x-auto">
-        <div className="quote-lines-table min-w-[56rem]">
-          <div className="quote-line-header hidden lg:contents">
-            <span aria-hidden className="min-w-0" />
-            <span className="min-w-0 truncate">{t("fields.lineTitle")}</span>
-            <span className="min-w-0 truncate">{t("fields.type")}</span>
-            <span className="min-w-0 truncate text-right">
-              {t("fields.quantity")}
-            </span>
-            <span className="min-w-0 truncate text-center">
-              {t("fields.unit")}
-            </span>
-            <span className="min-w-0 truncate text-right">
-              {t("fields.unitPrice")}
-            </span>
-            <span className="min-w-0 truncate text-right">
-              {t("fields.discount")}
-            </span>
-            <span className="min-w-0 truncate text-right">
-              {t("fields.lineTotal")}
-            </span>
-            <span aria-hidden className="min-w-0" />
+      {roots.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-4 px-6 py-14 text-center">
+          <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <Plus className="size-5" />
           </div>
-
-          {roots.length === 0 ? (
-            <p className="px-4 py-10 text-sm text-muted-foreground">
+          <div className="max-w-sm space-y-1">
+            <p className="text-sm font-medium">{t("emptyTitle")}</p>
+            <p className="text-sm text-muted-foreground">
               {emptyMessage ?? t("noLines")}
             </p>
-          ) : (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(event) => void onDragEnd(event, null)}
-            >
-              <SortableContext
-                items={rootIds}
-                strategy={verticalListSortingStrategy}
-              >
-                {roots.map((line, index) =>
-                  renderLineRow(line, 0, String(index + 1)),
-                )}
-              </SortableContext>
-            </DndContext>
-          )}
+          </div>
+          {editable ? (
+            <div className="flex flex-wrap justify-center gap-2">
+              {ADD_CHIPS.slice(0, 3).map((chip) => (
+                <Button
+                  key={chip.labelKey}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={busy}
+                  onClick={() =>
+                    void handleAddLine(null, { lineType: chip.type })
+                  }
+                >
+                  <chip.icon className="size-3.5" />
+                  {t(chip.labelKey)}
+                </Button>
+              ))}
+            </div>
+          ) : null}
         </div>
-      </div>
+      ) : (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={(event) => void onDragEnd(event, null)}
+        >
+          <SortableContext
+            items={rootIds}
+            strategy={verticalListSortingStrategy}
+          >
+            <div>{roots.map((line) => renderLine(line, 0))}</div>
+          </SortableContext>
+        </DndContext>
+      )}
 
-      <div className="flex flex-wrap items-center justify-end gap-6 border-t border-border bg-muted/20 px-4 py-3 text-sm">
+      <div className="flex flex-wrap items-center justify-end gap-6 border-t border-border bg-muted/20 px-4 py-3 text-sm sm:px-5">
         <div>
           <span className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
             {t("footer.totalHours")}
@@ -652,7 +849,7 @@ export function QuoteLinesWorkspace({
   );
 }
 
-function LineTypeBadge({
+function TypeChip({
   type,
   label,
 }: {
@@ -662,7 +859,7 @@ function LineTypeBadge({
   return (
     <span
       className={cn(
-        "inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium",
+        "inline-flex shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-medium",
         type === "article" && "bg-primary/10 text-primary",
         type === "hours" && "bg-emerald-500/10 text-emerald-700",
         type === "labor" && "bg-amber-500/10 text-amber-800",
@@ -675,178 +872,65 @@ function LineTypeBadge({
   );
 }
 
-function SortableSection({
-  id,
-  disabled,
-  selected,
-  onToggleSelect,
-  children,
-}: {
-  id: string;
-  disabled?: boolean;
-  selected: boolean;
-  onToggleSelect: () => void;
-  children: React.ReactNode;
-}) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id, disabled });
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={{
-        transform: CSS.Transform.toString(transform),
-        transition,
-      }}
-      className={cn(
-        "quote-line-section border-b border-border/70 bg-muted/50",
-        isDragging && "opacity-70",
-      )}
-    >
-      <div className="flex items-center gap-2 px-3 py-2.5">
-        {!disabled ? (
-          <>
-            <button
-              type="button"
-              className="cursor-grab text-muted-foreground active:cursor-grabbing"
-              {...attributes}
-              {...listeners}
-            >
-              <GripVertical className="size-4" />
-            </button>
-            <input
-              type="checkbox"
-              checked={selected}
-              onChange={onToggleSelect}
-              className="size-3.5 accent-primary"
-            />
-          </>
-        ) : null}
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function LineRowFrame({
-  id,
-  indexLabel,
-  depth,
-  sortable,
-  disabled,
-  selected,
-  onToggleSelect,
-  children,
-}: {
-  id: string;
-  indexLabel: string;
-  depth: number;
-  sortable: boolean;
-  disabled?: boolean;
-  selected: boolean;
-  onToggleSelect: () => void;
-  children: React.ReactNode;
-}) {
-  if (sortable) {
+function DragHandleButton({ className }: { className?: string }) {
+  const ctx = useContext(DragHandleContext);
+  if (!ctx || ctx.disabled) {
     return (
-      <SortableLineRow
-        id={id}
-        indexLabel={indexLabel}
-        depth={depth}
-        disabled={disabled}
-        selected={selected}
-        onToggleSelect={onToggleSelect}
-      >
-        {children}
-      </SortableLineRow>
+      <span className={cn("text-muted-foreground/40", className)}>
+        <GripVertical className="size-4" />
+      </span>
     );
   }
-
   return (
-    <div
-      style={{ paddingLeft: 12 + depth * 8 }}
-      className={cn("quote-line-row group", selected && "bg-primary/5")}
+    <button
+      type="button"
+      className={cn(
+        "cursor-grab text-muted-foreground active:cursor-grabbing",
+        className,
+      )}
+      {...ctx.attributes}
+      {...ctx.listeners}
     >
-      <div className="flex items-center gap-1">
-        {!disabled ? (
-          <input
-            type="checkbox"
-            checked={selected}
-            onChange={onToggleSelect}
-            className="size-3.5 accent-primary"
-            aria-label={indexLabel}
-          />
-        ) : (
-          <span className="text-[11px] tabular-nums text-muted-foreground">
-            {indexLabel}
-          </span>
-        )}
-      </div>
-      {children}
-    </div>
+      <GripVertical className="size-4" />
+    </button>
   );
 }
 
-function SortableLineRow({
+function SortableRow({
   id,
-  indexLabel,
-  depth,
   disabled,
   selected,
-  onToggleSelect,
+  className,
   children,
 }: {
   id: string;
-  indexLabel: string;
-  depth: number;
   disabled?: boolean;
   selected: boolean;
-  onToggleSelect: () => void;
-  children: React.ReactNode;
+  className?: string;
+  children: ReactNode;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id, disabled });
 
   return (
-    <div
-      ref={setNodeRef}
-      style={{
-        transform: CSS.Transform.toString(transform),
-        transition,
-        paddingLeft: 12 + depth * 8,
-      }}
-      className={cn(
-        "quote-line-row group",
-        isDragging && "opacity-70",
-        selected && "bg-primary/5",
-      )}
+    <DragHandleContext.Provider
+      value={{ attributes, listeners, disabled }}
     >
-      <div className="flex items-center gap-1">
-        {!disabled ? (
-          <>
-            <button
-              type="button"
-              className="cursor-grab text-muted-foreground active:cursor-grabbing"
-              {...attributes}
-              {...listeners}
-            >
-              <GripVertical className="size-4" />
-            </button>
-            <input
-              type="checkbox"
-              checked={selected}
-              onChange={onToggleSelect}
-              className="size-3.5 accent-primary"
-              aria-label={indexLabel}
-            />
-          </>
-        ) : (
-          <span className="text-[11px] tabular-nums text-muted-foreground">
-            {indexLabel}
-          </span>
+      <div
+        ref={setNodeRef}
+        style={{
+          transform: CSS.Transform.toString(transform),
+          transition,
+        }}
+        className={cn(
+          "border-b border-border/70 bg-card",
+          isDragging && "opacity-70",
+          selected && "bg-primary/5",
+          className,
         )}
+      >
+        {children}
       </div>
-      {children}
-    </div>
+    </DragHandleContext.Provider>
   );
 }

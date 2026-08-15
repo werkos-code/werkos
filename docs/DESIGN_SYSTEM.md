@@ -157,22 +157,25 @@ Rest: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§8)
 ```
 Header (titel · OFF-nummer · status · save-indicator · Acties / Voorbeeld / Verzenden)
 KPI-strip: 4× MetaStatCard (excl · btw · incl · marge)
-Underline-tabs: Overzicht · Offerte editor · Voorwaarden · Bijlagen · Opmerkingen · Activiteiten
+Underline-tabs: Regels · Voorwaarden · Bijlagen · Opmerkingen
 grid xl:[minmax(0,1fr)_20rem]
-  ├─ Main PageCard (tab-body; editor = regels + toolbar)
+  ├─ Main PageCard
+  │    Regels = soft-chips toevoegen + card-regels (geen spreadsheet-grid)
   └─ Sticky rail PageCard
        sub-tabs: Samenvatting | Offerte instellingen
-       Samenvatting: totalen · betalingsvoorwaarden · betalingsplanning-timeline · concept-banner
+       Samenvatting: grote totalen · betalingsvoorwaarden · betalingsplanning-timeline · concept-banner
 ```
 
 | Regel | Detail |
 | --- | --- |
+| Regels-UI | Soft chips (Artikel/Uren/Arbeid/Tekst/Groep); card-rijen met qty × prijs × btw-chips; details progressief |
 | Financiële planning | In de **rail**, niet als primaire tab |
 | Marge-KPI | Alleen met echte kostprijs; anders `—` |
 | Actieve tab | `border-b-2 border-primary text-primary` |
 | Rail-breedte | `20rem` sticky `top-20` |
+| Geen stub-tabs | Geen Overzicht/Activiteiten als primaire tabs |
 
-**Canonical:** `src/features/quotes/components/quote-editor.tsx`  
+**Canonical:** `src/features/quotes/components/{quote-editor,quote-lines-workspace}.tsx`  
 Open refine: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§2). Financiële planning: [`QUOTE_FINANCIAL_PLANNING.md`](./QUOTE_FINANCIAL_PLANNING.md). Afgeronde fases: `docs/archive/quote-editor-phases/`.
 
 ### 4.5b Factuur-editor (live document)
