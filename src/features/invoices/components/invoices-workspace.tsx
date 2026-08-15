@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition, type FormEvent } from "react";
+import { useEffect, useMemo, useState, useTransition, type FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import {
@@ -962,9 +962,34 @@ function CreateInvoiceDialog({
   const t = useTranslations("invoices");
   const tCommon = useTranslations("common");
   const [mode, setMode] = useState<"project" | "standalone">("project");
+  const [customerMode, setCustomerMode] = useState<"existing" | "new">(
+    "existing",
+  );
   const [projectId, setProjectId] = useState("");
   const [customerId, setCustomerId] = useState("");
+  const [customerOptions, setCustomerOptions] =
+    useState<InvoiceCustomerOption[]>(customers);
+  const [newCustomerName, setNewCustomerName] = useState("");
+  const [newCustomerEmail, setNewCustomerEmail] = useState("");
+  const [newCustomerPhone, setNewCustomerPhone] = useState("");
+  const [newCustomerAddress, setNewCustomerAddress] = useState("");
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (!open) return;
+    setCustomerOptions(customers);
+  }, [open, customers]);
+
+  function resetForm() {
+    setMode("project");
+    setCustomerMode("existing");
+    setProjectId("");
+    setCustomerId("");
+    setNewCustomerName("");
+    setNewCustomerEmail("");
+    setNewCustomerPhone("");
+    setNewCustomerAddress("");
+  }
 
   function submit(event: FormEvent) {
     event.preventDefault();
@@ -972,20 +997,69 @@ function CreateInvoiceDialog({
       onError(t("form.projectRequired"));
       return;
     }
-    if (mode === "standalone" && !customerId) {
-      onError(t("form.customerRequired"));
-      return;
+    if (mode === "standalone") {
+      if (customerMode === "existing" && !customerId) {
+        onError(t("form.customerRequired"));
+        return;
+      }
+      if (customerMode === "new" && !newCustomerName.trim()) {
+        onError(t("form.customerNameRequired"));
+        return;
+      }
     }
     onError(null);
     startTransition(() => {
       void (async () => {
         try {
+          let resolvedCustomerId =
+            mode === "standalone" && customerMode === "existing"
+              ? customerId
+              : null;
+
+          if (mode === "standalone" && customerMode === "new") {
+            const customerRes = await fetch("/api/customers", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: newCustomerName.trim(),
+                email: newCustomerEmail.trim() || undefined,
+                phone: newCustomerPhone.trim() || undefined,
+                address: newCustomerAddress.trim() || undefined,
+              }),
+              signal: AbortSignal.timeout(20_000),
+            });
+            const customerResult = (await customerRes.json()) as {
+              error?: string;
+              customerId?: string;
+            };
+            if (!customerRes.ok || !customerResult.customerId) {
+              onError(
+                customerResult.error === "name_required"
+                  ? t("form.customerNameRequired")
+                  : customerResult.error || tCommon("error"),
+              );
+              return;
+            }
+            resolvedCustomerId = customerResult.customerId;
+            setCustomerOptions((prev) => {
+              if (prev.some((c) => c.id === resolvedCustomerId)) return prev;
+              return [
+                ...prev,
+                {
+                  id: resolvedCustomerId!,
+                  name: newCustomerName.trim(),
+                },
+              ].sort((a, b) => a.name.localeCompare(b.name, "nl"));
+            });
+          }
+
           const res = await fetch("/api/invoices", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               projectId: mode === "project" ? projectId : null,
-              customerId: mode === "standalone" ? customerId : null,
+              customerId:
+                mode === "standalone" ? resolvedCustomerId : null,
               status: "draft",
               editorMode: true,
             }),
@@ -999,9 +1073,7 @@ function CreateInvoiceDialog({
             onError(result.error || tCommon("error"));
             return;
           }
-          setMode("project");
-          setProjectId("");
-          setCustomerId("");
+          resetForm();
           onCreated(result.invoiceId);
         } catch {
           onError(tCommon("error"));
@@ -1063,33 +1135,109 @@ function CreateInvoiceDialog({
               </select>
             </label>
           ) : (
-            <div className="space-y-2">
-              <label className="block space-y-1 text-sm">
-                <span className="text-muted-foreground">{t("form.customer")}</span>
-                <select
-                  value={customerId}
-                  onChange={(e) => setCustomerId(e.target.value)}
-                  disabled={isPending}
-                  className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
-                  required
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-1 rounded-lg border border-border p-1">
+                <button
+                  type="button"
+                  className={cn(
+                    "rounded-md px-3 py-1.5 text-xs transition-colors",
+                    customerMode === "existing"
+                      ? "bg-primary/10 font-medium text-primary"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                  onClick={() => setCustomerMode("existing")}
                 >
-                  <option value="">{t("form.selectCustomer")}</option>
-                  {customers.map((customer) => (
-                    <option key={customer.id} value={customer.id}>
-                      {customer.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <p className="text-xs text-muted-foreground">
-                {t("form.standaloneHint")}{" "}
-                <Link
-                  href="/klanten/nieuw"
-                  className="font-medium text-primary hover:underline"
+                  {t("form.customerExisting")}
+                </button>
+                <button
+                  type="button"
+                  className={cn(
+                    "rounded-md px-3 py-1.5 text-xs transition-colors",
+                    customerMode === "new"
+                      ? "bg-primary/10 font-medium text-primary"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                  onClick={() => setCustomerMode("new")}
                 >
-                  {t("form.newCustomer")}
-                </Link>
-              </p>
+                  {t("form.customerNew")}
+                </button>
+              </div>
+
+              {customerMode === "existing" ? (
+                <label className="block space-y-1 text-sm">
+                  <span className="text-muted-foreground">
+                    {t("form.customer")}
+                  </span>
+                  <select
+                    value={customerId}
+                    onChange={(e) => setCustomerId(e.target.value)}
+                    disabled={isPending}
+                    className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
+                    required
+                  >
+                    <option value="">{t("form.selectCustomer")}</option>
+                    {customerOptions.map((customer) => (
+                      <option key={customer.id} value={customer.id}>
+                        {customer.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : (
+                <div className="space-y-3 rounded-lg border border-border bg-muted/20 p-3">
+                  <label className="block space-y-1 text-sm">
+                    <span className="text-muted-foreground">
+                      {t("form.customerName")}
+                    </span>
+                    <input
+                      value={newCustomerName}
+                      onChange={(e) => setNewCustomerName(e.target.value)}
+                      disabled={isPending}
+                      className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
+                      required
+                      autoComplete="organization"
+                    />
+                  </label>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <label className="block space-y-1 text-sm">
+                      <span className="text-muted-foreground">
+                        {t("form.customerEmail")}
+                      </span>
+                      <input
+                        type="email"
+                        value={newCustomerEmail}
+                        onChange={(e) => setNewCustomerEmail(e.target.value)}
+                        disabled={isPending}
+                        className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
+                      />
+                    </label>
+                    <label className="block space-y-1 text-sm">
+                      <span className="text-muted-foreground">
+                        {t("form.customerPhone")}
+                      </span>
+                      <input
+                        type="tel"
+                        value={newCustomerPhone}
+                        onChange={(e) => setNewCustomerPhone(e.target.value)}
+                        disabled={isPending}
+                        className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
+                      />
+                    </label>
+                  </div>
+                  <label className="block space-y-1 text-sm">
+                    <span className="text-muted-foreground">
+                      {t("form.customerAddress")}
+                    </span>
+                    <textarea
+                      value={newCustomerAddress}
+                      onChange={(e) => setNewCustomerAddress(e.target.value)}
+                      disabled={isPending}
+                      rows={2}
+                      className="border-input bg-background w-full rounded-lg border px-2.5 py-2"
+                    />
+                  </label>
+                </div>
+              )}
             </div>
           )}
 
