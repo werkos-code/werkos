@@ -1,8 +1,8 @@
 # Jaarlijkse billing — implementatie (vóór livegang)
 
-> Status: **OPEN** — commercieel model is vastgelegd; app + Stripe yearly prices nog niet gebouwd.  
+> Status: **OPEN** — app-keuze maand/jaar staat op `/instellingen/abonnement/kiezen`; **Stripe yearly prices + env + DB-interval nog activeren**.  
 > Productregels (bedragen, principes): [`PHASE1_SETUP.md` — Prijsmodel](./PHASE1_SETUP.md#prijsmodel).  
-> Dit document = **doe-lijst** om yearly live te krijgen. Niets hiervan is al geïmplementeerd.
+> Handmatige activering ook in [`PENDING_SETUP.md`](./PENDING_SETUP.md) (§ Stripe activeren).
 
 Laatst bijgewerkt: 2026-08-15
 
@@ -10,7 +10,7 @@ Laatst bijgewerkt: 2026-08-15
 
 ## Doel
 
-Klant kiest bij onboarding (en later in abonnement) tussen:
+Klant kiest bij abonnement (en later evt. onboarding) tussen:
 
 | Frequentie | Wat Stripe doet | Klant ziet |
 | --- | --- | --- |

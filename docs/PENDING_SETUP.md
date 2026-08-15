@@ -10,11 +10,23 @@ Zonder service-role in de app faalt provisioneren. Voer uit in Supabase SQL Edit
 
 Daarna opnieuw proberen op de team-stap. Lokaal: zet ook `SUPABASE_SERVICE_ROLE_KEY` in `.env.local` (zie `.env.example`) voor webhooks/admin.
 
+## Stripe activeren voor abonnementen — **nog te doen** (vóór livegang)
+
+De abonnementspagina (`/instellingen/abonnement/kiezen`) is klaar (maand/jaar + seats + Checkout-flow), maar **betalen werkt pas als Stripe live is gezet**.
+
+Checklist:
+
+1. Stripe product **WerkOS** met monthly prices (basis / kantoor / uitvoerend) — zie [`PHASE1_SETUP.md` §3](./PHASE1_SETUP.md)
+2. **Yearly prices** toevoegen (basis €588, kantoor €240, uitvoerend €120) — zie [`BILLING_YEARLY_IMPLEMENTATION.md`](./BILLING_YEARLY_IMPLEMENTATION.md)
+3. Env op Vercel + lokaal: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_BASE`, `STRIPE_PRICE_SEAT_OFFICE`, `STRIPE_PRICE_SEAT_FIELD`, plus `STRIPE_PRICE_BASE_YEARLY`, `STRIPE_PRICE_SEAT_OFFICE_YEARLY`, `STRIPE_PRICE_SEAT_FIELD_YEARLY` (zie `.env.example`)
+4. Webhook endpoint: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`
+5. Smoke-test: trial-org → abonnement kiezen → Checkout → status `active`
+
+Zonder yearly price-ids faalt alleen de jaarlijkse Checkout; maandelijks kan al werken zodra de monthly ids + secret staan.
+
 ## Trial / paywall flow — **geen extra SQL**
 
-Onboarding provisionneert direct een org met `subscriptions.status = trialing` + `trial_ends_at` (+14d). Stripe Checkout gebeurt pas op `/instellingen/abonnement/kiezen`.
-
-Webhook events bijwerken (als nog niet gedaan): `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`.
+Onboarding provisionneert direct een org met `subscriptions.status = trialing` + `trial_ends_at` (+14d). Stripe Checkout gebeurt pas op `/instellingen/abonnement/kiezen` (zie Stripe-sectie hierboven).
 
 ## Guided setup SQL — **nog te doen** (vóór eerste-stappen-gids)
 
@@ -42,12 +54,13 @@ Voor facturen zonder project (alleen klant):
 
 `docs/sql-applied/20260815120000_invoice_optional_project.sql`
 
-## Jaarlijkse billing (vóór livegang) — **nog te doen**
+## Jaarlijkse billing (vóór livegang) — **deels open**
 
-Commercieel model staat vast; Stripe yearly prices + app-keuze maandelijks/jaarlijks zijn **nog niet gebouwd**.
+App-UI (maand/jaar-switch + totalen) staat klaar op de abonnementspagina. **Nog open:** Stripe yearly prices + env-ids + webhook/DB `billing_interval` opslaan.
 
 → Volledige checklist (jij + agent): [`BILLING_YEARLY_IMPLEMENTATION.md`](./BILLING_YEARLY_IMPLEMENTATION.md)  
 → Bedragen / principes: [`PHASE1_SETUP.md` — Prijsmodel](./PHASE1_SETUP.md#prijsmodel)
+→ Activeren: sectie **Stripe activeren voor abonnementen** hierboven
 
 ## 2BA catalogus activeren — **nog te doen**
 
