@@ -40,7 +40,7 @@ Commercieel model (bron van waarheid, ook jaarlijks): zie [Prijsmodel](#prijsmod
 
 1. Stripe Dashboard → **Developers → Webhooks → Add endpoint**
 2. URL: `https://app.werkos.nl/api/stripe/webhook`
-3. Events: `checkout.session.completed`
+3. Events: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`
 4. Kopieer **Signing secret** → `STRIPE_WEBHOOK_SECRET`
 
 Lokaal testen (optioneel):
@@ -56,11 +56,23 @@ Zet dezelfde keys als in `.env.example` voor **Production** én **Preview**, daa
 ## 6. Smoke test
 
 1. Open `https://app.werkos.nl/nl/onboarding`
-2. Doorloop account → bedrijf → team → betaling
-3. Rond Stripe Checkout (testkaart `4242…`) af
-4. Je landt op provisioning → complete → `/dashboard`
-5. Controleer de sidebar: één navigatiestructuur + organisatie-switcher
-6. Uitloggen / inloggen
+2. Doorloop account → bedrijf → team (aantal medewerkers optioneel)
+3. **Geen Stripe Checkout** tijdens onboarding — org wordt direct aangemaakt met 14 dagen trial
+4. Je landt op complete → `/dashboard` met volledige toegang
+5. In de sidebar: trial-blok met resterende dagen + “Bekijk abonnementen”
+6. Na trial (of handmatig `trial_ends_at` in het verleden zetten): soft popup + read-only; mutaties tonen de paywall
+7. Abonnement kiezen via `/instellingen/abonnement/kiezen` → Stripe Checkout
+8. Uitloggen / inloggen
+
+### Handmatig trial aflaten lopen (lokaal)
+
+```sql
+update public.subscriptions
+set trial_ends_at = now() - interval '1 day'
+where organization_id = '<org-id>';
+```
+
+Status blijft `trialing` tot ze upgraden; de app behandelt verlopen trial als read-only.
 
 ## 7. Super Admin (platform)
 
@@ -339,6 +351,6 @@ Uitleg naar de klant: *“€59 per maand, of €49 per maand wanneer je jaarlij
 ### Huidige runtime (tot yearly is gebouwd)
 
 Checkout en env-vars gebruiken alleen de maandelijkse prices uit §3.  
-Trial: 14 dagen, betaalmethode verplicht, €0 tijdens trial.
+Trial: 14 dagen **zonder** betaalmethode. Na afloop: read-only + actiegedreven paywall. Betaling pas via `/instellingen/abonnement/kiezen`.
 
 **Open voor livegang:** yearly prices + onboarding-keuze — zie [`BILLING_YEARLY_IMPLEMENTATION.md`](./BILLING_YEARLY_IMPLEMENTATION.md) (status OPEN).

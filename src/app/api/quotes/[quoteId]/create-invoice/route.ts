@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { recomputeInvoiceTotals } from "@/features/invoices/lib/recompute-invoice-totals";
 import { dueDateFromPaymentTerms } from "@/features/quotes/lib/quote-status";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 type RouteParams = { params: Promise<{ quoteId: string }> };
@@ -11,7 +11,7 @@ const BILLABLE_TYPES = new Set(["article", "hours", "labor"]);
 
 export async function POST(_request: Request, { params }: RouteParams) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const { quoteId } = await params;

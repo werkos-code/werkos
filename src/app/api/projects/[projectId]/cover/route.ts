@@ -5,7 +5,7 @@ import {
   PROJECT_COVERS_BUCKET,
   projectCoverStoragePath,
 } from "@/features/projects/lib/project-cover";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 type RouteParams = { params: Promise<{ projectId: string }> };
@@ -32,7 +32,7 @@ function extensionForMime(mime: string) {
 
 export async function POST(request: Request, { params }: RouteParams) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const { projectId } = await params;
@@ -112,7 +112,7 @@ export async function POST(request: Request, { params }: RouteParams) {
 
 export async function DELETE(_request: Request, { params }: RouteParams) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const { projectId } = await params;

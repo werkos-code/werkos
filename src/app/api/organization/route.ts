@@ -4,7 +4,7 @@ import {
   mapOrganizationLetterhead,
   ORGANIZATION_LETTERHEAD_SELECT,
 } from "@/features/organization/lib/organization-letterhead";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 function trimOrNull(value: unknown): string | null {
@@ -48,7 +48,7 @@ export async function GET() {
 
 export async function PATCH(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {

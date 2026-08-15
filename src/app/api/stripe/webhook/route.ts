@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 
-import { provisionOrganizationFromCheckout } from "@/features/onboarding/provision";
+import {
+  provisionOrganizationFromCheckout,
+  syncSubscriptionFromStripe,
+} from "@/features/onboarding/provision";
 import { getStripe, getStripeWebhookSecret } from "@/lib/stripe";
 
 export const runtime = "nodejs";
@@ -49,6 +52,14 @@ export async function POST(request: Request) {
           await stripe.subscriptions.retrieve(subscriptionId);
         await provisionOrganizationFromCheckout(session, subscription);
       }
+    }
+
+    if (
+      event.type === "customer.subscription.updated" ||
+      event.type === "customer.subscription.deleted"
+    ) {
+      const subscription = event.data.object as Stripe.Subscription;
+      await syncSubscriptionFromStripe(subscription);
     }
   } catch (error) {
     const message =

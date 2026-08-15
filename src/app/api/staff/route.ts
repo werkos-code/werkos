@@ -4,6 +4,7 @@ import { USER_ROLES } from "@/config/roles";
 import { STAFF_ASSIGNABLE_ROLES } from "@/features/staff/lib/staff-roles";
 import { getAppSession } from "@/features/shell/lib/require-organization";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getOrganizationAccessAdmin } from "@/features/billing/lib/get-organization-access";
 
 async function requireOwner() {
   const session = await getAppSession();
@@ -27,6 +28,14 @@ export async function POST(request: Request) {
   try {
     const gate = await requireOwner();
     if ("error" in gate) return gate.error;
+
+    const access = await getOrganizationAccessAdmin(gate.organizationId);
+    if (!access.canWrite) {
+      return NextResponse.json(
+        { error: "subscription_required", code: "subscription_required" },
+        { status: 402 },
+      );
+    }
 
     const body = (await request.json()) as {
       fullName?: string;
@@ -113,6 +122,14 @@ export async function PATCH(request: Request) {
     const gate = await requireOwner();
     if ("error" in gate) return gate.error;
 
+    const access = await getOrganizationAccessAdmin(gate.organizationId);
+    if (!access.canWrite) {
+      return NextResponse.json(
+        { error: "subscription_required", code: "subscription_required" },
+        { status: 402 },
+      );
+    }
+
     const body = (await request.json()) as {
       id?: string;
       fullName?: string;
@@ -190,6 +207,14 @@ export async function DELETE(request: Request) {
   try {
     const gate = await requireOwner();
     if ("error" in gate) return gate.error;
+
+    const access = await getOrganizationAccessAdmin(gate.organizationId);
+    if (!access.canWrite) {
+      return NextResponse.json(
+        { error: "subscription_required", code: "subscription_required" },
+        { status: 402 },
+      );
+    }
 
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id")?.trim() ?? "";

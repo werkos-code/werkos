@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { parseQuantity } from "@/features/materials/lib/materials";
 import { applyStockDelta } from "@/features/materials/lib/stock-balance";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { PurchaseOrderStatus } from "@/types/database";
 
@@ -18,7 +18,7 @@ type ReceiveLineInput = {
 
 export async function POST(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {

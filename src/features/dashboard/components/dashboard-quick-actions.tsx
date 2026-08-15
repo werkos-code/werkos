@@ -21,9 +21,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useOrgAccessOptional } from "@/features/billing/components/org-access-provider";
+import { WriteGateLink } from "@/features/billing/components/write-gate-link";
 import { PageCard } from "@/features/shell/components/page-card";
 import { hoursInputToMinutes } from "@/features/time/lib/time-entry";
-import { Link, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { toDateTimeLocalValue } from "@/features/dashboard/lib/dates";
 import type {
@@ -65,6 +67,8 @@ export function DashboardQuickActions({
   const tCommon = useTranslations("common");
   const tQuotes = useTranslations("quotes");
   const router = useRouter();
+  const orgAccess = useOrgAccessOptional();
+  const canWrite = orgAccess?.access.canWrite ?? true;
   const [dialog, setDialog] = useState<DialogId | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -104,6 +108,10 @@ export function DashboardQuickActions({
   ];
 
   function openDialog(id: DialogId) {
+    if (!canWrite) {
+      orgAccess?.openPaywall();
+      return;
+    }
     setError(null);
     setProjectId(projects[0]?.id ?? "");
     setWorkItemId("");
@@ -320,9 +328,16 @@ export function DashboardQuickActions({
               "flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-left transition-colors hover:bg-muted/40";
             if (action.href) {
               return (
-                <Link key={action.id} href={action.href} className={className}>
+                <WriteGateLink
+                  key={action.id}
+                  href={action.href}
+                  className={className}
+                  paywallContext={
+                    action.id === "project" ? "newProject" : "generic"
+                  }
+                >
                   {body}
-                </Link>
+                </WriteGateLink>
               );
             }
             return (

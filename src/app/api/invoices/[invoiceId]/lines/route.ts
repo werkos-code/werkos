@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { isInvoiceEditable } from "@/features/invoices/lib/invoice-pricing";
 import { recomputeInvoiceTotals } from "@/features/invoices/lib/recompute-invoice-totals";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 type RouteParams = { params: Promise<{ invoiceId: string }> };
@@ -79,7 +79,7 @@ async function assertParentGroup(
 
 export async function POST(request: Request, { params }: RouteParams) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const { invoiceId } = await params;
@@ -199,7 +199,7 @@ export async function POST(request: Request, { params }: RouteParams) {
 
 export async function PATCH(request: Request, { params }: RouteParams) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const { invoiceId } = await params;
@@ -305,7 +305,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
 export async function DELETE(request: Request, { params }: RouteParams) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const { invoiceId } = await params;

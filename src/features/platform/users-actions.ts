@@ -1,5 +1,6 @@
 "use server";
 
+import { PRICING } from "@/config/pricing";
 import {
   ORGANIZATION_ROLES,
   USER_ROLES,
@@ -234,6 +235,9 @@ export async function createPlatformUser(input: {
       stripe_subscription_id: null,
       office_seats: 0,
       field_seats: 0,
+      trial_ends_at: new Date(
+        Date.now() + PRICING.trialDays * 24 * 60 * 60 * 1000,
+      ).toISOString(),
     });
     if (subError) return { error: subError.message };
   } else if (!organizationId) {

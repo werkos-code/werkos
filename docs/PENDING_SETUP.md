@@ -2,6 +2,12 @@
 
 > Handmatige stappen die nog gedaan moeten worden. Agents: herinner de gebruiker hieraan bij relevant werk.
 
+## Trial / paywall flow — **geen extra SQL**
+
+Onboarding provisionneert direct een org met `subscriptions.status = trialing` + `trial_ends_at` (+14d). Stripe Checkout gebeurt pas op `/instellingen/abonnement/kiezen`.
+
+Webhook events bijwerken (als nog niet gedaan): `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`.
+
 ## Guided setup SQL — **nog te doen** (vóór eerste-stappen-gids)
 
 Na deploy: in Supabase SQL Editor uitvoeren:

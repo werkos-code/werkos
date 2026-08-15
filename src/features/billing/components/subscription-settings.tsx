@@ -10,6 +10,7 @@ import {
   type SubscriptionSummary,
 } from "@/features/billing/billing-actions";
 import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
+import { Link } from "@/i18n/navigation";
 
 type SubscriptionSettingsProps = {
   subscription: SubscriptionSummary;
@@ -114,8 +115,20 @@ export function SubscriptionSettings({
 
         {subscription.canManage ? (
           <div className="space-y-2">
+            {!subscription.hasStripeCustomer ||
+            subscription.status === "trialing" ||
+            subscription.status === "canceled" ||
+            subscription.status === "unpaid" ||
+            subscription.status === "incomplete" ||
+            subscription.status === "incomplete_expired" ||
+            subscription.status === "missing" ? (
+              <Button asChild>
+                <Link href="/instellingen/abonnement/kiezen">{t("choosePlan")}</Link>
+              </Button>
+            ) : null}
             <Button
               type="button"
+              variant={subscription.hasStripeCustomer ? "default" : "outline"}
               disabled={pending || !subscription.hasStripeCustomer}
               onClick={() => {
                 setError(null);

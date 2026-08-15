@@ -92,17 +92,11 @@
     },
     "team": {
       "title": "Met hoeveel mensen ga je WerkOS gebruiken?",
-      "description": "De owner zit in het basisabonnement. Tel alleen extra medewerkers.",
+      "description": "Optioneel. De owner zit inbegrepen — tel alleen extra medewerkers.",
       "office": "Kantoormedewerkers",
       "field": "Uitvoerende medewerkers",
-      "priceTitle": "Maandelijks",
-      "base": "WerkOS basis",
-      "officeLine": "Kantoormedewerkers (+{count})",
-      "fieldLine": "Uitvoerende (+{count})",
-      "total": "Totaal",
-      "includesAll": "Inclusief alle functionaliteiten",
-      "includesTrial": "14 dagen gratis proefperiode",
-      "submit": "Doorgaan"
+      "submit": "Start mijn proefperiode",
+      "trialHint": "Je krijgt 14 dagen volledige toegang. Geen betaalmethode nodig."
     },
     "payment": {
       "title": "Start je proefperiode",
@@ -129,7 +123,7 @@
     },
     "complete": {
       "title": "Welkom bij WerkOS",
-      "description": "Je proefperiode is gestart. Nog 14 dagen gratis.",
+      "description": "Je proefperiode is gestart. Nog 14 dagen gratis — zonder betaalmethode.",
       "cta": "Open WerkOS"
     }
   },
@@ -392,7 +386,7 @@
     "planHint": "Owner zit in de basis. Seats zijn extra kantoor- en uitvoerende medewerkers.",
     "perMonth": " / maand",
     "manage": "Beheer in Stripe",
-    "noPortalHint": "Nog geen Stripe-klant gekoppeld. Rond eerst de onboarding-betaling af.",
+    "noPortalHint": "Nog geen Stripe-klant. Kies eerst een abonnement om te betalen.",
     "ownerOnly": "Alleen de eigenaar kan het abonnement beheren.",
     "noTrial": "Geen actieve trial",
     "yes": "Ja",
@@ -425,7 +419,8 @@
     "errors": {
       "noStripeCustomer": "Geen Stripe-klant gevonden voor dit bedrijf.",
       "forbidden": "Alleen de eigenaar kan dit beheren."
-    }
+    },
+    "choosePlan": "Abonnement kiezen"
   },
   "guidedSetup": {
     "coach": {
@@ -562,10 +557,18 @@
         "task": "Taak",
         "appointment": "Afspraak"
       },
-      "quote": { "title": "Nieuwe offerte" },
-      "invoice": { "title": "Factuur maken" },
-      "hours": { "title": "Uren registreren" },
-      "schedule": { "title": "Taak of afspraak" }
+      "quote": {
+        "title": "Nieuwe offerte"
+      },
+      "invoice": {
+        "title": "Factuur maken"
+      },
+      "hours": {
+        "title": "Uren registreren"
+      },
+      "schedule": {
+        "title": "Taak of afspraak"
+      }
     }
   },
   "reports": {
@@ -2454,6 +2457,50 @@
         "insufficientStock": "Onvoldoende voorraad op deze locatie.",
         "reserveRequired": "Locatie en aantal zijn verplicht voor reserveren.",
         "insufficientAvailable": "Onvoldoende beschikbare voorraad."
+      }
+    }
+  },
+  "billing": {
+    "trialCard": {
+      "title": "Je proefperiode",
+      "daysLeft": "Nog {days} dagen gratis",
+      "daysUrgent": "Nog {days} dagen gratis",
+      "urgentHint": "Kies een abonnement om WerkOS te blijven gebruiken.",
+      "cta": "Bekijk abonnementen"
+    },
+    "trialExpired": {
+      "title": "Je proefperiode is afgelopen",
+      "body": "Je kunt je gegevens blijven bekijken, maar om nieuwe projecten, offertes en andere items aan te maken heb je een actief abonnement nodig.",
+      "hint": "Je kunt deze melding sluiten en je bestaande gegevens blijven bekijken.",
+      "cta": "Abonnement kiezen",
+      "dismiss": "Sluiten"
+    },
+    "paywall": {
+      "title": "Klaar om verder te gaan?",
+      "description": "Je gratis proefperiode is afgelopen. Kies een abonnement om verder te werken met WerkOS.",
+      "contexts": {
+        "newProject": "Je gratis proefperiode is afgelopen. Kies een abonnement om nieuwe projecten aan te maken en verder te werken met WerkOS."
+      },
+      "cta": "Bekijk abonnementen",
+      "dismiss": "Annuleren"
+    },
+    "chooser": {
+      "pageTitle": "Abonnement kiezen",
+      "title": "WerkOS abonnement",
+      "description": "Kies het aantal extra medewerkers. De owner zit in het basisabonnement.",
+      "office": "Kantoormedewerkers",
+      "field": "Uitvoerende medewerkers",
+      "priceTitle": "Maandelijks",
+      "base": "WerkOS basis",
+      "officeLine": "Kantoormedewerkers (+{count})",
+      "fieldLine": "Uitvoerende (+{count})",
+      "total": "Totaal",
+      "cta": "Doorgaan naar betaling",
+      "ownerOnly": "Alleen de eigenaar kan een abonnement kiezen.",
+      "errors": {
+        "stripeMissing": "Betalingen zijn nog niet geconfigureerd.",
+        "alreadySubscribed": "Er is al een actief abonnement.",
+        "forbidden": "Alleen de eigenaar kan dit doen."
       }
     }
   }

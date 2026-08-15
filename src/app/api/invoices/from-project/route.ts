@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { listBillableProjectSources } from "@/features/invoices/invoices-actions";
 import { DEFAULT_HOURLY_RATE_CENTS } from "@/features/invoices/lib/invoice-pricing";
 import { recomputeInvoiceTotals } from "@/features/invoices/lib/recompute-invoice-totals";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 function emptyToNull(value: string | null | undefined) {
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {

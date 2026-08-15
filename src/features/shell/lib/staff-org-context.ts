@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { isOrgStaffRole } from "@/features/projects/lib/project-status";
+import { getOrganizationAccess } from "@/features/billing/lib/get-organization-access";
 import { getAppSession } from "@/features/shell/lib/require-organization";
 
 export type StaffOrgContext =
@@ -26,4 +27,16 @@ export async function getStaffOrgContext(): Promise<StaffOrgContext> {
     userId: session.user.id,
     organizationId: session.organizationId,
   };
+}
+
+/** Same as getStaffOrgContext, but blocks when the org is read-only. */
+export async function getWritableStaffOrgContext(): Promise<
+  StaffOrgContext | { error: "subscription_required" }
+> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return ctx;
+
+  const access = await getOrganizationAccess(ctx.organizationId);
+  if (!access.canWrite) return { error: "subscription_required" };
+  return ctx;
 }

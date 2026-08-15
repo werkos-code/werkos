@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { StockLocationKind } from "@/types/database";
 
@@ -49,7 +49,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {
@@ -99,7 +99,7 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {
@@ -149,7 +149,7 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const id = new URL(request.url).searchParams.get("id")?.trim() ?? "";

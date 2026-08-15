@@ -4,7 +4,7 @@ import { INVOICE_STATUSES } from "@/features/invoices/lib/invoice";
 import { DEFAULT_INVOICE_SETTINGS } from "@/features/invoices/lib/invoice-settings";
 import { notifyOrgStaff } from "@/features/notifications/lib/notify-org-staff";
 import { dueDateFromPaymentTerms } from "@/features/quotes/lib/quote-status";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { InvoiceStatus } from "@/types/database";
 
@@ -30,7 +30,7 @@ function eurosToCents(value: unknown) {
 
 export async function POST(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {
@@ -191,7 +191,7 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {
@@ -299,7 +299,7 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as { id?: string };

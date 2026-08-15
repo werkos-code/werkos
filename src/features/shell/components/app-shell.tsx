@@ -1,6 +1,11 @@
 import { Suspense } from "react";
 import { setRequestLocale } from "next-intl/server";
 
+import { OrgAccessProvider } from "@/features/billing/components/org-access-provider";
+import { SubscriptionPaywallDialog } from "@/features/billing/components/subscription-paywall-dialog";
+import { TrialExpiredDialog } from "@/features/billing/components/trial-expired-dialog";
+import { resolveOrgAccess } from "@/features/billing/lib/entitlements";
+import { getOrganizationAccess } from "@/features/billing/lib/get-organization-access";
 import { GuidedSetupCoachHost } from "@/features/guided-setup/components/guided-setup-coach-host";
 import { AppSidebar } from "@/features/shell/components/app-sidebar";
 import { ShellChromeProvider } from "@/features/shell/components/shell-chrome-provider";
@@ -15,10 +20,12 @@ type AppShellProps = {
   requireSuperAdminSession?: boolean;
 };
 
-async function AppSidebarWithSession({
+async function AppShellWithAccess({
+  children,
   params,
   requireSuperAdminSession,
 }: {
+  children: React.ReactNode;
   params: Promise<{ locale: string }>;
   requireSuperAdminSession: boolean;
 }) {
@@ -29,12 +36,30 @@ async function AppSidebarWithSession({
     ? await requireSuperAdmin(locale)
     : await requireOrganization(locale);
 
+  const access = session.organizationId
+    ? await getOrganizationAccess(session.organizationId)
+    : resolveOrgAccess({ status: "active", trialEndsAt: null });
+
   return (
-    <AppSidebar
-      organizationName={session.organizationName}
-      userName={session.userName}
-      isSuperAdmin={session.isSuperAdmin}
-    />
+    <OrgAccessProvider access={access}>
+      <AppSidebar
+        organizationName={session.organizationName}
+        userName={session.userName}
+        isSuperAdmin={session.isSuperAdmin}
+      />
+      <div className="min-h-dvh pl-[var(--sidebar-width)] print:pl-0">
+        {children}
+      </div>
+      {!requireSuperAdminSession ? (
+        <>
+          <Suspense fallback={null}>
+            <GuidedSetupCoachHost />
+          </Suspense>
+          <TrialExpiredDialog />
+          <SubscriptionPaywallDialog />
+        </>
+      ) : null}
+    </OrgAccessProvider>
   );
 }
 
@@ -46,18 +71,23 @@ export function AppShell({
   return (
     <ShellChromeProvider>
       <div className="min-h-dvh bg-background">
-        <Suspense fallback={<AppSidebar />}>
-          <AppSidebarWithSession
+        <Suspense
+          fallback={
+            <>
+              <AppSidebar />
+              <div className="min-h-dvh pl-[var(--sidebar-width)] print:pl-0">
+                {children}
+              </div>
+            </>
+          }
+        >
+          <AppShellWithAccess
             params={params}
             requireSuperAdminSession={requireSuperAdminSession}
-          />
+          >
+            {children}
+          </AppShellWithAccess>
         </Suspense>
-        <div className="min-h-dvh pl-[var(--sidebar-width)] print:pl-0">{children}</div>
-        {!requireSuperAdminSession ? (
-          <Suspense fallback={null}>
-            <GuidedSetupCoachHost />
-          </Suspense>
-        ) : null}
       </div>
     </ShellChromeProvider>
   );

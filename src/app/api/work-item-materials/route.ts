@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { listMaterialLinesForWorkItem } from "@/features/materials/materials-actions";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 
 export async function GET(request: Request) {
   try {

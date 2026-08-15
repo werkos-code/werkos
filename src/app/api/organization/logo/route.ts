@@ -4,7 +4,7 @@ import {
   ORGANIZATION_LOGOS_BUCKET,
   organizationLogoStoragePath,
 } from "@/features/organization/lib/organization-logo";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const ALLOWED_TYPES = new Set([
@@ -29,7 +29,7 @@ function extensionForMime(mime: string) {
 
 export async function POST(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const form = await request.formData();
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
 
 export async function DELETE() {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const admin = createAdminClient();

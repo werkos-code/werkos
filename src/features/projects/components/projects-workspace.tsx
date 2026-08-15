@@ -26,6 +26,7 @@ import {
   type ProjectListFilter,
 } from "@/features/projects/lib/project-status";
 import type { ProjectRow } from "@/features/projects/projects-actions";
+import { WriteGateLink } from "@/features/billing/components/write-gate-link";
 import { PageCard } from "@/features/shell/components/page-card";
 import { Link } from "@/i18n/navigation";
 import type { ProjectStatus } from "@/types/database";
@@ -198,10 +199,10 @@ export function ProjectsWorkspace({
             {t("actions.saveFilters")}
           </Button>
           <Button type="button" size="sm" asChild>
-            <Link href="/opdrachten/nieuw">
+            <WriteGateLink href="/opdrachten/nieuw" paywallContext="newProject">
               <Plus className="size-3.5" />
               {t("newRequest")}
-            </Link>
+            </WriteGateLink>
           </Button>
         </div>
       </div>

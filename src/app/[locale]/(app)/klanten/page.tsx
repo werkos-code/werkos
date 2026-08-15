@@ -1,10 +1,11 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { Button } from "@/components/ui/button";
+import { PaywallQueryOpener } from "@/features/billing/components/paywall-query-opener";
+import { WriteGateLink } from "@/features/billing/components/write-gate-link";
 import { CustomersTable } from "@/features/customers/components/customers-table";
 import { listCustomers } from "@/features/customers/customers-actions";
 import { ShellPage } from "@/features/shell/components/shell-page";
-import { Link } from "@/i18n/navigation";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -16,9 +17,10 @@ export default async function BedrijfKlantenPage({ params }: Props) {
 
   return (
     <ShellPage title={t("title")} description={t("description")}>
+      <PaywallQueryOpener />
       <div className="mb-6">
         <Button asChild>
-          <Link href="/klanten/nieuw">{t("newCustomer")}</Link>
+          <WriteGateLink href="/klanten/nieuw">{t("newCustomer")}</WriteGateLink>
         </Button>
       </div>
       {result.error ? (

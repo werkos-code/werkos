@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { notifyOrgStaff } from "@/features/notifications/lib/notify-org-staff";
 import { logProjectActivity } from "@/features/projects/lib/project-activity";
 import { WORK_ITEM_PRIORITIES, WORK_ITEM_STATUSES } from "@/features/projects/lib/work-item";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { WorkItemPriority, WorkItemStatus } from "@/types/database";
 
@@ -40,7 +40,7 @@ function parsePriority(value: unknown): WorkItemPriority | null {
 
 export async function POST(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {
@@ -186,7 +186,7 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {
@@ -356,7 +356,7 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as { id?: string };

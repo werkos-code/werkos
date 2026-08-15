@@ -8,7 +8,7 @@ import {
   type InvoiceSettingsLetterhead,
 } from "@/features/invoices/lib/invoice-settings";
 import { organizationLogoPublicUrl } from "@/features/organization/lib/organization-logo";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const SETTINGS_SELECT =
@@ -148,7 +148,7 @@ export async function GET() {
 
 export async function PATCH(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {

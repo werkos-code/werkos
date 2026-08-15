@@ -5,7 +5,7 @@ import {
   WORK_ORDER_PRIORITIES,
   WORK_ORDER_STATUSES,
 } from "@/features/work-orders/lib/work-order";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { WorkOrderPriority, WorkOrderStatus } from "@/types/database";
 
@@ -31,7 +31,7 @@ function parseIso(value: unknown) {
 
 export async function POST(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {
@@ -138,7 +138,7 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {
@@ -298,7 +298,7 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as { id?: string };

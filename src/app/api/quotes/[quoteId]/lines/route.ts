@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { QUOTE_LINE_TYPES } from "@/features/quotes/lib/quote-types";
 import type { QuoteLineType } from "@/features/quotes/lib/quote-types";
 import { isQuoteEditable } from "@/features/quotes/lib/quote-status";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 type RouteParams = { params: Promise<{ quoteId: string }> };
@@ -72,7 +72,7 @@ function parseLineType(value: unknown): QuoteLineType | null {
 
 export async function POST(request: Request, { params }: RouteParams) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const { quoteId } = await params;
@@ -183,7 +183,7 @@ export async function POST(request: Request, { params }: RouteParams) {
 
 export async function PATCH(request: Request, { params }: RouteParams) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const { quoteId } = await params;
@@ -330,7 +330,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
 export async function DELETE(request: Request, { params }: RouteParams) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const { quoteId } = await params;

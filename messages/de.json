@@ -91,18 +91,12 @@
       }
     },
     "team": {
-      "title": "Met hoeveel mensen ga je WerkOS gebruiken?",
-      "description": "De owner zit in het basisabonnement. Tel alleen extra medewerkers.",
+      "title": "Mit wie vielen Personen nutzen Sie WerkOS?",
+      "description": "Optional. Der Owner ist enthalten — zählen Sie nur zusätzliche Mitarbeiter.",
       "office": "Kantoormedewerkers",
       "field": "Uitvoerende medewerkers",
-      "priceTitle": "Maandelijks",
-      "base": "WerkOS basis",
-      "officeLine": "Kantoormedewerkers (+{count})",
-      "fieldLine": "Uitvoerende (+{count})",
-      "total": "Totaal",
-      "includesAll": "Inclusief alle functionaliteiten",
-      "includesTrial": "14 dagen gratis proefperiode",
-      "submit": "Doorgaan"
+      "submit": "Testphase starten",
+      "trialHint": "Sie erhalten 14 Tage vollen Zugriff. Keine Zahlungsmethode nötig."
     },
     "payment": {
       "title": "Start je proefperiode",
@@ -128,9 +122,9 @@
       "failed": "Het inrichten duurt langer dan verwacht. Vernieuw de pagina of neem contact op."
     },
     "complete": {
-      "title": "Welkom bij WerkOS",
-      "description": "Je proefperiode is gestart. Nog 14 dagen gratis.",
-      "cta": "Open WerkOS"
+      "title": "Willkommen bei WerkOS",
+      "description": "Ihre Testphase hat begonnen. 14 Tage kostenlos — ohne Zahlungsmethode.",
+      "cta": "WerkOS öffnen"
     }
   },
   "shell": {
@@ -392,7 +386,7 @@
     "planHint": "Der Eigentümer ist im Basisplan enthalten. Sitze sind zusätzliche Büro- und Außendienstmitarbeiter.",
     "perMonth": " / Monat",
     "manage": "In Stripe verwalten",
-    "noPortalHint": "Noch kein Stripe-Kunde verknüpft. Schließe zuerst die Onboarding-Zahlung ab.",
+    "noPortalHint": "Noch kein Stripe-Kunde. Wählen Sie zuerst ein Abo zur Zahlung.",
     "ownerOnly": "Nur der Eigentümer kann das Abo verwalten.",
     "noTrial": "Keine aktive Testphase",
     "yes": "Ja",
@@ -425,7 +419,8 @@
     "errors": {
       "noStripeCustomer": "Kein Stripe-Kunde für dieses Unternehmen gefunden.",
       "forbidden": "Nur der Eigentümer kann das verwalten."
-    }
+    },
+    "choosePlan": "Abo wählen"
   },
   "guidedSetup": {
     "coach": {
@@ -562,10 +557,18 @@
         "task": "Aufgabe",
         "appointment": "Termin"
       },
-      "quote": { "title": "Neues Angebot" },
-      "invoice": { "title": "Rechnung erstellen" },
-      "hours": { "title": "Stunden erfassen" },
-      "schedule": { "title": "Aufgabe oder Termin" }
+      "quote": {
+        "title": "Neues Angebot"
+      },
+      "invoice": {
+        "title": "Rechnung erstellen"
+      },
+      "hours": {
+        "title": "Stunden erfassen"
+      },
+      "schedule": {
+        "title": "Aufgabe oder Termin"
+      }
     }
   },
   "reports": {
@@ -2368,6 +2371,50 @@
         "insufficientStock": "Nicht genug Bestand an diesem Standort.",
         "reserveRequired": "Standort und Menge sind für Reservierung erforderlich.",
         "insufficientAvailable": "Nicht genug verfügbarer Bestand."
+      }
+    }
+  },
+  "billing": {
+    "trialCard": {
+      "title": "Ihre Testphase",
+      "daysLeft": "Noch {days} Tage kostenlos",
+      "daysUrgent": "Nur noch {days} Tage kostenlos",
+      "urgentHint": "Wählen Sie ein Abo, um WerkOS weiter zu nutzen.",
+      "cta": "Abos ansehen"
+    },
+    "trialExpired": {
+      "title": "Ihre Testphase ist beendet",
+      "body": "Sie können Ihre Daten weiterhin ansehen, aber zum Erstellen neuer Projekte, Angebote und anderer Elemente brauchen Sie ein aktives Abo.",
+      "hint": "Sie können diese Meldung schließen und Ihre vorhandenen Daten weiter ansehen.",
+      "cta": "Abo wählen",
+      "dismiss": "Schließen"
+    },
+    "paywall": {
+      "title": "Bereit weiterzumachen?",
+      "description": "Ihre kostenlose Testphase ist beendet. Wählen Sie ein Abo, um mit WerkOS weiterzuarbeiten.",
+      "contexts": {
+        "newProject": "Ihre kostenlose Testphase ist beendet. Wählen Sie ein Abo, um neue Projekte anzulegen und mit WerkOS weiterzuarbeiten."
+      },
+      "cta": "Abos ansehen",
+      "dismiss": "Abbrechen"
+    },
+    "chooser": {
+      "pageTitle": "Abo wählen",
+      "title": "WerkOS-Abo",
+      "description": "Wählen Sie zusätzliche Plätze. Der Owner ist im Basisabo enthalten.",
+      "office": "Büromitarbeiter",
+      "field": "Außendienst",
+      "priceTitle": "Monatlich",
+      "base": "WerkOS Basis",
+      "officeLine": "Büroplätze (+{count})",
+      "fieldLine": "Außendienst (+{count})",
+      "total": "Gesamt",
+      "cta": "Weiter zur Zahlung",
+      "ownerOnly": "Nur der Owner kann ein Abo wählen.",
+      "errors": {
+        "stripeMissing": "Zahlungen sind noch nicht konfiguriert.",
+        "alreadySubscribed": "Es gibt bereits ein aktives Abo.",
+        "forbidden": "Nur der Owner kann das tun."
       }
     }
   }

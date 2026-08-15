@@ -5,7 +5,7 @@ import {
   APPOINTMENT_STATUSES,
   APPOINTMENT_TYPES,
 } from "@/features/planning/lib/planning";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { AppointmentStatus, AppointmentType } from "@/types/database";
 
@@ -43,7 +43,7 @@ async function syncWorkItemDates(
 
 export async function POST(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {
@@ -137,7 +137,7 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {
@@ -286,7 +286,7 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as { id?: string };

@@ -1,7 +1,10 @@
 "use server";
 
 import { notifyOrgStaff } from "@/features/notifications/lib/notify-org-staff";
-import { getStaffOrgContext } from "@/features/shell/lib/staff-org-context";
+import {
+  getStaffOrgContext,
+  getWritableStaffOrgContext,
+} from "@/features/shell/lib/staff-org-context";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export type ConversationRow = {
@@ -178,7 +181,7 @@ export async function createConversation(input: {
   subject: string;
   body: string;
 }): Promise<{ conversationId?: string; error?: string }> {
-  const ctx = await getStaffOrgContext();
+  const ctx = await getWritableStaffOrgContext();
   if ("error" in ctx) return { error: ctx.error };
 
   const subject = input.subject.trim();
@@ -229,7 +232,7 @@ export async function postConversationMessage(input: {
   conversationId: string;
   body: string;
 }): Promise<{ error?: string }> {
-  const ctx = await getStaffOrgContext();
+  const ctx = await getWritableStaffOrgContext();
   if ("error" in ctx) return { error: ctx.error };
 
   const body = input.body.trim();

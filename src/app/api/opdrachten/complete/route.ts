@@ -5,7 +5,7 @@ import {
   computeQuoteTotals,
 } from "@/features/quotes/lib/quote-line";
 import { logProjectActivity } from "@/features/projects/lib/project-activity";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import type { QuoteLineRow } from "@/features/quotes/quotes-actions";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -84,7 +84,7 @@ function mapIncomingLines(
 
 export async function POST(request: Request) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {

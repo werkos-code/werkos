@@ -110,10 +110,100 @@ function mapStripeStatus(status: Stripe.Subscription.Status): SubscriptionStatus
   }
 }
 
+function periodEndFromSubscription(subscription: Stripe.Subscription) {
+  return "current_period_end" in subscription &&
+    typeof subscription.current_period_end === "number"
+    ? new Date(subscription.current_period_end * 1000).toISOString()
+    : null;
+}
+
+/**
+ * Attach Stripe subscription to an existing org (trial → paid upgrade).
+ */
+export async function activateOrganizationSubscriptionFromCheckout(
+  session: Stripe.Checkout.Session,
+  subscription: Stripe.Subscription,
+) {
+  const organizationId = session.metadata?.organization_id;
+  if (!organizationId) {
+    throw new Error("Checkout session missing organization_id");
+  }
+
+  const admin = createAdminClient();
+  const officeSeats = Number(session.metadata?.office_seats ?? 0);
+  const fieldSeats = Number(session.metadata?.field_seats ?? 0);
+  const trialEnd = subscription.trial_end
+    ? new Date(subscription.trial_end * 1000).toISOString()
+    : null;
+
+  const stripeCustomerId =
+    typeof session.customer === "string"
+      ? session.customer
+      : session.customer?.id ?? null;
+
+  const { error } = await admin
+    .from("subscriptions")
+    .update({
+      stripe_customer_id: stripeCustomerId,
+      stripe_subscription_id: subscription.id,
+      status: mapStripeStatus(subscription.status),
+      trial_ends_at: trialEnd,
+      current_period_end: periodEndFromSubscription(subscription),
+      cancel_at_period_end: subscription.cancel_at_period_end ?? false,
+      office_seats: Number.isFinite(officeSeats) ? officeSeats : 0,
+      field_seats: Number.isFinite(fieldSeats) ? fieldSeats : 0,
+    })
+    .eq("organization_id", organizationId);
+
+  if (error) throw new Error(error.message);
+  return organizationId;
+}
+
+export async function syncSubscriptionFromStripe(
+  subscription: Stripe.Subscription,
+) {
+  const admin = createAdminClient();
+  const organizationId = subscription.metadata?.organization_id;
+  const stripeCustomerId =
+    typeof subscription.customer === "string"
+      ? subscription.customer
+      : subscription.customer?.id ?? null;
+
+  const payload = {
+    status: mapStripeStatus(subscription.status),
+    trial_ends_at: subscription.trial_end
+      ? new Date(subscription.trial_end * 1000).toISOString()
+      : null,
+    current_period_end: periodEndFromSubscription(subscription),
+    cancel_at_period_end: subscription.cancel_at_period_end ?? false,
+    stripe_subscription_id: subscription.id,
+    ...(stripeCustomerId ? { stripe_customer_id: stripeCustomerId } : {}),
+  };
+
+  if (organizationId) {
+    const { error } = await admin
+      .from("subscriptions")
+      .update(payload)
+      .eq("organization_id", organizationId);
+    if (error) throw new Error(error.message);
+    return;
+  }
+
+  const { error } = await admin
+    .from("subscriptions")
+    .update(payload)
+    .eq("stripe_subscription_id", subscription.id);
+  if (error) throw new Error(error.message);
+}
+
 export async function provisionOrganizationFromCheckout(
   session: Stripe.Checkout.Session,
   subscription: Stripe.Subscription,
 ) {
+  if (session.metadata?.organization_id) {
+    return activateOrganizationSubscriptionFromCheckout(session, subscription);
+  }
+
   const userId = session.metadata?.user_id ?? session.client_reference_id;
   const companyName = session.metadata?.company_name;
   const industry = session.metadata?.industry || null;
@@ -128,12 +218,6 @@ export async function provisionOrganizationFromCheckout(
     ? new Date(subscription.trial_end * 1000).toISOString()
     : null;
 
-  const periodEnd =
-    "current_period_end" in subscription &&
-    typeof subscription.current_period_end === "number"
-      ? new Date(subscription.current_period_end * 1000).toISOString()
-      : null;
-
   return provisionOrganization({
     userId,
     companyName,
@@ -147,7 +231,7 @@ export async function provisionOrganizationFromCheckout(
     stripeSubscriptionId: subscription.id,
     status: mapStripeStatus(subscription.status),
     trialEndsAt: trialEnd,
-    currentPeriodEnd: periodEnd,
+    currentPeriodEnd: periodEndFromSubscription(subscription),
     cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
   });
 }

@@ -1,16 +1,18 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 
-import { OnboardingStepFrame } from "@/features/onboarding/components/onboarding-step-frame";
-import { ProvisioningView } from "@/features/onboarding/components/provisioning-view";
 import { userHasOrganization } from "@/features/onboarding/actions";
-import { createClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
+import { createClient } from "@/lib/supabase/server";
 
 type Props = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ session_id?: string }>;
 };
 
+/**
+ * Legacy Stripe provisioning wait page.
+ * Kept for checkout success URLs from subscription upgrades; new signups skip this.
+ */
 export default async function OnboardingProvisioningPage({
   params,
   searchParams,
@@ -26,18 +28,12 @@ export default async function OnboardingProvisioningPage({
   if (!user) redirect({ href: "/onboarding/account", locale });
 
   if (await userHasOrganization()) {
+    // Returning from upgrade checkout — go to billing settings
+    if (sessionId) {
+      redirect({ href: "/instellingen/abonnement", locale });
+    }
     redirect({ href: "/onboarding/complete", locale });
   }
 
-  const t = await getTranslations("onboarding.provisioning");
-
-  return (
-    <OnboardingStepFrame
-      step={5}
-      title={t("title")}
-      description={t("waiting")}
-    >
-      <ProvisioningView sessionId={sessionId ?? null} />
-    </OnboardingStepFrame>
-  );
+  redirect({ href: "/onboarding/team", locale });
 }

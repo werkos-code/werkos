@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { logProjectActivity } from "@/features/projects/lib/project-activity";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 type RouteParams = { params: Promise<{ quoteId: string }> };
@@ -32,7 +32,7 @@ function sortLinesForInsert<
 
 export async function POST(_request: Request, { params }: RouteParams) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const { quoteId } = await params;

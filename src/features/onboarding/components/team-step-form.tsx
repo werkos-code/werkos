@@ -1,15 +1,10 @@
 "use client";
 
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  calculateMonthlyTotalCents,
-  formatEurFromCents,
-  PRICING,
-} from "@/config/pricing";
-import { saveTeamDraft } from "@/features/onboarding/actions";
+import { completeOnboardingAction } from "@/features/onboarding/actions";
 import { useRouter } from "@/i18n/navigation";
 
 type TeamStepFormProps = {
@@ -60,17 +55,11 @@ export function TeamStepForm({
 }: TeamStepFormProps) {
   const t = useTranslations("onboarding.team");
   const tCommon = useTranslations("common");
-  const locale = useLocale();
   const router = useRouter();
   const [officeSeats, setOfficeSeats] = useState(initialOfficeSeats);
   const [fieldSeats, setFieldSeats] = useState(initialFieldSeats);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-
-  const numberLocale =
-    locale === "de" ? "de-DE" : locale === "en" ? "en-GB" : "nl-NL";
-
-  const total = calculateMonthlyTotalCents(officeSeats, fieldSeats);
 
   return (
     <form
@@ -82,13 +71,17 @@ export function TeamStepForm({
 
         void (async () => {
           try {
-            const result = await saveTeamDraft({ officeSeats, fieldSeats });
+            const result = await completeOnboardingAction({
+              officeSeats,
+              fieldSeats,
+            });
             if (result.error) {
               setError(result.error);
               setPending(false);
               return;
             }
-            router.push("/onboarding/payment");
+            router.push("/onboarding/complete");
+            router.refresh();
           } catch (err) {
             setError(err instanceof Error ? err.message : tCommon("error"));
             setPending(false);
@@ -109,47 +102,7 @@ export function TeamStepForm({
         />
       </div>
 
-      <div className="rounded-lg border border-border bg-muted/20 px-4 py-4 text-sm">
-        <p className="mb-3 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-          {t("priceTitle")}
-        </p>
-        <div className="space-y-2 text-muted-foreground">
-          <div className="flex justify-between">
-            <span>{t("base")}</span>
-            <span className="tabular-nums">
-              {formatEurFromCents(PRICING.baseMonthlyCents, numberLocale)}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span>{t("officeLine", { count: officeSeats })}</span>
-            <span className="tabular-nums">
-              {formatEurFromCents(
-                officeSeats * PRICING.officeSeatMonthlyCents,
-                numberLocale,
-              )}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span>{t("fieldLine", { count: fieldSeats })}</span>
-            <span className="tabular-nums">
-              {formatEurFromCents(
-                fieldSeats * PRICING.fieldSeatMonthlyCents,
-                numberLocale,
-              )}
-            </span>
-          </div>
-          <div className="mt-3 flex justify-between border-t border-border pt-3 text-foreground">
-            <span className="font-medium">{t("total")}</span>
-            <span className="font-semibold tabular-nums">
-              {formatEurFromCents(total, numberLocale)} {tCommon("perMonth")}
-            </span>
-          </div>
-        </div>
-        <ul className="mt-4 space-y-1 text-muted-foreground">
-          <li>{t("includesAll")}</li>
-          <li>{t("includesTrial")}</li>
-        </ul>
-      </div>
+      <p className="text-sm text-muted-foreground">{t("trialHint")}</p>
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       <Button type="submit" size="lg" disabled={pending} className="w-full">

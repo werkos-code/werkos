@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+import { PaywallQueryOpener } from "@/features/billing/components/paywall-query-opener";
 import { ProjectsWorkspace } from "@/features/projects/components/projects-workspace";
 import type { ProjectListFilter } from "@/features/projects/lib/project-status";
 import { listProjects } from "@/features/projects/projects-actions";
@@ -33,6 +34,7 @@ export default async function ProjectenPage({ params, searchParams }: Props) {
 
   return (
     <ShellPage title={t("title")}>
+      <PaywallQueryOpener />
       {result.error ? (
         <p className="text-sm text-destructive">{result.error}</p>
       ) : (

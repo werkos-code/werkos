@@ -14,6 +14,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logoutAction } from "@/features/auth/actions";
+import { SidebarTrialCard } from "@/features/billing/components/sidebar-trial-card";
+import { useOrgAccessOptional } from "@/features/billing/components/org-access-provider";
 import { OrganizationSwitcher } from "@/features/shell/components/organization-switcher";
 import {
   APP_NAV,
@@ -213,6 +215,7 @@ export function AppSidebar({
   const tAuth = useTranslations("auth");
   const pathname = usePathname();
   const router = useRouter();
+  const orgAccess = useOrgAccessOptional();
   const sections = [
     ...APP_NAV,
     ...(isSuperAdmin ? [PLATFORM_ADMIN_NAV] : []),
@@ -226,6 +229,8 @@ export function AppSidebar({
     return `${parts[0]![0] ?? ""}${parts[1]![0] ?? ""}`.toUpperCase();
   }, [userName]);
 
+  const canWrite = orgAccess?.access.canWrite ?? true;
+
   return (
     <aside
       className="fixed inset-y-0 left-0 z-40 flex w-[var(--sidebar-width)] flex-col rounded-tr-3xl rounded-br-3xl bg-sidebar text-sidebar-foreground"
@@ -235,13 +240,28 @@ export function AppSidebar({
         <OrganizationSwitcher organizationName={organizationName} />
 
         <Button
-          asChild
+          asChild={canWrite}
           className="h-10 w-full justify-center gap-2 rounded-xl border-0 bg-linear-to-r from-[#2563EB] to-[#60A5FA] text-sm font-medium text-white shadow-none hover:from-[#1D4ED8] hover:to-[#3B82F6]"
+          onClick={
+            canWrite
+              ? undefined
+              : (event) => {
+                  event.preventDefault();
+                  orgAccess?.openPaywall("newProject");
+                }
+          }
         >
-          <Link href={NEW_REQUEST_HREF}>
-            <Plus className="size-4" />
-            {t("newRequest")}
-          </Link>
+          {canWrite ? (
+            <Link href={NEW_REQUEST_HREF}>
+              <Plus className="size-4" />
+              {t("newRequest")}
+            </Link>
+          ) : (
+            <>
+              <Plus className="size-4" />
+              {t("newRequest")}
+            </>
+          )}
         </Button>
       </div>
 
@@ -256,6 +276,7 @@ export function AppSidebar({
       </nav>
 
       <div className="mt-auto px-3 py-3">
+        <SidebarTrialCard />
         <div className="flex items-center gap-2.5 rounded-xl px-1.5 py-1.5">
           <Avatar className="size-8 after:border-white/10">
             <AvatarFallback className="bg-white/12 text-[11px] text-white">

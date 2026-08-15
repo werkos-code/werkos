@@ -6,6 +6,7 @@ import {
 } from "@/features/inbox/inbox-actions";
 import { isOrgStaffRole } from "@/features/projects/lib/project-status";
 import { createClient } from "@/lib/supabase/server";
+import { getOrganizationAccessAdmin } from "@/features/billing/lib/get-organization-access";
 
 async function requireStaff() {
   const supabase = await createClient();
@@ -38,6 +39,14 @@ export async function POST(request: Request) {
   try {
     const gate = await requireStaff();
     if ("error" in gate) return gate.error;
+
+    const access = await getOrganizationAccessAdmin(gate.organizationId);
+    if (!access.canWrite) {
+      return NextResponse.json(
+        { error: "subscription_required", code: "subscription_required" },
+        { status: 402 },
+      );
+    }
 
     const body = (await request.json()) as {
       action?: string;

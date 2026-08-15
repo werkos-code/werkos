@@ -1,3 +1,4 @@
+import { getOrganizationAccessAdmin } from "@/features/billing/lib/get-organization-access";
 import { isOrgStaffRole } from "@/features/projects/lib/project-status";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
@@ -30,4 +31,26 @@ export async function requireApiStaff() {
     userId: user.id,
     organizationId: membership.organization_id,
   };
+}
+
+/** Staff gate that also blocks writes when the org is in read-only (trial expired / unpaid). */
+export async function requireWritableApiStaff() {
+  const gate = await requireApiStaff();
+  if ("error" in gate) return gate;
+
+  const access = await getOrganizationAccessAdmin(gate.organizationId);
+  if (!access.canWrite) {
+    return {
+      error: NextResponse.json(
+        {
+          error: "subscription_required",
+          code: "subscription_required",
+          access: access.mode,
+        },
+        { status: 402 },
+      ),
+    };
+  }
+
+  return gate;
 }

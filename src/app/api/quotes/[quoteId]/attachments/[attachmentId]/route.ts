@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { QUOTE_FILES_BUCKET } from "@/features/quotes/lib/quote-attachments";
-import { requireApiStaff } from "@/features/shell/lib/api-staff";
+import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 type RouteParams = {
@@ -50,7 +50,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
 
 export async function DELETE(_request: Request, { params }: RouteParams) {
   try {
-    const gate = await requireApiStaff();
+    const gate = await requireWritableApiStaff();
     if ("error" in gate) return gate.error;
 
     const { quoteId, attachmentId } = await params;

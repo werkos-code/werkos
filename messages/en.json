@@ -91,18 +91,12 @@
       }
     },
     "team": {
-      "title": "Met hoeveel mensen ga je WerkOS gebruiken?",
-      "description": "De owner zit in het basisabonnement. Tel alleen extra medewerkers.",
+      "title": "How many people will use WerkOS?",
+      "description": "Optional. The owner is included — count only extra staff.",
       "office": "Kantoormedewerkers",
       "field": "Uitvoerende medewerkers",
-      "priceTitle": "Maandelijks",
-      "base": "WerkOS basis",
-      "officeLine": "Kantoormedewerkers (+{count})",
-      "fieldLine": "Uitvoerende (+{count})",
-      "total": "Totaal",
-      "includesAll": "Inclusief alle functionaliteiten",
-      "includesTrial": "14 dagen gratis proefperiode",
-      "submit": "Doorgaan"
+      "submit": "Start my trial",
+      "trialHint": "You get 14 days of full access. No payment method required."
     },
     "payment": {
       "title": "Start je proefperiode",
@@ -128,8 +122,8 @@
       "failed": "Het inrichten duurt langer dan verwacht. Vernieuw de pagina of neem contact op."
     },
     "complete": {
-      "title": "Welkom bij WerkOS",
-      "description": "Je proefperiode is gestart. Nog 14 dagen gratis.",
+      "title": "Welcome to WerkOS",
+      "description": "Your trial has started. 14 days free — no payment method required.",
       "cta": "Open WerkOS"
     }
   },
@@ -392,7 +386,7 @@
     "planHint": "The owner is included in the base plan. Seats are extra office and field staff.",
     "perMonth": " / month",
     "manage": "Manage in Stripe",
-    "noPortalHint": "No Stripe customer linked yet. Complete onboarding payment first.",
+    "noPortalHint": "No Stripe customer yet. Choose a plan first to pay.",
     "ownerOnly": "Only the owner can manage the subscription.",
     "noTrial": "No active trial",
     "yes": "Yes",
@@ -425,7 +419,8 @@
     "errors": {
       "noStripeCustomer": "No Stripe customer found for this company.",
       "forbidden": "Only the owner can manage this."
-    }
+    },
+    "choosePlan": "Choose a plan"
   },
   "guidedSetup": {
     "coach": {
@@ -562,10 +557,18 @@
         "task": "Task",
         "appointment": "Appointment"
       },
-      "quote": { "title": "New quote" },
-      "invoice": { "title": "Create invoice" },
-      "hours": { "title": "Log hours" },
-      "schedule": { "title": "Task or appointment" }
+      "quote": {
+        "title": "New quote"
+      },
+      "invoice": {
+        "title": "Create invoice"
+      },
+      "hours": {
+        "title": "Log hours"
+      },
+      "schedule": {
+        "title": "Task or appointment"
+      }
     }
   },
   "reports": {
@@ -2454,6 +2457,50 @@
         "insufficientStock": "Insufficient stock at this location.",
         "reserveRequired": "Location and quantity are required to reserve.",
         "insufficientAvailable": "Insufficient available stock."
+      }
+    }
+  },
+  "billing": {
+    "trialCard": {
+      "title": "Your trial",
+      "daysLeft": "{days} days left free",
+      "daysUrgent": "Only {days} days left free",
+      "urgentHint": "Choose a plan to keep using WerkOS.",
+      "cta": "View plans"
+    },
+    "trialExpired": {
+      "title": "Your trial has ended",
+      "body": "You can still view your data, but creating new projects, quotes and other items requires an active subscription.",
+      "hint": "You can close this message and keep viewing your existing data.",
+      "cta": "Choose a plan",
+      "dismiss": "Close"
+    },
+    "paywall": {
+      "title": "Ready to continue?",
+      "description": "Your free trial has ended. Choose a plan to keep working in WerkOS.",
+      "contexts": {
+        "newProject": "Your free trial has ended. Choose a plan to create new projects and keep working in WerkOS."
+      },
+      "cta": "View plans",
+      "dismiss": "Cancel"
+    },
+    "chooser": {
+      "pageTitle": "Choose a plan",
+      "title": "WerkOS subscription",
+      "description": "Choose extra seats. The owner is included in the base plan.",
+      "office": "Office staff",
+      "field": "Field staff",
+      "priceTitle": "Monthly",
+      "base": "WerkOS base",
+      "officeLine": "Office seats (+{count})",
+      "fieldLine": "Field seats (+{count})",
+      "total": "Total",
+      "cta": "Continue to payment",
+      "ownerOnly": "Only the owner can choose a subscription.",
+      "errors": {
+        "stripeMissing": "Payments are not configured yet.",
+        "alreadySubscribed": "There is already an active subscription.",
+        "forbidden": "Only the owner can do this."
       }
     }
   }
