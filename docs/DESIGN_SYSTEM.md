@@ -175,6 +175,26 @@ grid xl:[minmax(0,1fr)_20rem]
 **Canonical:** `src/features/quotes/components/quote-editor.tsx`  
 Open refine: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§2). Financiële planning: [`QUOTE_FINANCIAL_PLANNING.md`](./QUOTE_FINANCIAL_PLANNING.md). Afgeronde fases: `docs/archive/quote-editor-phases/`.
 
+### 4.5b Factuur-editor (live document)
+
+```
+Header (status · nummer · save · Voorbeeld / Afdrukken / Versturen)
+KPI-strip: 4× MetaStatCard (excl · btw · incl · vervaldatum)
+grid xl:[minmax(0,1fr)_20rem]
+  ├─ Soft canvas (bg-muted/40) → A4-achtig document PageCard
+  │    briefpapier · partijen · inline regels · live totalen · notities
+  └─ Sticky rail PageCard (Samenvatting | Instellingen)
+```
+
+| Regel | Detail |
+| --- | --- |
+| Document = bron | Bewerken gebeurt **in** het factuurdocument (letterhead zichtbaar); geen aparte form-spreadsheet |
+| Preview/print | Zelfde `InvoiceDocument`; `/voorbeeld` + browser print |
+| Live totalen | `computeInvoiceTotals` — btw/korting per regel |
+| Alleen concept | Bewerken locked buiten `draft` |
+
+**Canonical:** `src/features/invoices/components/{invoice-editor,invoice-document}.tsx`
+
 ### 4.6 Coming soon / stub
 
 `PageCard p-8` · icoon · `h3 text-sm font-medium` · één zin muted · optioneel outline-CTA.  

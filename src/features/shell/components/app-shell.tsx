@@ -52,7 +52,7 @@ export function AppShell({
             requireSuperAdminSession={requireSuperAdminSession}
           />
         </Suspense>
-        <div className="min-h-dvh pl-[var(--sidebar-width)]">{children}</div>
+        <div className="min-h-dvh pl-[var(--sidebar-width)] print:pl-0">{children}</div>
         {!requireSuperAdminSession ? (
           <Suspense fallback={null}>
             <GuidedSetupCoachHost />

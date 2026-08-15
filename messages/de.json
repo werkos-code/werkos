@@ -1918,17 +1918,33 @@
       "openEditor": "Anlegen und bearbeiten"
     },
     "editor": {
-      "editTitle": "Rechnung bearbeiten",
-      "noLines": "Noch keine Positionen. Füge eine Position hinzu oder importiere aus dem Projekt.",
+      "editTitle": "Rechnung",
+      "noLines": "Noch keine Positionen. Füge unten eine Position hinzu.",
       "addLine": "Position hinzufügen",
+      "deleteLine": "Position löschen",
       "deleteLineConfirm": "Diese Position löschen?",
       "save": "Speichern",
-      "savedJustNow": "Zuletzt gespeichert: gerade eben",
+      "savedJustNow": "Gespeichert",
       "unsaved": "Ungespeicherte Änderungen",
+      "unsavedLeave": "Es gibt ungespeicherte Änderungen. Trotzdem verlassen?",
       "totalsTitle": "Rechnungssumme",
+      "draftHint": "Du bearbeitest die Rechnung selbst. Summen werden live berechnet. Speichere vor dem Senden.",
+      "settingsHint": "Fälligkeit und Rechnungsdatum kannst du auch im Dokument anpassen.",
+      "letterheadHint": "Briefpapier ist noch unvollständig.",
+      "letterheadLink": "Unternehmensdaten öffnen",
+      "paymentDays": "{days} Tage",
       "tabs": {
         "lines": "Positionen",
         "notes": "Notizen"
+      },
+      "rail": {
+        "summary": "Übersicht",
+        "settings": "Einstellungen"
+      },
+      "kpi": {
+        "subtotal": "Exkl. MwSt.",
+        "vat": "MwSt.",
+        "gross": "Inkl. MwSt."
       },
       "meta": {
         "number": "Rechnungsnummer",
@@ -1936,9 +1952,10 @@
         "project": "Projekt"
       },
       "placeholders": {
+        "title": "Rechnungstitel",
         "line": "Positionsbeschreibung",
         "description": "Optionale Erläuterung",
-        "notes": "Notizen auf der Rechnung"
+        "notes": "Notizen auf der Rechnung (Zahlungsinfo, Dank…)"
       },
       "fields": {
         "title": "Titel",
@@ -1948,6 +1965,8 @@
         "unit": "Einheit",
         "quantity": "Menge",
         "unitPrice": "Preis",
+        "vat": "MwSt.",
+        "discount": "Rabatt",
         "lineTotal": "Gesamt"
       },
       "totals": {
@@ -1964,7 +1983,8 @@
       "actions": {
         "send": "Senden",
         "markPaid": "Als bezahlt markieren",
-        "preview": "Vorschau"
+        "preview": "Vorschau",
+        "print": "Drucken"
       },
       "errors": {
         "notEditable": "Diese Rechnung kann nicht mehr bearbeitet werden (nur Entwurf).",

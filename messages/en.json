@@ -1918,17 +1918,33 @@
       "openEditor": "Create and edit"
     },
     "editor": {
-      "editTitle": "Edit invoice",
-      "noLines": "No lines yet. Add a line or import from the project.",
+      "editTitle": "Invoice",
+      "noLines": "No lines yet. Add a line below.",
       "addLine": "Add line",
+      "deleteLine": "Delete line",
       "deleteLineConfirm": "Delete this line?",
       "save": "Save",
-      "savedJustNow": "Last saved: just now",
+      "savedJustNow": "Saved",
       "unsaved": "Unsaved changes",
+      "unsavedLeave": "You have unsaved changes. Leave anyway?",
       "totalsTitle": "Invoice total",
+      "draftHint": "You are editing the invoice itself. Totals update live. Save before sending.",
+      "settingsHint": "You can also change due date and invoice date inside the document.",
+      "letterheadHint": "Letterhead is incomplete.",
+      "letterheadLink": "Open company settings",
+      "paymentDays": "{days} days",
       "tabs": {
         "lines": "Lines",
         "notes": "Notes"
+      },
+      "rail": {
+        "summary": "Summary",
+        "settings": "Settings"
+      },
+      "kpi": {
+        "subtotal": "Excl. VAT",
+        "vat": "VAT",
+        "gross": "Incl. VAT"
       },
       "meta": {
         "number": "Invoice number",
@@ -1936,9 +1952,10 @@
         "project": "Project"
       },
       "placeholders": {
+        "title": "Invoice title",
         "line": "Line description",
         "description": "Optional details",
-        "notes": "Notes on the invoice"
+        "notes": "Notes on the invoice (payment info, thank you…)"
       },
       "fields": {
         "title": "Title",
@@ -1948,6 +1965,8 @@
         "unit": "Unit",
         "quantity": "Qty",
         "unitPrice": "Price",
+        "vat": "VAT",
+        "discount": "Discount",
         "lineTotal": "Total"
       },
       "totals": {
@@ -1964,7 +1983,8 @@
       "actions": {
         "send": "Send",
         "markPaid": "Mark as paid",
-        "preview": "Preview"
+        "preview": "Preview",
+        "print": "Print"
       },
       "errors": {
         "notEditable": "This invoice can no longer be edited (draft only).",

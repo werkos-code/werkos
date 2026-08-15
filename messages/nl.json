@@ -1918,17 +1918,33 @@
       "openEditor": "Aanmaken en bewerken"
     },
     "editor": {
-      "editTitle": "Factuur bewerken",
-      "noLines": "Nog geen regels. Voeg een regel toe of importeer vanuit het project.",
+      "editTitle": "Factuur",
+      "noLines": "Nog geen regels. Voeg hieronder een regel toe.",
       "addLine": "Regel toevoegen",
+      "deleteLine": "Regel verwijderen",
       "deleteLineConfirm": "Deze regel verwijderen?",
       "save": "Opslaan",
-      "savedJustNow": "Laatst opgeslagen: zojuist",
+      "savedJustNow": "Opgeslagen",
       "unsaved": "Niet-opgeslagen wijzigingen",
+      "unsavedLeave": "Je hebt niet-opgeslagen wijzigingen. Toch weggaan?",
       "totalsTitle": "Factuur totaal",
+      "draftHint": "Je werkt in de factuur zelf. Totalen worden live berekend. Sla op vóór je verstuurt.",
+      "settingsHint": "Vervaldatum en factuurdatum kun je ook in het document zelf aanpassen.",
+      "letterheadHint": "Briefpapier is nog niet compleet.",
+      "letterheadLink": "Bedrijfsgegevens openen",
+      "paymentDays": "{days} dagen",
       "tabs": {
         "lines": "Regels",
         "notes": "Notities"
+      },
+      "rail": {
+        "summary": "Samenvatting",
+        "settings": "Instellingen"
+      },
+      "kpi": {
+        "subtotal": "Excl. btw",
+        "vat": "Btw",
+        "gross": "Incl. btw"
       },
       "meta": {
         "number": "Factuurnummer",
@@ -1936,9 +1952,10 @@
         "project": "Project"
       },
       "placeholders": {
+        "title": "Factuurtitel",
         "line": "Omschrijving van de regel",
         "description": "Optionele toelichting",
-        "notes": "Notities op de factuur"
+        "notes": "Notities op de factuur (betalingsinfo, dankwoord…)"
       },
       "fields": {
         "title": "Titel",
@@ -1948,6 +1965,8 @@
         "unit": "Eenheid",
         "quantity": "Aantal",
         "unitPrice": "Prijs",
+        "vat": "Btw",
+        "discount": "Korting",
         "lineTotal": "Totaal"
       },
       "totals": {
@@ -1964,7 +1983,8 @@
       "actions": {
         "send": "Versturen",
         "markPaid": "Markeer als betaald",
-        "preview": "Voorbeeld"
+        "preview": "Voorbeeld",
+        "print": "Afdrukken"
       },
       "errors": {
         "notEditable": "Deze factuur is niet meer bewerkbaar (alleen concept).",
