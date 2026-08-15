@@ -288,7 +288,7 @@ Geen nieuwe SQL. Test:
 
 1. Open **SQL Editor** in Supabase  
 2. Plak en run: `docs/sql-applied/20260815100000_guided_setup.sql`  
-3. Test: `/dashboard` → intro-sheet; checklist tot stappen klaar; Help → **Eerste stappen opnieuw**
+3. Test: op Dashboard / Projecten / Planning e.d. → floating coach rechtsonder; Help → **Eerste stappen opnieuw**
 
 ## Prijsmodel
 

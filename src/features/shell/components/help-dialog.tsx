@@ -63,8 +63,18 @@ export function HelpDialog({ open, onOpenChange }: HelpDialogProps) {
             startTransition(() => {
               void (async () => {
                 await restartGuidedSetup();
+                try {
+                  window.localStorage.removeItem(
+                    "werkos.guided-setup.context-dismissed",
+                  );
+                  window.localStorage.removeItem(
+                    "werkos.guided-setup.collapsed",
+                  );
+                } catch {
+                  // ignore storage errors
+                }
                 onOpenChange(false);
-                router.push("/dashboard?welcome=1");
+                router.push("/dashboard");
                 router.refresh();
               })();
             });

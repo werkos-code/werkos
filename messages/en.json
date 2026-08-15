@@ -428,57 +428,38 @@
     }
   },
   "guidedSetup": {
-    "intro": {
-      "eyebrow": "Step {step} of {total}",
-      "next": "Next",
-      "done": "Go to dashboard",
-      "skip": "Explore on my own",
-      "ctaStart": "Start first assignment",
-      "ctaCompany": "Open company profile",
-      "steps": {
-        "model": {
-          "title": "Everything centres on the project",
-          "body": "Quotes, planning, work and invoices belong to the same project — so nothing gets scattered."
-        },
-        "start": {
-          "title": "Start with New assignment",
-          "body": "Don’t create an empty project. New assignment captures the customer, intake and a draft quote in one flow."
-        },
-        "flow": {
-          "title": "From quote to invoice",
-          "body": "After the quote comes execution. The dashboard shows what needs attention today."
-        },
-        "company": {
-          "title": "Set up your letterhead",
-          "body": "Address, KvK and logo appear on quotes and invoices. Do it now or later."
-        }
-      }
-    },
-    "checklist": {
+    "coach": {
       "title": "First steps",
       "progress": "{done} of {total} done",
-      "dismiss": "Hide",
+      "dismiss": "Hide on this page",
+      "collapse": "Collapse",
+      "expand": "Open first steps",
+      "reopen": "Show help",
+      "hideEverywhere": "Don't show again",
+      "contexts": {
+        "dashboard": "Dashboard",
+        "projects": "Projects",
+        "planning": "Planning",
+        "work": "Work items",
+        "materials": "Materials",
+        "staff": "Staff"
+      },
       "steps": {
-        "company": {
-          "title": "Finish company details",
-          "hint": "Address, KvK or logo for clean documents"
-        },
-        "assignment": {
-          "title": "Create your first assignment",
-          "hint": "Use New assignment in the sidebar"
-        },
-        "quote": {
-          "title": "Review the draft quote",
-          "hint": "Created automatically with your first assignment"
-        },
-        "projects": {
-          "title": "Open your projects",
-          "hint": "See what your team is working on"
-        },
-        "work": {
-          "title": "Check work items",
-          "hint": "What still needs to be done"
-        }
+        "assignment": "Create an assignment",
+        "company": "Add your company details",
+        "customer": "Add a customer",
+        "project": "Create a project",
+        "workItems": "Add work items",
+        "quote": "Create a quote",
+        "invoice": "Create an invoice",
+        "appointment": "Schedule an appointment",
+        "planWork": "Plan work into the calendar",
+        "addWork": "Add work items",
+        "scheduleWork": "Put work on the schedule",
+        "article": "Add an article",
+        "stock": "Check your stock",
+        "invite": "Invite a team member",
+        "roles": "Review your team"
       }
     }
   },

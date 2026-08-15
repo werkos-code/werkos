@@ -428,57 +428,38 @@
     }
   },
   "guidedSetup": {
-    "intro": {
-      "eyebrow": "Stap {step} van {total}",
-      "next": "Volgende",
-      "done": "Naar het dashboard",
-      "skip": "Zelf ontdekken",
-      "ctaStart": "Eerste opdracht starten",
-      "ctaCompany": "Bedrijfsgegevens openen",
-      "steps": {
-        "model": {
-          "title": "Alles draait om het project",
-          "body": "Offerte, planning, werk en factuur horen bij hetzelfde project. Zo blijft alles bij elkaar."
-        },
-        "start": {
-          "title": "Begin bij Nieuwe opdracht",
-          "body": "Start geen leeg project. Via Nieuwe opdracht leg je klant, intake en een conceptofferte in één keer vast."
-        },
-        "flow": {
-          "title": "Van offerte naar factuur",
-          "body": "Na de offerte volgt uitvoering. Het dashboard toont wat vandaag aandacht nodig heeft."
-        },
-        "company": {
-          "title": "Zet je bedrijf netjes op papier",
-          "body": "Adres, KvK en logo verschijnen op offertes en facturen. Dat kun je nu of later doen."
-        }
-      }
-    },
-    "checklist": {
+    "coach": {
       "title": "Eerste stappen",
       "progress": "{done} van {total} klaar",
-      "dismiss": "Verbergen",
+      "dismiss": "Verbergen op deze pagina",
+      "collapse": "Inklappen",
+      "expand": "Eerste stappen openen",
+      "reopen": "Hulp tonen",
+      "hideEverywhere": "Niet meer tonen",
+      "contexts": {
+        "dashboard": "Dashboard",
+        "projects": "Projecten",
+        "planning": "Planning",
+        "work": "Werkzaamheden",
+        "materials": "Materiaal",
+        "staff": "Personeel"
+      },
       "steps": {
-        "company": {
-          "title": "Bedrijfsgegevens afronden",
-          "hint": "Adres, KvK of logo voor nette documenten"
-        },
-        "assignment": {
-          "title": "Eerste opdracht aanmaken",
-          "hint": "Via Nieuwe opdracht in de sidebar"
-        },
-        "quote": {
-          "title": "Conceptofferte bekijken",
-          "hint": "Volgt automatisch na je eerste opdracht"
-        },
-        "projects": {
-          "title": "Open je projecten",
-          "hint": "Zie waar je team aan werkt"
-        },
-        "work": {
-          "title": "Bekijk werkzaamheden",
-          "hint": "Wat er nog moet gebeuren"
-        }
+        "assignment": "Maak een opdracht aan",
+        "company": "Vul je bedrijfsgegevens in",
+        "customer": "Voeg een klant toe",
+        "project": "Maak een project aan",
+        "workItems": "Voeg werkzaamheden toe",
+        "quote": "Maak een offerte",
+        "invoice": "Maak een factuur",
+        "appointment": "Plan een afspraak",
+        "planWork": "Plan werkzaamheden in",
+        "addWork": "Voeg werkzaamheden toe",
+        "scheduleWork": "Zet werk in de planning",
+        "article": "Voeg een artikel toe",
+        "stock": "Bekijk je voorraad",
+        "invite": "Nodig een medewerker uit",
+        "roles": "Bekijk je team"
       }
     }
   },

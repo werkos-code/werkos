@@ -61,7 +61,7 @@ AppShell (navy sidebar)
 | --- | --- |
 | Header-titel | `text-base font-semibold tracking-tight` — geen grote hero in de chrome |
 | Navigatie | Sidebar + header blijven staan; pagina-inhoud streamt achter `loading.tsx` (`PageSkeleton`) — geen bevroren oude pagina |
-| Eerste stappen | Intro-sheet + dashboard-checklist (`guided-setup`); opnieuw via Help |
+| Eerste stappen | Content-aware coach rechtsonder (`guided-setup`); stappen per pagina; opnieuw via Help |
 | Geen page-description | `description` op `ShellPage` wordt niet gerenderd; uitleg via tooltip of weglaten |
 | Surfaces | Gebruik `PageCard` / `MetaStatCard` — niet shadcn `Card` in product-UI |
 | Secties | `space-y-5` of `space-y-6` |

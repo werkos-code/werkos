@@ -55,7 +55,7 @@
 | --- | --- | --- |
 | Zoekfunctie | Done | ⌘K / header-icoon → globale zoekdialog |
 | Notificatie-icoon | Done | Sheet + live badge + link naar `/notificaties` |
-| Help-icoon | Done | Help-dialog + “Eerste stappen opnieuw” |
+| Help-icoon | Done | Help-dialog + “Eerste stappen opnieuw” (content-aware coach) |
 
 ### Account & abonnement
 

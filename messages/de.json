@@ -428,57 +428,38 @@
     }
   },
   "guidedSetup": {
-    "intro": {
-      "eyebrow": "Schritt {step} von {total}",
-      "next": "Weiter",
-      "done": "Zum Dashboard",
-      "skip": "Selbst entdecken",
-      "ctaStart": "Ersten Auftrag starten",
-      "ctaCompany": "Unternehmensdaten öffnen",
-      "steps": {
-        "model": {
-          "title": "Alles dreht sich ums Projekt",
-          "body": "Angebot, Planung, Arbeit und Rechnung gehören zum selben Projekt — so bleibt alles zusammen."
-        },
-        "start": {
-          "title": "Starte mit Neuer Auftrag",
-          "body": "Kein leeres Projekt anlegen. Über Neuer Auftrag erfasst du Kunde, Intake und Angebotsentwurf in einem Schritt."
-        },
-        "flow": {
-          "title": "Vom Angebot zur Rechnung",
-          "body": "Nach dem Angebot folgt die Ausführung. Das Dashboard zeigt, was heute Aufmerksamkeit braucht."
-        },
-        "company": {
-          "title": "Briefpapier einrichten",
-          "body": "Adresse, Handelsregister und Logo erscheinen auf Angeboten und Rechnungen. Jetzt oder später."
-        }
-      }
-    },
-    "checklist": {
+    "coach": {
       "title": "Erste Schritte",
       "progress": "{done} von {total} erledigt",
-      "dismiss": "Ausblenden",
+      "dismiss": "Auf dieser Seite ausblenden",
+      "collapse": "Einklappen",
+      "expand": "Erste Schritte öffnen",
+      "reopen": "Hilfe anzeigen",
+      "hideEverywhere": "Nicht mehr anzeigen",
+      "contexts": {
+        "dashboard": "Dashboard",
+        "projects": "Projekte",
+        "planning": "Planung",
+        "work": "Arbeitsposten",
+        "materials": "Material",
+        "staff": "Personal"
+      },
       "steps": {
-        "company": {
-          "title": "Unternehmensdaten vervollständigen",
-          "hint": "Adresse, Handelsregister oder Logo"
-        },
-        "assignment": {
-          "title": "Ersten Auftrag anlegen",
-          "hint": "Über Neuer Auftrag in der Seitenleiste"
-        },
-        "quote": {
-          "title": "Angebotsentwurf prüfen",
-          "hint": "Entsteht automatisch mit dem ersten Auftrag"
-        },
-        "projects": {
-          "title": "Projekte öffnen",
-          "hint": "Sieh, woran dein Team arbeitet"
-        },
-        "work": {
-          "title": "Arbeitsposten ansehen",
-          "hint": "Was noch zu tun ist"
-        }
+        "assignment": "Auftrag anlegen",
+        "company": "Unternehmensdaten ausfüllen",
+        "customer": "Kunden hinzufügen",
+        "project": "Projekt anlegen",
+        "workItems": "Arbeitsposten hinzufügen",
+        "quote": "Angebot erstellen",
+        "invoice": "Rechnung erstellen",
+        "appointment": "Termin planen",
+        "planWork": "Arbeit in den Kalender planen",
+        "addWork": "Arbeitsposten hinzufügen",
+        "scheduleWork": "Arbeit in die Planung setzen",
+        "article": "Artikel hinzufügen",
+        "stock": "Bestand prüfen",
+        "invite": "Mitarbeiter einladen",
+        "roles": "Team ansehen"
       }
     }
   },

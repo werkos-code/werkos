@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { setRequestLocale } from "next-intl/server";
 
+import { GuidedSetupCoachHost } from "@/features/guided-setup/components/guided-setup-coach-host";
 import { AppSidebar } from "@/features/shell/components/app-sidebar";
 import { ShellChromeProvider } from "@/features/shell/components/shell-chrome-provider";
 import {
@@ -52,6 +53,11 @@ export function AppShell({
           />
         </Suspense>
         <div className="min-h-dvh pl-[var(--sidebar-width)]">{children}</div>
+        {!requireSuperAdminSession ? (
+          <Suspense fallback={null}>
+            <GuidedSetupCoachHost />
+          </Suspense>
+        ) : null}
       </div>
     </ShellChromeProvider>
   );
