@@ -2522,16 +2522,15 @@
         "forbidden": "Only the owner can do this."
       },
       "perYear": "/ year",
-      "yearlyHeroHint": "{percent}% cheaper with annual prepay",
       "interval": {
         "month": "Monthly",
         "year": "Yearly",
         "yearlyDiscount": "-{percent}%"
       },
-      "yearlyTotal": "WerkOS per year",
-      "yearlyEquivalent": "{monthly} / month · vs {compared} billed monthly",
       "yearlySavingsBanner": "You save {percent}% compared to paying monthly.",
-      "ctaHintYearly": "You prepay 12 months via Stripe. Then renews yearly."
+      "ctaHintYearly": "You prepay 12 months via Stripe. Then renews yearly.",
+      "yearlyHeroBilled": "{yearly} prepaid per year · {percent}% cheaper",
+      "yearlyBilledHint": "{yearly} prepaid yearly"
     }
   }
 }

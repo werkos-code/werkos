@@ -2522,16 +2522,15 @@
         "forbidden": "Alleen de eigenaar kan dit doen."
       },
       "perYear": "/ jaar",
-      "yearlyHeroHint": "{percent}% goedkoper bij jaarlijkse vooruitbetaling",
       "interval": {
         "month": "Maandelijks",
         "year": "Jaarlijks",
         "yearlyDiscount": "-{percent}%"
       },
-      "yearlyTotal": "Per jaar WerkOS",
-      "yearlyEquivalent": "{monthly} / maand · i.p.v. {compared} maandelijks",
       "yearlySavingsBanner": "Je bespaart {percent}% ten opzichte van maandelijks betalen.",
-      "ctaHintYearly": "Je betaalt 12 maanden vooruit via Stripe. Daarna jaarlijks verlengbaar."
+      "ctaHintYearly": "Je betaalt 12 maanden vooruit via Stripe. Daarna jaarlijks verlengbaar.",
+      "yearlyHeroBilled": "{yearly} per jaar vooruit · {percent}% goedkoper",
+      "yearlyBilledHint": "{yearly} per jaar vooruitbetaald"
     }
   }
 }

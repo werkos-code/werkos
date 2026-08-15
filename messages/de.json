@@ -2436,16 +2436,15 @@
         "forbidden": "Nur der Owner kann das tun."
       },
       "perYear": "/ Jahr",
-      "yearlyHeroHint": "{percent}% günstiger bei jährlicher Vorauszahlung",
       "interval": {
         "month": "Monatlich",
         "year": "Jährlich",
         "yearlyDiscount": "-{percent}%"
       },
-      "yearlyTotal": "WerkOS pro Jahr",
-      "yearlyEquivalent": "{monthly} / Monat · statt {compared} monatlich",
       "yearlySavingsBanner": "Sie sparen {percent}% gegenüber monatlicher Zahlung.",
-      "ctaHintYearly": "Sie zahlen 12 Monate im Voraus über Stripe. Danach jährlich verlängerbar."
+      "ctaHintYearly": "Sie zahlen 12 Monate im Voraus über Stripe. Danach jährlich verlängerbar.",
+      "yearlyHeroBilled": "{yearly} jährlich im Voraus · {percent}% günstiger",
+      "yearlyBilledHint": "{yearly} jährlich im Voraus bezahlt"
     }
   }
 }

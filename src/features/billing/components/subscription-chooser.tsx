@@ -124,17 +124,15 @@ export function SubscriptionChooser({
     : PRICING.fieldSeatMonthlyCents;
 
   const baseLabel = formatEurFromCents(displayBaseCents, numberLocale);
+  const baseYearlyLabel = formatEurFromCents(
+    PRICING.baseYearlyCents,
+    numberLocale,
+  );
   const officeSeatLabel = formatEurFromCents(officeSeatDisplayCents, numberLocale);
   const fieldSeatLabel = formatEurFromCents(fieldSeatDisplayCents, numberLocale);
-  const totalLabel = formatEurFromCents(
-    yearly ? yearlyTotal : monthlyTotal,
-    numberLocale,
-  );
-  const equivalentLabel = formatEurFromCents(
-    yearlyMonthlyEquivalent,
-    numberLocale,
-  );
-  const monthlyCompareLabel = formatEurFromCents(monthlyTotal, numberLocale);
+  const headlineTotalCents = yearly ? yearlyMonthlyEquivalent : monthlyTotal;
+  const headlineTotalLabel = formatEurFromCents(headlineTotalCents, numberLocale);
+  const yearlyTotalLabel = formatEurFromCents(yearlyTotal, numberLocale);
 
   const ctaLabel = isTrialing ? t("ctaWhileTrialing") : t("cta");
 
@@ -203,8 +201,9 @@ export function SubscriptionChooser({
               <span className="text-sm text-white/70">{t("perMonth")}</span>
             </p>
             {yearly ? (
-              <p className="mt-2 text-sm text-amber-300">
-                {t("yearlyHeroHint", {
+              <p className="mt-2 text-sm text-white/70">
+                {t("yearlyHeroBilled", {
+                  yearly: baseYearlyLabel,
                   percent: PRICING.yearlyDiscountPercent,
                 })}
               </p>
@@ -292,7 +291,7 @@ export function SubscriptionChooser({
             <div className="flex items-end justify-between gap-3">
               <div>
                 <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  {yearly ? t("yearlyTotal") : t("monthlyTotal")}
+                  {t("monthlyTotal")}
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
                   {t("ownerIncluded")}
@@ -300,17 +299,14 @@ export function SubscriptionChooser({
               </div>
               <div className="text-right">
                 <p className="text-2xl font-semibold tracking-tight tabular-nums">
-                  {totalLabel}
+                  {headlineTotalLabel}
                   <span className="ml-1 text-sm font-normal text-muted-foreground">
-                    {yearly ? t("perYear") : t("perMonth")}
+                    {t("perMonth")}
                   </span>
                 </p>
                 {yearly ? (
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {t("yearlyEquivalent", {
-                      monthly: equivalentLabel,
-                      compared: monthlyCompareLabel,
-                    })}
+                    {t("yearlyBilledHint", { yearly: yearlyTotalLabel })}
                   </p>
                 ) : null}
               </div>
