@@ -209,8 +209,8 @@ Geen nepcijfers.
 Landingspagina met **eigen navy-header** — geen standaard `AppPageHeader` / `ShellPage`.
 
 ```
-Navy gradient-banner (#09133A → blauw)
-  ├─ Hallo, {naam}!  + wit omzet-blok
+Navy gradient-banner (#09133A → blauw), full-bleed achter sidebar
+  ├─ Hallo, {naam}!
   └─ datum · tijd · taal  |  zoek · bel · help (wit, alleen hier)
 Widgets (rounded-2xl) overlappen de banner (-mt)
 3× cards: Aandacht · Vandaag · Mijn taken
@@ -221,9 +221,9 @@ grid: Actieve projecten + Financieel / Snelle acties
 | --- | --- |
 | Chrome | Geen standaard shell-header op `/dashboard` |
 | Greeting | `Hallo, {name}!` in de banner (wit) |
-| Omzet-KPI | Wit blok naast begroeting; echte data of €0 — geen nep |
 | Meta | Datum + live tijd + language picker |
 | Iconen | Zoek/bel/help wit op navy — **alleen dashboard** |
+| Banner bleed | Banner loopt achter de sidebar door (`-ml` + sidebar-width) zodat rounded sidebar-hoek navy toont, geen wit |
 | Widgets | `PageCard` met `rounded-2xl` (ruimer dan standaard `rounded-xl`) |
 | Overlap | Eerste rij widgets valt licht over de banner |
 | Snelle acties | Compacte tegels (icoon `bg-primary/10`); geen sidebar-CTA-gradient |

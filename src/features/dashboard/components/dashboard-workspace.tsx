@@ -101,7 +101,6 @@ export function DashboardWorkspace({
     <div className="flex min-h-dvh flex-col bg-background">
       <DashboardHero
         firstName={firstName}
-        revenueCents={snapshot.finance.paidThisMonthCents}
         chrome={<DashboardHeroChrome />}
       />
 

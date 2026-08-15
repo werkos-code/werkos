@@ -11,7 +11,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { formatEurFromCents } from "@/config/pricing";
 import { routing, type AppLocale } from "@/i18n/routing";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -87,57 +86,53 @@ function DashboardLocalePicker({ className }: { className?: string }) {
 
 type DashboardHeroProps = {
   firstName: string;
-  revenueCents: number;
   chrome: React.ReactNode;
 };
 
-export function DashboardHero({
-  firstName,
-  revenueCents,
-  chrome,
-}: DashboardHeroProps) {
+/**
+ * Full-bleed navy banner that extends behind the sidebar so the
+ * rounded sidebar corner reveals navy instead of page background.
+ */
+export function DashboardHero({ firstName, chrome }: DashboardHeroProps) {
   const t = useTranslations("dashboard");
   const locale = useLocale();
   const { dateLabel, timeLabel } = useLiveClock(locale);
-  const revenueLabel = formatEurFromCents(revenueCents, locale);
 
   return (
-    <div className="relative overflow-hidden bg-linear-to-br from-[#09133A] via-[#0B1A4A] to-[#1E3A8A] text-white">
+    <div
+      className="relative overflow-hidden bg-linear-to-br from-[#09133A] via-[#0B1A4A] to-[#1E3A8A] text-white print:hidden"
+      style={{
+        marginLeft: "calc(-1 * var(--sidebar-width))",
+        width: "calc(100% + var(--sidebar-width))",
+      }}
+    >
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(59,130,246,0.22),transparent_55%)]"
       />
-      <div className="relative mx-auto w-[90%] px-0 pt-5 pb-20 lg:pt-6 lg:pb-24">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
-            <h1 className="truncate text-2xl font-semibold tracking-tight sm:text-3xl">
+      <div className="relative pl-[var(--sidebar-width)]">
+        <div className="mx-auto w-[90%] pt-5 pb-20 lg:pt-6 lg:pb-24">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h1 className="min-w-0 truncate text-2xl font-semibold tracking-tight sm:text-3xl">
               {t("hero.hello", { name: firstName })}
             </h1>
-            <div className="shrink-0 rounded-2xl bg-white px-4 py-3 text-[#09133A] shadow-[0_8px_24px_rgba(15,23,42,0.18)]">
-              <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                {t("hero.revenueLabel")}
-              </p>
-              <p className="mt-0.5 text-lg font-semibold tabular-nums tracking-tight">
-                {revenueLabel}
-              </p>
-            </div>
-          </div>
 
-          <div className="flex flex-wrap items-center gap-1 sm:justify-end">
-            <span className="inline-flex h-8 items-center gap-1.5 px-2 text-xs text-white/80">
-              <CalendarDays className="size-3.5 opacity-80" />
-              <span className="capitalize">{dateLabel}</span>
-            </span>
-            <span className="inline-flex h-8 items-center gap-1.5 px-2 text-xs tabular-nums text-white/80">
-              <Clock3 className="size-3.5 opacity-80" />
-              {timeLabel}
-            </span>
-            <DashboardLocalePicker />
-            <span
-              aria-hidden
-              className="mx-1 hidden h-5 w-px bg-white/25 sm:block"
-            />
-            <div className="flex items-center gap-0.5">{chrome}</div>
+            <div className="flex flex-wrap items-center gap-1 sm:justify-end">
+              <span className="inline-flex h-8 items-center gap-1.5 px-2 text-xs text-white/80">
+                <CalendarDays className="size-3.5 opacity-80" />
+                <span className="capitalize">{dateLabel}</span>
+              </span>
+              <span className="inline-flex h-8 items-center gap-1.5 px-2 text-xs tabular-nums text-white/80">
+                <Clock3 className="size-3.5 opacity-80" />
+                {timeLabel}
+              </span>
+              <DashboardLocalePicker />
+              <span
+                aria-hidden
+                className="mx-1 hidden h-5 w-px bg-white/25 sm:block"
+              />
+              <div className="flex items-center gap-0.5">{chrome}</div>
+            </div>
           </div>
         </div>
       </div>
