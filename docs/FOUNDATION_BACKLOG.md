@@ -62,7 +62,7 @@
 | Module | Route | Status | Notities |
 | --- | --- | --- | --- |
 | Account | `/instellingen/account` | Done | Naam + wachtwoord wijzigen |
-| Abonnement en facturatie | `/instellingen/abonnement` | Done | Status/seats + Stripe Customer Portal (owner) |
+| Abonnement en facturatie | `/instellingen/abonnement` | Partial | Maandelijks live; **jaarlijks vóór livegang** — [`BILLING_YEARLY_IMPLEMENTATION.md`](./BILLING_YEARLY_IMPLEMENTATION.md) |
 
 ### Afvinklijst basisvorm
 

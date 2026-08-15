@@ -1,6 +1,13 @@
 # Open setup & acties
 
-> Handmatige stappen die nog gedaan moeten worden. Agents: herinner de gebruiker hieraan bij materiaal/inkoop-werk.
+> Handmatige stappen die nog gedaan moeten worden. Agents: herinner de gebruiker hieraan bij relevant werk.
+
+## Jaarlijkse billing (vóór livegang) — **nog te doen**
+
+Commercieel model staat vast; Stripe yearly prices + app-keuze maandelijks/jaarlijks zijn **nog niet gebouwd**.
+
+→ Volledige checklist (jij + agent): [`BILLING_YEARLY_IMPLEMENTATION.md`](./BILLING_YEARLY_IMPLEMENTATION.md)  
+→ Bedragen / principes: [`PHASE1_SETUP.md` — Prijsmodel](./PHASE1_SETUP.md#prijsmodel)
 
 ## 2BA catalogus activeren — **nog te doen**
 

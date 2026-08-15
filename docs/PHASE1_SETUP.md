@@ -334,3 +334,5 @@ Uitleg naar de klant: *“€59 per maand, of €49 per maand wanneer je jaarlij
 
 Checkout en env-vars gebruiken alleen de maandelijkse prices uit §3.  
 Trial: 14 dagen, betaalmethode verplicht, €0 tijdens trial.
+
+**Open voor livegang:** yearly prices + onboarding-keuze — zie [`BILLING_YEARLY_IMPLEMENTATION.md`](./BILLING_YEARLY_IMPLEMENTATION.md) (status OPEN).
