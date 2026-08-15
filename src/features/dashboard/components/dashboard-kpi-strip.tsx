@@ -68,13 +68,9 @@ export function DashboardKpiStrip({ kpis }: { kpis: DashboardKpis }) {
 
         return (
           <Link key={card.key} href={href} className="group block h-full">
-            <DashboardSurface
-              className={cn(
-                "relative flex h-full flex-col p-5 transition-colors group-hover:bg-muted/20",
-              )}
-            >
+            <DashboardSurface className="flex h-full flex-col p-5">
               <div className="flex items-start justify-between gap-3">
-                <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase transition-colors group-hover:text-primary">
                   {t(`${card.key}.label`)}
                 </p>
                 {!isEmpty ? (
@@ -85,17 +81,19 @@ export function DashboardKpiStrip({ kpis }: { kpis: DashboardKpis }) {
                   <span className="size-9 shrink-0" aria-hidden />
                 )}
               </div>
-              <p className="mt-6 text-3xl font-semibold tracking-tight tabular-nums text-foreground">
+              <p className="mt-6 text-3xl font-semibold tracking-tight tabular-nums text-foreground transition-colors group-hover:text-primary">
                 {isEmpty ? "—" : card.value}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p
+                className={cn(
+                  "mt-1 text-xs transition-colors",
+                  isEmpty
+                    ? "text-primary group-hover:underline"
+                    : "text-muted-foreground group-hover:text-primary",
+                )}
+              >
                 {isEmpty ? t(`${card.key}.cta`) : t(`${card.key}.hint`)}
               </p>
-              <div
-                className={cn(
-                  "pointer-events-none absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-primary/0 via-primary/40 to-primary/0 opacity-0 transition-opacity group-hover:opacity-100",
-                )}
-              />
             </DashboardSurface>
           </Link>
         );
