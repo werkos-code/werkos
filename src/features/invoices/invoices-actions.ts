@@ -20,7 +20,7 @@ export type InvoiceDetail = {
   sequenceNumber: number;
   title: string;
   status: InvoiceStatus;
-  projectId: string;
+  projectId: string | null;
   projectName: string;
   projectNumber: string;
   organizationName: string | null;
@@ -74,11 +74,11 @@ export async function listInvoices(): Promise<{
   const ctx = await getStaffOrgContext();
   if ("error" in ctx) return { error: ctx.error };
 
-  const [invoicesResult, projectsResult] = await Promise.all([
+  const [invoicesResult, projectsResult, customersResult] = await Promise.all([
     ctx.supabase
       .from("invoices")
       .select(
-        "id, invoice_number, sequence_number, title, status, issue_date, due_date, paid_at, subtotal_cents, vat_cents, total_cents, notes, project_id, quote_id, created_at",
+        "id, invoice_number, sequence_number, title, status, issue_date, due_date, paid_at, subtotal_cents, vat_cents, total_cents, notes, project_id, customer_id, quote_id, created_at",
       )
       .eq("organization_id", ctx.organizationId)
       .order("created_at", { ascending: false }),
@@ -87,34 +87,32 @@ export async function listInvoices(): Promise<{
       .select("id, name, project_number, customer_id")
       .eq("organization_id", ctx.organizationId)
       .order("name", { ascending: true }),
+    ctx.supabase
+      .from("customers")
+      .select("id, name")
+      .eq("organization_id", ctx.organizationId)
+      .order("name", { ascending: true }),
   ]);
 
   if (invoicesResult.error) return { error: invoicesResult.error.message };
   if (projectsResult.error) return { error: projectsResult.error.message };
+  if (customersResult.error) return { error: customersResult.error.message };
 
   const projects = projectsResult.data ?? [];
-  const customerIds = [
-    ...new Set(projects.map((row) => row.customer_id).filter(Boolean)),
-  ];
-
-  const { data: customers } = customerIds.length
-    ? await ctx.supabase
-        .from("customers")
-        .select("id, name")
-        .in("id", customerIds)
-    : { data: [] as { id: string; name: string }[] };
+  const customers = customersResult.data ?? [];
 
   const customerNameById = new Map(
-    (customers ?? []).map((row) => [row.id, row.name] as const),
+    customers.map((row) => [row.id, row.name] as const),
   );
-  const projectById = new Map(
-    projects.map((row) => [row.id, row] as const),
-  );
+  const projectById = new Map(projects.map((row) => [row.id, row] as const));
 
   return {
     invoices: (invoicesResult.data ?? []).map((row) => {
-      const project = projectById.get(row.project_id);
-      const customerId = project?.customer_id ?? "";
+      const project = row.project_id
+        ? projectById.get(row.project_id)
+        : undefined;
+      const customerId =
+        row.customer_id ?? project?.customer_id ?? "";
       return {
         id: row.id,
         invoiceNumber: row.invoice_number,
@@ -142,7 +140,7 @@ export async function listInvoices(): Promise<{
       name: row.name,
       customerId: row.customer_id,
     })),
-    customers: (customers ?? []).map((row) => ({
+    customers: customers.map((row) => ({
       id: row.id,
       name: row.name,
     })),
@@ -159,7 +157,7 @@ export async function getInvoice(invoiceId: string): Promise<{
   const { data: invoice, error } = await ctx.supabase
     .from("invoices")
     .select(
-      "id, invoice_number, sequence_number, title, status, project_id, quote_id, issue_date, due_date, paid_at, subtotal_cents, vat_cents, total_cents, notes, created_at",
+      "id, invoice_number, sequence_number, title, status, project_id, customer_id, quote_id, issue_date, due_date, paid_at, subtotal_cents, vat_cents, total_cents, notes, created_at",
     )
     .eq("organization_id", ctx.organizationId)
     .eq("id", invoiceId)
@@ -170,12 +168,14 @@ export async function getInvoice(invoiceId: string): Promise<{
 
   const [{ data: project }, { data: lines, error: linesError }] =
     await Promise.all([
-      ctx.supabase
-        .from("projects")
-        .select("id, name, project_number, customer_id")
-        .eq("organization_id", ctx.organizationId)
-        .eq("id", invoice.project_id)
-        .maybeSingle(),
+      invoice.project_id
+        ? ctx.supabase
+            .from("projects")
+            .select("id, name, project_number, customer_id")
+            .eq("organization_id", ctx.organizationId)
+            .eq("id", invoice.project_id)
+            .maybeSingle()
+        : Promise.resolve({ data: null }),
       ctx.supabase
         .from("invoice_lines")
         .select(
@@ -200,7 +200,7 @@ export async function getInvoice(invoiceId: string): Promise<{
   let customerEmail: string | null = null;
   let customerPhone: string | null = null;
   let customerAddress: string | null = null;
-  const customerId = project?.customer_id ?? null;
+  const customerId = invoice.customer_id ?? project?.customer_id ?? null;
   if (customerId) {
     const { data: customer } = await ctx.supabase
       .from("customers")

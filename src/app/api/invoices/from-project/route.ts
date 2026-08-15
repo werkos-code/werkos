@@ -105,7 +105,7 @@ export async function POST(request: Request) {
     const admin = createAdminClient();
     const { data: project } = await admin
       .from("projects")
-      .select("id")
+      .select("id, customer_id")
       .eq("organization_id", gate.organizationId)
       .eq("id", projectId)
       .maybeSingle();
@@ -123,6 +123,7 @@ export async function POST(request: Request) {
       .insert({
         organization_id: gate.organizationId,
         project_id: projectId,
+        customer_id: project.customer_id,
         title,
         status: "draft",
         issue_date: issueDate,

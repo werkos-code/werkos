@@ -596,6 +596,7 @@ export function InvoicesWorkspace({
         open={createOpen}
         onOpenChange={setCreateOpen}
         projects={projects}
+        customers={customers}
         onCreated={(invoiceId) => {
           setCreateOpen(false);
           router.push(`/facturen/${invoiceId}`);
@@ -847,16 +848,24 @@ function InvoiceDetailSheet({
           </div>
 
           <div>
-            <Link
-              href={`/projecten/${invoice.projectId}`}
-              className="text-primary inline-flex items-center gap-1.5 font-medium hover:underline"
-            >
-              {invoice.projectName}
-              <ExternalLink className="size-3.5" />
-            </Link>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {invoice.projectNumber} · {invoice.customerName}
-            </p>
+            {invoice.projectId ? (
+              <>
+                <Link
+                  href={`/projecten/${invoice.projectId}`}
+                  className="text-primary inline-flex items-center gap-1.5 font-medium hover:underline"
+                >
+                  {invoice.projectName}
+                  <ExternalLink className="size-3.5" />
+                </Link>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {invoice.projectNumber} · {invoice.customerName}
+                </p>
+              </>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                {invoice.customerName}
+              </p>
+            )}
           </div>
 
           <dl className="space-y-3 text-sm">
@@ -933,30 +942,32 @@ function CreateInvoiceDialog({
   open,
   onOpenChange,
   projects,
+  customers,
   onCreated,
   onError,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   projects: InvoiceProjectOption[];
+  customers: InvoiceCustomerOption[];
   onCreated: (invoiceId: string) => void;
   onError: (message: string | null) => void;
 }) {
   const t = useTranslations("invoices");
   const tCommon = useTranslations("common");
-  const [title, setTitle] = useState("");
+  const [mode, setMode] = useState<"project" | "standalone">("project");
   const [projectId, setProjectId] = useState("");
-  const [issueDate, setIssueDate] = useState(
-    () => new Date().toISOString().slice(0, 10),
-  );
-  const [dueDate, setDueDate] = useState("");
-  const [notes, setNotes] = useState("");
+  const [customerId, setCustomerId] = useState("");
   const [isPending, startTransition] = useTransition();
 
   function submit(event: FormEvent) {
     event.preventDefault();
-    if (!title.trim() || !projectId) {
-      onError(t("form.required"));
+    if (mode === "project" && !projectId) {
+      onError(t("form.projectRequired"));
+      return;
+    }
+    if (mode === "standalone" && !customerId) {
+      onError(t("form.customerRequired"));
       return;
     }
     onError(null);
@@ -967,12 +978,9 @@ function CreateInvoiceDialog({
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              title: title.trim(),
-              projectId,
+              projectId: mode === "project" ? projectId : null,
+              customerId: mode === "standalone" ? customerId : null,
               status: "draft",
-              issueDate: issueDate || null,
-              dueDate: dueDate || null,
-              notes: notes || null,
               editorMode: true,
             }),
             signal: AbortSignal.timeout(20_000),
@@ -985,11 +993,9 @@ function CreateInvoiceDialog({
             onError(result.error || tCommon("error"));
             return;
           }
-          setTitle("");
+          setMode("project");
           setProjectId("");
-          setIssueDate(new Date().toISOString().slice(0, 10));
-          setDueDate("");
-          setNotes("");
+          setCustomerId("");
           onCreated(result.invoiceId);
         } catch {
           onError(tCommon("error"));
@@ -1000,71 +1006,89 @@ function CreateInvoiceDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg" showCloseButton>
+      <DialogContent className="sm:max-w-md" showCloseButton>
         <DialogHeader>
           <DialogTitle>{t("form.createTitle")}</DialogTitle>
         </DialogHeader>
-        <form className="space-y-3" onSubmit={submit}>
-          <label className="block space-y-1 text-sm">
-            <span className="text-muted-foreground">{t("form.title")}</span>
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              disabled={isPending}
-              className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
-              required
-            />
-          </label>
-          <label className="block space-y-1 text-sm">
-            <span className="text-muted-foreground">{t("form.project")}</span>
-            <select
-              value={projectId}
-              onChange={(e) => setProjectId(e.target.value)}
-              disabled={isPending}
-              className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
-              required
+        <form className="space-y-4" onSubmit={submit}>
+          <div className="grid grid-cols-2 gap-1 rounded-lg border border-border p-1">
+            <button
+              type="button"
+              className={cn(
+                "rounded-md px-3 py-2 text-sm transition-colors",
+                mode === "project"
+                  ? "bg-primary/10 font-medium text-primary"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+              onClick={() => setMode("project")}
             >
-              <option value="">{t("form.selectProject")}</option>
-              {projects.map((project) => (
-                <option key={project.id} value={project.id}>
-                  {project.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="block space-y-1 text-sm">
-              <span className="text-muted-foreground">{t("columns.issueDate")}</span>
-              <input
-                type="date"
-                value={issueDate}
-                onChange={(e) => setIssueDate(e.target.value)}
-                disabled={isPending}
-                className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
-              />
-            </label>
-            <label className="block space-y-1 text-sm">
-              <span className="text-muted-foreground">{t("columns.dueDate")}</span>
-              <input
-                type="date"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-                disabled={isPending}
-                className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
-              />
-            </label>
+              {t("form.modeProject")}
+            </button>
+            <button
+              type="button"
+              className={cn(
+                "rounded-md px-3 py-2 text-sm transition-colors",
+                mode === "standalone"
+                  ? "bg-primary/10 font-medium text-primary"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+              onClick={() => setMode("standalone")}
+            >
+              {t("form.modeStandalone")}
+            </button>
           </div>
+
+          {mode === "project" ? (
+            <label className="block space-y-1 text-sm">
+              <span className="text-muted-foreground">{t("form.project")}</span>
+              <select
+                value={projectId}
+                onChange={(e) => setProjectId(e.target.value)}
+                disabled={isPending}
+                className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
+                required
+              >
+                <option value="">{t("form.selectProject")}</option>
+                {projects.map((project) => (
+                  <option key={project.id} value={project.id}>
+                    {project.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <div className="space-y-2">
+              <label className="block space-y-1 text-sm">
+                <span className="text-muted-foreground">{t("form.customer")}</span>
+                <select
+                  value={customerId}
+                  onChange={(e) => setCustomerId(e.target.value)}
+                  disabled={isPending}
+                  className="border-input bg-background h-9 w-full rounded-lg border px-2.5"
+                  required
+                >
+                  <option value="">{t("form.selectCustomer")}</option>
+                  {customers.map((customer) => (
+                    <option key={customer.id} value={customer.id}>
+                      {customer.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <p className="text-xs text-muted-foreground">
+                {t("form.standaloneHint")}{" "}
+                <Link
+                  href="/klanten/nieuw"
+                  className="font-medium text-primary hover:underline"
+                >
+                  {t("form.newCustomer")}
+                </Link>
+              </p>
+            </div>
+          )}
+
           <p className="text-xs text-muted-foreground">{t("form.editorHint")}</p>
-          <label className="block space-y-1 text-sm">
-            <span className="text-muted-foreground">{t("detail.notes")}</span>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              disabled={isPending}
-              rows={3}
-              className="border-input bg-background w-full rounded-lg border px-2.5 py-2"
-            />
-          </label>
+
           <div className="flex justify-end gap-2 pt-1">
             <Button
               type="button"

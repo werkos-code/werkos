@@ -1910,12 +1910,20 @@
       "createTitle": "Neue Rechnung",
       "title": "Titel",
       "project": "Projekt",
+      "customer": "Kunde",
       "selectProject": "Projekt wählen",
+      "selectCustomer": "Kunde wählen",
+      "modeProject": "Mit Projekt",
+      "modeStandalone": "Ohne Projekt",
+      "standaloneHint": "Noch kein Kunde? Lege zuerst einen an:",
+      "newCustomer": "Neuer Kunde",
+      "projectRequired": "Projekt wählen.",
+      "customerRequired": "Kunde wählen.",
       "total": "Gesamt inkl. MwSt. (€)",
       "vat": "MwSt. (€)",
-      "required": "Titel und Projekt sind Pflicht.",
-      "editorHint": "Nach dem Anlegen öffnest du den Editor, um Positionen hinzuzufügen.",
-      "openEditor": "Anlegen und bearbeiten"
+      "required": "Projekt oder Kunde wählen.",
+      "editorHint": "Die Rechnungsnummer wird automatisch der Titel. Daten und Positionen setzt du im Editor.",
+      "openEditor": "Rechnung anlegen"
     },
     "editor": {
       "editTitle": "Rechnung",

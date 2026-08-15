@@ -20,7 +20,8 @@ function parseCents(value: unknown) {
 
 function eurosToCents(value: unknown) {
   if (value === null || value === undefined || value === "") return 0;
-  const n = typeof value === "number" ? value : Number(String(value).replace(",", "."));
+  const n =
+    typeof value === "number" ? value : Number(String(value).replace(",", "."));
   if (!Number.isFinite(n) || n < 0) return null;
   return Math.round(n * 100);
 }
@@ -31,7 +32,8 @@ export async function POST(request: Request) {
     if ("error" in gate) return gate.error;
 
     const body = (await request.json()) as {
-      projectId?: string;
+      projectId?: string | null;
+      customerId?: string | null;
       quoteId?: string | null;
       title?: string;
       status?: InvoiceStatus;
@@ -43,13 +45,14 @@ export async function POST(request: Request) {
       editorMode?: boolean;
     };
 
-    const projectId = body.projectId?.trim() ?? "";
-    const title = body.title?.trim() ?? "";
-    if (!projectId) {
-      return NextResponse.json({ error: "project_required" }, { status: 400 });
-    }
-    if (!title) {
-      return NextResponse.json({ error: "title_required" }, { status: 400 });
+    const projectId = emptyToNull(body.projectId);
+    let customerId = emptyToNull(body.customerId);
+
+    if (!projectId && !customerId) {
+      return NextResponse.json(
+        { error: "project_or_customer_required" },
+        { status: 400 },
+      );
     }
 
     const status = body.status ?? "draft";
@@ -74,27 +77,53 @@ export async function POST(request: Request) {
     }
 
     const admin = createAdminClient();
-    const { data: project } = await admin
-      .from("projects")
-      .select("id")
-      .eq("organization_id", gate.organizationId)
-      .eq("id", projectId)
-      .maybeSingle();
 
-    if (!project) {
-      return NextResponse.json({ error: "not_found" }, { status: 404 });
+    if (projectId) {
+      const { data: project } = await admin
+        .from("projects")
+        .select("id, customer_id")
+        .eq("organization_id", gate.organizationId)
+        .eq("id", projectId)
+        .maybeSingle();
+
+      if (!project) {
+        return NextResponse.json({ error: "not_found" }, { status: 404 });
+      }
+      if (!customerId) {
+        customerId = project.customer_id;
+      }
+    }
+
+    if (customerId) {
+      const { data: customer } = await admin
+        .from("customers")
+        .select("id")
+        .eq("organization_id", gate.organizationId)
+        .eq("id", customerId)
+        .maybeSingle();
+
+      if (!customer) {
+        return NextResponse.json({ error: "customer_not_found" }, { status: 404 });
+      }
+    } else if (!projectId) {
+      return NextResponse.json(
+        { error: "project_or_customer_required" },
+        { status: 400 },
+      );
     }
 
     const issueDate =
-      emptyToNull(body.issueDate) ??
-      new Date().toISOString().slice(0, 10);
+      emptyToNull(body.issueDate) ?? new Date().toISOString().slice(0, 10);
     const dueDate = emptyToNull(body.dueDate);
+    // Empty title → DB trigger copies invoice_number
+    const title = body.title?.trim() ?? "";
 
     const { data, error } = await admin
       .from("invoices")
       .insert({
         organization_id: gate.organizationId,
         project_id: projectId,
+        customer_id: customerId,
         quote_id: emptyToNull(body.quoteId),
         title,
         status,
@@ -107,7 +136,7 @@ export async function POST(request: Request) {
         notes: emptyToNull(body.notes),
         created_by: gate.userId,
       })
-      .select("id, invoice_number")
+      .select("id, invoice_number, title")
       .single();
 
     if (error) {
@@ -120,7 +149,7 @@ export async function POST(request: Request) {
         actorUserId: gate.userId,
         type: status === "paid" ? "invoice_paid" : "invoice_sent",
         title: status === "paid" ? "Factuur betaald" : "Factuur verstuurd",
-        body: title,
+        body: data.title || data.invoice_number,
         entityType: "invoice",
         entityId: data.id,
         projectId,
@@ -165,7 +194,7 @@ export async function PATCH(request: Request) {
     const admin = createAdminClient();
     const { data: existing } = await admin
       .from("invoices")
-      .select("id, status, title, project_id")
+      .select("id, status, title, project_id, invoice_number")
       .eq("organization_id", gate.organizationId)
       .eq("id", id)
       .maybeSingle();
@@ -186,7 +215,10 @@ export async function PATCH(request: Request) {
       paid_at?: string | null;
     } = {};
 
-    if (body.title !== undefined) patch.title = body.title.trim();
+    if (body.title !== undefined) {
+      const nextTitle = body.title.trim();
+      patch.title = nextTitle || existing.invoice_number;
+    }
     if (body.issueDate !== undefined) patch.issue_date = body.issueDate;
     if (body.dueDate !== undefined) patch.due_date = emptyToNull(body.dueDate);
     if (body.notes !== undefined) patch.notes = emptyToNull(body.notes);

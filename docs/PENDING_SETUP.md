@@ -16,6 +16,12 @@ Voor groepen + hiërarchie in de factuur-editor:
 
 `docs/sql-applied/20260815110000_invoice_line_groups.sql`
 
+## Factuur zonder project SQL — **nog te doen**
+
+Voor facturen zonder project (alleen klant):
+
+`docs/sql-applied/20260815120000_invoice_optional_project.sql`
+
 ## Jaarlijkse billing (vóór livegang) — **nog te doen**
 
 Commercieel model staat vast; Stripe yearly prices + app-keuze maandelijks/jaarlijks zijn **nog niet gebouwd**.

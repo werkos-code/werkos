@@ -24,7 +24,7 @@ export type InvoiceRow = {
   vatCents: number;
   totalCents: number;
   notes: string | null;
-  projectId: string;
+  projectId: string | null;
   projectName: string;
   projectNumber: string;
   customerId: string;
@@ -166,12 +166,13 @@ export function computeInvoiceStats(invoices: InvoiceRow[], today = new Date()) 
 
   const byProject = new Map<string, { name: string; cents: number }>();
   for (const inv of outstanding) {
-    const current = byProject.get(inv.projectId) ?? {
-      name: inv.projectName,
+    const key = inv.projectId ?? `customer:${inv.customerId || inv.id}`;
+    const current = byProject.get(key) ?? {
+      name: inv.projectId ? inv.projectName : inv.customerName,
       cents: 0,
     };
     current.cents += inv.totalCents;
-    byProject.set(inv.projectId, current);
+    byProject.set(key, current);
   }
   const topOutstanding = [...byProject.entries()]
     .map(([projectId, value]) => ({ projectId, ...value }))

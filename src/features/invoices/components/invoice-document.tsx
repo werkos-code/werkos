@@ -320,15 +320,21 @@ export function InvoiceDocument({
           <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
             {t("preview.project")}
           </p>
-          <Link
-            href={`/projecten/${invoice.projectId}`}
-            className="font-medium hover:text-primary hover:underline"
-          >
-            {invoice.projectName}
-          </Link>
-          <p className="font-mono text-xs text-muted-foreground">
-            {invoice.projectNumber}
-          </p>
+          {invoice.projectId ? (
+            <>
+              <Link
+                href={`/projecten/${invoice.projectId}`}
+                className="font-medium hover:text-primary hover:underline"
+              >
+                {invoice.projectName}
+              </Link>
+              <p className="font-mono text-xs text-muted-foreground">
+                {invoice.projectNumber}
+              </p>
+            </>
+          ) : (
+            <p className="text-muted-foreground">—</p>
+          )}
         </div>
       </div>
 

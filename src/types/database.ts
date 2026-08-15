@@ -1508,7 +1508,8 @@ export type Database = {
         Row: {
           id: string;
           organization_id: string;
-          project_id: string;
+          project_id: string | null;
+          customer_id: string | null;
           quote_id: string | null;
           invoice_number: string;
           sequence_number: number;
@@ -1528,11 +1529,12 @@ export type Database = {
         Insert: {
           id?: string;
           organization_id: string;
-          project_id: string;
+          project_id?: string | null;
+          customer_id?: string | null;
           quote_id?: string | null;
           invoice_number?: string;
           sequence_number?: number;
-          title: string;
+          title?: string;
           status?: InvoiceStatus;
           issue_date?: string;
           due_date?: string | null;
@@ -1548,7 +1550,8 @@ export type Database = {
         Update: {
           id?: string;
           organization_id?: string;
-          project_id?: string;
+          project_id?: string | null;
+          customer_id?: string | null;
           quote_id?: string | null;
           invoice_number?: string;
           sequence_number?: number;

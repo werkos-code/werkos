@@ -1910,12 +1910,20 @@
       "createTitle": "Nieuwe factuur",
       "title": "Titel",
       "project": "Project",
+      "customer": "Klant",
       "selectProject": "Kies een project",
+      "selectCustomer": "Kies een klant",
+      "modeProject": "Met project",
+      "modeStandalone": "Zonder project",
+      "standaloneHint": "Geen klant? Maak er eerst een aan:",
+      "newCustomer": "Nieuwe klant",
+      "projectRequired": "Kies een project.",
+      "customerRequired": "Kies een klant.",
       "total": "Totaal incl. btw (€)",
       "vat": "Btw (€)",
-      "required": "Titel en project zijn verplicht.",
-      "editorHint": "Na aanmaken open je de editor om regels toe te voegen.",
-      "openEditor": "Aanmaken en bewerken"
+      "required": "Kies een project of klant.",
+      "editorHint": "Het factuurnummer wordt automatisch de titel. Datums en regels vul je in de editor in.",
+      "openEditor": "Factuur aanmaken"
     },
     "editor": {
       "editTitle": "Factuur",

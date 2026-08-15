@@ -1910,12 +1910,20 @@
       "createTitle": "New invoice",
       "title": "Title",
       "project": "Project",
+      "customer": "Customer",
       "selectProject": "Choose a project",
+      "selectCustomer": "Choose a customer",
+      "modeProject": "With project",
+      "modeStandalone": "Without project",
+      "standaloneHint": "No customer yet? Create one first:",
+      "newCustomer": "New customer",
+      "projectRequired": "Choose a project.",
+      "customerRequired": "Choose a customer.",
       "total": "Total incl. VAT (€)",
       "vat": "VAT (€)",
-      "required": "Title and project are required.",
-      "editorHint": "After creating, you open the editor to add line items.",
-      "openEditor": "Create and edit"
+      "required": "Choose a project or customer.",
+      "editorHint": "The invoice number becomes the title automatically. Dates and lines are set in the editor.",
+      "openEditor": "Create invoice"
     },
     "editor": {
       "editTitle": "Invoice",

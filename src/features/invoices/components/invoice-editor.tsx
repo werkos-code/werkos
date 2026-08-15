@@ -544,13 +544,17 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
                   <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
                     {t("meta.project")}
                   </p>
-                  <Link
-                    href={`/projecten/${invoice.projectId}`}
-                    className="inline-flex items-center gap-1.5 text-sm font-medium hover:text-primary hover:underline"
-                  >
-                    {invoice.projectName}
-                    <ExternalLink className="size-3.5 text-muted-foreground" />
-                  </Link>
+                  {invoice.projectId ? (
+                    <Link
+                      href={`/projecten/${invoice.projectId}`}
+                      className="inline-flex items-center gap-1.5 text-sm font-medium hover:text-primary hover:underline"
+                    >
+                      {invoice.projectName}
+                      <ExternalLink className="size-3.5 text-muted-foreground" />
+                    </Link>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">—</p>
+                  )}
                 </div>
 
                 {status === "draft" ? (
