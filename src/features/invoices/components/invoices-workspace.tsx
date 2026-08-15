@@ -1108,7 +1108,10 @@ function CreateInvoiceDialog({
                   ? "bg-primary/10 font-medium text-primary"
                   : "text-muted-foreground hover:text-foreground",
               )}
-              onClick={() => setMode("standalone")}
+              onClick={() => {
+                setMode("standalone");
+                setCustomerMode("new");
+              }}
             >
               {t("form.modeStandalone")}
             </button>
