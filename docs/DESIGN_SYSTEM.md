@@ -257,11 +257,10 @@ wit blok rounded-3xl, geen border, royale padding
 Belangrijkste monetisatie-pagina in de app — rijk, niet basic, geen marketing-1:1.
 
 1. Intro: eyebrow + headline (`text-2xl/3xl`) met één `text-primary` accent-woord + korte subcopy
-2. Twee kolommen (`lg:grid-cols-12`): plan-card 5 · calculator+uitsluitingen 7
-3. Plan-card: navy gradient-header (`#09133A` → blauw) met prijs + feature-lijst met soft check-chips + primaire CTA
-4. Calculator: seat-steppers met hint-regels + total-balk onderaan
-5. “Niet inbegrepen”-card met muted X-chips — eerlijk, geen hype
-6. Geen website-navbar, geen paarse/cream marketing-atmosfeer; surfaces blijven `PageCard`
+2. Twee kolommen (`lg:grid-cols-12`): plan-card 5 · samenstellen 7
+3. Links: navy prijs-header + feature-lijst (geen CTA)
+4. Rechts: interval-switch (Maandelijks / Jaarlijks met oranje `-17%` badge) · seat-steppers · total · primaire CTA
+5. Geen “niet inbegrepen”-blok; geen website-navbar; surfaces `PageCard`
 
 **Canonical:** `src/features/billing/components/subscription-chooser.tsx`
 

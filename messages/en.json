@@ -2514,20 +2514,24 @@
       "fieldHint": "People on the job · {price} / month",
       "monthlyTotal": "WerkOS per month",
       "ownerIncluded": "Includes 1 owner",
-      "excludedTitle": "What’s not included",
-      "excluded": {
-        "accounting": "Accounting suite (Exact, Moneybird, …)",
-        "clientPortal": "Client portal",
-        "fieldApp": "Dedicated on-site app"
-      },
-      "excludedHint": "Better to say it now than after signup. What we build later is added without extra modules.",
-      "billingNote": "Annual prepay comes later. For now you pay monthly via Stripe.",
       "ownerOnly": "Only the owner can choose a subscription.",
       "errors": {
         "stripeMissing": "Payments are not configured yet.",
+        "yearlyPricesMissing": "Yearly Stripe prices are not configured yet. Choose monthly, or add yearly price IDs.",
         "alreadySubscribed": "There is already an active subscription.",
         "forbidden": "Only the owner can do this."
-      }
+      },
+      "perYear": "/ year",
+      "yearlyHeroHint": "{percent}% cheaper with annual prepay",
+      "interval": {
+        "month": "Monthly",
+        "year": "Yearly",
+        "yearlyDiscount": "-{percent}%"
+      },
+      "yearlyTotal": "WerkOS per year",
+      "yearlyEquivalent": "{monthly} / month · vs {compared} billed monthly",
+      "yearlySavingsBanner": "You save {percent}% compared to paying monthly.",
+      "ctaHintYearly": "You prepay 12 months via Stripe. Then renews yearly."
     }
   }
 }

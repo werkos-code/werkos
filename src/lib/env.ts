@@ -15,6 +15,9 @@ export const env = createEnv({
     STRIPE_PRICE_BASE: z.string().min(1).optional(),
     STRIPE_PRICE_SEAT_OFFICE: z.string().min(1).optional(),
     STRIPE_PRICE_SEAT_FIELD: z.string().min(1).optional(),
+    STRIPE_PRICE_BASE_YEARLY: z.string().min(1).optional(),
+    STRIPE_PRICE_SEAT_OFFICE_YEARLY: z.string().min(1).optional(),
+    STRIPE_PRICE_SEAT_FIELD_YEARLY: z.string().min(1).optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -32,6 +35,9 @@ export const env = createEnv({
     STRIPE_PRICE_BASE: process.env.STRIPE_PRICE_BASE,
     STRIPE_PRICE_SEAT_OFFICE: process.env.STRIPE_PRICE_SEAT_OFFICE,
     STRIPE_PRICE_SEAT_FIELD: process.env.STRIPE_PRICE_SEAT_FIELD,
+    STRIPE_PRICE_BASE_YEARLY: process.env.STRIPE_PRICE_BASE_YEARLY,
+    STRIPE_PRICE_SEAT_OFFICE_YEARLY: process.env.STRIPE_PRICE_SEAT_OFFICE_YEARLY,
+    STRIPE_PRICE_SEAT_FIELD_YEARLY: process.env.STRIPE_PRICE_SEAT_FIELD_YEARLY,
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,

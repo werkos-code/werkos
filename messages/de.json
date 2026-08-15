@@ -2428,20 +2428,24 @@
       "fieldHint": "Menschen auf der Baustelle · {price} / Monat",
       "monthlyTotal": "WerkOS pro Monat",
       "ownerIncluded": "Inklusive 1 Owner",
-      "excludedTitle": "Was nicht enthalten ist",
-      "excluded": {
-        "accounting": "Buchhaltungspaket (Exact, Moneybird, …)",
-        "clientPortal": "Kundenportal",
-        "fieldApp": "Dedizierte App vor Ort"
-      },
-      "excludedHint": "Lieber jetzt sagen als nach der Anmeldung. Was wir bauen, kommt später dazu — ohne Extra-Module.",
-      "billingNote": "Jährliche Vorauszahlung kommt später. Aktuell zahlen Sie monatlich über Stripe.",
       "ownerOnly": "Nur der Owner kann ein Abo wählen.",
       "errors": {
         "stripeMissing": "Zahlungen sind noch nicht konfiguriert.",
+        "yearlyPricesMissing": "Jährliche Stripe-Preise sind noch nicht konfiguriert. Wählen Sie monatlich, oder fügen Sie Yearly-Price-IDs hinzu.",
         "alreadySubscribed": "Es gibt bereits ein aktives Abo.",
         "forbidden": "Nur der Owner kann das tun."
-      }
+      },
+      "perYear": "/ Jahr",
+      "yearlyHeroHint": "{percent}% günstiger bei jährlicher Vorauszahlung",
+      "interval": {
+        "month": "Monatlich",
+        "year": "Jährlich",
+        "yearlyDiscount": "-{percent}%"
+      },
+      "yearlyTotal": "WerkOS pro Jahr",
+      "yearlyEquivalent": "{monthly} / Monat · statt {compared} monatlich",
+      "yearlySavingsBanner": "Sie sparen {percent}% gegenüber monatlicher Zahlung.",
+      "ctaHintYearly": "Sie zahlen 12 Monate im Voraus über Stripe. Danach jährlich verlängerbar."
     }
   }
 }

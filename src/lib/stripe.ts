@@ -24,6 +24,14 @@ export function getStripePriceIds() {
       readServerEnv("STRIPE_PRICE_SEAT_OFFICE") ?? env.STRIPE_PRICE_SEAT_OFFICE,
     field:
       readServerEnv("STRIPE_PRICE_SEAT_FIELD") ?? env.STRIPE_PRICE_SEAT_FIELD,
+    baseYearly:
+      readServerEnv("STRIPE_PRICE_BASE_YEARLY") ?? env.STRIPE_PRICE_BASE_YEARLY,
+    officeYearly:
+      readServerEnv("STRIPE_PRICE_SEAT_OFFICE_YEARLY") ??
+      env.STRIPE_PRICE_SEAT_OFFICE_YEARLY,
+    fieldYearly:
+      readServerEnv("STRIPE_PRICE_SEAT_FIELD_YEARLY") ??
+      env.STRIPE_PRICE_SEAT_FIELD_YEARLY,
   };
 }
 
@@ -37,17 +45,26 @@ export function getStripe(): Stripe {
   });
 }
 
-export function assertStripePricesConfigured() {
+export function assertStripePricesConfigured(interval: "month" | "year" = "month") {
   const prices = getStripePriceIds();
-  const missing = [
-    !prices.base ? "STRIPE_PRICE_BASE" : null,
-    !prices.office ? "STRIPE_PRICE_SEAT_OFFICE" : null,
-    !prices.field ? "STRIPE_PRICE_SEAT_FIELD" : null,
-    !getStripeSecretKey() ? "STRIPE_SECRET_KEY" : null,
-  ].filter(Boolean);
+  const missing =
+    interval === "year"
+      ? [
+          !prices.baseYearly ? "STRIPE_PRICE_BASE_YEARLY" : null,
+          !prices.officeYearly ? "STRIPE_PRICE_SEAT_OFFICE_YEARLY" : null,
+          !prices.fieldYearly ? "STRIPE_PRICE_SEAT_FIELD_YEARLY" : null,
+          !getStripeSecretKey() ? "STRIPE_SECRET_KEY" : null,
+        ]
+      : [
+          !prices.base ? "STRIPE_PRICE_BASE" : null,
+          !prices.office ? "STRIPE_PRICE_SEAT_OFFICE" : null,
+          !prices.field ? "STRIPE_PRICE_SEAT_FIELD" : null,
+          !getStripeSecretKey() ? "STRIPE_SECRET_KEY" : null,
+        ];
 
-  if (missing.length > 0) {
-    throw new Error(`Stripe not configured: missing ${missing.join(", ")}`);
+  const filtered = missing.filter(Boolean);
+  if (filtered.length > 0) {
+    throw new Error(`Stripe not configured: missing ${filtered.join(", ")}`);
   }
 }
 

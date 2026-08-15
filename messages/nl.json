@@ -2514,20 +2514,24 @@
       "fieldHint": "Mensen op de klus · {price} / maand",
       "monthlyTotal": "Per maand WerkOS",
       "ownerIncluded": "Inclusief 1 owner",
-      "excludedTitle": "Wat er níét in zit",
-      "excluded": {
-        "accounting": "Boekhoudpakket (Exact, Moneybird, …)",
-        "clientPortal": "Klantportaal",
-        "fieldApp": "Dedicated app voor op locatie"
-      },
-      "excludedHint": "Liever dat nu zeggen dan na je aanmelding. Wat we bouwen, zetten we er later bij — zonder extra modules.",
-      "billingNote": "Jaarlijkse vooruitbetaling volgt later. Nu reken je maandelijks af via Stripe.",
       "ownerOnly": "Alleen de eigenaar kan een abonnement kiezen.",
       "errors": {
         "stripeMissing": "Betalingen zijn nog niet geconfigureerd.",
+        "yearlyPricesMissing": "Jaarlijkse Stripe-prijzen zijn nog niet geconfigureerd. Kies maandelijks, of voeg yearly price-ids toe.",
         "alreadySubscribed": "Er is al een actief abonnement.",
         "forbidden": "Alleen de eigenaar kan dit doen."
-      }
+      },
+      "perYear": "/ jaar",
+      "yearlyHeroHint": "{percent}% goedkoper bij jaarlijkse vooruitbetaling",
+      "interval": {
+        "month": "Maandelijks",
+        "year": "Jaarlijks",
+        "yearlyDiscount": "-{percent}%"
+      },
+      "yearlyTotal": "Per jaar WerkOS",
+      "yearlyEquivalent": "{monthly} / maand · i.p.v. {compared} maandelijks",
+      "yearlySavingsBanner": "Je bespaart {percent}% ten opzichte van maandelijks betalen.",
+      "ctaHintYearly": "Je betaalt 12 maanden vooruit via Stripe. Daarna jaarlijks verlengbaar."
     }
   }
 }

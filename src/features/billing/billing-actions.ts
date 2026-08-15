@@ -9,7 +9,11 @@ import { USER_ROLES } from "@/config/roles";
 import { getAppSession } from "@/features/shell/lib/require-organization";
 import { getStaffOrgContext } from "@/features/shell/lib/staff-org-context";
 import { env } from "@/lib/env";
-import { assertStripePricesConfigured, getStripe } from "@/lib/stripe";
+import {
+  assertStripePricesConfigured,
+  getStripe,
+  getStripePriceIds,
+} from "@/lib/stripe";
 import type { SubscriptionStatus } from "@/types/database";
 
 export type SubscriptionSummary = {
@@ -119,13 +123,20 @@ export async function createBillingPortalSession(): Promise<{
 export async function createOrgSubscriptionCheckoutAction(input: {
   officeSeats: number;
   fieldSeats: number;
+  billingInterval?: "month" | "year";
 }): Promise<{ url?: string; error?: string; detail?: string }> {
+  const billingInterval = input.billingInterval === "year" ? "year" : "month";
+
   try {
-    assertStripePricesConfigured();
+    assertStripePricesConfigured(billingInterval);
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Stripe not configured";
-    return { error: "stripe_missing", detail: message };
+    return {
+      error:
+        billingInterval === "year" ? "yearly_prices_missing" : "stripe_missing",
+      detail: message,
+    };
   }
 
   const session = await getAppSession();
@@ -154,18 +165,26 @@ export async function createOrgSubscriptionCheckoutAction(input: {
     return { error: "already_subscribed" };
   }
 
+  const prices = getStripePriceIds();
+  const basePrice =
+    billingInterval === "year" ? prices.baseYearly! : prices.base!;
+  const officePrice =
+    billingInterval === "year" ? prices.officeYearly! : prices.office!;
+  const fieldPrice =
+    billingInterval === "year" ? prices.fieldYearly! : prices.field!;
+
   const lineItems: Array<{ price: string; quantity: number }> = [
-    { price: env.STRIPE_PRICE_BASE!, quantity: 1 },
+    { price: basePrice, quantity: 1 },
   ];
   if (officeSeats > 0) {
     lineItems.push({
-      price: env.STRIPE_PRICE_SEAT_OFFICE!,
+      price: officePrice,
       quantity: officeSeats,
     });
   }
   if (fieldSeats > 0) {
     lineItems.push({
-      price: env.STRIPE_PRICE_SEAT_FIELD!,
+      price: fieldPrice,
       quantity: fieldSeats,
     });
   }
@@ -188,6 +207,7 @@ export async function createOrgSubscriptionCheckoutAction(input: {
           user_id: session.user.id,
           office_seats: String(officeSeats),
           field_seats: String(fieldSeats),
+          billing_interval: billingInterval,
         },
       },
       metadata: {
@@ -195,6 +215,7 @@ export async function createOrgSubscriptionCheckoutAction(input: {
         user_id: session.user.id,
         office_seats: String(officeSeats),
         field_seats: String(fieldSeats),
+        billing_interval: billingInterval,
       },
       payment_method_collection: "always",
       success_url: `${appUrl}/${locale}/instellingen/abonnement?checkout=success`,
