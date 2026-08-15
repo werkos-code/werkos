@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ArrowRight,
   CalendarPlus,
   Clock3,
   FileText,
@@ -99,13 +98,44 @@ export function DashboardQuickActions({
     href?: string;
     dialog?: DialogId;
     icon: typeof FolderPlus;
+    iconBg: string;
   }> = [
-    { id: "project", href: "/opdrachten/nieuw", icon: FolderPlus },
-    { id: "quote", dialog: "quote", icon: FileText },
-    { id: "customer", href: "/klanten/nieuw", icon: UserPlus },
-    { id: "hours", dialog: "hours", icon: Clock3 },
-    { id: "invoice", dialog: "invoice", icon: Receipt },
-    { id: "schedule", dialog: "schedule", icon: CalendarPlus },
+    {
+      id: "project",
+      href: "/opdrachten/nieuw",
+      icon: FolderPlus,
+      iconBg: "bg-[#2563EB]",
+    },
+    {
+      id: "quote",
+      dialog: "quote",
+      icon: FileText,
+      iconBg: "bg-[#0D9488]",
+    },
+    {
+      id: "customer",
+      href: "/klanten/nieuw",
+      icon: UserPlus,
+      iconBg: "bg-[#EA580C]",
+    },
+    {
+      id: "hours",
+      dialog: "hours",
+      icon: Clock3,
+      iconBg: "bg-[#0284C7]",
+    },
+    {
+      id: "invoice",
+      dialog: "invoice",
+      icon: Receipt,
+      iconBg: "bg-[#059669]",
+    },
+    {
+      id: "schedule",
+      dialog: "schedule",
+      icon: CalendarPlus,
+      iconBg: "bg-[#DB2777]",
+    },
   ];
 
   function openDialog(id: DialogId) {
@@ -318,24 +348,21 @@ export function DashboardQuickActions({
             const Icon = action.icon;
             const body = (
               <>
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                  <Icon className="size-5" strokeWidth={1.75} />
+                <span
+                  className={cn(
+                    "flex size-10 shrink-0 items-center justify-center rounded-full text-white",
+                    action.iconBg,
+                  )}
+                >
+                  <Icon className="size-4" strokeWidth={2} />
                 </span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-2">
-                    <span className="block truncate text-sm font-semibold">
-                      {t(`quickActions.${action.id}.title`)}
-                    </span>
-                    <ArrowRight className="size-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
-                  </span>
-                  <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
-                    {t(`quickActions.${action.id}.hint`)}
-                  </span>
+                <span className="min-w-0 flex-1 truncate text-sm font-semibold transition-colors group-hover:text-primary">
+                  {t(`quickActions.${action.id}.title`)}
                 </span>
               </>
             );
             const className =
-              "group flex w-full items-start gap-3 rounded-2xl bg-card p-4 text-left shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.12)] ring-1 ring-black/[0.04] transition-colors hover:bg-muted/20";
+              "group flex w-full items-center gap-3 rounded-2xl bg-card px-4 py-3.5 text-left shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.12)] ring-1 ring-black/[0.04]";
             if (action.href) {
               return (
                 <WriteGateLink

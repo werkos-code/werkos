@@ -229,7 +229,7 @@ Sectie 4: Notities · rekenmachine · to-do’s · mini-kalender
 | Surfaces | Dashboard-only: `rounded-2xl`, zachte shadow + `ring-1 ring-black/4` (niet standaard `PageCard`) |
 | Overlap | KPI-sectie valt licht over de banner |
 | Lege blokken | Gecentreerde empty-CTA (icoon + titel + knop) — geen kale muted tekst |
-| Snelle acties | Grote tegels met hover-icoon primary; geen sidebar-CTA-gradient |
+| Snelle acties | Tegels met alleen titel; wit icoon in gekleurde cirkel (uniek per actie) |
 | Privé | Persoonlijke tools; notities/to-do’s per user+org (SQL) |
 
 **Canonical:** `src/features/dashboard/components/{dashboard-workspace,dashboard-hero,dashboard-surface}.tsx`
