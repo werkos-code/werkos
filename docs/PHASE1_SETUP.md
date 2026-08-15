@@ -284,6 +284,12 @@ Geen nieuwe SQL. Test:
 2. Optioneel: zet `TWOBA_*` in `.env.local` / Vercel — zie [`PENDING_SETUP.md`](./PENDING_SETUP.md)
 3. Test: `/materiaal/inkoop` en `/materiaal/artikelen` → **2BA**
 
+## 27. Eerste-stappen-gids (guided setup)
+
+1. Open **SQL Editor** in Supabase  
+2. Plak en run: `docs/sql-applied/20260815100000_guided_setup.sql`  
+3. Test: `/dashboard` → intro-sheet; checklist tot stappen klaar; Help → **Eerste stappen opnieuw**
+
 ## Prijsmodel
 
 Bron van waarheid voor productstrategie en toekomstige billing. **Nog niet alles hiervan zit in Stripe/UI** — de live checkout volgt nog alleen het maandelijkse tarief (zie §3).
