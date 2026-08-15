@@ -31,6 +31,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { PageCard } from "@/features/shell/components/page-card";
+import { InvoiceSettingsSheet } from "@/features/invoices/components/invoice-settings-sheet";
 import {
   INVOICE_STATUSES,
   computeInvoiceStats,
@@ -105,6 +106,7 @@ export function InvoicesWorkspace({
   const [pageSize, setPageSize] = useState<(typeof PAGE_SIZES)[number]>(8);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -285,7 +287,12 @@ export function InvoicesWorkspace({
         <Button type="button" variant="outline" size="sm" disabled>
           {t("export")}
         </Button>
-        <Button type="button" variant="outline" size="sm" disabled>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => setSettingsOpen(true)}
+        >
           <Settings className="size-3.5" />
           {t("settings")}
         </Button>
@@ -608,6 +615,11 @@ export function InvoicesWorkspace({
           router.push(`/facturen/${invoiceId}`);
         }}
         onError={setError}
+      />
+
+      <InvoiceSettingsSheet
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
       />
     </div>
   );

@@ -10,6 +10,12 @@ Na deploy: in Supabase SQL Editor uitvoeren:
 
 Zonder deze kolommen blijft de gids uit (fail-soft).
 
+## Factuurinstellingen SQL — **nog te doen**
+
+Voor factuurnummer-formaat, afzender-e-mail, standaard betaaltermijn/btw/notities:
+
+`docs/sql-applied/20260815130000_invoice_settings.sql`
+
 ## Factuur-groepen SQL — **nog te doen**
 
 Voor groepen + hiërarchie in de factuur-editor:

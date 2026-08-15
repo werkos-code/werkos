@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 
 import { INVOICE_STATUSES } from "@/features/invoices/lib/invoice";
+import { DEFAULT_INVOICE_SETTINGS } from "@/features/invoices/lib/invoice-settings";
 import { notifyOrgStaff } from "@/features/notifications/lib/notify-org-staff";
+import { dueDateFromPaymentTerms } from "@/features/quotes/lib/quote-status";
 import { requireApiStaff } from "@/features/shell/lib/api-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { InvoiceStatus } from "@/types/database";
@@ -114,7 +116,28 @@ export async function POST(request: Request) {
 
     const issueDate =
       emptyToNull(body.issueDate) ?? new Date().toISOString().slice(0, 10);
-    const dueDate = emptyToNull(body.dueDate);
+    let dueDate = emptyToNull(body.dueDate);
+    let notes = emptyToNull(body.notes);
+
+    const { data: orgSettings, error: orgSettingsError } = await admin
+      .from("organizations")
+      .select(
+        "invoice_default_payment_terms_days, invoice_default_notes",
+      )
+      .eq("id", gate.organizationId)
+      .maybeSingle();
+
+    if (!dueDate) {
+      const terms =
+        (!orgSettingsError
+          ? orgSettings?.invoice_default_payment_terms_days
+          : null) ?? DEFAULT_INVOICE_SETTINGS.defaultPaymentTermsDays;
+      dueDate = dueDateFromPaymentTerms(issueDate, terms);
+    }
+    if (!notes && !orgSettingsError && orgSettings?.invoice_default_notes?.trim()) {
+      notes = orgSettings.invoice_default_notes.trim();
+    }
+
     // Empty title → DB trigger copies invoice_number
     const title = body.title?.trim() ?? "";
 
@@ -133,7 +156,7 @@ export async function POST(request: Request) {
         subtotal_cents: subtotalCents,
         vat_cents: vatCents,
         total_cents: totalCents,
-        notes: emptyToNull(body.notes),
+        notes,
         created_by: gate.userId,
       })
       .select("id, invoice_number, title")

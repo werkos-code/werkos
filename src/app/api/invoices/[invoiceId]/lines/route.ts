@@ -132,6 +132,18 @@ export async function POST(request: Request, { params }: RouteParams) {
     const title =
       body.title?.trim() || (isGroup ? "Nieuwe groep" : "Nieuwe regel");
 
+    let defaultVatBps = 2100;
+    if (!isGroup && body.vatRateBps === undefined) {
+      const { data: orgSettings } = await draft.admin
+        .from("organizations")
+        .select("invoice_default_vat_rate_bps")
+        .eq("id", gate.organizationId)
+        .maybeSingle();
+      if (orgSettings?.invoice_default_vat_rate_bps != null) {
+        defaultVatBps = orgSettings.invoice_default_vat_rate_bps;
+      }
+    }
+
     const insert = {
       id: lineId,
       organization_id: gate.organizationId,
@@ -151,7 +163,7 @@ export async function POST(request: Request, { params }: RouteParams) {
         : body.unitPriceCents === undefined
           ? 0
           : Math.round(body.unitPriceCents),
-      vat_rate_bps: isGroup ? 0 : (body.vatRateBps ?? 2100),
+      vat_rate_bps: isGroup ? 0 : (body.vatRateBps ?? defaultVatBps),
       discount_cents: isGroup ? 0 : (body.discountCents ?? 0),
       is_group: isGroup,
     };

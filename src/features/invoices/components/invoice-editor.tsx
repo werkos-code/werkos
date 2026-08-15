@@ -162,7 +162,7 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
           quantity: input.isGroup ? 0 : 1,
           unit: input.isGroup ? null : "st",
           unitPriceCents: 0,
-          vatRateBps: input.isGroup ? 0 : 2100,
+          vatRateBps: input.isGroup ? 0 : undefined,
           discountCents: 0,
         }),
         signal: AbortSignal.timeout(20_000),
