@@ -32,9 +32,8 @@ export function SidebarTrialCard() {
       ) : null}
       <Button
         asChild
-        variant="secondary"
         size="sm"
-        className="mt-3 h-8 w-full border-0 bg-white/12 text-xs text-white hover:bg-white/18"
+        className="mt-3 h-9 w-full border-0 bg-linear-to-r from-[#EA580C] to-[#F59E0B] text-xs font-medium text-white shadow-none hover:from-[#C2410C] hover:to-[#D97706]"
       >
         <Link href="/instellingen/abonnement/kiezen">{t("cta")}</Link>
       </Button>

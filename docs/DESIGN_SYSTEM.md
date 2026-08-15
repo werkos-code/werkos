@@ -68,6 +68,7 @@ AppShell (navy sidebar)
 | Sidebar | Vast tegen links/boven/onder; afronding alleen rechtsboven en rechtsonder (`rounded-3xl`); organisatie-switcher bovenaan; **inklappbare** sectiekoppen; Bedrijf default dicht; subtiele active state |
 | Notificatie-rail | Sheet rechts; afronding linksboven/linksonder (`rounded-tl-3xl rounded-bl-3xl`); inner padding `px-6` |
 | Sidebar CTA | Alleen “Nieuwe opdracht”: lichte blauwe gradient `#2563EB` → `#60A5FA` — nergens anders hergebruiken |
+| Sidebar trial CTA | Alleen “Bekijk abonnementen” in het trial-blok: oranje/amber gradient `#EA580C` → `#F59E0B` — onderscheidt van de primaire sidebar-CTA |
 | Eén app-context | Geen dual-context switch — één navigatiestructuur |
 
 **Canonical:**  
