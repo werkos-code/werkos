@@ -630,6 +630,7 @@ function SortablePricedRow({
               "shrink-0 text-muted-foreground",
               (showDescription || hasDescription) && "text-primary",
             )}
+            title={tEditor("fields.description")}
             aria-label={tEditor("fields.description")}
             aria-pressed={showDescription}
             onClick={() => setShowDescription((open) => !open)}
@@ -644,6 +645,7 @@ function SortablePricedRow({
               "shrink-0 text-muted-foreground",
               (showDiscount || hasDiscount) && "text-primary",
             )}
+            title={tEditor("fields.discount")}
             aria-label={tEditor("fields.discount")}
             aria-pressed={showDiscount}
             onClick={() => setShowDiscount((open) => !open)}
