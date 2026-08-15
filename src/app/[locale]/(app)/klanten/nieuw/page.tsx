@@ -14,7 +14,10 @@ export default async function NewCustomerPage({ params }: Props) {
   setRequestLocale(locale);
 
   const session = await requireTenantOrganization(locale);
-  const access = await getOrganizationAccess(session.organizationId);
+  const access = await getOrganizationAccess(session.organizationId, {
+    isSuperAdmin: session.isSuperAdmin,
+    userId: session.user.id,
+  });
   if (!access.canWrite) {
     redirect({ href: "/klanten?paywall=1", locale });
   }

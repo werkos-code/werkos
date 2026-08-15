@@ -53,3 +53,16 @@ export function resolveOrgAccess(input: {
     canWrite,
   };
 }
+
+/** Unrestricted access — used for platform super admins. */
+export function fullOrgAccess(): OrgAccess {
+  return {
+    mode: "full",
+    status: "active",
+    trialEndsAt: null,
+    trialDaysRemaining: null,
+    isTrialing: false,
+    isTrialExpired: false,
+    canWrite: true,
+  };
+}

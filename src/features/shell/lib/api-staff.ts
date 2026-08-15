@@ -38,7 +38,9 @@ export async function requireWritableApiStaff() {
   const gate = await requireApiStaff();
   if ("error" in gate) return gate;
 
-  const access = await getOrganizationAccessAdmin(gate.organizationId);
+  const access = await getOrganizationAccessAdmin(gate.organizationId, {
+    userId: gate.userId,
+  });
   if (!access.canWrite) {
     return {
       error: NextResponse.json(

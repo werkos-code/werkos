@@ -33,10 +33,23 @@ export async function getStaffOrgContext(): Promise<StaffOrgContext> {
 export async function getWritableStaffOrgContext(): Promise<
   StaffOrgContext | { error: "subscription_required" }
 > {
-  const ctx = await getStaffOrgContext();
-  if ("error" in ctx) return ctx;
+  const session = await getAppSession();
+  if (!session) return { error: "unauthorized" };
+  if (!session.organizationId) return { error: "no_organization" };
+  if (!isOrgStaffRole(session.role)) return { error: "forbidden" };
 
-  const access = await getOrganizationAccess(ctx.organizationId);
+  const supabase = await createClient();
+  const ctx = {
+    supabase,
+    userId: session.user.id,
+    organizationId: session.organizationId,
+  };
+
+  if (session.isSuperAdmin) return ctx;
+
+  const access = await getOrganizationAccess(ctx.organizationId, {
+    userId: ctx.userId,
+  });
   if (!access.canWrite) return { error: "subscription_required" };
   return ctx;
 }

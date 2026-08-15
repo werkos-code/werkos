@@ -4,7 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { OrgAccessProvider } from "@/features/billing/components/org-access-provider";
 import { SubscriptionPaywallDialog } from "@/features/billing/components/subscription-paywall-dialog";
 import { TrialExpiredDialog } from "@/features/billing/components/trial-expired-dialog";
-import { resolveOrgAccess } from "@/features/billing/lib/entitlements";
+import { fullOrgAccess } from "@/features/billing/lib/entitlements";
 import { getOrganizationAccess } from "@/features/billing/lib/get-organization-access";
 import { GuidedSetupCoachHost } from "@/features/guided-setup/components/guided-setup-coach-host";
 import { AppSidebar } from "@/features/shell/components/app-sidebar";
@@ -36,9 +36,13 @@ async function AppShellWithAccess({
     ? await requireSuperAdmin(locale)
     : await requireOrganization(locale);
 
-  const access = session.organizationId
-    ? await getOrganizationAccess(session.organizationId)
-    : resolveOrgAccess({ status: "active", trialEndsAt: null });
+  const access = session.isSuperAdmin
+    ? fullOrgAccess()
+    : session.organizationId
+      ? await getOrganizationAccess(session.organizationId, {
+          userId: session.user.id,
+        })
+      : fullOrgAccess();
 
   return (
     <OrgAccessProvider access={access}>

@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     const gate = await requireStaff();
     if ("error" in gate) return gate.error;
 
-    const access = await getOrganizationAccessAdmin(gate.organizationId);
+    const access = await getOrganizationAccessAdmin(gate.organizationId, { userId: gate.userId });
     if (!access.canWrite) {
       return NextResponse.json(
         { error: "subscription_required", code: "subscription_required" },
@@ -92,7 +92,7 @@ export async function PATCH(request: Request) {
     const gate = await requireStaff();
     if ("error" in gate) return gate.error;
 
-    const access = await getOrganizationAccessAdmin(gate.organizationId);
+    const access = await getOrganizationAccessAdmin(gate.organizationId, { userId: gate.userId });
     if (!access.canWrite) {
       return NextResponse.json(
         { error: "subscription_required", code: "subscription_required" },
@@ -149,7 +149,7 @@ export async function DELETE(request: Request) {
     const gate = await requireStaff();
     if ("error" in gate) return gate.error;
 
-    const access = await getOrganizationAccessAdmin(gate.organizationId);
+    const access = await getOrganizationAccessAdmin(gate.organizationId, { userId: gate.userId });
     if (!access.canWrite) {
       return NextResponse.json(
         { error: "subscription_required", code: "subscription_required" },
