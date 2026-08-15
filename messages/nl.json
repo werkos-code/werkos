@@ -1813,8 +1813,10 @@
       "documentLabel": "Factuur",
       "customer": "Klant",
       "project": "Project",
-      "hint": "Controleer het voorbeeld. Gebruik Afdrukken / PDF om via de browser op te slaan of te printen.",
-      "print": "Afdrukken / PDF",
+      "hint": "Controleer het voorbeeld. Download de PDF of gebruik Afdrukken via de browser.",
+      "print": "Afdrukken",
+      "download": "Downloaden",
+      "downloadError": "PDF downloaden is mislukt. Probeer het opnieuw.",
       "organizationFallback": "Jouw bedrijf",
       "footer": "Factuur gegenereerd via WerkOS · {organization}",
       "kvk": "KvK",
@@ -2007,13 +2009,16 @@
         "send": "Versturen",
         "markPaid": "Markeer als betaald",
         "preview": "Voorbeeld",
-        "print": "Afdrukken"
+        "print": "Afdrukken",
+        "download": "Downloaden",
+        "downloading": "PDF maken…"
       },
       "errors": {
         "notEditable": "Deze factuur is niet meer bewerkbaar (alleen concept).",
         "notFound": "Factuur of regel niet gevonden.",
         "forbidden": "Je hebt geen rechten om dit te doen.",
-        "invalidParent": "Een regel kan alleen onder een groep hangen."
+        "invalidParent": "Een regel kan alleen onder een groep hangen.",
+        "downloadFailed": "PDF downloaden is mislukt. Probeer het opnieuw."
       }
     },
     "fromProject": {

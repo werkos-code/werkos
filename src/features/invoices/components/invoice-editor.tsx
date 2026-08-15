@@ -18,6 +18,7 @@ import {
   formatInvoiceEuro,
   InvoiceDocument,
 } from "@/features/invoices/components/invoice-document";
+import { InvoicePdfDownloadButton } from "@/features/invoices/components/invoice-pdf-download-button";
 import type { InvoiceDetail } from "@/features/invoices/invoices-actions";
 import type { InvoiceLineRow } from "@/features/invoices/lib/invoice-lines";
 import { reorderInvoiceSiblings } from "@/features/invoices/lib/invoice-line-tree";
@@ -385,6 +386,15 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
             <Printer className="size-3.5" />
             {t("actions.print")}
           </Button>
+          <InvoicePdfDownloadButton
+            invoice={invoice}
+            title={title}
+            issueDate={issueDate}
+            dueDate={dueDate}
+            notes={notes}
+            lines={lines}
+            totals={totals}
+          />
           {editable ? (
             <Button
               type="button"

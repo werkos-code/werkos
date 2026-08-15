@@ -187,6 +187,7 @@ export function InvoiceDocument({
             <img
               src={org.logoUrl}
               alt={orgName}
+              crossOrigin="anonymous"
               className="h-14 w-auto max-w-[10rem] object-contain"
             />
           ) : (

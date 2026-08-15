@@ -178,7 +178,7 @@ Open refine: [`FOUNDATION_BACKLOG.md`](./FOUNDATION_BACKLOG.md) (§2). Financië
 ### 4.5b Factuur-editor (live document)
 
 ```
-Header (status · nummer · save · Voorbeeld / Afdrukken / Versturen)
+Header (status · nummer · save · Voorbeeld / Afdrukken / Downloaden / Versturen)
 KPI-strip: 4× MetaStatCard (excl · btw · incl · vervaldatum)
 grid xl:[minmax(0,1fr)_20rem]
   ├─ Soft canvas (bg-muted/40) → A4-achtig document PageCard
@@ -189,7 +189,7 @@ grid xl:[minmax(0,1fr)_20rem]
 | Regel | Detail |
 | --- | --- |
 | Document = bron | Bewerken gebeurt **in** het factuurdocument (letterhead zichtbaar); geen aparte form-spreadsheet |
-| Preview/print | Zelfde `InvoiceDocument`; `/voorbeeld` + browser print |
+| Preview/print/PDF | Zelfde `InvoiceDocument`; `/voorbeeld` + browser print + PDF-download (`InvoicePdfDownloadButton`) |
 | Live totalen | `computeInvoiceTotals` — btw/korting per regel |
 | Alleen concept | Bewerken locked buiten `draft` |
 

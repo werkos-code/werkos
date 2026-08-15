@@ -1813,8 +1813,10 @@
       "documentLabel": "Invoice",
       "customer": "Customer",
       "project": "Project",
-      "hint": "Review the preview. Use Print / PDF to save or print from the browser.",
-      "print": "Print / PDF",
+      "hint": "Review the preview. Download the PDF or use Print from the browser.",
+      "print": "Print",
+      "download": "Download",
+      "downloadError": "Could not download the PDF. Please try again.",
       "organizationFallback": "Your company",
       "footer": "Invoice generated with WerkOS · {organization}",
       "kvk": "CoC",
@@ -2007,13 +2009,16 @@
         "send": "Send",
         "markPaid": "Mark as paid",
         "preview": "Preview",
-        "print": "Print"
+        "print": "Print",
+        "download": "Download",
+        "downloading": "Creating PDF…"
       },
       "errors": {
         "notEditable": "This invoice can no longer be edited (draft only).",
         "notFound": "Invoice or line not found.",
         "forbidden": "You do not have permission to do this.",
-        "invalidParent": "A line can only nest under a group."
+        "invalidParent": "A line can only nest under a group.",
+        "downloadFailed": "Could not download the PDF. Please try again."
       }
     },
     "fromProject": {
