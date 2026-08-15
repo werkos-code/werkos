@@ -179,7 +179,7 @@ export async function getInvoice(invoiceId: string): Promise<{
       ctx.supabase
         .from("invoice_lines")
         .select(
-          "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents",
+          "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, is_group",
         )
         .eq("organization_id", ctx.organizationId)
         .eq("invoice_id", invoiceId)
@@ -265,6 +265,9 @@ export async function getInvoice(invoiceId: string): Promise<{
         unitPriceCents: line.unit_price_cents,
         vatRateBps: line.vat_rate_bps,
         discountCents: line.discount_cents,
+        isGroup: Boolean(
+          "is_group" in line ? (line as { is_group?: boolean }).is_group : false,
+        ),
       })),
     },
   };

@@ -20,6 +20,7 @@ import {
 } from "@/features/invoices/components/invoice-document";
 import type { InvoiceDetail } from "@/features/invoices/invoices-actions";
 import type { InvoiceLineRow } from "@/features/invoices/lib/invoice-lines";
+import { reorderInvoiceSiblings } from "@/features/invoices/lib/invoice-line-tree";
 import {
   computeInvoiceTotals,
   isInvoiceEditable,
@@ -72,12 +73,14 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
   const totals = useMemo(
     () =>
       computeInvoiceTotals(
-        lines.map((line) => ({
-          quantity: line.quantity,
-          unitPriceCents: line.unitPriceCents,
-          discountCents: line.discountCents,
-          vatRateBps: line.vatRateBps,
-        })),
+        lines
+          .filter((line) => !line.isGroup)
+          .map((line) => ({
+            quantity: line.quantity,
+            unitPriceCents: line.unitPriceCents,
+            discountCents: line.discountCents,
+            vatRateBps: line.vatRateBps,
+          })),
       ),
     [lines],
   );
@@ -110,6 +113,9 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
     if (code === "not_editable") return t("errors.notEditable");
     if (code === "not_found") return t("errors.notFound");
     if (code === "forbidden") return t("errors.forbidden");
+    if (code === "parent_not_found" || code === "invalid_parent") {
+      return t("errors.invalidParent");
+    }
     return code || tCommon("error");
   }
 
@@ -123,6 +129,106 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
       prev.map((line) => (line.id === lineId ? { ...line, ...patch } : line)),
     );
     markDirty();
+  }
+
+  function reorderLines(
+    parentId: string | null,
+    activeId: string,
+    overId: string,
+  ) {
+    setLines((prev) =>
+      reorderInvoiceSiblings(prev, parentId, activeId, overId),
+    );
+    markDirty();
+  }
+
+  async function createLine(input: {
+    title: string;
+    parentId?: string | null;
+    isGroup?: boolean;
+  }) {
+    if (!editable) return;
+    setPendingAction(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/invoices/${invoice.id}/lines`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: input.title,
+          parentId: input.parentId ?? null,
+          isGroup: Boolean(input.isGroup),
+          quantity: input.isGroup ? 0 : 1,
+          unit: input.isGroup ? null : "st",
+          unitPriceCents: 0,
+          vatRateBps: input.isGroup ? 0 : 2100,
+          discountCents: 0,
+        }),
+        signal: AbortSignal.timeout(20_000),
+      });
+      const result = (await response.json()) as {
+        error?: string;
+        line?: InvoiceLineRow;
+      };
+      if (!response.ok || !result.line) {
+        setError(mapApiError(result.error));
+        return;
+      }
+      const created = {
+        ...result.line,
+        isGroup: result.line.isGroup ?? Boolean(input.isGroup),
+      };
+      setLines((prev) => [...prev, created]);
+      router.refresh();
+    } catch {
+      setError(tCommon("error"));
+    } finally {
+      setPendingAction(false);
+    }
+  }
+
+  async function addLine(parentId?: string | null) {
+    await createLine({
+      title: t("defaultLineTitle"),
+      parentId: parentId ?? null,
+    });
+  }
+
+  async function addGroup() {
+    await createLine({
+      title: t("defaultGroupTitle"),
+      isGroup: true,
+    });
+  }
+
+  async function deleteLine(lineId: string) {
+    if (!editable) return;
+    const target = lines.find((line) => line.id === lineId);
+    const confirmMessage = target?.isGroup
+      ? t("deleteGroupConfirm")
+      : t("deleteLineConfirm");
+    if (!window.confirm(confirmMessage)) return;
+    setPendingAction(true);
+    setError(null);
+    try {
+      const response = await fetch(
+        `/api/invoices/${invoice.id}/lines?id=${encodeURIComponent(lineId)}`,
+        { method: "DELETE", signal: AbortSignal.timeout(20_000) },
+      );
+      const result = (await response.json()) as { error?: string };
+      if (!response.ok || result.error) {
+        setError(mapApiError(result.error));
+        return;
+      }
+      setLines((prev) =>
+        prev.filter((line) => line.id !== lineId && line.parentId !== lineId),
+      );
+      router.refresh();
+    } catch {
+      setError(tCommon("error"));
+    } finally {
+      setPendingAction(false);
+    }
   }
 
   async function saveAll() {
@@ -158,6 +264,7 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               id: line.id,
+              parentId: line.parentId,
               title: line.title,
               description: line.description,
               quantity: line.quantity,
@@ -166,6 +273,7 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
               vatRateBps: line.vatRateBps,
               discountCents: line.discountCents,
               sortOrder: line.sortOrder,
+              isGroup: line.isGroup,
             }),
             signal: AbortSignal.timeout(20_000),
           });
@@ -212,65 +320,6 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
         return;
       }
       setStatus(next);
-      router.refresh();
-    } catch {
-      setError(tCommon("error"));
-    } finally {
-      setPendingAction(false);
-    }
-  }
-
-  async function addLine() {
-    if (!editable) return;
-    setPendingAction(true);
-    setError(null);
-    try {
-      const response = await fetch(`/api/invoices/${invoice.id}/lines`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: t("defaultLineTitle"),
-          quantity: 1,
-          unit: "st",
-          unitPriceCents: 0,
-          vatRateBps: 2100,
-          discountCents: 0,
-        }),
-        signal: AbortSignal.timeout(20_000),
-      });
-      const result = (await response.json()) as {
-        error?: string;
-        line?: InvoiceLineRow;
-      };
-      if (!response.ok || !result.line) {
-        setError(mapApiError(result.error));
-        return;
-      }
-      setLines((prev) => [...prev, result.line!]);
-      router.refresh();
-    } catch {
-      setError(tCommon("error"));
-    } finally {
-      setPendingAction(false);
-    }
-  }
-
-  async function deleteLine(lineId: string) {
-    if (!editable) return;
-    if (!window.confirm(t("deleteLineConfirm"))) return;
-    setPendingAction(true);
-    setError(null);
-    try {
-      const response = await fetch(
-        `/api/invoices/${invoice.id}/lines?id=${encodeURIComponent(lineId)}`,
-        { method: "DELETE", signal: AbortSignal.timeout(20_000) },
-      );
-      const result = (await response.json()) as { error?: string };
-      if (!response.ok || result.error) {
-        setError(mapApiError(result.error));
-        return;
-      }
-      setLines((prev) => prev.filter((line) => line.id !== lineId));
       router.refresh();
     } catch {
       setError(tCommon("error"));
@@ -399,7 +448,7 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
             totals={totals}
             editable={editable}
             busy={busy}
-            className="mx-auto max-w-[52rem] shadow-sm"
+            className="w-full shadow-sm"
             onTitleChange={(value) => {
               setTitle(value);
               markDirty();
@@ -417,8 +466,10 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
               markDirty();
             }}
             onLineChange={updateLocalLine}
-            onAddLine={() => void addLine()}
+            onAddLine={(parentId) => void addLine(parentId)}
+            onAddGroup={() => void addGroup()}
             onDeleteLine={(lineId) => void deleteLine(lineId)}
+            onReorder={reorderLines}
           />
         </div>
 

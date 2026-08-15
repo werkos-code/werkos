@@ -1921,9 +1921,14 @@
       "editTitle": "Factuur",
       "noLines": "Nog geen regels. Voeg hieronder een regel toe.",
       "addLine": "Regel toevoegen",
+      "addGroup": "Groep toevoegen",
+      "addLineInGroup": "Regel in groep",
       "defaultLineTitle": "Nieuwe regel",
+      "defaultGroupTitle": "Nieuwe groep",
       "deleteLine": "Regel verwijderen",
+      "deleteGroup": "Groep verwijderen",
       "deleteLineConfirm": "Deze regel verwijderen?",
+      "deleteGroupConfirm": "Deze groep en alle regels eronder verwijderen?",
       "save": "Opslaan",
       "savedJustNow": "Opgeslagen",
       "unsaved": "Niet-opgeslagen wijzigingen",
@@ -1955,6 +1960,7 @@
       "placeholders": {
         "title": "Factuurtitel",
         "line": "Omschrijving van de regel",
+        "group": "Groepsnaam",
         "description": "Optionele toelichting",
         "notes": "Notities op de factuur (betalingsinfo, dankwoord…)"
       },
@@ -1990,7 +1996,8 @@
       "errors": {
         "notEditable": "Deze factuur is niet meer bewerkbaar (alleen concept).",
         "notFound": "Factuur of regel niet gevonden.",
-        "forbidden": "Je hebt geen rechten om dit te doen."
+        "forbidden": "Je hebt geen rechten om dit te doen.",
+        "invalidParent": "Een regel kan alleen onder een groep hangen."
       }
     },
     "fromProject": {

@@ -12,7 +12,7 @@ export async function recomputeInvoiceTotals(
   const { data: lines, error: linesError } = await admin
     .from("invoice_lines")
     .select(
-      "quantity, unit_price_cents, discount_cents, vat_rate_bps, parent_id",
+      "quantity, unit_price_cents, discount_cents, vat_rate_bps, is_group",
     )
     .eq("organization_id", organizationId)
     .eq("invoice_id", invoiceId);
@@ -21,7 +21,7 @@ export async function recomputeInvoiceTotals(
     return { error: linesError.message };
   }
 
-  const priced = (lines ?? []).filter((line) => !line.parent_id);
+  const priced = (lines ?? []).filter((line) => !line.is_group);
   const totals = computeInvoiceTotals(
     priced.map((line) => ({
       quantity: line.quantity,

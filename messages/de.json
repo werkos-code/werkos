@@ -1921,9 +1921,14 @@
       "editTitle": "Rechnung",
       "noLines": "Noch keine Positionen. Füge unten eine Position hinzu.",
       "addLine": "Position hinzufügen",
+      "addGroup": "Gruppe hinzufügen",
+      "addLineInGroup": "Position in Gruppe",
       "defaultLineTitle": "Neue Position",
+      "defaultGroupTitle": "Neue Gruppe",
       "deleteLine": "Position löschen",
+      "deleteGroup": "Gruppe löschen",
       "deleteLineConfirm": "Diese Position löschen?",
+      "deleteGroupConfirm": "Diese Gruppe und alle Positionen darin löschen?",
       "save": "Speichern",
       "savedJustNow": "Gespeichert",
       "unsaved": "Ungespeicherte Änderungen",
@@ -1955,6 +1960,7 @@
       "placeholders": {
         "title": "Rechnungstitel",
         "line": "Positionsbeschreibung",
+        "group": "Gruppenname",
         "description": "Optionale Erläuterung",
         "notes": "Notizen auf der Rechnung (Zahlungsinfo, Dank…)"
       },
@@ -1990,7 +1996,8 @@
       "errors": {
         "notEditable": "Diese Rechnung kann nicht mehr bearbeitet werden (nur Entwurf).",
         "notFound": "Rechnung oder Position nicht gefunden.",
-        "forbidden": "Keine Berechtigung für diese Aktion."
+        "forbidden": "Keine Berechtigung für diese Aktion.",
+        "invalidParent": "Eine Position kann nur unter einer Gruppe hängen."
       }
     },
     "fromProject": {

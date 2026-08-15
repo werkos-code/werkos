@@ -36,6 +36,7 @@ function mapLineRow(row: {
   unit_price_cents: number;
   vat_rate_bps: number;
   discount_cents: number;
+  is_group?: boolean | null;
 }) {
   return {
     id: row.id,
@@ -48,7 +49,32 @@ function mapLineRow(row: {
     unitPriceCents: row.unit_price_cents,
     vatRateBps: row.vat_rate_bps,
     discountCents: row.discount_cents,
+    isGroup: Boolean(row.is_group),
   };
+}
+
+const LINE_SELECT =
+  "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents, is_group";
+
+async function assertParentGroup(
+  admin: ReturnType<typeof createAdminClient>,
+  organizationId: string,
+  invoiceId: string,
+  parentId: string,
+) {
+  const { data: parent } = await admin
+    .from("invoice_lines")
+    .select("id, parent_id, is_group")
+    .eq("organization_id", organizationId)
+    .eq("invoice_id", invoiceId)
+    .eq("id", parentId)
+    .maybeSingle();
+
+  if (!parent) return { error: "parent_not_found" as const };
+  if (!parent.is_group || parent.parent_id) {
+    return { error: "invalid_parent" as const };
+  }
+  return { parent };
 }
 
 export async function POST(request: Request, { params }: RouteParams) {
@@ -73,40 +99,67 @@ export async function POST(request: Request, { params }: RouteParams) {
       vatRateBps?: number;
       discountCents?: number;
       sortOrder?: number;
+      isGroup?: boolean;
     };
+
+    const isGroup = Boolean(body.isGroup);
+    const parentId = isGroup ? null : body.parentId?.trim() || null;
+
+    if (parentId) {
+      const parentCheck = await assertParentGroup(
+        draft.admin,
+        gate.organizationId,
+        invoiceId,
+        parentId,
+      );
+      if ("error" in parentCheck) {
+        return NextResponse.json({ error: parentCheck.error }, { status: 400 });
+      }
+    }
 
     const lineId = crypto.randomUUID();
 
-    const { count } = await draft.admin
+    const baseCount = draft.admin
       .from("invoice_lines")
       .select("id", { count: "exact", head: true })
       .eq("invoice_id", invoiceId)
       .eq("organization_id", gate.organizationId);
 
-    const title = body.title?.trim() || "Nieuwe regel";
+    const { count } = parentId
+      ? await baseCount.eq("parent_id", parentId)
+      : await baseCount.is("parent_id", null);
+
+    const title =
+      body.title?.trim() || (isGroup ? "Nieuwe groep" : "Nieuwe regel");
 
     const insert = {
       id: lineId,
       organization_id: gate.organizationId,
       invoice_id: invoiceId,
-      parent_id: body.parentId?.trim() || null,
+      parent_id: parentId,
       sort_order: body.sortOrder ?? count ?? 0,
       title,
       description: body.description?.trim() || null,
-      quantity: body.quantity === undefined ? 1 : body.quantity,
-      unit: body.unit === undefined ? "st" : body.unit?.trim() || null,
-      unit_price_cents:
-        body.unitPriceCents === undefined ? 0 : Math.round(body.unitPriceCents),
-      vat_rate_bps: body.vatRateBps ?? 2100,
-      discount_cents: body.discountCents ?? 0,
+      quantity: isGroup ? 0 : body.quantity === undefined ? 1 : body.quantity,
+      unit: isGroup
+        ? null
+        : body.unit === undefined
+          ? "st"
+          : body.unit?.trim() || null,
+      unit_price_cents: isGroup
+        ? 0
+        : body.unitPriceCents === undefined
+          ? 0
+          : Math.round(body.unitPriceCents),
+      vat_rate_bps: isGroup ? 0 : (body.vatRateBps ?? 2100),
+      discount_cents: isGroup ? 0 : (body.discountCents ?? 0),
+      is_group: isGroup,
     };
 
     const { data, error } = await draft.admin
       .from("invoice_lines")
       .insert(insert)
-      .select(
-        "id, parent_id, sort_order, title, description, quantity, unit, unit_price_cents, vat_rate_bps, discount_cents",
-      )
+      .select(LINE_SELECT)
       .single();
 
     if (error || !data) {
@@ -155,11 +208,27 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       vatRateBps?: number;
       discountCents?: number;
       sortOrder?: number;
+      isGroup?: boolean;
     };
 
     const lineId = body.id?.trim() ?? "";
     if (!lineId) {
       return NextResponse.json({ error: "invalid_input" }, { status: 400 });
+    }
+
+    if (body.parentId !== undefined && body.parentId?.trim()) {
+      const parentCheck = await assertParentGroup(
+        draft.admin,
+        gate.organizationId,
+        invoiceId,
+        body.parentId.trim(),
+      );
+      if ("error" in parentCheck) {
+        return NextResponse.json({ error: parentCheck.error }, { status: 400 });
+      }
+      if (body.parentId.trim() === lineId) {
+        return NextResponse.json({ error: "invalid_parent" }, { status: 400 });
+      }
     }
 
     const { error } = await draft.admin
@@ -168,7 +237,9 @@ export async function PATCH(request: Request, { params }: RouteParams) {
         ...(body.parentId !== undefined
           ? { parent_id: body.parentId?.trim() || null }
           : {}),
-        ...(body.title !== undefined ? { title: body.title.trim() } : {}),
+        ...(body.title !== undefined
+          ? { title: body.title.trim() || "Nieuwe regel" }
+          : {}),
         ...(body.description !== undefined
           ? { description: body.description?.trim() || null }
           : {}),
@@ -194,6 +265,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
             }
           : {}),
         ...(body.sortOrder !== undefined ? { sort_order: body.sortOrder } : {}),
+        ...(body.isGroup !== undefined ? { is_group: Boolean(body.isGroup) } : {}),
       })
       .eq("organization_id", gate.organizationId)
       .eq("invoice_id", invoiceId)

@@ -9,6 +9,7 @@ export type InvoiceLineRow = {
   unitPriceCents: number;
   vatRateBps: number;
   discountCents: number;
+  isGroup: boolean;
 };
 
 export type BillableSourceKind = "hours" | "material" | "work_item";

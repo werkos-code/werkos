@@ -1603,6 +1603,7 @@ export type Database = {
           unit_price_cents: number;
           vat_rate_bps: number;
           discount_cents: number;
+          is_group: boolean;
           created_at: string;
         };
         Insert: {
@@ -1618,6 +1619,7 @@ export type Database = {
           unit_price_cents?: number;
           vat_rate_bps?: number;
           discount_cents?: number;
+          is_group?: boolean;
           created_at?: string;
         };
         Update: {
@@ -1633,6 +1635,7 @@ export type Database = {
           unit_price_cents?: number;
           vat_rate_bps?: number;
           discount_cents?: number;
+          is_group?: boolean;
           created_at?: string;
         };
         Relationships: [

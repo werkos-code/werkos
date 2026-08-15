@@ -1921,9 +1921,14 @@
       "editTitle": "Invoice",
       "noLines": "No lines yet. Add a line below.",
       "addLine": "Add line",
+      "addGroup": "Add group",
+      "addLineInGroup": "Add line in group",
       "defaultLineTitle": "New line",
+      "defaultGroupTitle": "New group",
       "deleteLine": "Delete line",
+      "deleteGroup": "Delete group",
       "deleteLineConfirm": "Delete this line?",
+      "deleteGroupConfirm": "Delete this group and all lines inside it?",
       "save": "Save",
       "savedJustNow": "Saved",
       "unsaved": "Unsaved changes",
@@ -1955,6 +1960,7 @@
       "placeholders": {
         "title": "Invoice title",
         "line": "Line description",
+        "group": "Group name",
         "description": "Optional details",
         "notes": "Notes on the invoice (payment info, thank you…)"
       },
@@ -1990,7 +1996,8 @@
       "errors": {
         "notEditable": "This invoice can no longer be edited (draft only).",
         "notFound": "Invoice or line not found.",
-        "forbidden": "You do not have permission to do this."
+        "forbidden": "You do not have permission to do this.",
+        "invalidParent": "A line can only nest under a group."
       }
     },
     "fromProject": {

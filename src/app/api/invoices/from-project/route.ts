@@ -156,6 +156,7 @@ export async function POST(request: Request) {
       unit_price_cents: line.unitPriceCents,
       vat_rate_bps: line.vatRateBps,
       discount_cents: 0,
+      is_group: false,
     }));
 
     const { error: linesError } = await admin
