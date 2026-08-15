@@ -1974,6 +1974,7 @@
         "unitPrice": "Prijs",
         "vat": "Btw",
         "discount": "Korting",
+        "description": "Toelichting",
         "lineTotal": "Totaal"
       },
       "totals": {

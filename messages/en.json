@@ -1974,6 +1974,7 @@
         "unitPrice": "Price",
         "vat": "VAT",
         "discount": "Discount",
+        "description": "Notes",
         "lineTotal": "Total"
       },
       "totals": {

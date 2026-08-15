@@ -17,8 +17,9 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Link } from "@/i18n/navigation";
-import { FolderPlus, GripVertical, Plus, Trash2 } from "lucide-react";
+import { FolderPlus, GripVertical, MessageSquare, Percent, Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -585,6 +586,12 @@ function SortablePricedRow({
   const tEditor = useTranslations("invoices.editor");
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: line.id });
+  const [showDescription, setShowDescription] = useState(() =>
+    Boolean(line.description?.trim()),
+  );
+  const [showDiscount, setShowDiscount] = useState(() => line.discountCents > 0);
+  const hasDescription = Boolean(line.description?.trim());
+  const hasDiscount = line.discountCents > 0;
   const net = lineNetCents({
     quantity: line.quantity,
     unitPriceCents: line.unitPriceCents,
@@ -600,43 +607,78 @@ function SortablePricedRow({
         paddingLeft: depth > 0 ? 12 : undefined,
       }}
       className={cn(
-        "group grid gap-2 border-b border-border/70 py-3",
+        "group grid gap-2 border-b border-border/70 py-2.5",
         EDIT_COLS,
         isDragging && "opacity-70",
         depth > 0 && "bg-muted/20",
       )}
     >
       <DragHandle attributes={attributes} listeners={listeners} />
-      <div className="min-w-0 space-y-1">
-        <Input
-          value={line.title}
-          placeholder={tEditor("placeholders.line")}
-          className={cn(ghostInputClass, "font-medium")}
-          onChange={(e) => onLineChange?.(line.id, { title: e.target.value })}
-        />
-        <textarea
-          rows={1}
-          value={line.description ?? ""}
-          placeholder={tEditor("placeholders.description")}
-          className={ghostTextareaClass}
-          onChange={(e) =>
-            onLineChange?.(line.id, {
-              description: e.target.value || null,
-            })
-          }
-        />
-        <div className="flex items-center gap-2 pt-0.5 opacity-70 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
-          <span className="text-[11px] text-muted-foreground">
-            {tEditor("fields.discount")}
-          </span>
-          <MoneyField
-            cents={line.discountCents}
-            className="h-7 max-w-[6.5rem] border-border/50"
-            onCommit={(cents) =>
-              onLineChange?.(line.id, { discountCents: cents ?? 0 })
+      <div className="min-w-0 space-y-1.5">
+        <div className="flex items-center gap-1">
+          <Input
+            value={line.title}
+            placeholder={tEditor("placeholders.line")}
+            className={cn(ghostInputClass, "min-w-0 flex-1 font-medium")}
+            onChange={(e) => onLineChange?.(line.id, { title: e.target.value })}
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            className={cn(
+              "shrink-0 text-muted-foreground",
+              (showDescription || hasDescription) && "text-primary",
+            )}
+            aria-label={tEditor("fields.description")}
+            aria-pressed={showDescription}
+            onClick={() => setShowDescription((open) => !open)}
+          >
+            <MessageSquare className="size-3.5" />
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            className={cn(
+              "shrink-0 text-muted-foreground",
+              (showDiscount || hasDiscount) && "text-primary",
+            )}
+            aria-label={tEditor("fields.discount")}
+            aria-pressed={showDiscount}
+            onClick={() => setShowDiscount((open) => !open)}
+          >
+            <Percent className="size-3.5" />
+          </Button>
+        </div>
+        {showDescription ? (
+          <textarea
+            rows={2}
+            value={line.description ?? ""}
+            placeholder={tEditor("placeholders.description")}
+            className={ghostTextareaClass}
+            autoFocus={!hasDescription}
+            onChange={(e) =>
+              onLineChange?.(line.id, {
+                description: e.target.value || null,
+              })
             }
           />
-        </div>
+        ) : null}
+        {showDiscount ? (
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] text-muted-foreground">
+              {tEditor("fields.discount")}
+            </span>
+            <MoneyField
+              cents={line.discountCents}
+              className="h-7 max-w-[6.5rem] border-border/50"
+              onCommit={(cents) =>
+                onLineChange?.(line.id, { discountCents: cents ?? 0 })
+              }
+            />
+          </div>
+        ) : null}
       </div>
       <QuantityField
         value={line.quantity}

@@ -1974,6 +1974,7 @@
         "unitPrice": "Preis",
         "vat": "MwSt.",
         "discount": "Rabatt",
+        "description": "Erläuterung",
         "lineTotal": "Gesamt"
       },
       "totals": {
