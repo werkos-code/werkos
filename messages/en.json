@@ -868,11 +868,24 @@
     },
     "calculatie": {
       "title": "Estimate & pricing",
-      "subtitle": "Build a first price breakdown. A draft quote is created automatically.",
-      "empty": "No estimate lines yet. Add labour, materials or work items.",
+      "subtitle": "Quickly build a first price breakdown. A draft quote is created automatically.",
+      "emptyTitle": "No lines yet",
+      "empty": "Add materials, hours or labour for a first price indication.",
+      "addMaterial": "Material",
+      "addHours": "Hours",
+      "addLabor": "Labour",
+      "addGroup": "Group",
+      "addInGroup": "Line in group",
       "addLine": "Add line",
       "removeLine": "Remove",
       "linePlaceholder": "Description",
+      "groupPlaceholder": "Group name",
+      "types": {
+        "material": "Material",
+        "hours": "Hours",
+        "labor": "Labour",
+        "group": "Group"
+      },
       "columns": {
         "description": "Description",
         "unit": "Unit",
@@ -880,10 +893,17 @@
         "price": "Price",
         "total": "Total"
       },
+      "kpi": {
+        "excl": "Excl. VAT",
+        "vat": "VAT",
+        "incl": "Incl. VAT"
+      },
       "totalsTitle": "Price indication",
-      "subtotal": "Subtotal excl. VAT",
+      "marginLabel": "Margin",
+      "marginCustom": "Custom margin",
       "margin": "Margin %",
       "marginAmount": "Margin",
+      "subtotal": "Subtotal excl. VAT",
       "vat": "VAT",
       "total": "Total incl. VAT",
       "futureTitle": "Coming soon",

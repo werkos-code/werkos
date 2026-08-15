@@ -868,11 +868,24 @@
     },
     "calculatie": {
       "title": "Calculatie & prijsindicatie",
-      "subtitle": "Bouw een eerste prijsopbouw. Hieruit ontstaat automatisch een conceptofferte.",
-      "empty": "Nog geen calculatieregels. Voeg werkzaamheden, materiaal of arbeid toe.",
+      "subtitle": "Bouw snel een eerste prijsopbouw. Hieruit ontstaat automatisch een conceptofferte.",
+      "emptyTitle": "Nog geen regels",
+      "empty": "Voeg materiaal, uren of arbeid toe voor een eerste prijsindicatie.",
+      "addMaterial": "Materiaal",
+      "addHours": "Uren",
+      "addLabor": "Arbeid",
+      "addGroup": "Groep",
+      "addInGroup": "Regel in groep",
       "addLine": "Regel toevoegen",
       "removeLine": "Verwijderen",
       "linePlaceholder": "Omschrijving",
+      "groupPlaceholder": "Groepsnaam",
+      "types": {
+        "material": "Materiaal",
+        "hours": "Uren",
+        "labor": "Arbeid",
+        "group": "Groep"
+      },
       "columns": {
         "description": "Omschrijving",
         "unit": "Eenheid",
@@ -880,10 +893,17 @@
         "price": "Prijs",
         "total": "Totaal"
       },
+      "kpi": {
+        "excl": "Excl. btw",
+        "vat": "Btw",
+        "incl": "Incl. btw"
+      },
       "totalsTitle": "Prijsindicatie",
-      "subtotal": "Subtotaal excl. btw",
+      "marginLabel": "Marge",
+      "marginCustom": "Aangepaste marge",
       "margin": "Marge %",
       "marginAmount": "Marge",
+      "subtotal": "Subtotaal excl. btw",
       "vat": "Btw",
       "total": "Totaal incl. btw",
       "futureTitle": "Straks slimmer",

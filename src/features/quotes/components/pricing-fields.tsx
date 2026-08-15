@@ -79,10 +79,12 @@ export function MoneyField({
 export function QuantityField({
   value,
   disabled,
+  className,
   onCommit,
 }: {
   value: number | null;
   disabled?: boolean;
+  className?: string;
   onCommit: (value: number | null) => void;
 }) {
   const display =
@@ -99,7 +101,10 @@ export function QuantityField({
       inputMode="decimal"
       disabled={disabled}
       value={focused ? draft : display}
-      className="h-8 w-full border-border/70 bg-background font-mono text-right tabular-nums"
+      className={cn(
+        "h-8 w-full border-border/70 bg-background font-mono text-right tabular-nums",
+        className,
+      )}
       onFocus={() => {
         setFocused(true);
         setDraft(display);
