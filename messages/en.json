@@ -1921,6 +1921,7 @@
       "editTitle": "Invoice",
       "noLines": "No lines yet. Add a line below.",
       "addLine": "Add line",
+      "defaultLineTitle": "New line",
       "deleteLine": "Delete line",
       "deleteLineConfirm": "Delete this line?",
       "save": "Save",

@@ -1921,6 +1921,7 @@
       "editTitle": "Factuur",
       "noLines": "Nog geen regels. Voeg hieronder een regel toe.",
       "addLine": "Regel toevoegen",
+      "defaultLineTitle": "Nieuwe regel",
       "deleteLine": "Regel verwijderen",
       "deleteLineConfirm": "Deze regel verwijderen?",
       "save": "Opslaan",

@@ -229,7 +229,7 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: "",
+          title: t("defaultLineTitle"),
           quantity: 1,
           unit: "st",
           unitPriceCents: 0,

@@ -1921,6 +1921,7 @@
       "editTitle": "Rechnung",
       "noLines": "Noch keine Positionen. Füge unten eine Position hinzu.",
       "addLine": "Position hinzufügen",
+      "defaultLineTitle": "Neue Position",
       "deleteLine": "Position löschen",
       "deleteLineConfirm": "Diese Position löschen?",
       "save": "Speichern",

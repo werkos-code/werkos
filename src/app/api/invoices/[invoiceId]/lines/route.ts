@@ -83,13 +83,15 @@ export async function POST(request: Request, { params }: RouteParams) {
       .eq("invoice_id", invoiceId)
       .eq("organization_id", gate.organizationId);
 
+    const title = body.title?.trim() || "Nieuwe regel";
+
     const insert = {
       id: lineId,
       organization_id: gate.organizationId,
       invoice_id: invoiceId,
       parent_id: body.parentId?.trim() || null,
       sort_order: body.sortOrder ?? count ?? 0,
-      title: body.title?.trim() ?? "",
+      title,
       description: body.description?.trim() || null,
       quantity: body.quantity === undefined ? 1 : body.quantity,
       unit: body.unit === undefined ? "st" : body.unit?.trim() || null,
