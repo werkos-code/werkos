@@ -2443,8 +2443,8 @@
       },
       "yearlySavingsBanner": "Sie sparen {percent}% gegenüber monatlicher Zahlung.",
       "ctaHintYearly": "Sie zahlen 12 Monate im Voraus über Stripe. Danach jährlich verlängerbar.",
-      "yearlyHeroBilled": "{yearly} jährlich im Voraus · {percent}% günstiger",
-      "yearlyBilledHint": "{yearly} jährlich im Voraus bezahlt"
+      "yearlyBilledHint": "{yearly} jährlich im Voraus bezahlt",
+      "yearlyHeroSavings": "Sparen Sie {amount} im Jahr"
     }
   }
 }

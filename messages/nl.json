@@ -2529,8 +2529,8 @@
       },
       "yearlySavingsBanner": "Je bespaart {percent}% ten opzichte van maandelijks betalen.",
       "ctaHintYearly": "Je betaalt 12 maanden vooruit via Stripe. Daarna jaarlijks verlengbaar.",
-      "yearlyHeroBilled": "{yearly} per jaar vooruit · {percent}% goedkoper",
-      "yearlyBilledHint": "{yearly} per jaar vooruitbetaald"
+      "yearlyBilledHint": "{yearly} per jaar vooruitbetaald",
+      "yearlyHeroSavings": "Bespaar {amount} op jaarbasis"
     }
   }
 }

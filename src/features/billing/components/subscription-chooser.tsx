@@ -124,8 +124,10 @@ export function SubscriptionChooser({
     : PRICING.fieldSeatMonthlyCents;
 
   const baseLabel = formatEurFromCents(displayBaseCents, numberLocale);
-  const baseYearlyLabel = formatEurFromCents(
-    PRICING.baseYearlyCents,
+  const baseYearlySavingsCents =
+    PRICING.baseMonthlyCents * 12 - PRICING.baseYearlyCents;
+  const baseYearlySavingsLabel = formatEurFromCents(
+    baseYearlySavingsCents,
     numberLocale,
   );
   const officeSeatLabel = formatEurFromCents(officeSeatDisplayCents, numberLocale);
@@ -201,11 +203,8 @@ export function SubscriptionChooser({
               <span className="text-sm text-white/70">{t("perMonth")}</span>
             </p>
             {yearly ? (
-              <p className="mt-2 text-sm text-white/70">
-                {t("yearlyHeroBilled", {
-                  yearly: baseYearlyLabel,
-                  percent: PRICING.yearlyDiscountPercent,
-                })}
+              <p className="mt-2 text-sm text-amber-300">
+                {t("yearlyHeroSavings", { amount: baseYearlySavingsLabel })}
               </p>
             ) : (
               <p className="mt-2 text-sm text-white/70">
