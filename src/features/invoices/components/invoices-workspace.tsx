@@ -448,10 +448,16 @@ export function InvoicesWorkspace({
                             </p>
                           </td>
                           <td>
-                            <p className="font-medium">{invoice.projectName}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {invoice.projectNumber}
+                            <p className="font-medium">
+                              {invoice.projectId
+                                ? invoice.projectName
+                                : t("form.modeStandalone")}
                             </p>
+                            {invoice.projectId ? (
+                              <p className="text-xs text-muted-foreground">
+                                {invoice.projectNumber}
+                              </p>
+                            ) : null}
                           </td>
                           <td>{invoice.customerName}</td>
                           <td className="text-muted-foreground">
