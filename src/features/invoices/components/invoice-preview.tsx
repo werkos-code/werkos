@@ -21,6 +21,21 @@ export function InvoicePreview({
   const t = useTranslations("invoices");
   const documentRef = useRef<HTMLDivElement>(null);
 
+  const documentProps = {
+    mode: "preview" as const,
+    invoice,
+    title: invoice.title,
+    issueDate: invoice.issueDate,
+    dueDate: invoice.dueDate ?? "",
+    notes: invoice.notes ?? "",
+    lines: invoice.lines,
+    totals: {
+      subtotalCents: invoice.subtotalCents,
+      vatCents: invoice.vatCents,
+      totalCents: invoice.totalCents,
+    },
+  };
+
   return (
     <div className="space-y-4">
       {showToolbar ? (
@@ -28,17 +43,7 @@ export function InvoicePreview({
           <p className="text-sm text-muted-foreground">{t("preview.hint")}</p>
           <div className="flex flex-wrap items-center gap-2">
             <InvoicePdfDownloadButton
-              invoice={invoice}
-              title={invoice.title}
-              issueDate={invoice.issueDate}
-              dueDate={invoice.dueDate ?? ""}
-              notes={invoice.notes ?? ""}
-              lines={invoice.lines}
-              totals={{
-                subtotalCents: invoice.subtotalCents,
-                vatCents: invoice.vatCents,
-                totalCents: invoice.totalCents,
-              }}
+              {...documentProps}
               sourceRef={documentRef}
               labelKey="preview"
             />
@@ -55,21 +60,8 @@ export function InvoicePreview({
         </div>
       ) : null}
 
-      <div ref={documentRef}>
-        <InvoiceDocument
-          mode="preview"
-          invoice={invoice}
-          title={invoice.title}
-          issueDate={invoice.issueDate}
-          dueDate={invoice.dueDate ?? ""}
-          notes={invoice.notes ?? ""}
-          lines={invoice.lines}
-          totals={{
-            subtotalCents: invoice.subtotalCents,
-            vatCents: invoice.vatCents,
-            totalCents: invoice.totalCents,
-          }}
-        />
+      <div ref={documentRef} className="invoice-print-root">
+        <InvoiceDocument {...documentProps} />
       </div>
     </div>
   );

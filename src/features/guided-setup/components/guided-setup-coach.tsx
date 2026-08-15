@@ -99,7 +99,7 @@ export function GuidedSetupCoach({ flags }: GuidedSetupCoachProps) {
 
   if (contextDismissed) {
     return (
-      <div className="pointer-events-none fixed right-6 bottom-6 z-40">
+      <div className="no-print pointer-events-none fixed right-6 bottom-6 z-40">
         <Button
           type="button"
           size="icon"
@@ -125,7 +125,7 @@ export function GuidedSetupCoach({ flags }: GuidedSetupCoachProps) {
 
   if (collapsed) {
     return (
-      <div className="pointer-events-none fixed right-6 bottom-6 z-40">
+      <div className="no-print pointer-events-none fixed right-6 bottom-6 z-40">
         <Button
           type="button"
           className="pointer-events-auto h-11 gap-2 rounded-full px-4 shadow-md"
@@ -143,7 +143,7 @@ export function GuidedSetupCoach({ flags }: GuidedSetupCoachProps) {
   }
 
   return (
-    <div className="pointer-events-none fixed right-6 bottom-6 z-40 w-[min(100vw-2rem,22rem)]">
+    <div className="no-print pointer-events-none fixed right-6 bottom-6 z-40 w-[min(100vw-2rem,22rem)]">
       <div className="pointer-events-auto overflow-hidden rounded-xl border border-border bg-card shadow-md">
         <div className="flex items-start justify-between gap-2 border-b border-border px-4 py-3">
           <div className="min-w-0">

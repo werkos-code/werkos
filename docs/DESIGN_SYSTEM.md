@@ -189,7 +189,7 @@ grid xl:[minmax(0,1fr)_20rem]
 | Regel | Detail |
 | --- | --- |
 | Document = bron | Bewerken gebeurt **in** het factuurdocument (letterhead zichtbaar); geen aparte form-spreadsheet |
-| Preview/print/PDF | Zelfde `InvoiceDocument`; `/voorbeeld` + browser print + PDF-download (`InvoicePdfDownloadButton`) |
+| Preview/print/PDF | Zelfde `InvoiceDocument` in preview-modus; print + PDF gebruiken een schone print-surface (geen edit-velden) |
 | Live totalen | `computeInvoiceTotals` — btw/korting per regel |
 | Alleen concept | Bewerken locked buiten `draft` |
 

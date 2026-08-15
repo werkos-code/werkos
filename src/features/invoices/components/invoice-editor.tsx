@@ -9,7 +9,7 @@ import {
   Send,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -338,10 +338,12 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
   }
 
   const busy = saveState === "saving" || pendingAction;
+  const printRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="space-y-5">
-      <div className="no-print flex flex-wrap items-center gap-3">
+    <>
+    <div className="no-print space-y-5">
+      <div className="flex flex-wrap items-center gap-3">
         <Badge
           variant={status === "draft" ? "success" : "secondary"}
           className="h-6 px-2.5"
@@ -394,6 +396,7 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
             notes={notes}
             lines={lines}
             totals={totals}
+            sourceRef={printRef}
           />
           {editable ? (
             <Button
@@ -421,12 +424,12 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
       </div>
 
       {error ? (
-        <p className="no-print rounded-xl border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+        <p className="rounded-xl border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
           {error}
         </p>
       ) : null}
 
-      <div className="no-print grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <MetaStatCard
           label={t("kpi.subtotal")}
           value={formatInvoiceEuro(totals.subtotalCents)}
@@ -446,7 +449,7 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_20rem]">
-        <div className="min-w-0 rounded-2xl bg-muted/40 p-3 sm:p-5 print:bg-transparent print:p-0">
+        <div className="min-w-0 rounded-2xl bg-muted/40 p-3 sm:p-5">
           <InvoiceDocument
             mode="edit"
             invoice={invoice}
@@ -483,7 +486,7 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
           />
         </div>
 
-        <aside className="no-print space-y-3">
+        <aside className="space-y-3">
           <PageCard className="sticky top-20 overflow-hidden">
             <div className="flex gap-1 border-b border-border px-2 pt-2">
               {(
@@ -630,5 +633,24 @@ export function InvoiceEditor({ invoice }: InvoiceEditorProps) {
         </aside>
       </div>
     </div>
+
+    <div
+      ref={printRef}
+      className="invoice-print-surface invoice-print-root"
+      aria-hidden
+    >
+      <InvoiceDocument
+        mode="preview"
+        invoice={invoice}
+        title={title}
+        issueDate={issueDate}
+        dueDate={dueDate}
+        notes={notes}
+        lines={lines}
+        totals={totals}
+        className="shadow-none"
+      />
+    </div>
+    </>
   );
 }

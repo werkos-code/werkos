@@ -31,8 +31,8 @@ export function ShellPage({
         status={status}
         actions={actions}
       />
-      <div className="flex-1 px-6 py-6 lg:px-8 lg:py-8">
-        <div className={cn("mx-auto w-[90%]", contentClassName)}>
+      <div className="flex-1 px-6 py-6 print:px-0 print:py-0 lg:px-8 lg:py-8">
+        <div className={cn("mx-auto w-[90%] print:w-full print:max-w-none", contentClassName)}>
           {children}
         </div>
       </div>

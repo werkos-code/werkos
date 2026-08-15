@@ -339,8 +339,8 @@ export function InvoiceDocument({
         </div>
       </div>
 
-      <div className="mt-8 overflow-x-auto">
-        <div className="min-w-[44rem]">
+      <div className="mt-8 overflow-x-auto print:overflow-visible">
+        <div className="min-w-[44rem] print:min-w-0">
           <div
             className={cn(
               "grid gap-2 border-b border-border pb-2 text-xs font-medium text-muted-foreground",

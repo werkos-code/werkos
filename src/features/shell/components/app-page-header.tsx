@@ -25,7 +25,7 @@ export function AppPageHeader({
   const chrome = useShellChrome();
 
   return (
-    <header className="sticky top-0 z-20 border-b border-border/80 bg-background/90 backdrop-blur-sm">
+    <header className="no-print sticky top-0 z-20 border-b border-border/80 bg-background/90 backdrop-blur-sm">
       <div className="flex h-14 items-center justify-between gap-4 px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-3">
           {backHref ? (
