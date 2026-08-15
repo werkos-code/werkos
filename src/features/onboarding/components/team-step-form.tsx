@@ -1,11 +1,10 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { completeOnboardingAction } from "@/features/onboarding/actions";
-import { useRouter } from "@/i18n/navigation";
 
 type TeamStepFormProps = {
   initialOfficeSeats?: number;
@@ -55,7 +54,7 @@ export function TeamStepForm({
 }: TeamStepFormProps) {
   const t = useTranslations("onboarding.team");
   const tCommon = useTranslations("common");
-  const router = useRouter();
+  const locale = useLocale();
   const [officeSeats, setOfficeSeats] = useState(initialOfficeSeats);
   const [fieldSeats, setFieldSeats] = useState(initialFieldSeats);
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +65,7 @@ export function TeamStepForm({
       className="flex flex-col gap-5"
       onSubmit={(event) => {
         event.preventDefault();
+        if (pending) return;
         setError(null);
         setPending(true);
 
@@ -80,8 +80,8 @@ export function TeamStepForm({
               setPending(false);
               return;
             }
-            router.push("/onboarding/complete");
-            router.refresh();
+            // Hard navigation avoids soft-nav redirect loops leaving the button stuck on Laden.
+            window.location.assign(`/${locale}/dashboard`);
           } catch (err) {
             setError(err instanceof Error ? err.message : tCommon("error"));
             setPending(false);

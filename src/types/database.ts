@@ -2432,6 +2432,10 @@ export type Database = {
         Args: Record<string, never>;
         Returns: boolean;
       };
+      complete_onboarding: {
+        Args: { p_office_seats?: number; p_field_seats?: number };
+        Returns: string;
+      };
       is_org_staff: {
         Args: { org_id: string };
         Returns: boolean;

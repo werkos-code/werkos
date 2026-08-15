@@ -2,6 +2,14 @@
 
 > Handmatige stappen die nog gedaan moeten worden. Agents: herinner de gebruiker hieraan bij relevant werk.
 
+## Onboarding RPC — **nog te doen** (lost “Laden…” op team-stap op)
+
+Zonder service-role in de app faalt provisioneren. Voer uit in Supabase SQL Editor:
+
+`docs/sql-applied/20260815140000_complete_onboarding_rpc.sql`
+
+Daarna opnieuw proberen op de team-stap. Lokaal: zet ook `SUPABASE_SERVICE_ROLE_KEY` in `.env.local` (zie `.env.example`) voor webhooks/admin.
+
 ## Trial / paywall flow — **geen extra SQL**
 
 Onboarding provisionneert direct een org met `subscriptions.status = trialing` + `trial_ends_at` (+14d). Stripe Checkout gebeurt pas op `/instellingen/abonnement/kiezen`.

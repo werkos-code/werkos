@@ -92,6 +92,7 @@ export async function saveTeamDraft(input: {
 
 /**
  * Finish onboarding without Stripe: provision org + 14-day free trial.
+ * Prefers DB RPC (no service-role required); falls back to admin client.
  */
 export async function completeOnboardingAction(input: {
   officeSeats: number;
@@ -115,17 +116,30 @@ export async function completeOnboardingAction(input: {
   if (draftError) return { error: draftError.message };
   if (!draft?.company_name) return { error: "incomplete_draft" };
 
-  const { error: saveError } = await supabase.from("onboarding_drafts").upsert(
+  const { data: rpcOrgId, error: rpcError } = await supabase.rpc(
+    "complete_onboarding",
     {
-      user_id: user.id,
-      office_seats: officeSeats,
-      field_seats: fieldSeats,
-      step: "complete",
+      p_office_seats: officeSeats,
+      p_field_seats: fieldSeats,
     },
-    { onConflict: "user_id" },
   );
-  if (saveError) return { error: saveError.message };
 
+  if (!rpcError && rpcOrgId) {
+    return { organizationId: rpcOrgId };
+  }
+
+  const rpcMissing =
+    rpcError &&
+    (rpcError.code === "PGRST202" ||
+      rpcError.message.toLowerCase().includes("could not find the function") ||
+      rpcError.message.toLowerCase().includes("complete_onboarding"));
+
+  if (rpcError && !rpcMissing) {
+    console.error("complete_onboarding rpc", rpcError.message);
+    return { error: rpcError.message };
+  }
+
+  // Fallback for environments that have not applied the RPC yet.
   const industry =
     draft.industry === "other" ? draft.industry_other : draft.industry;
 
@@ -145,6 +159,13 @@ export async function completeOnboardingAction(input: {
   } catch (err) {
     const message =
       err instanceof Error ? err.message : "provisioning_failed";
+    if (message.includes("SUPABASE_SERVICE_ROLE_KEY")) {
+      return {
+        error:
+          "server_misconfigured: SUPABASE_SERVICE_ROLE_KEY ontbreekt, of voer docs/sql-applied/20260815140000_complete_onboarding_rpc.sql uit in Supabase.",
+      };
+    }
+    console.error("completeOnboardingAction fallback", message);
     return { error: message };
   }
 }
