@@ -2441,7 +2441,7 @@
         "year": "Jährlich",
         "yearlyDiscount": "-{percent}%"
       },
-      "yearlySavingsBanner": "Sie sparen {percent}% gegenüber monatlicher Zahlung.",
+      "yearlySavingsBanner": "Sie sparen {amount} pro Jahr gegenüber monatlicher Zahlung.",
       "ctaHintYearly": "Sie zahlen 12 Monate im Voraus über Stripe. Danach jährlich verlängerbar.",
       "yearlyBilledHint": "{yearly} jährlich im Voraus bezahlt",
       "yearlyHeroSavings": "Sparen Sie {amount} im Jahr"

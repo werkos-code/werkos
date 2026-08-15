@@ -2527,7 +2527,7 @@
         "year": "Yearly",
         "yearlyDiscount": "-{percent}%"
       },
-      "yearlySavingsBanner": "You save {percent}% compared to paying monthly.",
+      "yearlySavingsBanner": "You save {amount} per year compared to paying monthly.",
       "ctaHintYearly": "You prepay 12 months via Stripe. Then renews yearly.",
       "yearlyBilledHint": "{yearly} prepaid yearly",
       "yearlyHeroSavings": "Save {amount} per year"

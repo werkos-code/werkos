@@ -135,6 +135,8 @@ export function SubscriptionChooser({
   const headlineTotalCents = yearly ? yearlyMonthlyEquivalent : monthlyTotal;
   const headlineTotalLabel = formatEurFromCents(headlineTotalCents, numberLocale);
   const yearlyTotalLabel = formatEurFromCents(yearlyTotal, numberLocale);
+  const yearlySavingsCents = monthlyTotal * 12 - yearlyTotal;
+  const yearlySavingsLabel = formatEurFromCents(yearlySavingsCents, numberLocale);
 
   const ctaLabel = isTrialing ? t("ctaWhileTrialing") : t("cta");
 
@@ -311,11 +313,9 @@ export function SubscriptionChooser({
               </div>
             </div>
 
-            {yearly ? (
+            {yearly && yearlySavingsCents > 0 ? (
               <p className="rounded-lg bg-[#EA580C]/10 px-3 py-2 text-xs font-medium text-[#C2410C]">
-                {t("yearlySavingsBanner", {
-                  percent: PRICING.yearlyDiscountPercent,
-                })}
+                {t("yearlySavingsBanner", { amount: yearlySavingsLabel })}
               </p>
             ) : null}
 
