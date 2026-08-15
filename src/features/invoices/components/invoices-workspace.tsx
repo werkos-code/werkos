@@ -962,9 +962,7 @@ function CreateInvoiceDialog({
   const t = useTranslations("invoices");
   const tCommon = useTranslations("common");
   const [mode, setMode] = useState<"project" | "standalone">("project");
-  const [customerMode, setCustomerMode] = useState<"existing" | "new">(
-    "existing",
-  );
+  const [customerMode, setCustomerMode] = useState<"existing" | "new">("new");
   const [projectId, setProjectId] = useState("");
   const [customerId, setCustomerId] = useState("");
   const [customerOptions, setCustomerOptions] =
@@ -982,7 +980,7 @@ function CreateInvoiceDialog({
 
   function resetForm() {
     setMode("project");
-    setCustomerMode("existing");
+    setCustomerMode("new");
     setProjectId("");
     setCustomerId("");
     setNewCustomerName("");
@@ -1141,18 +1139,6 @@ function CreateInvoiceDialog({
                   type="button"
                   className={cn(
                     "rounded-md px-3 py-1.5 text-xs transition-colors",
-                    customerMode === "existing"
-                      ? "bg-primary/10 font-medium text-primary"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                  onClick={() => setCustomerMode("existing")}
-                >
-                  {t("form.customerExisting")}
-                </button>
-                <button
-                  type="button"
-                  className={cn(
-                    "rounded-md px-3 py-1.5 text-xs transition-colors",
                     customerMode === "new"
                       ? "bg-primary/10 font-medium text-primary"
                       : "text-muted-foreground hover:text-foreground",
@@ -1160,6 +1146,18 @@ function CreateInvoiceDialog({
                   onClick={() => setCustomerMode("new")}
                 >
                   {t("form.customerNew")}
+                </button>
+                <button
+                  type="button"
+                  className={cn(
+                    "rounded-md px-3 py-1.5 text-xs transition-colors",
+                    customerMode === "existing"
+                      ? "bg-primary/10 font-medium text-primary"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                  onClick={() => setCustomerMode("existing")}
+                >
+                  {t("form.customerExisting")}
                 </button>
               </div>
 
