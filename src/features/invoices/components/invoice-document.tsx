@@ -772,6 +772,10 @@ function SortableGroupBlock({
   const tEditor = useTranslations("invoices.editor");
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: line.id });
+  const [showDescription, setShowDescription] = useState(() =>
+    Boolean(line.description?.trim()),
+  );
+  const hasDescription = Boolean(line.description?.trim());
   const children = childrenOfInvoiceLine(lines, line.id);
   const subtotal = groupSubtotalCents(lines, line.id);
 
@@ -787,27 +791,47 @@ function SortableGroupBlock({
         isDragging && "opacity-70",
       )}
     >
-      <div className={cn("grid items-start gap-2 px-0 py-3", EDIT_COLS)}>
+      <div className={cn("grid items-start gap-2 px-0 py-2.5", EDIT_COLS)}>
         <DragHandle attributes={attributes} listeners={listeners} />
-        <div className="min-w-0 space-y-1">
-          <Input
-            value={line.title}
-            placeholder={tEditor("placeholders.group")}
-            className={cn(ghostInputClass, "font-semibold")}
-            onChange={(e) => onLineChange?.(line.id, { title: e.target.value })}
-            onKeyDown={blurOnEnter}
-          />
-          <textarea
-            rows={1}
-            value={line.description ?? ""}
-            placeholder={tEditor("placeholders.description")}
-            className={ghostTextareaClass}
-            onChange={(e) =>
-              onLineChange?.(line.id, {
-                description: e.target.value || null,
-              })
-            }
-          />
+        <div className="min-w-0 space-y-1.5">
+          <div className="flex items-center gap-1">
+            <Input
+              value={line.title}
+              placeholder={tEditor("placeholders.group")}
+              className={cn(ghostInputClass, "min-w-0 flex-1 font-semibold")}
+              onChange={(e) => onLineChange?.(line.id, { title: e.target.value })}
+              onKeyDown={blurOnEnter}
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              className={cn(
+                "shrink-0 text-muted-foreground",
+                (showDescription || hasDescription) && "text-primary",
+              )}
+              title={tEditor("fields.description")}
+              aria-label={tEditor("fields.description")}
+              aria-pressed={showDescription}
+              onClick={() => setShowDescription((open) => !open)}
+            >
+              <MessageSquare className="size-3.5" />
+            </Button>
+          </div>
+          {showDescription ? (
+            <textarea
+              rows={2}
+              value={line.description ?? ""}
+              placeholder={tEditor("placeholders.description")}
+              className={ghostTextareaClass}
+              autoFocus={!hasDescription}
+              onChange={(e) =>
+                onLineChange?.(line.id, {
+                  description: e.target.value || null,
+                })
+              }
+            />
+          ) : null}
         </div>
         <span />
         <span />
