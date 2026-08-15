@@ -471,14 +471,47 @@
       "yesterday": "Gestern",
       "daysAgo": "{count, plural, one {vor # Tag} other {vor # Tagen}}"
     },
+    "kpis": {
+      "revenue": {
+        "label": "Umsatz diesen Monat",
+        "hint": "Bezahlte Rechnungen",
+        "emptyTitle": "Noch kein Umsatz diesen Monat",
+        "emptyDescription": "Erstelle oder sende eine Rechnung, um erste Einnahmen zu sehen.",
+        "cta": "Zu Rechnungen"
+      },
+      "openQuotes": {
+        "label": "Offene Angebote",
+        "hint": "Entwürfe und gesendet",
+        "emptyTitle": "Keine offenen Angebote",
+        "emptyDescription": "Erstelle ein Angebot, um Deals schneller abzuschließen.",
+        "cta": "Angebot erstellen"
+      },
+      "openInbox": {
+        "label": "Posteingang",
+        "hint": "Offene Gespräche",
+        "emptyTitle": "Posteingang ist leer",
+        "emptyDescription": "Starte ein Gespräch zu einem Projekt für die interne Abstimmung.",
+        "cta": "Zum Posteingang"
+      }
+    },
+    "operations": {
+      "title": "Arbeit & Betrieb",
+      "subtitle": "Was heute in deinen Projekten läuft."
+    },
     "attention": {
       "title": "Braucht Aufmerksamkeit",
       "empty": "Nichts braucht gerade Aufmerksamkeit.",
+      "emptyTitle": "Alles im Griff",
+      "emptyDescription": "Keine offenen Punkte. Plane Arbeit oder prüfe deine Projekte.",
+      "cta": "Arbeitsposten ansehen",
       "viewAll": "Alles ansehen"
     },
     "today": {
       "title": "Heute",
       "empty": "Heute nichts geplant.",
+      "emptyTitle": "Noch nichts geplant",
+      "emptyDescription": "Plane einen Termin oder eine Aufgabe für einen klaren Tag.",
+      "cta": "Etwas planen",
       "viewAll": "Planung ansehen",
       "allDay": "Ganztägig"
     },
@@ -490,8 +523,11 @@
       "todosUnavailable": "Persönliche To-dos sind noch nicht verfügbar. Führe die SQL-Migration aus."
     },
     "projects": {
-      "title": "Aktive Projekte",
+      "title": "Offene Projekte",
       "empty": "Keine aktiven Projekte.",
+      "emptyTitle": "Noch keine aktiven Projekte",
+      "emptyDescription": "Starte einen Auftrag, um Projekte hier zu sehen.",
+      "cta": "Neuer Auftrag",
       "viewAll": "Alle Projekte ansehen",
       "columns": {
         "project": "Projekt",
@@ -510,6 +546,7 @@
     },
     "quickActions": {
       "title": "Schnellaktionen",
+      "subtitle": "Die wichtigsten Aufgaben mit einem Klick vom Dashboard.",
       "project": {
         "title": "Neues Projekt",
         "hint": "Neuen Auftrag starten"
@@ -533,6 +570,35 @@
       "schedule": {
         "title": "Aufgabe oder Termin",
         "hint": "Arbeit oder Zeitpunkt planen"
+      }
+    },
+    "private": {
+      "title": "Privater Arbeitsbereich",
+      "notes": {
+        "title": "Notizen",
+        "placeholder": "Schnelle Notizen für dich selbst…",
+        "saving": "Speichern…",
+        "saved": "Gespeichert",
+        "unavailable": "Notizen sind noch nicht verfügbar. Führe die SQL-Migration aus."
+      },
+      "calculator": {
+        "title": "Rechner"
+      },
+      "todos": {
+        "title": "To-dos",
+        "placeholder": "Neues To-do…",
+        "emptyTitle": "Noch keine To-dos",
+        "emptyDescription": "Halte persönliche Aktionen getrennt von Projektaufgaben fest.",
+        "cta": "Erstes To-do hinzufügen",
+        "openCount": "{count, plural, one {# offen} other {# offen}}",
+        "unavailable": "Persönliche To-dos sind noch nicht verfügbar. Führe die SQL-Migration aus."
+      },
+      "calendar": {
+        "title": "Kalender",
+        "emptyTitle": "Keine Termine diesen Monat",
+        "emptyDescription": "Plane etwas, damit dein Monat hier sichtbar wird.",
+        "cta": "Zur Planung",
+        "openPlanning": "Planung öffnen"
       }
     },
     "dialogs": {

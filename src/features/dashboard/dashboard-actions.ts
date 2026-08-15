@@ -80,12 +80,26 @@ export type DashboardWorkItemOption = {
   projectId: string;
 };
 
+export type DashboardKpis = {
+  revenueCents: number;
+  openQuotesCount: number;
+  openInboxCount: number;
+};
+
+export type DashboardCalendarDay = {
+  date: string;
+  count: number;
+};
+
 export type DashboardSnapshot = {
   currentUserId: string;
+  kpis: DashboardKpis;
   attention: DashboardAttentionItem[];
   today: DashboardTodayItem[];
   assignedTasks: DashboardAssignedTask[];
   personalTodos: DashboardPersonalTodo[];
+  personalNote: string;
+  calendarDays: DashboardCalendarDay[];
   projects: DashboardProject[];
   finance: {
     outstandingCents: number;
@@ -112,9 +126,14 @@ function endOfLocalDay(date = new Date()) {
 function isMissingTableError(message: string) {
   return (
     message.includes("user_todos") ||
+    message.includes("user_notes") ||
     message.includes("schema cache") ||
     message.includes("does not exist")
   );
+}
+
+function toDateKey(iso: string) {
+  return iso.slice(0, 10);
 }
 
 export async function loadDashboardSnapshot(): Promise<{
@@ -126,6 +145,20 @@ export async function loadDashboardSnapshot(): Promise<{
 
   const todayStart = startOfLocalDay();
   const todayEnd = endOfLocalDay();
+  const monthStart = new Date(
+    todayStart.getFullYear(),
+    todayStart.getMonth(),
+    1,
+  );
+  const monthEnd = new Date(
+    todayStart.getFullYear(),
+    todayStart.getMonth() + 1,
+    0,
+    23,
+    59,
+    59,
+    999,
+  );
 
   const [
     projectsResult,
@@ -133,7 +166,10 @@ export async function loadDashboardSnapshot(): Promise<{
     invoicesResult,
     workItemsResult,
     planningResult,
+    monthPlanningResult,
     todosResult,
+    notesResult,
+    inboxResult,
   ] = await Promise.all([
     listProjects(),
     listQuotesForOrganization(),
@@ -143,6 +179,10 @@ export async function loadDashboardSnapshot(): Promise<{
       from: todayStart.toISOString(),
       to: todayEnd.toISOString(),
     }),
+    listPlanningWorkspaceData({
+      from: monthStart.toISOString(),
+      to: monthEnd.toISOString(),
+    }),
     ctx.supabase
       .from("user_todos")
       .select("id, title, due_date, completed_at, sort_order, created_at")
@@ -150,6 +190,16 @@ export async function loadDashboardSnapshot(): Promise<{
       .eq("user_id", ctx.userId)
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: true }),
+    ctx.supabase
+      .from("user_notes")
+      .select("body")
+      .eq("organization_id", ctx.organizationId)
+      .eq("user_id", ctx.userId)
+      .maybeSingle(),
+    ctx.supabase
+      .from("conversations")
+      .select("id", { count: "exact", head: true })
+      .eq("organization_id", ctx.organizationId),
   ]);
 
   if (projectsResult.error) return { error: projectsResult.error };
@@ -157,11 +207,24 @@ export async function loadDashboardSnapshot(): Promise<{
   if (invoicesResult.error) return { error: invoicesResult.error };
   if (workItemsResult.error) return { error: workItemsResult.error };
   if (planningResult.error) return { error: planningResult.error };
+  if (monthPlanningResult.error) return { error: monthPlanningResult.error };
   if (
     todosResult.error &&
     !isMissingTableError(todosResult.error.message)
   ) {
     return { error: todosResult.error.message };
+  }
+  if (
+    notesResult.error &&
+    !isMissingTableError(notesResult.error.message)
+  ) {
+    return { error: notesResult.error.message };
+  }
+  if (
+    inboxResult.error &&
+    !isMissingTableError(inboxResult.error.message)
+  ) {
+    return { error: inboxResult.error.message };
   }
 
   const projects = projectsResult.projects ?? [];
@@ -234,11 +297,6 @@ export async function loadDashboardSnapshot(): Promise<{
   const overdueCents = unpaid
     .filter((invoice) => isInvoiceOverdue(invoice))
     .reduce((sum, invoice) => sum + invoice.totalCents, 0);
-  const monthStart = new Date(
-    todayStart.getFullYear(),
-    todayStart.getMonth(),
-    1,
-  );
   const paidThisMonthCents = invoices
     .filter(
       (invoice) =>
@@ -248,8 +306,23 @@ export async function loadDashboardSnapshot(): Promise<{
     )
     .reduce((sum, invoice) => sum + invoice.totalCents, 0);
 
+  const openQuotesCount = quotes.filter(
+    (quote) => quote.status === "sent" || quote.status === "draft",
+  ).length;
+
+  const calendarCounts = new Map<string, number>();
+  for (const row of monthPlanningResult.appointments ?? []) {
+    const key = toDateKey(row.startsAt);
+    calendarCounts.set(key, (calendarCounts.get(key) ?? 0) + 1);
+  }
+
   const snapshot: DashboardSnapshot = {
     currentUserId: ctx.userId,
+    kpis: {
+      revenueCents: paidThisMonthCents,
+      openQuotesCount,
+      openInboxCount: inboxResult.count ?? 0,
+    },
     attention: attention.slice(0, 6),
     today: (planningResult.appointments ?? []).slice(0, 8).map((row) => ({
       id: row.id,
@@ -287,6 +360,11 @@ export async function loadDashboardSnapshot(): Promise<{
         dueDate: row.due_date,
         completedAt: row.completed_at,
       })),
+    personalNote: notesResult.data?.body ?? "",
+    calendarDays: Array.from(calendarCounts.entries()).map(([date, count]) => ({
+      date,
+      count,
+    })),
     projects: projects
       .filter((project: ProjectRow) => activeStatuses.has(project.status))
       .slice(0, 8)
@@ -320,6 +398,28 @@ export async function loadDashboardSnapshot(): Promise<{
   };
 
   return { snapshot };
+}
+
+export async function saveUserNote(body: string): Promise<{ error?: string }> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const { error } = await ctx.supabase.from("user_notes").upsert(
+    {
+      organization_id: ctx.organizationId,
+      user_id: ctx.userId,
+      body,
+    },
+    { onConflict: "organization_id,user_id" },
+  );
+
+  if (error) {
+    if (isMissingTableError(error.message)) {
+      return { error: "notes_unavailable" };
+    }
+    return { error: error.message };
+  }
+  return {};
 }
 
 export async function createUserTodo(title: string): Promise<{

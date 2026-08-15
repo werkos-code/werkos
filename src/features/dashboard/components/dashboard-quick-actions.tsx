@@ -23,7 +23,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useOrgAccessOptional } from "@/features/billing/components/org-access-provider";
 import { WriteGateLink } from "@/features/billing/components/write-gate-link";
-import { PageCard } from "@/features/shell/components/page-card";
 import { hoursInputToMinutes } from "@/features/time/lib/time-entry";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -303,31 +302,40 @@ export function DashboardQuickActions({
 
   return (
     <>
-      <PageCard className={cn("overflow-hidden", cardClassName)}>
-        <div className="border-b border-border px-4 py-3">
-          <h2 className="text-sm font-medium">{t("quickActions.title")}</h2>
+      <div className={cn("space-y-3", cardClassName)}>
+        <div className="flex items-end justify-between gap-3 px-1">
+          <div>
+            <h2 className="text-sm font-semibold tracking-tight">
+              {t("quickActions.title")}
+            </h2>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {t("quickActions.subtitle")}
+            </p>
+          </div>
         </div>
-        <div className="grid gap-1 p-2 sm:grid-cols-2 xl:grid-cols-1">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {actions.map((action) => {
             const Icon = action.icon;
             const body = (
               <>
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Icon className="size-4" />
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Icon className="size-5" strokeWidth={1.75} />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-medium">
-                    {t(`quickActions.${action.id}.title`)}
+                  <span className="flex items-center gap-2">
+                    <span className="block truncate text-sm font-semibold">
+                      {t(`quickActions.${action.id}.title`)}
+                    </span>
+                    <ArrowRight className="size-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
                   </span>
-                  <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+                  <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
                     {t(`quickActions.${action.id}.hint`)}
                   </span>
                 </span>
-                <ArrowRight className="size-4 shrink-0 text-muted-foreground" />
               </>
             );
             const className =
-              "flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-left transition-colors hover:bg-muted/40";
+              "group flex w-full items-start gap-3 rounded-2xl bg-card p-4 text-left shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.12)] ring-1 ring-black/[0.04] transition-colors hover:bg-muted/20";
             if (action.href) {
               return (
                 <WriteGateLink
@@ -354,7 +362,7 @@ export function DashboardQuickActions({
             );
           })}
         </div>
-      </PageCard>
+      </div>
 
       <Dialog open={dialog !== null} onOpenChange={(open) => !open && closeDialog()}>
         <DialogContent className="sm:max-w-md" showCloseButton>

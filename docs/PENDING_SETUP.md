@@ -2,6 +2,14 @@
 
 > Handmatige stappen die nog gedaan moeten worden. Agents: herinner de gebruiker hieraan bij relevant werk.
 
+## Dashboard privé-notities SQL — **nog te doen**
+
+Voor notities in de privé-werkruimte op het dashboard:
+
+`docs/sql-applied/20260815220000_user_notes.sql`
+
+Zonder deze tabel blijft notities fail-soft (foutmelding + geen opslag).
+
 ## Onboarding RPC — **nog te doen** (lost “Laden…” op team-stap op)
 
 Zonder service-role in de app faalt provisioneren. Voer uit in Supabase SQL Editor:

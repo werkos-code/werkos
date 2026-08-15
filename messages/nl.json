@@ -471,14 +471,47 @@
       "yesterday": "Gisteren",
       "daysAgo": "{count, plural, one {# dag geleden} other {# dagen geleden}}"
     },
+    "kpis": {
+      "revenue": {
+        "label": "Omzet deze maand",
+        "hint": "Betaalde facturen",
+        "emptyTitle": "Nog geen omzet deze maand",
+        "emptyDescription": "Maak of verstuur een factuur om je eerste ontvangsten te zien.",
+        "cta": "Naar facturen"
+      },
+      "openQuotes": {
+        "label": "Openstaande offertes",
+        "hint": "Concepten en verzonden",
+        "emptyTitle": "Geen openstaande offertes",
+        "emptyDescription": "Maak een offerte om sneller deals te sluiten.",
+        "cta": "Offerte maken"
+      },
+      "openInbox": {
+        "label": "Inbox",
+        "hint": "Openstaande gesprekken",
+        "emptyTitle": "Inbox is leeg",
+        "emptyDescription": "Start een gesprek bij een project om intern af te stemmen.",
+        "cta": "Naar inbox"
+      }
+    },
+    "operations": {
+      "title": "Werkzaamheden & operatie",
+      "subtitle": "Wat er vandaag speelt in je projecten."
+    },
     "attention": {
       "title": "Vraagt je aandacht",
       "empty": "Niets dat nu om aandacht vraagt.",
+      "emptyTitle": "Alles onder controle",
+      "emptyDescription": "Geen openstaande aandachtspunten. Plan werk of check je projecten.",
+      "cta": "Bekijk werkzaamheden",
       "viewAll": "Bekijk alles"
     },
     "today": {
       "title": "Vandaag",
       "empty": "Niets gepland vandaag.",
+      "emptyTitle": "Nog niets gepland",
+      "emptyDescription": "Plan een afspraak of taak zodat je dag overzichtelijk blijft.",
+      "cta": "Plan iets in",
       "viewAll": "Bekijk planning",
       "allDay": "Hele dag"
     },
@@ -490,8 +523,11 @@
       "todosUnavailable": "Persoonlijke to-do’s zijn nog niet beschikbaar. Voer de SQL-migratie uit."
     },
     "projects": {
-      "title": "Actieve projecten",
+      "title": "Openstaande projecten",
       "empty": "Geen actieve projecten.",
+      "emptyTitle": "Nog geen actieve projecten",
+      "emptyDescription": "Start een opdracht om projecten hier terug te zien.",
+      "cta": "Nieuwe opdracht",
       "viewAll": "Bekijk alle projecten",
       "columns": {
         "project": "Project",
@@ -510,6 +546,7 @@
     },
     "quickActions": {
       "title": "Snelle acties",
+      "subtitle": "De belangrijkste taken in één klik vanaf je dashboard.",
       "project": {
         "title": "Nieuw project",
         "hint": "Start een nieuwe opdracht"
@@ -533,6 +570,35 @@
       "schedule": {
         "title": "Taak of afspraak",
         "hint": "Plan werk of een moment"
+      }
+    },
+    "private": {
+      "title": "Privé werkruimte",
+      "notes": {
+        "title": "Notities",
+        "placeholder": "Schrijf snelle notities voor jezelf…",
+        "saving": "Opslaan…",
+        "saved": "Opgeslagen",
+        "unavailable": "Notities zijn nog niet beschikbaar. Voer de SQL-migratie uit."
+      },
+      "calculator": {
+        "title": "Rekenmachine"
+      },
+      "todos": {
+        "title": "To-do’s",
+        "placeholder": "Nieuwe to-do…",
+        "emptyTitle": "Nog geen to-do’s",
+        "emptyDescription": "Houd persoonlijke acties bij, los van je projecttaken.",
+        "cta": "Eerste to-do toevoegen",
+        "openCount": "{count, plural, one {# open} other {# open}}",
+        "unavailable": "Persoonlijke to-do’s zijn nog niet beschikbaar. Voer de SQL-migratie uit."
+      },
+      "calendar": {
+        "title": "Kalender",
+        "emptyTitle": "Geen afspraken deze maand",
+        "emptyDescription": "Plan iets in zodat je maand hier zichtbaar wordt.",
+        "cta": "Naar planning",
+        "openPlanning": "Open planning"
       }
     },
     "dialogs": {

@@ -212,9 +212,11 @@ Landingspagina met **eigen navy-header** — geen standaard `AppPageHeader` / `S
 Navy gradient-banner (#09133A → blauw), full-bleed achter sidebar
   ├─ Hallo, {naam}!
   └─ datum · tijd · taal  |  zoek · bel · help (wit, alleen hier)
-Widgets (rounded-2xl) overlappen de banner (-mt)
-3× cards: Aandacht · Vandaag · Mijn taken
-grid: Actieve projecten + Financieel / Snelle acties
+Sectie 1 (overlapt banner): KPI-strip — omzet · open offertes · inbox
+Sectie 2: Snelle acties (grote tegels, 2–3 kolommen)
+Sectie 3: Operatie — open projecten · aandacht · vandaag
+Scheidingslijn met titel “Privé werkruimte”
+Sectie 4: Notities · rekenmachine · to-do’s · mini-kalender
 ```
 
 | Regel | Detail |
@@ -224,11 +226,13 @@ grid: Actieve projecten + Financieel / Snelle acties
 | Meta | Datum + live tijd + language picker |
 | Iconen | Zoek/bel/help wit op navy — **alleen dashboard** |
 | Banner bleed | Banner loopt achter de sidebar door (`-ml` + sidebar-width) zodat rounded sidebar-hoek navy toont, geen wit |
-| Widgets | `PageCard` met `rounded-2xl` (ruimer dan standaard `rounded-xl`) |
-| Overlap | Eerste rij widgets valt licht over de banner |
-| Snelle acties | Compacte tegels (icoon `bg-primary/10`); geen sidebar-CTA-gradient |
+| Surfaces | Dashboard-only: `rounded-2xl`, zachte shadow + `ring-1 ring-black/4` (niet standaard `PageCard`) |
+| Overlap | KPI-sectie valt licht over de banner |
+| Lege blokken | Gecentreerde empty-CTA (icoon + titel + knop) — geen kale muted tekst |
+| Snelle acties | Grote tegels met hover-icoon primary; geen sidebar-CTA-gradient |
+| Privé | Persoonlijke tools; notities/to-do’s per user+org (SQL) |
 
-**Canonical:** `src/features/dashboard/components/{dashboard-workspace,dashboard-hero}.tsx`
+**Canonical:** `src/features/dashboard/components/{dashboard-workspace,dashboard-hero,dashboard-surface}.tsx`
 
 ### 4.8 Onboarding (centered, buiten de app-shell)
 

@@ -1,26 +1,35 @@
 "use client";
 
 import {
+  CalendarPlus,
   CheckSquare,
   FileText,
   FolderKanban,
+  FolderPlus,
   Receipt,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
-import { formatEurFromCents } from "@/config/pricing";
+import { DashboardCalculatorCard } from "@/features/dashboard/components/dashboard-calculator-card";
 import { DashboardHero } from "@/features/dashboard/components/dashboard-hero";
 import { DashboardHeroChrome } from "@/features/dashboard/components/dashboard-hero-chrome";
+import { DashboardKpiStrip } from "@/features/dashboard/components/dashboard-kpi-strip";
+import { DashboardMiniCalendarCard } from "@/features/dashboard/components/dashboard-mini-calendar-card";
+import { DashboardNotesCard } from "@/features/dashboard/components/dashboard-notes-card";
+import { DashboardPrivateTodosCard } from "@/features/dashboard/components/dashboard-private-todos-card";
 import { DashboardQuickActions } from "@/features/dashboard/components/dashboard-quick-actions";
-import { DashboardTasksCard } from "@/features/dashboard/components/dashboard-tasks-card";
+import {
+  DashboardEmptyCta,
+  DashboardSurface,
+  DashboardSurfaceHeader,
+} from "@/features/dashboard/components/dashboard-surface";
 import type { DashboardSnapshot } from "@/features/dashboard/dashboard-actions";
 import {
   dayDelta,
   formatShortDate,
   formatTime,
 } from "@/features/dashboard/lib/dates";
-import { PageCard } from "@/features/shell/components/page-card";
 import { Link } from "@/i18n/navigation";
 import type { ProjectStatus } from "@/types/database";
 import { cn } from "@/lib/utils";
@@ -29,14 +38,6 @@ type DashboardWorkspaceProps = {
   snapshot: DashboardSnapshot;
   firstName: string;
 };
-
-/** Dashboard-only surface: slightly larger radius than standard PageCard. */
-function DashboardCard({
-  className,
-  ...props
-}: React.ComponentProps<typeof PageCard>) {
-  return <PageCard className={cn("rounded-2xl", className)} {...props} />;
-}
 
 function statusBadgeVariant(
   status: ProjectStatus,
@@ -104,20 +105,124 @@ export function DashboardWorkspace({
         chrome={<DashboardHeroChrome />}
       />
 
-      <div className="relative z-10 -mt-12 flex-1 px-6 pb-8 lg:-mt-14 lg:px-8 lg:pb-10">
-        <div className="mx-auto w-[90%] space-y-5">
-          <div className="grid gap-4 xl:grid-cols-3">
-            <DashboardCard className="flex min-h-64 flex-col overflow-hidden">
-              <div className="border-b border-border px-4 py-3">
-                <h2 className="text-sm font-medium">{t("attention.title")}</h2>
-              </div>
-              <div className="flex-1">
-                {snapshot.attention.length === 0 ? (
-                  <p className="px-4 py-6 text-sm text-muted-foreground">
-                    {t("attention.empty")}
-                  </p>
+      <div className="relative z-10 -mt-12 flex-1 px-6 pb-10 lg:-mt-14 lg:px-8 lg:pb-12">
+        <div className="mx-auto w-[90%] space-y-10">
+          {/* Section 1 — KPIs overlap banner */}
+          <DashboardKpiStrip kpis={snapshot.kpis} />
+
+          {/* Section 2 — Quick actions */}
+          <DashboardQuickActions
+            projects={snapshot.projectOptions}
+            workItems={snapshot.workItemOptions}
+            currentUserId={snapshot.currentUserId}
+          />
+
+          {/* Section 3 — Daily operations */}
+          <section className="space-y-3">
+            <div className="px-1">
+              <h2 className="text-sm font-semibold tracking-tight">
+                {t("operations.title")}
+              </h2>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                {t("operations.subtitle")}
+              </p>
+            </div>
+
+            <div className="grid gap-4 xl:grid-cols-3">
+              <DashboardSurface className="flex min-h-72 flex-col">
+                <DashboardSurfaceHeader
+                  title={t("projects.title")}
+                  action={
+                    snapshot.projects.length > 0 ? (
+                      <Link
+                        href="/projecten"
+                        className="text-xs text-primary hover:underline"
+                      >
+                        {t("projects.viewAll")}
+                      </Link>
+                    ) : null
+                  }
+                />
+                {snapshot.projects.length === 0 ? (
+                  <DashboardEmptyCta
+                    icon={FolderPlus}
+                    title={t("projects.emptyTitle")}
+                    description={t("projects.emptyDescription")}
+                    ctaLabel={t("projects.cta")}
+                    href="/opdrachten/nieuw"
+                  />
                 ) : (
-                  <ul className="divide-y divide-border/70">
+                  <ul className="flex-1 divide-y divide-border/60">
+                    {snapshot.projects.map((project) => (
+                      <li key={project.id}>
+                        <Link
+                          href={`/projecten/${project.id}`}
+                          className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-muted/30"
+                        >
+                          <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-muted text-muted-foreground">
+                            {project.coverUrl ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={project.coverUrl}
+                                alt=""
+                                className="size-full object-cover"
+                              />
+                            ) : (
+                              <FolderKanban className="size-4" />
+                            )}
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-sm font-medium">
+                              {project.name}
+                            </span>
+                            <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+                              {project.customerName || project.projectNumber}
+                            </span>
+                            {project.progressPercent != null ? (
+                              <div className="mt-2 h-1 overflow-hidden rounded-full bg-muted">
+                                <div
+                                  className="h-full rounded-full bg-primary"
+                                  style={{
+                                    width: `${project.progressPercent}%`,
+                                  }}
+                                />
+                              </div>
+                            ) : null}
+                          </span>
+                          <Badge variant={statusBadgeVariant(project.status)}>
+                            {tProjects(`status.${project.status}`)}
+                          </Badge>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </DashboardSurface>
+
+              <DashboardSurface className="flex min-h-72 flex-col">
+                <DashboardSurfaceHeader
+                  title={t("attention.title")}
+                  action={
+                    snapshot.attention.length > 0 ? (
+                      <Link
+                        href={attentionHref}
+                        className="text-xs text-primary hover:underline"
+                      >
+                        {t("attention.viewAll")}
+                      </Link>
+                    ) : null
+                  }
+                />
+                {snapshot.attention.length === 0 ? (
+                  <DashboardEmptyCta
+                    icon={CheckSquare}
+                    title={t("attention.emptyTitle")}
+                    description={t("attention.emptyDescription")}
+                    ctaLabel={t("attention.cta")}
+                    href="/werkzaamheden"
+                  />
+                ) : (
+                  <ul className="flex-1 divide-y divide-border/60">
                     {snapshot.attention.map((item) => {
                       const Icon =
                         item.kind === "invoice"
@@ -135,7 +240,7 @@ export function DashboardWorkspace({
                         <li key={item.id}>
                           <Link
                             href={item.href}
-                            className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-muted/30"
+                            className="flex items-center gap-3 px-5 py-2.5 transition-colors hover:bg-muted/30"
                           >
                             <span
                               className={cn(
@@ -164,33 +269,37 @@ export function DashboardWorkspace({
                     })}
                   </ul>
                 )}
-              </div>
-              <div className="border-t border-border px-4 py-2.5">
-                <Link
-                  href={attentionHref}
-                  className="text-sm text-primary hover:underline"
-                >
-                  {t("attention.viewAll")}
-                </Link>
-              </div>
-            </DashboardCard>
+              </DashboardSurface>
 
-            <DashboardCard className="flex min-h-64 flex-col overflow-hidden">
-              <div className="border-b border-border px-4 py-3">
-                <h2 className="text-sm font-medium">{t("today.title")}</h2>
-              </div>
-              <div className="flex-1">
+              <DashboardSurface className="flex min-h-72 flex-col">
+                <DashboardSurfaceHeader
+                  title={t("today.title")}
+                  action={
+                    snapshot.today.length > 0 ? (
+                      <Link
+                        href="/planning"
+                        className="text-xs text-primary hover:underline"
+                      >
+                        {t("today.viewAll")}
+                      </Link>
+                    ) : null
+                  }
+                />
                 {snapshot.today.length === 0 ? (
-                  <p className="px-4 py-6 text-sm text-muted-foreground">
-                    {t("today.empty")}
-                  </p>
+                  <DashboardEmptyCta
+                    icon={CalendarPlus}
+                    title={t("today.emptyTitle")}
+                    description={t("today.emptyDescription")}
+                    ctaLabel={t("today.cta")}
+                    href="/planning"
+                  />
                 ) : (
-                  <ul className="divide-y divide-border/70">
+                  <ul className="flex-1 divide-y divide-border/60">
                     {snapshot.today.map((item, index) => (
                       <li key={item.id}>
                         <Link
                           href={item.href}
-                          className="flex items-start gap-3 px-4 py-2.5 transition-colors hover:bg-muted/30"
+                          className="flex items-start gap-3 px-5 py-2.5 transition-colors hover:bg-muted/30"
                         >
                           <span className="w-12 shrink-0 pt-0.5 text-xs tabular-nums text-muted-foreground">
                             {item.allDay
@@ -220,171 +329,31 @@ export function DashboardWorkspace({
                     ))}
                   </ul>
                 )}
-              </div>
-              <div className="border-t border-border px-4 py-2.5">
-                <Link
-                  href="/planning"
-                  className="text-sm text-primary hover:underline"
-                >
-                  {t("today.viewAll")}
-                </Link>
-              </div>
-            </DashboardCard>
+              </DashboardSurface>
+            </div>
+          </section>
 
-            <DashboardTasksCard
-              personalTodos={snapshot.personalTodos}
-              assignedTasks={snapshot.assignedTasks}
-              locale={locale}
-              cardClassName="rounded-2xl"
-            />
-          </div>
-
-          <div className="grid gap-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(18rem,0.9fr)]">
-            <DashboardCard className="overflow-hidden">
-              <div className="border-b border-border px-4 py-3">
-                <h2 className="text-sm font-medium">{t("projects.title")}</h2>
-              </div>
-              {snapshot.projects.length === 0 ? (
-                <p className="px-4 py-6 text-sm text-muted-foreground">
-                  {t("projects.empty")}
-                </p>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="data-table">
-                    <thead>
-                      <tr>
-                        <th>{t("projects.columns.project")}</th>
-                        <th>{t("projects.columns.customer")}</th>
-                        <th>{t("projects.columns.status")}</th>
-                        <th>{t("projects.columns.progress")}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {snapshot.projects.map((project) => (
-                        <tr key={project.id}>
-                          <td>
-                            <Link
-                              href={`/projecten/${project.id}`}
-                              className="flex items-center gap-3"
-                            >
-                              <span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted text-muted-foreground">
-                                {project.coverUrl ? (
-                                  // eslint-disable-next-line @next/next/no-img-element
-                                  <img
-                                    src={project.coverUrl}
-                                    alt=""
-                                    className="size-full object-cover"
-                                  />
-                                ) : (
-                                  <FolderKanban className="size-4" />
-                                )}
-                              </span>
-                              <span className="min-w-0">
-                                <span className="block truncate font-medium hover:text-primary hover:underline">
-                                  {project.name}
-                                </span>
-                                <span className="block text-xs text-muted-foreground">
-                                  {project.projectNumber}
-                                </span>
-                              </span>
-                            </Link>
-                          </td>
-                          <td className="text-muted-foreground">
-                            {project.customerName || "—"}
-                          </td>
-                          <td>
-                            <Badge variant={statusBadgeVariant(project.status)}>
-                              {tProjects(`status.${project.status}`)}
-                            </Badge>
-                          </td>
-                          <td>
-                            {project.progressPercent == null ? (
-                              <span className="text-muted-foreground">—</span>
-                            ) : (
-                              <div className="min-w-24 space-y-1">
-                                <p className="text-xs tabular-nums text-muted-foreground">
-                                  {project.progressPercent}%
-                                </p>
-                                <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                                  <div
-                                    className="h-full rounded-full bg-primary"
-                                    style={{
-                                      width: `${project.progressPercent}%`,
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-              <div className="border-t border-border px-4 py-2.5">
-                <Link
-                  href="/projecten"
-                  className="text-sm text-primary hover:underline"
-                >
-                  {t("projects.viewAll")}
-                </Link>
-              </div>
-            </DashboardCard>
-
-            <div className="space-y-4">
-              <DashboardCard className="overflow-hidden">
-                <div className="border-b border-border px-4 py-3">
-                  <h2 className="text-sm font-medium">{t("finance.title")}</h2>
-                </div>
-                <div className="grid grid-cols-2 gap-px bg-border">
-                  {(
-                    [
-                      [
-                        "paidThisMonth",
-                        snapshot.finance.paidThisMonthCents,
-                        false,
-                      ],
-                      ["outstanding", snapshot.finance.outstandingCents, false],
-                      ["overdue", snapshot.finance.overdueCents, true],
-                      ["drafts", snapshot.finance.draftCount, false],
-                    ] as const
-                  ).map(([key, value, danger]) => (
-                    <div key={key} className="bg-card px-4 py-3">
-                      <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                        {t(`finance.${key}`)}
-                      </p>
-                      <p
-                        className={cn(
-                          "mt-1 text-lg font-semibold tabular-nums",
-                          danger && Number(value) > 0 && "text-destructive",
-                        )}
-                      >
-                        {key === "drafts"
-                          ? String(value)
-                          : formatEurFromCents(Number(value), locale)}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-                <div className="border-t border-border px-4 py-2.5">
-                  <Link
-                    href="/rapportages"
-                    className="text-sm text-primary hover:underline"
-                  >
-                    {t("finance.viewAll")}
-                  </Link>
-                </div>
-              </DashboardCard>
-
-              <DashboardQuickActions
-                projects={snapshot.projectOptions}
-                workItems={snapshot.workItemOptions}
-                currentUserId={snapshot.currentUserId}
-                cardClassName="rounded-2xl"
-              />
+          {/* Divider — Private workspace */}
+          <div className="relative py-2">
+            <div className="absolute inset-0 flex items-center" aria-hidden>
+              <div className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-background px-4 text-sm font-semibold tracking-tight text-foreground">
+                {t("private.title")}
+              </span>
             </div>
           </div>
+
+          {/* Section 4 — Personal tools */}
+          <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <DashboardNotesCard initialBody={snapshot.personalNote} />
+            <DashboardCalculatorCard />
+            <DashboardPrivateTodosCard
+              personalTodos={snapshot.personalTodos}
+            />
+            <DashboardMiniCalendarCard days={snapshot.calendarDays} />
+          </section>
         </div>
       </div>
     </div>

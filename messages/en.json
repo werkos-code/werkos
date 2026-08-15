@@ -471,14 +471,47 @@
       "yesterday": "Yesterday",
       "daysAgo": "{count, plural, one {# day ago} other {# days ago}}"
     },
+    "kpis": {
+      "revenue": {
+        "label": "Revenue this month",
+        "hint": "Paid invoices",
+        "emptyTitle": "No revenue this month yet",
+        "emptyDescription": "Create or send an invoice to see your first receipts here.",
+        "cta": "Go to invoices"
+      },
+      "openQuotes": {
+        "label": "Open quotes",
+        "hint": "Drafts and sent",
+        "emptyTitle": "No open quotes",
+        "emptyDescription": "Create a quote to move deals forward faster.",
+        "cta": "Create quote"
+      },
+      "openInbox": {
+        "label": "Inbox",
+        "hint": "Open conversations",
+        "emptyTitle": "Inbox is empty",
+        "emptyDescription": "Start a conversation on a project to align internally.",
+        "cta": "Open inbox"
+      }
+    },
+    "operations": {
+      "title": "Work & operations",
+      "subtitle": "What is happening across your projects today."
+    },
     "attention": {
       "title": "Needs your attention",
       "empty": "Nothing needs attention right now.",
+      "emptyTitle": "All clear",
+      "emptyDescription": "No open attention items. Plan work or review your projects.",
+      "cta": "View work items",
       "viewAll": "View all"
     },
     "today": {
       "title": "Today",
       "empty": "Nothing planned today.",
+      "emptyTitle": "Nothing planned yet",
+      "emptyDescription": "Schedule an appointment or task to keep your day clear.",
+      "cta": "Schedule something",
       "viewAll": "View planning",
       "allDay": "All day"
     },
@@ -490,8 +523,11 @@
       "todosUnavailable": "Personal to-dos are not available yet. Run the SQL migration."
     },
     "projects": {
-      "title": "Active projects",
+      "title": "Open projects",
       "empty": "No active projects.",
+      "emptyTitle": "No active projects yet",
+      "emptyDescription": "Start an assignment to see projects here.",
+      "cta": "New assignment",
       "viewAll": "View all projects",
       "columns": {
         "project": "Project",
@@ -510,6 +546,7 @@
     },
     "quickActions": {
       "title": "Quick actions",
+      "subtitle": "The most important tasks in one click from your dashboard.",
       "project": {
         "title": "New project",
         "hint": "Start a new assignment"
@@ -533,6 +570,35 @@
       "schedule": {
         "title": "Task or appointment",
         "hint": "Plan work or a timeslot"
+      }
+    },
+    "private": {
+      "title": "Private workspace",
+      "notes": {
+        "title": "Notes",
+        "placeholder": "Jot down quick notes for yourself…",
+        "saving": "Saving…",
+        "saved": "Saved",
+        "unavailable": "Notes are not available yet. Run the SQL migration."
+      },
+      "calculator": {
+        "title": "Calculator"
+      },
+      "todos": {
+        "title": "To-dos",
+        "placeholder": "New to-do…",
+        "emptyTitle": "No to-dos yet",
+        "emptyDescription": "Keep personal actions here, separate from project tasks.",
+        "cta": "Add first to-do",
+        "openCount": "{count, plural, one {# open} other {# open}}",
+        "unavailable": "Personal to-dos are not available yet. Run the SQL migration."
+      },
+      "calendar": {
+        "title": "Calendar",
+        "emptyTitle": "No appointments this month",
+        "emptyDescription": "Schedule something so your month shows up here.",
+        "cta": "Open planning",
+        "openPlanning": "Open planning"
       }
     },
     "dialogs": {
