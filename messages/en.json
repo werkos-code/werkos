@@ -184,6 +184,7 @@
       "title": "Help",
       "description": "Quick links to frequently used areas.",
       "shortcut": "Use ⌘K / Ctrl+K to search anywhere.",
+      "restartGuidedSetup": "Restart first steps",
       "links": {
         "projects": "Projects",
         "workItems": "Work items",
@@ -424,6 +425,61 @@
     "errors": {
       "noStripeCustomer": "No Stripe customer found for this company.",
       "forbidden": "Only the owner can manage this."
+    }
+  },
+  "guidedSetup": {
+    "intro": {
+      "eyebrow": "Step {step} of {total}",
+      "next": "Next",
+      "done": "Go to dashboard",
+      "skip": "Explore on my own",
+      "ctaStart": "Start first assignment",
+      "ctaCompany": "Open company profile",
+      "steps": {
+        "model": {
+          "title": "Everything centres on the project",
+          "body": "Quotes, planning, work and invoices belong to the same project — so nothing gets scattered."
+        },
+        "start": {
+          "title": "Start with New assignment",
+          "body": "Don’t create an empty project. New assignment captures the customer, intake and a draft quote in one flow."
+        },
+        "flow": {
+          "title": "From quote to invoice",
+          "body": "After the quote comes execution. The dashboard shows what needs attention today."
+        },
+        "company": {
+          "title": "Set up your letterhead",
+          "body": "Address, KvK and logo appear on quotes and invoices. Do it now or later."
+        }
+      }
+    },
+    "checklist": {
+      "title": "First steps",
+      "progress": "{done} of {total} done",
+      "dismiss": "Hide",
+      "steps": {
+        "company": {
+          "title": "Finish company details",
+          "hint": "Address, KvK or logo for clean documents"
+        },
+        "assignment": {
+          "title": "Create your first assignment",
+          "hint": "Use New assignment in the sidebar"
+        },
+        "quote": {
+          "title": "Review the draft quote",
+          "hint": "Created automatically with your first assignment"
+        },
+        "projects": {
+          "title": "Open your projects",
+          "hint": "See what your team is working on"
+        },
+        "work": {
+          "title": "Check work items",
+          "hint": "What still needs to be done"
+        }
+      }
     }
   },
   "dashboard": {

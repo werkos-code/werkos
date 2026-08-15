@@ -2,6 +2,14 @@
 
 > Handmatige stappen die nog gedaan moeten worden. Agents: herinner de gebruiker hieraan bij relevant werk.
 
+## Guided setup SQL — **nog te doen** (vóór eerste-stappen-gids)
+
+Na deploy: in Supabase SQL Editor uitvoeren:
+
+`docs/sql-applied/20260815100000_guided_setup.sql`
+
+Zonder deze kolommen blijft de gids uit (fail-soft).
+
 ## Jaarlijkse billing (vóór livegang) — **nog te doen**
 
 Commercieel model staat vast; Stripe yearly prices + app-keuze maandelijks/jaarlijks zijn **nog niet gebouwd**.

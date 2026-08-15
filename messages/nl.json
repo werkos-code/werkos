@@ -184,6 +184,7 @@
       "title": "Help",
       "description": "Snelle links naar veelgebruikte onderdelen.",
       "shortcut": "Gebruik ⌘K / Ctrl+K om overal te zoeken.",
+      "restartGuidedSetup": "Eerste stappen opnieuw",
       "links": {
         "projects": "Projecten",
         "workItems": "Werkzaamheden",
@@ -424,6 +425,61 @@
     "errors": {
       "noStripeCustomer": "Geen Stripe-klant gevonden voor dit bedrijf.",
       "forbidden": "Alleen de eigenaar kan dit beheren."
+    }
+  },
+  "guidedSetup": {
+    "intro": {
+      "eyebrow": "Stap {step} van {total}",
+      "next": "Volgende",
+      "done": "Naar het dashboard",
+      "skip": "Zelf ontdekken",
+      "ctaStart": "Eerste opdracht starten",
+      "ctaCompany": "Bedrijfsgegevens openen",
+      "steps": {
+        "model": {
+          "title": "Alles draait om het project",
+          "body": "Offerte, planning, werk en factuur horen bij hetzelfde project. Zo blijft alles bij elkaar."
+        },
+        "start": {
+          "title": "Begin bij Nieuwe opdracht",
+          "body": "Start geen leeg project. Via Nieuwe opdracht leg je klant, intake en een conceptofferte in één keer vast."
+        },
+        "flow": {
+          "title": "Van offerte naar factuur",
+          "body": "Na de offerte volgt uitvoering. Het dashboard toont wat vandaag aandacht nodig heeft."
+        },
+        "company": {
+          "title": "Zet je bedrijf netjes op papier",
+          "body": "Adres, KvK en logo verschijnen op offertes en facturen. Dat kun je nu of later doen."
+        }
+      }
+    },
+    "checklist": {
+      "title": "Eerste stappen",
+      "progress": "{done} van {total} klaar",
+      "dismiss": "Verbergen",
+      "steps": {
+        "company": {
+          "title": "Bedrijfsgegevens afronden",
+          "hint": "Adres, KvK of logo voor nette documenten"
+        },
+        "assignment": {
+          "title": "Eerste opdracht aanmaken",
+          "hint": "Via Nieuwe opdracht in de sidebar"
+        },
+        "quote": {
+          "title": "Conceptofferte bekijken",
+          "hint": "Volgt automatisch na je eerste opdracht"
+        },
+        "projects": {
+          "title": "Open je projecten",
+          "hint": "Zie waar je team aan werkt"
+        },
+        "work": {
+          "title": "Bekijk werkzaamheden",
+          "hint": "Wat er nog moet gebeuren"
+        }
+      }
     }
   },
   "dashboard": {

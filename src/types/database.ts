@@ -99,6 +99,8 @@ export type Database = {
           id: string;
           full_name: string | null;
           platform_role: "super_admin" | null;
+          guided_setup_intro_completed_at: string | null;
+          guided_setup_dismissed_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -106,6 +108,8 @@ export type Database = {
           id: string;
           full_name?: string | null;
           platform_role?: "super_admin" | null;
+          guided_setup_intro_completed_at?: string | null;
+          guided_setup_dismissed_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -113,6 +117,8 @@ export type Database = {
           id?: string;
           full_name?: string | null;
           platform_role?: "super_admin" | null;
+          guided_setup_intro_completed_at?: string | null;
+          guided_setup_dismissed_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };

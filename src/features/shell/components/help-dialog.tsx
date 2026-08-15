@@ -2,14 +2,17 @@
 
 import { ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useTransition } from "react";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Link } from "@/i18n/navigation";
+import { restartGuidedSetup } from "@/features/guided-setup/guided-setup-actions";
+import { Link, useRouter } from "@/i18n/navigation";
 
 type HelpDialogProps = {
   open: boolean;
@@ -18,6 +21,8 @@ type HelpDialogProps = {
 
 export function HelpDialog({ open, onOpenChange }: HelpDialogProps) {
   const t = useTranslations("shell.help");
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
 
   const links = [
     { href: "/projecten", label: t("links.projects") },
@@ -49,6 +54,24 @@ export function HelpDialog({ open, onOpenChange }: HelpDialogProps) {
             </li>
           ))}
         </ul>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          disabled={pending}
+          onClick={() => {
+            startTransition(() => {
+              void (async () => {
+                await restartGuidedSetup();
+                onOpenChange(false);
+                router.push("/dashboard?welcome=1");
+                router.refresh();
+              })();
+            });
+          }}
+        >
+          {t("restartGuidedSetup")}
+        </Button>
         <p className="text-xs text-muted-foreground">{t("shortcut")}</p>
       </DialogContent>
     </Dialog>
