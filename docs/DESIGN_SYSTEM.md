@@ -252,6 +252,19 @@ wit blok rounded-3xl, geen border, royale padding
 
 **Canonical:** `src/features/auth/components/login-shell.tsx` · `login-card.tsx` · `src/app/[locale]/page.tsx`
 
+### 4.10 Abonnement kiezen (`/instellingen/abonnement/kiezen`)
+
+Belangrijkste monetisatie-pagina in de app — rijk, niet basic, geen marketing-1:1.
+
+1. Intro: eyebrow + headline (`text-2xl/3xl`) met één `text-primary` accent-woord + korte subcopy
+2. Twee kolommen (`lg:grid-cols-12`): plan-card 5 · calculator+uitsluitingen 7
+3. Plan-card: navy gradient-header (`#09133A` → blauw) met prijs + feature-lijst met soft check-chips + primaire CTA
+4. Calculator: seat-steppers met hint-regels + total-balk onderaan
+5. “Niet inbegrepen”-card met muted X-chips — eerlijk, geen hype
+6. Geen website-navbar, geen paarse/cream marketing-atmosfeer; surfaces blijven `PageCard`
+
+**Canonical:** `src/features/billing/components/subscription-chooser.tsx`
+
 ---
 
 ## 5. Typografie-schaal
