@@ -47,6 +47,7 @@ type DashboardQuickActionsProps = {
   projects: DashboardProjectOption[];
   workItems: DashboardWorkItemOption[];
   currentUserId: string;
+  cardClassName?: string;
 };
 
 function nextHourRange() {
@@ -62,6 +63,7 @@ export function DashboardQuickActions({
   projects,
   workItems,
   currentUserId,
+  cardClassName,
 }: DashboardQuickActionsProps) {
   const t = useTranslations("dashboard");
   const tCommon = useTranslations("common");
@@ -301,7 +303,7 @@ export function DashboardQuickActions({
 
   return (
     <>
-      <PageCard className="overflow-hidden">
+      <PageCard className={cn("overflow-hidden", cardClassName)}>
         <div className="border-b border-border px-4 py-3">
           <h2 className="text-sm font-medium">{t("quickActions.title")}</h2>
         </div>

@@ -20,6 +20,7 @@ type DashboardTasksCardProps = {
   personalTodos: DashboardPersonalTodo[];
   assignedTasks: DashboardAssignedTask[];
   locale: string;
+  cardClassName?: string;
 };
 
 function DueMeta({
@@ -58,6 +59,7 @@ export function DashboardTasksCard({
   personalTodos,
   assignedTasks,
   locale,
+  cardClassName,
 }: DashboardTasksCardProps) {
   const t = useTranslations("dashboard");
   const tCommon = useTranslations("common");
@@ -153,7 +155,12 @@ export function DashboardTasksCard({
   }
 
   return (
-    <PageCard className="flex min-h-64 flex-col overflow-hidden">
+    <PageCard
+      className={cn(
+        "flex min-h-64 flex-col overflow-hidden",
+        cardClassName,
+      )}
+    >
       <div className="border-b border-border px-4 py-3">
         <h2 className="text-sm font-medium">{t("tasks.title")}</h2>
       </div>

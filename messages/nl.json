@@ -569,6 +569,11 @@
       "schedule": {
         "title": "Taak of afspraak"
       }
+    },
+    "hero": {
+      "hello": "Hallo, {name}!",
+      "revenueLabel": "Omzet deze maand",
+      "language": "Taal"
     }
   },
   "reports": {

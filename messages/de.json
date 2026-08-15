@@ -569,6 +569,11 @@
       "schedule": {
         "title": "Aufgabe oder Termin"
       }
+    },
+    "hero": {
+      "hello": "Hallo, {name}!",
+      "revenueLabel": "Umsatz diesen Monat",
+      "language": "Sprache"
     }
   },
   "reports": {
