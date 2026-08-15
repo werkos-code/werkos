@@ -51,6 +51,14 @@ const ghostInputClass =
 const ghostTextareaClass =
   "w-full resize-y rounded-md border border-transparent bg-transparent px-1 py-1 text-xs text-muted-foreground outline-none transition-colors placeholder:text-muted-foreground/50 focus-visible:border-input focus-visible:bg-background focus-visible:px-2";
 
+function blurOnEnter(
+  event: React.KeyboardEvent<HTMLInputElement>,
+) {
+  if (event.key !== "Enter") return;
+  event.preventDefault();
+  event.currentTarget.blur();
+}
+
 const EDIT_COLS =
   "grid-cols-[1.25rem_minmax(0,1.6fr)_4.5rem_3.5rem_5.5rem_4rem_5.5rem_2rem]";
 const PREVIEW_COLS =
@@ -621,6 +629,7 @@ function SortablePricedRow({
             placeholder={tEditor("placeholders.line")}
             className={cn(ghostInputClass, "min-w-0 flex-1 font-medium")}
             onChange={(e) => onLineChange?.(line.id, { title: e.target.value })}
+            onKeyDown={blurOnEnter}
           />
           <Button
             type="button"
@@ -694,6 +703,7 @@ function SortablePricedRow({
         onChange={(e) =>
           onLineChange?.(line.id, { unit: e.target.value || null })
         }
+        onKeyDown={blurOnEnter}
       />
       <MoneyField
         cents={line.unitPriceCents}
@@ -785,6 +795,7 @@ function SortableGroupBlock({
             placeholder={tEditor("placeholders.group")}
             className={cn(ghostInputClass, "font-semibold")}
             onChange={(e) => onLineChange?.(line.id, { title: e.target.value })}
+            onKeyDown={blurOnEnter}
           />
           <textarea
             rows={1}

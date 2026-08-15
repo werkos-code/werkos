@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type KeyboardEvent } from "react";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -8,6 +8,12 @@ import {
   minutesToHoursInput,
 } from "@/features/time/lib/time-entry";
 import { cn } from "@/lib/utils";
+
+function commitOnEnter(event: KeyboardEvent<HTMLInputElement>) {
+  if (event.key !== "Enter") return;
+  event.preventDefault();
+  event.currentTarget.blur();
+}
 
 export function centsToDraft(cents: number | null): string {
   if (cents === null || Number.isNaN(cents)) return "";
@@ -61,6 +67,7 @@ export function MoneyField({
         setDraft(centsToDraft(cents));
       }}
       onChange={(e) => setDraft(e.target.value)}
+      onKeyDown={commitOnEnter}
       onBlur={() => {
         setFocused(false);
         onCommit(draftToCents(draft));
@@ -98,6 +105,7 @@ export function QuantityField({
         setDraft(display);
       }}
       onChange={(e) => setDraft(e.target.value)}
+      onKeyDown={commitOnEnter}
       onBlur={() => {
         setFocused(false);
         onCommit(parseQuantity(draft));
@@ -134,6 +142,7 @@ export function HoursField({
         setDraft(display);
       }}
       onChange={(e) => setDraft(e.target.value)}
+      onKeyDown={commitOnEnter}
       onBlur={() => {
         setFocused(false);
         onCommit(hoursInputToMinutes(draft.replace(",", ".")));
@@ -170,6 +179,7 @@ export function VatRateField({
         setDraft(display);
       }}
       onChange={(e) => setDraft(e.target.value)}
+      onKeyDown={commitOnEnter}
       onBlur={() => {
         setFocused(false);
         const n = Number(draft.replace(",", "."));
