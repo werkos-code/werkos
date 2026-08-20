@@ -35,5 +35,5 @@ export default async function OnboardingProvisioningPage({
     redirect({ href: "/onboarding/complete", locale });
   }
 
-  redirect({ href: "/onboarding/team", locale });
+  redirect({ href: "/onboarding/company", locale });
 }

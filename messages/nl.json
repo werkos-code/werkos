@@ -62,8 +62,8 @@
       "cta": "Aan de slag"
     },
     "account": {
-      "title": "Maak je account",
-      "description": "Alleen wat nodig is om te beginnen.",
+      "title": "Start je 14 dagen gratis",
+      "description": "Geen betaalmethode nodig. Direct alle functies — alleen wat nodig is om te beginnen.",
       "fullName": "Naam",
       "email": "E-mailadres",
       "password": "Wachtwoord",
@@ -75,12 +75,14 @@
     },
     "company": {
       "title": "Over je bedrijf",
-      "description": "Alleen de basis. De rest vul je later aan.",
+      "description": "Alleen je bedrijfsnaam. De rest vul je later aan.",
       "companyName": "Bedrijfsnaam",
       "industry": "Branche",
+      "industryOptional": "Optioneel",
       "industryOther": "Andere branche",
       "industryPlaceholder": "Typ je branche",
-      "submit": "Doorgaan",
+      "trialHint": "14 dagen volledige toegang. Geen betaalmethode nodig.",
+      "submit": "Start 14 dagen gratis",
       "industries": {
         "painter": "Schilder",
         "roofer": "Dakdekker",

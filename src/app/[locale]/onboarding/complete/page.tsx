@@ -18,14 +18,14 @@ export default async function OnboardingCompletePage({ params }: Props) {
   } = await supabase.auth.getUser();
   if (!user) redirect({ href: "/onboarding/account", locale });
   if (!(await userHasOrganization())) {
-    redirect({ href: "/onboarding/team", locale });
+    redirect({ href: "/onboarding/company", locale });
   }
 
   const t = await getTranslations("onboarding.complete");
 
   return (
     <OnboardingStepFrame
-      step={4}
+      step={2}
       title={t("title")}
       description={t("description")}
     >

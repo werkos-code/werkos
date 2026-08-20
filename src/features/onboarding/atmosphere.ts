@@ -21,5 +21,5 @@ export const ONBOARDING_ATMOSPHERE_ASSETS = {
 export const DEFAULT_ONBOARDING_ATMOSPHERE =
   ONBOARDING_ATMOSPHERE_ASSETS.solarInstaller;
 
-/** Account → company → team → complete (no payment gate). */
-export const ONBOARDING_STEP_TOTAL = 4;
+/** Account → company → trial (no payment / seats gate). */
+export const ONBOARDING_STEP_TOTAL = 2;

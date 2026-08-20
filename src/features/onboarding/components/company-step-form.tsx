@@ -1,14 +1,13 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { saveCompanyDraft } from "@/features/onboarding/actions";
-import { useRouter } from "@/i18n/navigation";
+import { completeCompanyOnboardingAction } from "@/features/onboarding/actions";
 
 const INDUSTRY_KEYS = [
   "painter",
@@ -32,7 +31,7 @@ export function CompanyStepForm({
 }: CompanyStepFormProps) {
   const t = useTranslations("onboarding.company");
   const tCommon = useTranslations("common");
-  const router = useRouter();
+  const locale = useLocale();
   const [industry, setIndustry] = useState(initialIndustry);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -42,20 +41,17 @@ export function CompanyStepForm({
       className="flex flex-col gap-5"
       onSubmit={(event) => {
         event.preventDefault();
+        if (pending) return;
         const form = new FormData(event.currentTarget);
-        if (!industry) {
-          setError(tCommon("error"));
-          return;
-        }
 
         setError(null);
         setPending(true);
 
         void (async () => {
           try {
-            const result = await saveCompanyDraft({
+            const result = await completeCompanyOnboardingAction({
               companyName: String(form.get("companyName") ?? ""),
-              industry,
+              industry: industry || undefined,
               industryOther: String(form.get("industryOther") ?? ""),
             });
             if (result.error) {
@@ -63,7 +59,7 @@ export function CompanyStepForm({
               setPending(false);
               return;
             }
-            router.push("/onboarding/team");
+            window.location.assign(`/${locale}/onboarding/complete`);
           } catch (err) {
             setError(err instanceof Error ? err.message : tCommon("error"));
             setPending(false);
@@ -78,17 +74,23 @@ export function CompanyStepForm({
             id="companyName"
             name="companyName"
             required
+            autoComplete="organization"
             defaultValue={initialCompanyName}
           />
         </div>
         <div className="space-y-3">
-          <Label>{t("industry")}</Label>
+          <div className="flex items-baseline justify-between gap-3">
+            <Label>{t("industry")}</Label>
+            <span className="text-xs text-muted-foreground">{t("industryOptional")}</span>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             {INDUSTRY_KEYS.map((key) => (
               <button
                 key={key}
                 type="button"
-                onClick={() => setIndustry(key)}
+                onClick={() =>
+                  setIndustry((current) => (current === key ? "" : key))
+                }
                 className={cn(
                   "rounded-lg border px-3 py-2.5 text-left text-sm transition-colors",
                   industry === key
@@ -106,14 +108,16 @@ export function CompanyStepForm({
                 name="industryOther"
                 placeholder={t("industryPlaceholder")}
                 defaultValue={initialIndustryOther}
-                required
               />
             ) : null}
           </div>
         </div>
       </div>
+
+      <p className="text-sm text-muted-foreground">{t("trialHint")}</p>
+
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
-      <Button type="submit" size="lg" disabled={pending || !industry} className="w-full">
+      <Button type="submit" size="lg" disabled={pending} className="w-full">
         {pending ? tCommon("loading") : t("submit")}
       </Button>
     </form>

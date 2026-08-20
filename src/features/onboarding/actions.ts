@@ -39,11 +39,15 @@ export async function getOnboardingDraft(): Promise<OnboardingDraft | null> {
   return data;
 }
 
-export async function saveCompanyDraft(input: {
+/**
+ * Save company basics and provision the org with a 14-day trial (0 extra seats).
+ * Industry is optional — seats are chosen later under subscription settings.
+ */
+export async function completeCompanyOnboardingAction(input: {
   companyName: string;
-  industry: string;
+  industry?: string;
   industryOther?: string;
-}): Promise<{ error?: string }> {
+}): Promise<{ error?: string; organizationId?: string }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -53,43 +57,36 @@ export async function saveCompanyDraft(input: {
   const companyName = input.companyName.trim();
   if (!companyName) return { error: "company_name_required" };
 
-  const { error } = await supabase.from("onboarding_drafts").upsert(
+  const industryKey = input.industry?.trim() || null;
+  const industryOther =
+    industryKey === "other" ? input.industryOther?.trim() || null : null;
+
+  const { error: draftError } = await supabase.from("onboarding_drafts").upsert(
     {
       user_id: user.id,
       company_name: companyName,
-      industry: input.industry,
-      industry_other:
-        input.industry === "other" ? input.industryOther?.trim() ?? null : null,
-      step: "team",
-    },
-    { onConflict: "user_id" },
-  );
-
-  if (error) return { error: error.message };
-  return {};
-}
-
-export async function saveTeamDraft(input: {
-  officeSeats: number;
-  fieldSeats: number;
-}): Promise<{ error?: string }> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "unauthorized" };
-
-  const { error } = await supabase.from("onboarding_drafts").upsert(
-    {
-      user_id: user.id,
-      office_seats: Math.max(0, input.officeSeats),
-      field_seats: Math.max(0, input.fieldSeats),
+      industry: industryKey,
+      industry_other: industryOther,
+      office_seats: 0,
+      field_seats: 0,
       step: "complete",
     },
     { onConflict: "user_id" },
   );
 
-  if (error) return { error: error.message };
+  if (draftError) return { error: draftError.message };
+
+  return completeOnboardingAction({ officeSeats: 0, fieldSeats: 0 });
+}
+
+/** @deprecated Prefer completeCompanyOnboardingAction — kept for older clients. */
+export async function saveCompanyDraft(input: {
+  companyName: string;
+  industry: string;
+  industryOther?: string;
+}): Promise<{ error?: string }> {
+  const result = await completeCompanyOnboardingAction(input);
+  if (result.error) return { error: result.error };
   return {};
 }
 
@@ -146,7 +143,6 @@ export async function completeOnboardingAction(input: {
     return { error: rpcError.message };
   }
 
-  // Fallback for environments that have not applied the RPC yet.
   const industry =
     draft.industry === "other" ? draft.industry_other : draft.industry;
 
