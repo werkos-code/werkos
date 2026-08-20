@@ -19,7 +19,7 @@ export default async function NewStaffPage({ params }: Props) {
 
   return (
     <ShellPage title={t("inviteTitle")} backHref="/personeel">
-      <StaffInviteForm />
+      <StaffInviteForm seats={result.seats ?? null} />
     </ShellPage>
   );
 }

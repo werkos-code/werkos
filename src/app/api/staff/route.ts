@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
 
 import { USER_ROLES } from "@/config/roles";
+import { formatEurFromCents, PRICING } from "@/config/pricing";
+import { addStaffSeatAction } from "@/features/billing/billing-actions";
+import { getOrganizationAccessAdmin } from "@/features/billing/lib/get-organization-access";
+import { loadStaffSeatUsage } from "@/features/staff/lib/load-staff-seat-usage";
+import {
+  remainingForKind,
+  seatKindForRole,
+} from "@/features/staff/lib/staff-seats";
 import { STAFF_ASSIGNABLE_ROLES } from "@/features/staff/lib/staff-roles";
 import { getAppSession } from "@/features/shell/lib/require-organization";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getOrganizationAccessAdmin } from "@/features/billing/lib/get-organization-access";
 
 async function requireOwner() {
   const session = await getAppSession();
@@ -24,12 +31,22 @@ async function requireOwner() {
   };
 }
 
+function seatPriceLabel(kind: "office" | "field") {
+  const cents =
+    kind === "office"
+      ? PRICING.officeSeatMonthlyCents
+      : PRICING.fieldSeatMonthlyCents;
+  return formatEurFromCents(cents);
+}
+
 export async function POST(request: Request) {
   try {
     const gate = await requireOwner();
     if ("error" in gate) return gate.error;
 
-    const access = await getOrganizationAccessAdmin(gate.organizationId, { userId: gate.userId });
+    const access = await getOrganizationAccessAdmin(gate.organizationId, {
+      userId: gate.userId,
+    });
     if (!access.canWrite) {
       return NextResponse.json(
         { error: "subscription_required", code: "subscription_required" },
@@ -42,12 +59,14 @@ export async function POST(request: Request) {
       email?: string;
       password?: string;
       role?: string;
+      addSeat?: boolean;
     };
 
     const fullName = body.fullName?.trim() ?? "";
     const email = body.email?.trim().toLowerCase() ?? "";
     const password = body.password ?? "";
     const role = body.role?.trim() ?? "";
+    const addSeat = Boolean(body.addSeat);
 
     if (
       !fullName ||
@@ -61,6 +80,64 @@ export async function POST(request: Request) {
     }
 
     const assignableRole = role as (typeof STAFF_ASSIGNABLE_ROLES)[number];
+    const seatKind = seatKindForRole(assignableRole);
+
+    const seatsResult = await loadStaffSeatUsage(gate.organizationId);
+    if (seatsResult.error || !seatsResult.usage) {
+      return NextResponse.json(
+        { error: seatsResult.error || "seats_unavailable" },
+        { status: 500 },
+      );
+    }
+
+    let usage = seatsResult.usage;
+    if (remainingForKind(usage, seatKind) <= 0) {
+      if (!addSeat) {
+        return NextResponse.json(
+          {
+            error: "seat_limit_reached",
+            code: "seat_limit_reached",
+            seatKind,
+            priceLabel: seatPriceLabel(seatKind),
+            officeRemaining: usage.officeRemaining,
+            fieldRemaining: usage.fieldRemaining,
+            officeSeats: usage.officeSeats,
+            fieldSeats: usage.fieldSeats,
+            isTrialing: usage.isTrialing,
+            isPaid: usage.isPaid,
+          },
+          { status: 402 },
+        );
+      }
+
+      const purchase = await addStaffSeatAction({ kind: seatKind, quantity: 1 });
+      if (purchase.error) {
+        return NextResponse.json(
+          {
+            error: purchase.error,
+            detail: purchase.detail,
+            seatKind,
+            priceLabel: seatPriceLabel(seatKind),
+          },
+          {
+            status:
+              purchase.error === "subscription_required" ||
+              purchase.error === "stripe_missing"
+                ? 402
+                : 500,
+          },
+        );
+      }
+
+      const refreshed = await loadStaffSeatUsage(gate.organizationId);
+      if (refreshed.usage) usage = refreshed.usage;
+      if (remainingForKind(usage, seatKind) <= 0) {
+        return NextResponse.json(
+          { error: "seat_limit_reached", seatKind },
+          { status: 402 },
+        );
+      }
+    }
 
     const admin = createAdminClient();
     const { data: created, error: createError } =
@@ -186,6 +263,29 @@ export async function PATCH(request: Request) {
       nextRole !== membership.role
     ) {
       const assignableRole = nextRole as (typeof STAFF_ASSIGNABLE_ROLES)[number];
+      const seatKind = seatKindForRole(assignableRole);
+      const seatsResult = await loadStaffSeatUsage(gate.organizationId);
+      if (seatsResult.error || !seatsResult.usage) {
+        return NextResponse.json(
+          { error: seatsResult.error || "seats_unavailable" },
+          { status: 500 },
+        );
+      }
+
+      // Changing into a role frees the old seat automatically; only check target remaining
+      // after subtracting current member if they already occupy that kind (they don't).
+      if (remainingForKind(seatsResult.usage, seatKind) <= 0) {
+        return NextResponse.json(
+          {
+            error: "seat_limit_reached",
+            code: "seat_limit_reached",
+            seatKind,
+            priceLabel: seatPriceLabel(seatKind),
+          },
+          { status: 402 },
+        );
+      }
+
       const { error: roleError } = await admin
         .from("organization_memberships")
         .update({ role: assignableRole })

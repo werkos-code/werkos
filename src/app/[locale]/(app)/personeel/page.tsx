@@ -21,6 +21,7 @@ export default async function PersoneelPage({ params }: Props) {
           members={result.members ?? []}
           canManage={Boolean(result.canManage)}
           currentUserId={result.currentUserId ?? ""}
+          seats={result.seats ?? null}
         />
       )}
     </ShellPage>

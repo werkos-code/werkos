@@ -6,21 +6,26 @@ import { useMemo, useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { formatEurFromCents, PRICING } from "@/config/pricing";
 import { USER_ROLES } from "@/config/roles";
 import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
+import type { StaffSeatUsage } from "@/features/staff/lib/staff-seats";
 import type { StaffMemberRow } from "@/features/staff/staff-actions";
 import { Link, useRouter } from "@/i18n/navigation";
+import { cn } from "@/lib/utils";
 
 type StaffWorkspaceProps = {
   members: StaffMemberRow[];
   canManage: boolean;
   currentUserId: string;
+  seats: StaffSeatUsage | null;
 };
 
 export function StaffWorkspace({
   members,
   canManage,
   currentUserId,
+  seats,
 }: StaffWorkspaceProps) {
   const t = useTranslations("staff");
   const tRoles = useTranslations("platform.users.roles");
@@ -54,14 +59,96 @@ export function StaffWorkspace({
     });
   }, [members, query, roleFilter]);
 
+  const officeFull = seats ? seats.officeRemaining <= 0 : false;
+  const fieldFull = seats ? seats.fieldRemaining <= 0 : false;
+
   return (
     <div className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <MetaStatCard label={t("kpiTotal")} value={String(stats.total)} />
-        <MetaStatCard label={t("kpiOffice")} value={String(stats.office)} />
-        <MetaStatCard label={t("kpiField")} value={String(stats.field)} />
-        <MetaStatCard label={t("kpiOwners")} value={String(stats.owners)} />
+        <MetaStatCard
+          label={t("kpiOfficeSeats")}
+          value={
+            seats
+              ? t("seatUsage", {
+                  used: seats.officeUsed,
+                  included: seats.officeSeats,
+                })
+              : String(stats.office)
+          }
+          muted={officeFull}
+        />
+        <MetaStatCard
+          label={t("kpiFieldSeats")}
+          value={
+            seats
+              ? t("seatUsage", {
+                  used: seats.fieldUsed,
+                  included: seats.fieldSeats,
+                })
+              : String(stats.field)
+          }
+          muted={fieldFull}
+        />
+        <MetaStatCard
+          label={t("kpiOwners")}
+          value={t("ownerIncluded", { count: stats.owners })}
+        />
       </div>
+
+      {seats ? (
+        <PageCard className="p-4 sm:p-5">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="min-w-0 space-y-1">
+              <h2 className="text-sm font-semibold tracking-tight">
+                {t("seats.title")}
+              </h2>
+              <p className="max-w-2xl text-sm text-muted-foreground">
+                {seats.isTrialing
+                  ? t("seats.trialHint")
+                  : seats.isPaid
+                    ? t("seats.paidHint")
+                    : t("seats.missingHint")}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {t("seats.pricing", {
+                  office: formatEurFromCents(PRICING.officeSeatMonthlyCents),
+                  field: formatEurFromCents(PRICING.fieldSeatMonthlyCents),
+                })}
+              </p>
+            </div>
+            {canManage ? (
+              <Button asChild variant="outline" size="sm">
+                <Link href="/instellingen/abonnement">{t("seats.managePlan")}</Link>
+              </Button>
+            ) : null}
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <SeatMeter
+              label={tRoles("office_employee")}
+              used={seats.officeUsed}
+              included={seats.officeSeats}
+              remainingLabel={
+                seats.officeRemaining > 0
+                  ? t("seats.remaining", { count: seats.officeRemaining })
+                  : t("seats.full")
+              }
+              full={officeFull}
+            />
+            <SeatMeter
+              label={tRoles("field_employee")}
+              used={seats.fieldUsed}
+              included={seats.fieldSeats}
+              remainingLabel={
+                seats.fieldRemaining > 0
+                  ? t("seats.remaining", { count: seats.fieldRemaining })
+                  : t("seats.full")
+              }
+              full={fieldFull}
+            />
+          </div>
+        </PageCard>
+      ) : null}
 
       <div className="flex flex-wrap items-center gap-2">
         {canManage ? (
@@ -240,6 +327,55 @@ export function StaffWorkspace({
           </div>
         </PageCard>
       )}
+    </div>
+  );
+}
+
+function SeatMeter({
+  label,
+  used,
+  included,
+  remainingLabel,
+  full,
+}: {
+  label: string;
+  used: number;
+  included: number;
+  remainingLabel: string;
+  full: boolean;
+}) {
+  const pct =
+    included <= 0 ? (used > 0 ? 100 : 0) : Math.min(100, (used / included) * 100);
+
+  return (
+    <div className="rounded-xl bg-muted/35 px-4 py-3">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-sm font-medium">{label}</p>
+        <p
+          className={cn(
+            "text-xs tabular-nums",
+            full ? "text-amber-700" : "text-muted-foreground",
+          )}
+        >
+          {remainingLabel}
+        </p>
+      </div>
+      <p className="mt-1 text-lg font-semibold tabular-nums tracking-tight">
+        {used}
+        <span className="text-sm font-medium text-muted-foreground">
+          {" "}
+          / {included}
+        </span>
+      </p>
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
+        <div
+          className={cn(
+            "h-full rounded-full transition-[width]",
+            full ? "bg-amber-500" : "bg-primary",
+          )}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
     </div>
   );
 }

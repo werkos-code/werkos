@@ -811,6 +811,28 @@
     "kpiOffice": "Kantoor",
     "kpiField": "Uitvoerend",
     "kpiOwners": "Eigenaar",
+    "kpiOfficeSeats": "Kantoorseats",
+    "kpiFieldSeats": "Uitvoerende seats",
+    "seatUsage": "{used}/{included}",
+    "ownerIncluded": "{count, plural, one {# (inbegrepen)} other {# (inbegrepen)}}",
+    "seats": {
+      "title": "Seats in je abonnement",
+      "trialHint": "Tijdens je proefperiode kun je medewerkers toevoegen tot je gekozen seats. Extra seats worden meegenomen bij activeren.",
+      "paidHint": "Je kunt medewerkers toevoegen tot je gekochte seats. Daarboven voeg je een seat toe en betaal je via Stripe (naar rato).",
+      "missingHint": "Er is nog geen actief abonnement. Activeer eerst een plan om seats te beheren.",
+      "pricing": "Kantoor {office}/maand · Uitvoerend {field}/maand",
+      "managePlan": "Abonnement beheren",
+      "remaining": "{count, plural, one {# vrij} other {# vrij}}",
+      "full": "Vol"
+    },
+    "invite": {
+      "remaining": "Nog {count, plural, one {# vrije seat} other {# vrije seats}} voor {role}.",
+      "needSeatPaid": "Geen vrije seats meer voor {role}. Voeg een seat toe voor {price}/maand om door te gaan.",
+      "needSeatTrial": "Geen vrije seats meer voor {role}. Voeg een seat toe ({price}/maand na activeren) om door te gaan.",
+      "chargeNow": "Bij opslaan wordt 1 seat toegevoegd en direct verrekend via Stripe ({price}/maand, naar rato).",
+      "chargeLater": "Bij opslaan wordt 1 seat toegevoegd aan je plan ({price}/maand vanaf activeren).",
+      "createWithSeat": "Seat toevoegen & medewerker aanmaken"
+    },
     "filters": {
       "roleAll": "Rol: Alle"
     },
@@ -842,7 +864,10 @@
       "forbidden": "Alleen de eigenaar kan personeel beheren.",
       "cannotRemoveOwner": "De eigenaar kan niet worden verwijderd.",
       "cannotRemoveSelf": "Je kunt jezelf niet verwijderen.",
-      "cannotChangeOwnerRole": "De rol van de eigenaar kan niet worden gewijzigd."
+      "cannotChangeOwnerRole": "De rol van de eigenaar kan niet worden gewijzigd.",
+      "subscriptionRequired": "Activeer eerst een abonnement om medewerkers toe te voegen.",
+      "stripeMissing": "Stripe is nog niet geconfigureerd. Neem contact op of kies een plan later.",
+      "seatPurchaseFailed": "De seat kon niet worden toegevoegd. Probeer het opnieuw of beheer seats via Stripe."
     }
   },
   "inbox": {

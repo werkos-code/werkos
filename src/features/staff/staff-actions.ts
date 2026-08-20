@@ -1,6 +1,8 @@
 "use server";
 
 import { USER_ROLES, type OrganizationRole } from "@/config/roles";
+import { loadStaffSeatUsage } from "@/features/staff/lib/load-staff-seat-usage";
+import type { StaffSeatUsage } from "@/features/staff/lib/staff-seats";
 import { getAppSession } from "@/features/shell/lib/require-organization";
 import { getStaffOrgContext } from "@/features/shell/lib/staff-org-context";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -23,6 +25,7 @@ export async function listOrgStaffMembers(): Promise<{
   members?: StaffMemberRow[];
   canManage?: boolean;
   currentUserId?: string;
+  seats?: StaffSeatUsage;
   error?: string;
 }> {
   const ctx = await getStaffOrgContext();
@@ -31,20 +34,27 @@ export async function listOrgStaffMembers(): Promise<{
   const session = await getAppSession();
   const canManage = session?.role === USER_ROLES.OWNER;
 
-  const { data: memberships, error } = await ctx.supabase
-    .from("organization_memberships")
-    .select("user_id, role, created_at")
-    .eq("organization_id", ctx.organizationId)
-    .in("role", [...STAFF_MEMBER_ROLES]);
+  const [membershipsResult, seatsResult] = await Promise.all([
+    ctx.supabase
+      .from("organization_memberships")
+      .select("user_id, role, created_at")
+      .eq("organization_id", ctx.organizationId)
+      .in("role", [...STAFF_MEMBER_ROLES]),
+    loadStaffSeatUsage(ctx.organizationId),
+  ]);
 
-  if (error) return { error: error.message };
+  if (membershipsResult.error) {
+    return { error: membershipsResult.error.message };
+  }
+  if (seatsResult.error) return { error: seatsResult.error };
 
-  const rows = memberships ?? [];
+  const rows = membershipsResult.data ?? [];
   if (rows.length === 0) {
     return {
       members: [],
       canManage,
       currentUserId: ctx.userId,
+      seats: seatsResult.usage,
     };
   }
 
@@ -88,6 +98,7 @@ export async function listOrgStaffMembers(): Promise<{
       }),
     canManage,
     currentUserId: ctx.userId,
+    seats: seatsResult.usage,
   };
 }
 
@@ -95,6 +106,7 @@ export async function getOrgStaffMember(memberId: string): Promise<{
   member?: StaffMemberRow;
   canManage?: boolean;
   currentUserId?: string;
+  seats?: StaffSeatUsage;
   error?: string;
 }> {
   const result = await listOrgStaffMembers();
@@ -105,5 +117,6 @@ export async function getOrgStaffMember(memberId: string): Promise<{
     member,
     canManage: result.canManage,
     currentUserId: result.currentUserId,
+    seats: result.seats,
   };
 }

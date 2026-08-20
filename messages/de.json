@@ -811,6 +811,28 @@
     "kpiOffice": "Büro",
     "kpiField": "Außendienst",
     "kpiOwners": "Eigentümer",
+    "kpiOfficeSeats": "Büro-Seats",
+    "kpiFieldSeats": "Außendienst-Seats",
+    "seatUsage": "{used}/{included}",
+    "ownerIncluded": "{count, plural, one {# (inklusive)} other {# (inklusive)}}",
+    "seats": {
+      "title": "Seats in deinem Abo",
+      "trialHint": "In der Testphase kannst du Mitarbeiter bis zu den gewählten Seats hinzufügen. Extra-Seats werden bei der Aktivierung übernommen.",
+      "paidHint": "Du kannst Mitarbeiter bis zu den gekauften Seats hinzufügen. Darüber hinaus fügst du einen Seat hinzu und zahlst über Stripe (anteilig).",
+      "missingHint": "Noch kein aktives Abo. Aktiviere zuerst einen Plan, um Seats zu verwalten.",
+      "pricing": "Büro {office}/Monat · Außendienst {field}/Monat",
+      "managePlan": "Abo verwalten",
+      "remaining": "{count, plural, one {# frei} other {# frei}}",
+      "full": "Voll"
+    },
+    "invite": {
+      "remaining": "Noch {count, plural, one {# freier Seat} other {# freie Seats}} für {role}.",
+      "needSeatPaid": "Keine freien Seats mehr für {role}. Füge einen Seat für {price}/Monat hinzu, um fortzufahren.",
+      "needSeatTrial": "Keine freien Seats mehr für {role}. Füge einen Seat hinzu ({price}/Monat nach Aktivierung), um fortzufahren.",
+      "chargeNow": "Beim Speichern wird 1 Seat hinzugefügt und über Stripe verrechnet ({price}/Monat, anteilig).",
+      "chargeLater": "Beim Speichern wird 1 Seat zu deinem Plan hinzugefügt ({price}/Monat ab Aktivierung).",
+      "createWithSeat": "Seat hinzufügen & Mitarbeiter anlegen"
+    },
     "filters": {
       "roleAll": "Rolle: Alle"
     },
@@ -842,7 +864,10 @@
       "forbidden": "Nur der Eigentümer kann Personal verwalten.",
       "cannotRemoveOwner": "Der Eigentümer kann nicht entfernt werden.",
       "cannotRemoveSelf": "Du kannst dich nicht selbst entfernen.",
-      "cannotChangeOwnerRole": "Die Rolle des Eigentümers kann nicht geändert werden."
+      "cannotChangeOwnerRole": "Die Rolle des Eigentümers kann nicht geändert werden.",
+      "subscriptionRequired": "Aktiviere zuerst ein Abo, um Mitarbeiter hinzuzufügen.",
+      "stripeMissing": "Stripe ist noch nicht konfiguriert. Kontaktiere Support oder wähle später einen Plan.",
+      "seatPurchaseFailed": "Der Seat konnte nicht hinzugefügt werden. Versuche es erneut oder verwalte Seats in Stripe."
     }
   },
   "inbox": {

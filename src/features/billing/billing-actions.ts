@@ -229,3 +229,143 @@ export async function createOrgSubscriptionCheckoutAction(input: {
     return { error: message };
   }
 }
+
+/**
+ * Add one office or field seat to the org subscription.
+ * - Paid Stripe sub: update item quantity with proration
+ * - Trial without Stripe sub yet: bump DB seats (billed at conversion)
+ */
+export async function addStaffSeatAction(input: {
+  kind: "office" | "field";
+  quantity?: number;
+}): Promise<{
+  officeSeats?: number;
+  fieldSeats?: number;
+  error?: string;
+  detail?: string;
+}> {
+  const session = await getAppSession();
+  if (!session) return { error: "unauthorized" };
+  if (!session.organizationId || session.role !== USER_ROLES.OWNER) {
+    return { error: "forbidden" };
+  }
+
+  const organizationId = session.organizationId;
+  const addCount = Math.max(1, Math.floor(input.quantity ?? 1));
+  const kind = input.kind;
+
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const { data: sub, error } = await ctx.supabase
+    .from("subscriptions")
+    .select(
+      "status, office_seats, field_seats, stripe_subscription_id, stripe_customer_id",
+    )
+    .eq("organization_id", organizationId)
+    .maybeSingle();
+
+  if (error) return { error: error.message };
+  if (!sub) return { error: "subscription_missing" };
+
+  const nextOffice =
+    kind === "office"
+      ? (sub.office_seats ?? 0) + addCount
+      : (sub.office_seats ?? 0);
+  const nextField =
+    kind === "field"
+      ? (sub.field_seats ?? 0) + addCount
+      : (sub.field_seats ?? 0);
+
+  const isPaid =
+    Boolean(sub.stripe_subscription_id) &&
+    (sub.status === "active" || sub.status === "past_due");
+
+  if (isPaid && sub.stripe_subscription_id) {
+    try {
+      assertStripePricesConfigured("month");
+    } catch (err) {
+      return {
+        error: "stripe_missing",
+        detail: err instanceof Error ? err.message : "Stripe not configured",
+      };
+    }
+
+    try {
+      const stripe = getStripe();
+      const prices = getStripePriceIds();
+      const subscription = await stripe.subscriptions.retrieve(
+        sub.stripe_subscription_id,
+        { expand: ["items.data.price"] },
+      );
+
+      const officePriceIds = [prices.office, prices.officeYearly].filter(
+        Boolean,
+      ) as string[];
+      const fieldPriceIds = [prices.field, prices.fieldYearly].filter(
+        Boolean,
+      ) as string[];
+      const targetPriceIds =
+        kind === "office" ? officePriceIds : fieldPriceIds;
+
+      const existingItem = subscription.items.data.find((item) => {
+        const priceId =
+          typeof item.price === "string" ? item.price : item.price?.id;
+        return priceId ? targetPriceIds.includes(priceId) : false;
+      });
+
+      if (existingItem) {
+        await stripe.subscriptionItems.update(existingItem.id, {
+          quantity: (existingItem.quantity ?? 0) + addCount,
+          proration_behavior: "create_prorations",
+        });
+      } else {
+        const monthlyFallback =
+          kind === "office" ? prices.office! : prices.field!;
+        // Prefer matching the interval of another seat/base item when possible
+        const yearlyBase = prices.baseYearly;
+        const usesYearly = subscription.items.data.some((item) => {
+          const priceId =
+            typeof item.price === "string" ? item.price : item.price?.id;
+          return (
+            priceId === yearlyBase ||
+            priceId === prices.officeYearly ||
+            priceId === prices.fieldYearly
+          );
+        });
+        const priceToAdd =
+          usesYearly && kind === "office" && prices.officeYearly
+            ? prices.officeYearly
+            : usesYearly && kind === "field" && prices.fieldYearly
+              ? prices.fieldYearly
+              : monthlyFallback;
+
+        await stripe.subscriptionItems.create({
+          subscription: subscription.id,
+          price: priceToAdd,
+          quantity: addCount,
+          proration_behavior: "create_prorations",
+        });
+      }
+    } catch (err) {
+      return {
+        error: "seat_purchase_failed",
+        detail: err instanceof Error ? err.message : "seat_purchase_failed",
+      };
+    }
+  } else if (sub.status !== "trialing" && sub.status !== "active") {
+    return { error: "subscription_required" };
+  }
+
+  const { error: updateError } = await ctx.supabase
+    .from("subscriptions")
+    .update({
+      office_seats: nextOffice,
+      field_seats: nextField,
+    })
+    .eq("organization_id", organizationId);
+
+  if (updateError) return { error: updateError.message };
+
+  return { officeSeats: nextOffice, fieldSeats: nextField };
+}

@@ -811,6 +811,28 @@
     "kpiOffice": "Office",
     "kpiField": "Field",
     "kpiOwners": "Owner",
+    "kpiOfficeSeats": "Office seats",
+    "kpiFieldSeats": "Field seats",
+    "seatUsage": "{used}/{included}",
+    "ownerIncluded": "{count, plural, one {# (included)} other {# (included)}}",
+    "seats": {
+      "title": "Seats in your plan",
+      "trialHint": "During your trial you can add team members up to your chosen seats. Extra seats are included when you activate.",
+      "paidHint": "You can add team members up to your purchased seats. Beyond that, add a seat and pay via Stripe (prorated).",
+      "missingHint": "No active subscription yet. Activate a plan first to manage seats.",
+      "pricing": "Office {office}/month · Field {field}/month",
+      "managePlan": "Manage subscription",
+      "remaining": "{count, plural, one {# free} other {# free}}",
+      "full": "Full"
+    },
+    "invite": {
+      "remaining": "{count, plural, one {# free seat} other {# free seats}} left for {role}.",
+      "needSeatPaid": "No free seats left for {role}. Add a seat for {price}/month to continue.",
+      "needSeatTrial": "No free seats left for {role}. Add a seat ({price}/month after activation) to continue.",
+      "chargeNow": "On save, 1 seat is added and billed via Stripe ({price}/month, prorated).",
+      "chargeLater": "On save, 1 seat is added to your plan ({price}/month from activation).",
+      "createWithSeat": "Add seat & create member"
+    },
     "filters": {
       "roleAll": "Role: All"
     },
@@ -842,7 +864,10 @@
       "forbidden": "Only the owner can manage staff.",
       "cannotRemoveOwner": "The owner cannot be removed.",
       "cannotRemoveSelf": "You cannot remove yourself.",
-      "cannotChangeOwnerRole": "The owner's role cannot be changed."
+      "cannotChangeOwnerRole": "The owner's role cannot be changed.",
+      "subscriptionRequired": "Activate a subscription first to add team members.",
+      "stripeMissing": "Stripe is not configured yet. Contact support or choose a plan later.",
+      "seatPurchaseFailed": "The seat could not be added. Try again or manage seats in Stripe."
     }
   },
   "inbox": {
