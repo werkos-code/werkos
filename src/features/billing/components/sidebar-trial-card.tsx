@@ -40,10 +40,8 @@ export function SidebarTrialCard() {
               ? t("daysUrgent", { days })
               : t("daysLeft", { days })}
       </p>
-      {urgent || expired ? (
-        <p className="mt-1 text-xs text-sidebar-muted">
-          {expired ? t("expiredHint") : t("urgentHint")}
-        </p>
+      {urgent ? (
+        <p className="mt-1 text-xs text-sidebar-muted">{t("urgentHint")}</p>
       ) : null}
       <Button
         asChild
