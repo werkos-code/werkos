@@ -334,14 +334,9 @@ export function DashboardQuickActions({
     <>
       <div className={cn("space-y-3", cardClassName)}>
         <div className="flex items-end justify-between gap-3 px-1">
-          <div>
-            <h2 className="text-sm font-semibold tracking-tight">
-              {t("quickActions.title")}
-            </h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              {t("quickActions.subtitle")}
-            </p>
-          </div>
+          <h2 className="text-sm font-semibold tracking-tight">
+            {t("quickActions.title")}
+          </h2>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {actions.map((action) => {

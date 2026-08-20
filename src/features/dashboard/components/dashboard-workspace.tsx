@@ -123,9 +123,6 @@ export function DashboardWorkspace({
               <h2 className="text-sm font-semibold tracking-tight">
                 {t("operations.title")}
               </h2>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                {t("operations.subtitle")}
-              </p>
             </div>
 
             <div className="grid gap-4 xl:grid-cols-3">
@@ -147,7 +144,6 @@ export function DashboardWorkspace({
                   <DashboardEmptyCta
                     icon={FolderPlus}
                     title={t("projects.emptyTitle")}
-                    description={t("projects.emptyDescription")}
                     ctaLabel={t("projects.cta")}
                     href="/opdrachten/nieuw"
                   />
@@ -217,7 +213,6 @@ export function DashboardWorkspace({
                   <DashboardEmptyCta
                     icon={CheckSquare}
                     title={t("attention.emptyTitle")}
-                    description={t("attention.emptyDescription")}
                     ctaLabel={t("attention.cta")}
                     href="/werkzaamheden"
                   />
@@ -289,7 +284,6 @@ export function DashboardWorkspace({
                   <DashboardEmptyCta
                     icon={CalendarPlus}
                     title={t("today.emptyTitle")}
-                    description={t("today.emptyDescription")}
                     ctaLabel={t("today.cta")}
                     href="/planning"
                   />
