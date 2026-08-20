@@ -2621,6 +2621,10 @@
       "daysLeft": "Nog {days} dagen gratis",
       "daysUrgent": "Nog {days} dagen gratis",
       "urgentHint": "Kies een abonnement om WerkOS te blijven gebruiken.",
+      "subscribeHint": "Kies een abonnement om WerkOS te blijven gebruiken.",
+      "expiredTitle": "Proefperiode afgelopen",
+      "expiredHeadline": "Je werkt nu in alleen-lezen",
+      "expiredHint": "Kies een abonnement om weer projecten, offertes en andere items aan te maken.",
       "cta": "Bekijk abonnementen"
     },
     "trialExpired": {

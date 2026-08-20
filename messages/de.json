@@ -2535,6 +2535,10 @@
       "daysLeft": "Noch {days} Tage kostenlos",
       "daysUrgent": "Nur noch {days} Tage kostenlos",
       "urgentHint": "Wählen Sie ein Abo, um WerkOS weiter zu nutzen.",
+      "subscribeHint": "Wählen Sie ein Abo, um WerkOS weiter zu nutzen.",
+      "expiredTitle": "Testphase beendet",
+      "expiredHeadline": "Sie sind im Nur-Lesen-Modus",
+      "expiredHint": "Wählen Sie ein Abo, um wieder Projekte, Angebote und andere Elemente anzulegen.",
       "cta": "Abos ansehen"
     },
     "trialExpired": {
