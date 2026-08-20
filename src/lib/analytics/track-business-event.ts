@@ -91,10 +91,17 @@ export async function trackBusinessEvent(input: {
   });
 
   if (!claimed) {
+    console.info("[analytics:business]", {
+      event: input.event,
+      claimed: false,
+      sent: false,
+      reason: "dedupe_or_claim_failed",
+    });
     return { claimed: false, sent: false };
   }
 
   const clientId = input.clientId ?? (await resolveClientId());
+  const attribution = await readAttributionFromCookies();
   const sent = await sendGa4Event({
     name: input.event,
     clientId,
@@ -107,13 +114,19 @@ export async function trackBusinessEvent(input: {
     },
   });
 
-  if (process.env.NODE_ENV === "development") {
-    console.debug("[analytics:business]", input.event, {
-      claimed,
-      sent,
-      dedupeKey: input.dedupeKey,
-    });
-  }
+  console.info("[analytics:business]", {
+    event: input.event,
+    claimed: true,
+    sent,
+    hasAttribution: Boolean(
+      attribution &&
+        (attribution.gclid ||
+          attribution.utm_source ||
+          attribution.gbraid ||
+          attribution.wbraid),
+    ),
+    hasOrganizationId: Boolean(input.organizationId),
+  });
 
   return { claimed, sent };
 }

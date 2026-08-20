@@ -6,22 +6,22 @@
 
 `docs/sql-applied/20260820120000_marketing_attribution.sql` is gedraaid.
 
-## Google Analytics (GA4) + Vercel env — **nog te doen**
+## Google Analytics (GA4) + Vercel env — **nog te doen (oorzaak mislukte prod-test)**
 
-Nog geen GA-account. Zonder env blijven business events in de DB-dedupe werken zodra SQL er is, maar GA4 ontvangt niets (Measurement Protocol skippt stil).
+Live check (aug 2026): marketing site stuurt naar **`G-0J8H6M4TEC`**.  
+App production build heeft **`NEXT_PUBLIC_GA_MEASUREMENT_ID=""`** → geen gtag op app.werkos.nl, Measurement Protocol skippt `sign_up` / `company_created`.
 
-Als jullie klaar zijn (één property voor site + app):
+Op **Vercel → WerkOS App → Settings → Environment Variables → Production**:
 
-1. [Google Analytics](https://analytics.google.com/) → account **WerkOS** → property **GA4**
-2. Twee web data streams (of één stream + cross-domain linker — wij gebruiken linker op beide domeinen):
-   - `werkos.nl`
-   - `app.werkos.nl`
-3. Noteer **Measurement ID** (`G-XXXXXXXX`)
-4. In de stream: **Measurement Protocol API secrets** → secret aanmaken → `GA4_API_SECRET`
-5. Zelfde `G-…` op **beide** Vercel-projecten:
-   - App: `NEXT_PUBLIC_GA_MEASUREMENT_ID` + `GA4_API_SECRET`
-   - Site: `NEXT_PUBLIC_GA_MEASUREMENT_ID` (zoals de marketing-agent al verwacht)
-6. Redeploy app + site
+| Variable | Waarde |
+| --- | --- |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | `G-0J8H6M4TEC` (exact gelijk aan werkos.nl) |
+| `GA4_API_SECRET` | secret uit GA4 → Admin → Data stream (app of gedeelde web stream) → Measurement Protocol API secrets |
+
+Daarna **Redeploy** de app (vereist voor `NEXT_PUBLIC_*`).
+
+Controle na deploy: view-source / Network op app.werkos.nl moet `gtag/js?id=G-0J8H6M4TEC` tonen.  
+Vercel Runtime Logs bij signup: `[analytics:mp:response]` of `[analytics:mp:skip]`.
 
 Zie [`ANALYTICS_ATTRIBUTION.md`](./ANALYTICS_ATTRIBUTION.md).
 
