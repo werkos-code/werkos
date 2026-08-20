@@ -282,7 +282,7 @@ wit blok rounded-3xl, geen border, royale padding
 
 **Canonical:** `src/features/auth/components/login-shell.tsx` · `login-card.tsx` · `src/app/[locale]/page.tsx`
 
-### 4.10 Abonnement kiezen (`/instellingen/abonnement/kiezen`)
+### 4.11 Abonnement kiezen (`/instellingen/abonnement/kiezen`)
 
 Belangrijkste monetisatie-pagina in de app — rijk, niet basic, geen marketing-1:1.
 
