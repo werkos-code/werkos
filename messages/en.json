@@ -2622,8 +2622,8 @@
       "daysUrgent": "Only {days} days left free",
       "urgentHint": "Choose a plan to keep using WerkOS.",
       "subscribeHint": "Choose a plan to keep using WerkOS.",
-      "expiredTitle": "Your trial has ended",
-      "expiredHeadline": "You’re in read-only mode. Choose your plan.",
+      "expiredTitle": "You’re in read-only mode",
+      "expiredHeadline": "Your trial has ended",
       "cta": "View plans"
     },
     "trialExpired": {
