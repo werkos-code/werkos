@@ -1,5 +1,14 @@
 "use server";
 
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import {
+  markProfileTimestamp,
+  persistFirstTouchAttribution,
+} from "@/lib/analytics/persist-attribution";
+import {
+  readAttributionFromCookies,
+  trackBusinessEvent,
+} from "@/lib/analytics/track-business-event";
 import { createClient } from "@/lib/supabase/server";
 
 export type AuthActionResult = {
@@ -67,6 +76,22 @@ export async function signUpAction(input: {
       user_id: user.id,
       step: "company",
     });
+
+    const attribution = await readAttributionFromCookies();
+    await persistFirstTouchAttribution(user.id, attribution);
+
+    const { claimed } = await trackBusinessEvent({
+      event: ANALYTICS_EVENTS.signUp,
+      dedupeKey: `sign_up:${user.id}`,
+      userId: user.id,
+      params: {
+        method: "email",
+      },
+    });
+
+    if (claimed) {
+      await markProfileTimestamp(user.id, "signup_at");
+    }
   }
 
   return { success: true };

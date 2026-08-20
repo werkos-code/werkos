@@ -1,6 +1,10 @@
 import { USER_ROLES } from "@/config/roles";
 import { PRICING } from "@/config/pricing";
 import { uniqueOrganizationSlug } from "@/features/onboarding/lib/slug";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import { maybeTrackSubscriptionStarted } from "@/lib/analytics/first-conversions";
+import { markProfileTimestamp } from "@/lib/analytics/persist-attribution";
+import { trackBusinessEvent } from "@/lib/analytics/track-business-event";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { SubscriptionStatus } from "@/types/database";
 import type Stripe from "stripe";
@@ -156,6 +160,13 @@ export async function activateOrganizationSubscriptionFromCheckout(
     .eq("organization_id", organizationId);
 
   if (error) throw new Error(error.message);
+
+  const mappedStatus = mapStripeStatus(subscription.status);
+  await maybeTrackSubscriptionStarted({
+    organizationId,
+    status: mappedStatus,
+  });
+
   return organizationId;
 }
 
@@ -169,8 +180,9 @@ export async function syncSubscriptionFromStripe(
       ? subscription.customer
       : subscription.customer?.id ?? null;
 
+  const mappedStatus = mapStripeStatus(subscription.status);
   const payload = {
-    status: mapStripeStatus(subscription.status),
+    status: mappedStatus,
     trial_ends_at: subscription.trial_end
       ? new Date(subscription.trial_end * 1000).toISOString()
       : null,
@@ -186,14 +198,27 @@ export async function syncSubscriptionFromStripe(
       .update(payload)
       .eq("organization_id", organizationId);
     if (error) throw new Error(error.message);
+    await maybeTrackSubscriptionStarted({
+      organizationId,
+      status: mappedStatus,
+    });
     return;
   }
 
-  const { error } = await admin
+  const { data: updatedRows, error } = await admin
     .from("subscriptions")
     .update(payload)
-    .eq("stripe_subscription_id", subscription.id);
+    .eq("stripe_subscription_id", subscription.id)
+    .select("organization_id");
   if (error) throw new Error(error.message);
+
+  const resolvedOrgId = updatedRows?.[0]?.organization_id;
+  if (resolvedOrgId) {
+    await maybeTrackSubscriptionStarted({
+      organizationId: resolvedOrgId,
+      status: mappedStatus,
+    });
+  }
 }
 
 export async function provisionOrganizationFromCheckout(
@@ -218,7 +243,7 @@ export async function provisionOrganizationFromCheckout(
     ? new Date(subscription.trial_end * 1000).toISOString()
     : null;
 
-  return provisionOrganization({
+  const organizationId = await provisionOrganization({
     userId,
     companyName,
     industry,
@@ -234,4 +259,22 @@ export async function provisionOrganizationFromCheckout(
     currentPeriodEnd: periodEndFromSubscription(subscription),
     cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
   });
+
+  const { claimed } = await trackBusinessEvent({
+    event: ANALYTICS_EVENTS.companyCreated,
+    dedupeKey: `company_created:${organizationId}`,
+    userId,
+    organizationId,
+  });
+  if (claimed) {
+    await markProfileTimestamp(userId, "company_created_at");
+  }
+
+  await maybeTrackSubscriptionStarted({
+    organizationId,
+    status: mapStripeStatus(subscription.status),
+    userId,
+  });
+
+  return organizationId;
 }

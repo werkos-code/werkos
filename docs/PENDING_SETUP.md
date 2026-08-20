@@ -2,6 +2,21 @@
 
 > Handmatige stappen die nog gedaan moeten worden. Agents: herinner de gebruiker hieraan bij relevant werk.
 
+## Marketing attribution SQL — **nog te doen**
+
+Voor first-touch attribution op `profiles`, `organizations.subscription_started_at` en idempotente `analytics_event_log`:
+
+`docs/sql-applied/20260820120000_marketing_attribution.sql`
+
+Zonder deze SQL falen attribution-writes / event-dedupe soft (events worden overgeslagen met een server-log).
+
+Ook in Vercel zetten (zelfde GA4 Measurement ID als werkos.nl):
+
+- `NEXT_PUBLIC_GA_MEASUREMENT_ID`
+- `GA4_API_SECRET` (GA4 Admin → Data stream → Measurement Protocol)
+
+Zie [`ANALYTICS_ATTRIBUTION.md`](./ANALYTICS_ATTRIBUTION.md).
+
 ## Dashboard privé-notities SQL — **nog te doen**
 
 Voor notities in de privé-werkruimte op het dashboard:

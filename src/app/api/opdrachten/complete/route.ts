@@ -7,6 +7,10 @@ import {
 import { logProjectActivity } from "@/features/projects/lib/project-activity";
 import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
 import type { QuoteLineRow } from "@/features/quotes/quotes-actions";
+import {
+  maybeTrackFirstProjectCreated,
+  maybeTrackFirstQuoteCreated,
+} from "@/lib/analytics/first-conversions";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 function emptyToNull(value: string | null | undefined) {
@@ -328,6 +332,17 @@ export async function POST(request: Request) {
         source: "new_assignment_wizard",
       },
       createdBy: gate.userId,
+    });
+
+    await maybeTrackFirstProjectCreated({
+      organizationId: gate.organizationId,
+      userId: gate.userId,
+      projectId,
+    });
+    await maybeTrackFirstQuoteCreated({
+      organizationId: gate.organizationId,
+      userId: gate.userId,
+      quoteId,
     });
 
     return NextResponse.json({

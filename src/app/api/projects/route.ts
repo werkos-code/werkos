@@ -5,6 +5,7 @@ import {
   isOrgStaffRole,
   PROJECT_STATUSES,
 } from "@/features/projects/lib/project-status";
+import { maybeTrackFirstProjectCreated } from "@/lib/analytics/first-conversions";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import type { ProjectStatus } from "@/types/database";
@@ -128,6 +129,12 @@ export async function POST(request: Request) {
       body: inserted.name,
       metadata: { project_number: inserted.project_number },
       createdBy: gate.userId,
+    });
+
+    await maybeTrackFirstProjectCreated({
+      organizationId: gate.organizationId,
+      userId: gate.userId,
+      projectId,
     });
 
     return NextResponse.json({ projectId });

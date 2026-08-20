@@ -2,6 +2,9 @@
 
 import { PRICING } from "@/config/pricing";
 import { provisionOrganization } from "@/features/onboarding/provision";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import { markProfileTimestamp } from "@/lib/analytics/persist-attribution";
+import { trackBusinessEvent } from "@/lib/analytics/track-business-event";
 import { createClient } from "@/lib/supabase/server";
 
 export type OnboardingDraft = {
@@ -125,6 +128,10 @@ export async function completeOnboardingAction(input: {
   );
 
   if (!rpcError && rpcOrgId) {
+    await trackCompanyCreated({
+      userId: user.id,
+      organizationId: String(rpcOrgId),
+    });
     return { organizationId: rpcOrgId };
   }
 
@@ -154,6 +161,10 @@ export async function completeOnboardingAction(input: {
       trialEndsAt: new Date(
         Date.now() + PRICING.trialDays * 24 * 60 * 60 * 1000,
       ).toISOString(),
+    });
+    await trackCompanyCreated({
+      userId: user.id,
+      organizationId,
     });
     return { organizationId };
   } catch (err) {
@@ -189,4 +200,19 @@ export async function userHasOrganization(): Promise<boolean> {
   }
 
   return (data?.length ?? 0) > 0;
+}
+
+async function trackCompanyCreated(input: {
+  userId: string;
+  organizationId: string;
+}) {
+  const { claimed } = await trackBusinessEvent({
+    event: ANALYTICS_EVENTS.companyCreated,
+    dedupeKey: `company_created:${input.organizationId}`,
+    userId: input.userId,
+    organizationId: input.organizationId,
+  });
+  if (claimed) {
+    await markProfileTimestamp(input.userId, "company_created_at");
+  }
 }

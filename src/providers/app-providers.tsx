@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from "next-themes";
 
+import { AnalyticsProvider } from "@/components/analytics/analytics-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 type AppProvidersProps = {
@@ -10,7 +11,7 @@ type AppProvidersProps = {
 
 /**
  * Root client providers. Keep this thin — add providers here only when
- * they are truly app-wide (theme, toasts, analytics later).
+ * they are truly app-wide (theme, toasts, analytics).
  */
 export function AppProviders({ children }: AppProvidersProps) {
   return (
@@ -20,6 +21,7 @@ export function AppProviders({ children }: AppProvidersProps) {
       enableSystem
       disableTransitionOnChange
     >
+      <AnalyticsProvider />
       {children}
       <Toaster richColors closeButton position="top-right" />
     </ThemeProvider>

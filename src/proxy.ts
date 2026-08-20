@@ -3,6 +3,14 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { APP_HOME_HREF } from "@/features/shell/nav-config";
 import { routing } from "@/i18n/routing";
+import {
+  ATTRIBUTION_COOKIE,
+  ATTRIBUTION_COOKIE_MAX_AGE_SECONDS,
+  mergeFirstTouchAttribution,
+  parseAttributionCookie,
+  parseAttributionFromSearchParams,
+  serializeAttributionCookie,
+} from "@/lib/analytics/attribution";
 import { updateSession } from "@/lib/supabase/middleware";
 
 const handleI18n = createMiddleware(routing);
@@ -95,6 +103,30 @@ function legacyRedirectTarget(pathWithoutLocale: string): string | null {
   return null;
 }
 
+function applyAttributionCookie(
+  request: NextRequest,
+  response: NextResponse,
+): void {
+  const incoming = parseAttributionFromSearchParams(request.nextUrl.searchParams);
+  if (!incoming) return;
+
+  const existing = parseAttributionCookie(
+    request.cookies.get(ATTRIBUTION_COOKIE)?.value,
+  );
+  const merged = mergeFirstTouchAttribution(existing, incoming);
+  if (!merged) return;
+
+  response.cookies.set({
+    name: ATTRIBUTION_COOKIE,
+    value: serializeAttributionCookie(merged),
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: ATTRIBUTION_COOKIE_MAX_AGE_SECONDS,
+  });
+}
+
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
@@ -119,11 +151,22 @@ export async function proxy(request: NextRequest) {
     routing.locales.find((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`)) ??
     routing.defaultLocale;
 
+  // Marketing site may deep-link to /signup — normalize to onboarding account.
+  if (pathWithoutLocale === "/signup" || pathWithoutLocale === "/register") {
+    const target = new URL(`/${locale}/onboarding/account`, request.url);
+    target.search = request.nextUrl.search;
+    const redirect = NextResponse.redirect(target);
+    applyAttributionCookie(request, redirect);
+    return redirect;
+  }
+
   const legacyTarget = legacyRedirectTarget(pathWithoutLocale);
   if (legacyTarget) {
-    return NextResponse.redirect(
+    const redirect = NextResponse.redirect(
       new URL(`/${locale}${legacyTarget}`, request.url),
     );
+    applyAttributionCookie(request, redirect);
+    return redirect;
   }
 
   const isPublic = PUBLIC_PATHS.some(
@@ -131,15 +174,21 @@ export async function proxy(request: NextRequest) {
   );
 
   if (user && pathWithoutLocale === "/") {
-    return NextResponse.redirect(
+    const redirect = NextResponse.redirect(
       new URL(`/${locale}${APP_HOME_HREF}`, request.url),
     );
+    applyAttributionCookie(request, redirect);
+    return redirect;
   }
 
   const isAppShell = isAppShellPath(pathWithoutLocale);
 
   if (isAppShell && !user) {
-    return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
+    const redirect = NextResponse.redirect(
+      new URL(`/${locale}/login`, request.url),
+    );
+    applyAttributionCookie(request, redirect);
+    return redirect;
   }
 
   const onboardingNeedsAuth =
@@ -148,13 +197,18 @@ export async function proxy(request: NextRequest) {
     pathWithoutLocale !== "/onboarding/account";
 
   if (onboardingNeedsAuth && !user) {
-    return NextResponse.redirect(new URL(`/${locale}/onboarding/account`, request.url));
+    const redirect = NextResponse.redirect(
+      new URL(`/${locale}/onboarding/account`, request.url),
+    );
+    applyAttributionCookie(request, redirect);
+    return redirect;
   }
 
   if (!isPublic && !isAppShell && !user) {
     // Unknown private routes
   }
 
+  applyAttributionCookie(request, response);
   return response;
 }
 

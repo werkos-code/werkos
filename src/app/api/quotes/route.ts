@@ -6,6 +6,7 @@ import {
 } from "@/features/projects/lib/project-activity";
 import { QUOTE_STATUSES } from "@/features/quotes/lib/quote-status";
 import { requireApiStaff, requireWritableApiStaff } from "@/features/shell/lib/api-staff";
+import { maybeTrackFirstQuoteCreated } from "@/lib/analytics/first-conversions";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { QuoteStatus } from "@/types/database";
 
@@ -77,6 +78,12 @@ export async function POST(request: Request) {
       body: title,
       metadata: { quote_id: quoteId, status: "draft" },
       createdBy: gate.userId,
+    });
+
+    await maybeTrackFirstQuoteCreated({
+      organizationId: gate.organizationId,
+      userId: gate.userId,
+      quoteId,
     });
 
     return NextResponse.json({ quoteId });
