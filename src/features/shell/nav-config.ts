@@ -115,7 +115,7 @@ export const APP_NAV: ShellNavSection[] = [
   {
     id: "resources",
     labelKey: "resources",
-    defaultOpen: true,
+    defaultOpen: false,
     items: [
       {
         id: "customers",
@@ -199,7 +199,7 @@ export const NEW_REQUEST_HREF = "/opdrachten/nieuw" as const;
 export const PLATFORM_ADMIN_NAV: ShellNavSection = {
   id: "platform-admin",
   labelKey: "platform",
-  defaultOpen: true,
+  defaultOpen: false,
   dividerBefore: true,
   items: [
     {
