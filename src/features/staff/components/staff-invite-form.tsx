@@ -1,17 +1,23 @@
 "use client";
 
-import { Link, useRouter } from "@/i18n/navigation";
+import { UserPlus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { USER_ROLES } from "@/config/roles";
+import {
+  EntityFormField,
+  EntityFormSection,
+  EntityFormShell,
+} from "@/features/shell/components/entity-form-shell";
 import {
   STAFF_ASSIGNABLE_ROLES,
   type StaffAssignableRole,
 } from "@/features/staff/lib/staff-roles";
-import { USER_ROLES } from "@/config/roles";
+import { Link, useRouter } from "@/i18n/navigation";
 
 export function StaffInviteForm() {
   const t = useTranslations("staff");
@@ -26,7 +32,6 @@ export function StaffInviteForm() {
 
   return (
     <form
-      className="flex max-w-lg flex-col gap-4"
       onSubmit={(event) => {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
@@ -73,58 +78,89 @@ export function StaffInviteForm() {
         })();
       }}
     >
-      <div className="space-y-2">
-        <Label htmlFor="fullName">{t("fields.name")}</Label>
-        <Input id="fullName" name="fullName" required autoComplete="off" />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="email">{t("fields.email")}</Label>
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          required
-          autoComplete="off"
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="password">{t("fields.password")}</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          required
-          minLength={8}
-          autoComplete="new-password"
-        />
-        <p className="text-xs text-muted-foreground">{t("passwordHint")}</p>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="role">{t("fields.role")}</Label>
-        <select
-          id="role"
-          value={role}
-          onChange={(e) => setRole(e.target.value as StaffAssignableRole)}
-          className="border-input bg-background h-9 w-full rounded-lg border px-3 text-sm"
+      <EntityFormShell
+        icon={UserPlus}
+        title={t("inviteTitle")}
+        description={t("inviteHint")}
+        footer={
+          <>
+            <Button type="submit" disabled={pending}>
+              {pending ? tCommon("loading") : t("create")}
+            </Button>
+            <Button type="button" variant="ghost" asChild>
+              <Link href="/personeel">{tCommon("cancel")}</Link>
+            </Button>
+            {error ? (
+              <p className="w-full text-sm text-destructive sm:ml-auto sm:w-auto">
+                {error}
+              </p>
+            ) : null}
+          </>
+        }
+      >
+        <EntityFormSection title={t("sections.profile")}>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <EntityFormField className="sm:col-span-2">
+              <Label htmlFor="fullName">{t("fields.name")}</Label>
+              <Input
+                id="fullName"
+                name="fullName"
+                required
+                autoComplete="off"
+                placeholder={t("placeholders.name")}
+              />
+            </EntityFormField>
+            <EntityFormField className="sm:col-span-2">
+              <Label htmlFor="email">{t("fields.email")}</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autoComplete="off"
+                placeholder={t("placeholders.email")}
+              />
+            </EntityFormField>
+          </div>
+        </EntityFormSection>
+
+        <EntityFormSection
+          title={t("sections.access")}
+          description={t("passwordHint")}
         >
-          {STAFF_ASSIGNABLE_ROLES.map((option) => (
-            <option key={option} value={option}>
-              {tRoles(option)}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
-
-      <div className="flex gap-2">
-        <Button type="submit" disabled={pending}>
-          {pending ? tCommon("loading") : t("create")}
-        </Button>
-        <Button type="button" variant="ghost" asChild>
-          <Link href="/personeel">{tCommon("cancel")}</Link>
-        </Button>
-      </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <EntityFormField>
+              <Label htmlFor="password">{t("fields.password")}</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                required
+                minLength={8}
+                autoComplete="new-password"
+                placeholder={t("placeholders.password")}
+              />
+            </EntityFormField>
+            <EntityFormField>
+              <Label htmlFor="role">{t("fields.role")}</Label>
+              <select
+                id="role"
+                value={role}
+                onChange={(e) =>
+                  setRole(e.target.value as StaffAssignableRole)
+                }
+                className="border-input bg-background h-8 w-full rounded-lg border px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              >
+                {STAFF_ASSIGNABLE_ROLES.map((option) => (
+                  <option key={option} value={option}>
+                    {tRoles(option)}
+                  </option>
+                ))}
+              </select>
+            </EntityFormField>
+          </div>
+        </EntityFormSection>
+      </EntityFormShell>
     </form>
   );
 }

@@ -234,7 +234,29 @@ Sectie 4: Notities · rekenmachine · to-do’s · mini-kalender
 
 **Canonical:** `src/features/dashboard/components/{dashboard-workspace,dashboard-hero,dashboard-surface}.tsx`
 
-### 4.8 Onboarding (centered, buiten de app-shell)
+### 4.8 Relatie / medewerker aanmaken & bewerken
+
+Gecentreerd formulier binnen `ShellPage` `w-[90%]`.
+
+```
+ShellPage (titel + back)
+  └─ EntityFormShell (mx-auto max-w-2xl)
+       ├─ Header: icoon in primary/10 · titel · korte hint
+       ├─ Secties: uppercase labels · 1–2 koloms velden
+       └─ Footer: primaire CTA + annuleren
+```
+
+| Regel | Detail |
+| --- | --- |
+| Breedte | `max-w-2xl` gecentreerd — niet linksboven `max-w-lg` |
+| Intro | In de card-header, **niet** als page-description onder shell-titel |
+| Secties | Identiteit · Contact · (Bedrijfsgegevens) · Notities |
+| Velden | Placeholders; e-mail/telefoon naast elkaar op `sm+` |
+
+**Canonical:** `src/features/shell/components/entity-form-shell.tsx`  
+**Voorbeelden:** `customer-form.tsx`, `supplier-form.tsx`, `subcontractor-form.tsx`, `staff-invite-form.tsx`
+
+### 4.9 Onboarding (centered, buiten de app-shell)
 
 Full-bleed foto + navy overlay. Wit logo boven een groot gecentreerd formulierblok.
 
@@ -252,7 +274,7 @@ wit blok rounded-3xl, geen border, royale padding
 
 **Canonical:** `src/features/onboarding/components/onboarding-shell.tsx`
 
-### 4.9 Login & app-start (buiten de app-shell)
+### 4.10 Login & app-start (buiten de app-shell)
 
 **Login:** full-bleed achtergrondfoto, navy overlay, groot wit centrumvak (`rounded-3xl`, geen border, royale padding). Volgorde in het vak: logo → titel → subtitel → velden → CTA → account-link → website-link.
 

@@ -679,7 +679,9 @@
     "description": "Clients of your company.",
     "newCustomer": "New customer",
     "newTitle": "New customer",
-    "newDescription": "A name is enough. Add more details when needed.",
+    "newDescription": "A name is enough. Add contact details when needed.",
+    "editTitle": "Edit customer",
+    "editDescription": "Update this client's details.",
     "detailDescription": "Edit customer details.",
     "empty": "No customers yet. Add your first client.",
     "create": "Save customer",
@@ -690,6 +692,18 @@
     "hasProjects": "This customer still has projects and cannot be deleted.",
     "nameRequired": "Enter a name.",
     "projectCount": "{count, plural, =0 {No projects} one {1 project} other {# projects}}",
+    "sections": {
+      "identity": "Identity",
+      "contact": "Contact",
+      "notes": "Notes"
+    },
+    "placeholders": {
+      "name": "Company or contact name",
+      "email": "name@company.com",
+      "phone": "+31 6 12 34 56 78",
+      "address": "Street, postal code, city",
+      "notes": "Internal notes about this customer…"
+    },
     "fields": {
       "name": "Name",
       "email": "Email",
@@ -710,6 +724,9 @@
     "title": "Subcontractors",
     "newSubcontractor": "New subcontractor",
     "newTitle": "New subcontractor",
+    "newDescription": "A name is enough. Add contact and CoC details when needed.",
+    "editTitle": "Edit subcontractor",
+    "editDescription": "Update this subcontractor's details.",
     "empty": "No subcontractors yet. Add your first subcontractor.",
     "emptyFiltered": "No subcontractors match this search.",
     "searchPlaceholder": "Search by name, email, phone or CoC…",
@@ -722,6 +739,20 @@
     "delete": "Delete",
     "deleteConfirm": "Are you sure you want to delete {name}?",
     "nameRequired": "Enter a name.",
+    "sections": {
+      "identity": "Identity",
+      "contact": "Contact",
+      "business": "Business details",
+      "notes": "Notes"
+    },
+    "placeholders": {
+      "name": "Company or contact name",
+      "email": "name@company.com",
+      "phone": "+31 6 12 34 56 78",
+      "address": "Street, postal code, city",
+      "kvk": "12345678",
+      "notes": "Internal notes…"
+    },
     "fields": {
       "name": "Name",
       "email": "Email",
@@ -766,6 +797,8 @@
     "invite": "Add team member",
     "inviteTitle": "Add team member",
     "inviteHint": "Only the owner can add team members. Share the temporary password securely.",
+    "editTitle": "Edit team member",
+    "editDescription": "Update this team member's name and role.",
     "create": "Create team member",
     "save": "Save changes",
     "open": "Open",
@@ -780,6 +813,15 @@
     "kpiOwners": "Owner",
     "filters": {
       "roleAll": "Role: All"
+    },
+    "sections": {
+      "profile": "Profile",
+      "access": "Access"
+    },
+    "placeholders": {
+      "name": "First and last name",
+      "email": "name@company.com",
+      "password": "At least 8 characters"
     },
     "fields": {
       "name": "Name",
@@ -859,7 +901,9 @@
     "description": "Suppliers for purchasing and article prices.",
     "newSupplier": "New supplier",
     "newTitle": "New supplier",
-    "newDescription": "At least a name. Add the rest when needed.",
+    "newDescription": "A name is enough. Add contact and payment details when needed.",
+    "editTitle": "Edit supplier",
+    "editDescription": "Update this supplier's details.",
     "empty": "No suppliers yet. Add your first supplier.",
     "create": "Save supplier",
     "save": "Save changes",
@@ -869,6 +913,21 @@
     "hasLinks": "This supplier still has prices or purchase orders and cannot be deleted.",
     "nameRequired": "Enter a name.",
     "linkCount": "{prices} prices · {orders} orders",
+    "sections": {
+      "identity": "Identity",
+      "contact": "Contact",
+      "business": "Business details",
+      "notes": "Notes"
+    },
+    "placeholders": {
+      "name": "Company name",
+      "email": "purchasing@supplier.com",
+      "phone": "+31 6 12 34 56 78",
+      "address": "Street, postal code, city",
+      "kvk": "12345678",
+      "paymentTerms": "30",
+      "notes": "Internal notes…"
+    },
     "fields": {
       "name": "Name",
       "email": "Email",

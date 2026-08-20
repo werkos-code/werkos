@@ -26,6 +26,7 @@ Bij elke nieuwe of gewijzigde UI: volg `docs/DESIGN_SYSTEM.md`. Geen screenshot 
 | Onboarding | Foto full-bleed · gecentreerd wit formulierblok · logo-white | `onboarding-shell.tsx` |
 | Kalender | View-tabs + filters → niet-gepland rail + weekgrid + detailpaneel | `planning-workspace.tsx` |
 | Editor | MetaStat-rij → main card + sticky totals | `quote-editor.tsx` |
+| Relatie-form | Gecentreerd `EntityFormShell` max-w-2xl · secties · footer-CTA | `entity-form-shell.tsx` |
 
 ## Huisstijl-ankers
 

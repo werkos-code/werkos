@@ -2,7 +2,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { CustomerForm } from "@/features/customers/components/customer-form";
 import { getOrganizationAccess } from "@/features/billing/lib/get-organization-access";
-import { PageCard } from "@/features/shell/components/page-card";
 import { ShellPage } from "@/features/shell/components/shell-page";
 import { requireTenantOrganization } from "@/features/shell/lib/require-organization";
 import { redirect } from "@/i18n/navigation";
@@ -26,9 +25,7 @@ export default async function NewCustomerPage({ params }: Props) {
 
   return (
     <ShellPage title={t("newTitle")} backHref="/klanten">
-      <PageCard className="max-w-lg p-5">
-        <CustomerForm mode="create" />
-      </PageCard>
+      <CustomerForm mode="create" />
     </ShellPage>
   );
 }

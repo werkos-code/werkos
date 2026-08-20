@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 
 import { CustomerForm } from "@/features/customers/components/customer-form";
 import { getCustomer } from "@/features/customers/customers-actions";
-import { PageCard } from "@/features/shell/components/page-card";
 import { ShellPage } from "@/features/shell/components/shell-page";
 import { Link } from "@/i18n/navigation";
 
@@ -24,24 +23,27 @@ export default async function CustomerDetailPage({ params }: Props) {
   const customer = result.customer;
 
   return (
-    <ShellPage title={customer.name} backHref="/klanten">
-      <p className="mb-6 text-sm text-muted-foreground">
-        {t("projectCount", { count: customer.projectCount })}
-        {customer.projectCount > 0 ? (
-          <>
-            {" · "}
-            <Link
-              href="/projecten"
-              className="text-foreground hover:text-primary hover:underline"
-            >
-              {t("openProjects")}
-            </Link>
-          </>
-        ) : null}
-      </p>
-      <PageCard className="max-w-lg p-5">
-        <CustomerForm mode="edit" initial={customer} />
-      </PageCard>
+    <ShellPage
+      title={customer.name}
+      backHref="/klanten"
+      status={
+        <span className="text-sm text-muted-foreground">
+          {t("projectCount", { count: customer.projectCount })}
+          {customer.projectCount > 0 ? (
+            <>
+              {" · "}
+              <Link
+                href="/projecten"
+                className="text-foreground hover:text-primary hover:underline"
+              >
+                {t("openProjects")}
+              </Link>
+            </>
+          ) : null}
+        </span>
+      }
+    >
+      <CustomerForm mode="edit" initial={customer} />
     </ShellPage>
   );
 }

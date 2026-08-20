@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 
 import { SupplierForm } from "@/features/suppliers/components/supplier-form";
 import { getSupplier } from "@/features/suppliers/suppliers-actions";
-import { PageCard } from "@/features/shell/components/page-card";
 import { ShellPage } from "@/features/shell/components/shell-page";
 
 type Props = {
@@ -23,16 +22,19 @@ export default async function SupplierDetailPage({ params }: Props) {
   const supplier = result.supplier;
 
   return (
-    <ShellPage title={supplier.name} backHref="/leveranciers">
-      <p className="mb-6 text-sm text-muted-foreground">
-        {t("linkCount", {
-          prices: supplier.priceCount,
-          orders: supplier.purchaseOrderCount,
-        })}
-      </p>
-      <PageCard className="max-w-lg p-5">
-        <SupplierForm mode="edit" initial={supplier} />
-      </PageCard>
+    <ShellPage
+      title={supplier.name}
+      backHref="/leveranciers"
+      status={
+        <span className="text-sm text-muted-foreground">
+          {t("linkCount", {
+            prices: supplier.priceCount,
+            orders: supplier.purchaseOrderCount,
+          })}
+        </span>
+      }
+    >
+      <SupplierForm mode="edit" initial={supplier} />
     </ShellPage>
   );
 }

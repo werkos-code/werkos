@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 
 import { StaffMemberForm } from "@/features/staff/components/staff-member-form";
 import { getOrgStaffMember } from "@/features/staff/staff-actions";
-import { PageCard } from "@/features/shell/components/page-card";
 import { ShellPage } from "@/features/shell/components/shell-page";
 
 type Props = {
@@ -22,13 +21,11 @@ export default async function StaffMemberPage({ params }: Props) {
 
   return (
     <ShellPage title={result.member.name} backHref="/personeel">
-      <PageCard className="max-w-lg p-5">
-        <StaffMemberForm
-          member={result.member}
-          canManage={Boolean(result.canManage)}
-          currentUserId={result.currentUserId ?? ""}
-        />
-      </PageCard>
+      <StaffMemberForm
+        member={result.member}
+        canManage={Boolean(result.canManage)}
+        currentUserId={result.currentUserId ?? ""}
+      />
     </ShellPage>
   );
 }

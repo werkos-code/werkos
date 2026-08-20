@@ -679,7 +679,9 @@
     "description": "Auftraggeber deines Unternehmens.",
     "newCustomer": "Neuer Kunde",
     "newTitle": "Neuer Kunde",
-    "newDescription": "Ein Name reicht. Weitere Details bei Bedarf.",
+    "newDescription": "Ein Name reicht. Kontaktdaten fügst du bei Bedarf hinzu.",
+    "editTitle": "Kunde bearbeiten",
+    "editDescription": "Aktualisiere die Daten dieses Auftraggebers.",
     "detailDescription": "Kundendaten bearbeiten.",
     "empty": "Noch keine Kunden. Füge den ersten Auftraggeber hinzu.",
     "create": "Kunde speichern",
@@ -690,6 +692,18 @@
     "hasProjects": "Dieser Kunde hat noch Projekte und kann nicht gelöscht werden.",
     "nameRequired": "Gib einen Namen ein.",
     "projectCount": "{count, plural, =0 {Keine Projekte} one {1 Projekt} other {# Projekte}}",
+    "sections": {
+      "identity": "Identität",
+      "contact": "Kontakt",
+      "notes": "Notizen"
+    },
+    "placeholders": {
+      "name": "Firmen- oder Kontaktname",
+      "email": "name@firma.de",
+      "phone": "+49 170 1234567",
+      "address": "Straße, PLZ, Ort",
+      "notes": "Interne Notizen zu diesem Kunden…"
+    },
     "fields": {
       "name": "Name",
       "email": "E-Mail",
@@ -710,6 +724,9 @@
     "title": "Subunternehmer",
     "newSubcontractor": "Neuer Subunternehmer",
     "newTitle": "Neuer Subunternehmer",
+    "newDescription": "Ein Name reicht. Kontakt- und HR-Daten fügst du bei Bedarf hinzu.",
+    "editTitle": "Subunternehmer bearbeiten",
+    "editDescription": "Aktualisiere die Daten dieses Subunternehmers.",
     "empty": "Noch keine Subunternehmer. Füge den ersten hinzu.",
     "emptyFiltered": "Keine Subunternehmer passen zu dieser Suche.",
     "searchPlaceholder": "Suche nach Name, E-Mail, Telefon oder HR…",
@@ -722,6 +739,20 @@
     "delete": "Löschen",
     "deleteConfirm": "Möchtest du {name} wirklich löschen?",
     "nameRequired": "Gib einen Namen ein.",
+    "sections": {
+      "identity": "Identität",
+      "contact": "Kontakt",
+      "business": "Unternehmensdaten",
+      "notes": "Notizen"
+    },
+    "placeholders": {
+      "name": "Firmen- oder Kontaktname",
+      "email": "name@firma.de",
+      "phone": "+49 170 1234567",
+      "address": "Straße, PLZ, Ort",
+      "kvk": "12345678",
+      "notes": "Interne Notizen…"
+    },
     "fields": {
       "name": "Name",
       "email": "E-Mail",
@@ -766,6 +797,8 @@
     "invite": "Mitarbeiter hinzufügen",
     "inviteTitle": "Mitarbeiter hinzufügen",
     "inviteHint": "Nur der Eigentümer kann Mitarbeiter hinzufügen. Teile das temporäre Passwort sicher.",
+    "editTitle": "Mitarbeiter bearbeiten",
+    "editDescription": "Aktualisiere Name und Rolle dieses Teammitglieds.",
     "create": "Mitarbeiter anlegen",
     "save": "Änderungen speichern",
     "open": "Öffnen",
@@ -780,6 +813,15 @@
     "kpiOwners": "Eigentümer",
     "filters": {
       "roleAll": "Rolle: Alle"
+    },
+    "sections": {
+      "profile": "Profil",
+      "access": "Zugang"
+    },
+    "placeholders": {
+      "name": "Vor- und Nachname",
+      "email": "name@firma.de",
+      "password": "Mindestens 8 Zeichen"
     },
     "fields": {
       "name": "Name",
@@ -859,7 +901,9 @@
     "description": "Lieferanten für Einkauf und Artikelpreise.",
     "newSupplier": "Neuer Lieferant",
     "newTitle": "Neuer Lieferant",
-    "newDescription": "Mindestens ein Name. Den Rest fügst du bei Bedarf hinzu.",
+    "newDescription": "Ein Name reicht. Kontakt- und Zahlungsdaten fügst du bei Bedarf hinzu.",
+    "editTitle": "Lieferant bearbeiten",
+    "editDescription": "Aktualisiere die Daten dieses Lieferanten.",
     "empty": "Noch keine Lieferanten. Füge deinen ersten Lieferanten hinzu.",
     "create": "Lieferant speichern",
     "save": "Änderungen speichern",
@@ -869,6 +913,21 @@
     "hasLinks": "Dieser Lieferant hat noch Preise oder Bestellungen und kann nicht gelöscht werden.",
     "nameRequired": "Gib einen Namen ein.",
     "linkCount": "{prices} Preise · {orders} Bestellungen",
+    "sections": {
+      "identity": "Identität",
+      "contact": "Kontakt",
+      "business": "Unternehmensdaten",
+      "notes": "Notizen"
+    },
+    "placeholders": {
+      "name": "Firmenname",
+      "email": "einkauf@lieferant.de",
+      "phone": "+49 170 1234567",
+      "address": "Straße, PLZ, Ort",
+      "kvk": "12345678",
+      "paymentTerms": "30",
+      "notes": "Interne Notizen…"
+    },
     "fields": {
       "name": "Name",
       "email": "E-Mail",
