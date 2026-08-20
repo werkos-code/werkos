@@ -2,18 +2,26 @@
 
 > Handmatige stappen die nog gedaan moeten worden. Agents: herinner de gebruiker hieraan bij relevant werk.
 
-## Marketing attribution SQL — **nog te doen**
+## Marketing attribution SQL — **gedaan**
 
-Voor first-touch attribution op `profiles`, `organizations.subscription_started_at` en idempotente `analytics_event_log`:
+`docs/sql-applied/20260820120000_marketing_attribution.sql` is gedraaid.
 
-`docs/sql-applied/20260820120000_marketing_attribution.sql`
+## Google Analytics (GA4) + Vercel env — **nog te doen**
 
-Zonder deze SQL falen attribution-writes / event-dedupe soft (events worden overgeslagen met een server-log).
+Nog geen GA-account. Zonder env blijven business events in de DB-dedupe werken zodra SQL er is, maar GA4 ontvangt niets (Measurement Protocol skippt stil).
 
-Ook in Vercel zetten (zelfde GA4 Measurement ID als werkos.nl):
+Als jullie klaar zijn (één property voor site + app):
 
-- `NEXT_PUBLIC_GA_MEASUREMENT_ID`
-- `GA4_API_SECRET` (GA4 Admin → Data stream → Measurement Protocol)
+1. [Google Analytics](https://analytics.google.com/) → account **WerkOS** → property **GA4**
+2. Twee web data streams (of één stream + cross-domain linker — wij gebruiken linker op beide domeinen):
+   - `werkos.nl`
+   - `app.werkos.nl`
+3. Noteer **Measurement ID** (`G-XXXXXXXX`)
+4. In de stream: **Measurement Protocol API secrets** → secret aanmaken → `GA4_API_SECRET`
+5. Zelfde `G-…` op **beide** Vercel-projecten:
+   - App: `NEXT_PUBLIC_GA_MEASUREMENT_ID` + `GA4_API_SECRET`
+   - Site: `NEXT_PUBLIC_GA_MEASUREMENT_ID` (zoals de marketing-agent al verwacht)
+6. Redeploy app + site
 
 Zie [`ANALYTICS_ATTRIBUTION.md`](./ANALYTICS_ATTRIBUTION.md).
 
