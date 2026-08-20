@@ -6,16 +6,15 @@ export type Ga4EventParams = Record<
 >;
 
 function getMeasurementId(): string | undefined {
-  return (
+  const raw =
     process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim() ||
-    env.NEXT_PUBLIC_GA_MEASUREMENT_ID
-  );
+    env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  return raw || undefined;
 }
 
 function getApiSecret(): string | undefined {
-  return (
-    process.env.GA4_API_SECRET?.trim() || env.GA4_API_SECRET || undefined
-  );
+  const raw = process.env.GA4_API_SECRET?.trim() || env.GA4_API_SECRET;
+  return raw || undefined;
 }
 
 /**
@@ -34,6 +33,8 @@ export function parseGaClientIdFromCookie(
 /**
  * Send a GA4 event via Measurement Protocol (server-side).
  * Never throws — analytics must not break business flows.
+ *
+ * Safe production logs: event name + HTTP status + config presence. No PII.
  */
 export async function sendGa4Event(input: {
   name: string;
@@ -45,9 +46,14 @@ export async function sendGa4Event(input: {
   const apiSecret = getApiSecret();
 
   if (!measurementId || !apiSecret) {
-    if (process.env.NODE_ENV === "development") {
-      console.debug("[analytics:mp:skip]", input.name, input.params ?? {});
-    }
+    console.warn("[analytics:mp:skip]", {
+      event: input.name,
+      hasMeasurementId: Boolean(measurementId),
+      hasApiSecret: Boolean(apiSecret),
+      reason: !measurementId
+        ? "missing_NEXT_PUBLIC_GA_MEASUREMENT_ID"
+        : "missing_GA4_API_SECRET",
+    });
     return false;
   }
 
@@ -80,15 +86,24 @@ export async function sendGa4Event(input: {
       cache: "no-store",
     });
 
-    if (!response.ok && process.env.NODE_ENV === "development") {
-      console.debug("[analytics:mp:http]", response.status, input.name);
-    }
+    // GA4 MP typically returns 204 with empty body even for some bad payloads.
+    console.info("[analytics:mp:response]", {
+      event: input.name,
+      measurementIdPrefix: measurementId.slice(0, 6),
+      httpStatus: response.status,
+      ok: response.ok || response.status === 204,
+      hasUserId: Boolean(input.userId),
+      clientIdSource: input.clientId.includes(".")
+        ? "ga_cookie_or_dotted"
+        : "generated",
+    });
+
     return response.ok || response.status === 204;
   } catch (error) {
-    console.error(
-      "[analytics:mp]",
-      error instanceof Error ? error.message : error,
-    );
+    console.error("[analytics:mp:error]", {
+      event: input.name,
+      message: error instanceof Error ? error.message : "unknown",
+    });
     return false;
   }
 }
