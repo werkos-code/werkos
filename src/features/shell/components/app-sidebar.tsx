@@ -265,7 +265,7 @@ export function AppSidebar({
         </Button>
       </div>
 
-      <nav className="flex-1 space-y-4 overflow-y-auto px-3 pb-4">
+      <nav className="sidebar-scroll flex-1 space-y-4 overflow-y-auto px-3 pb-4">
         {sections.map((section) => (
           <NavSection
             key={section.id}
