@@ -54,7 +54,13 @@ export function AccountStepForm() {
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="fullName">{t("fullName")}</Label>
-            <Input id="fullName" name="fullName" required autoComplete="name" />
+            <Input
+              id="fullName"
+              name="fullName"
+              required
+              autoComplete="name"
+              className="h-11"
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">{t("email")}</Label>
@@ -64,6 +70,7 @@ export function AccountStepForm() {
               type="email"
               required
               autoComplete="email"
+              className="h-11"
             />
           </div>
           <div className="space-y-2">
@@ -75,16 +82,22 @@ export function AccountStepForm() {
               required
               minLength={8}
               autoComplete="new-password"
+              className="h-11"
             />
             <p className="text-xs text-muted-foreground">{t("passwordHint")}</p>
           </div>
         </div>
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
-        <Button type="submit" size="lg" disabled={pending} className="w-full">
+        <Button
+          type="submit"
+          size="lg"
+          disabled={pending}
+          className="h-11 w-full"
+        >
           {pending ? tCommon("loading") : t("submit")}
         </Button>
       </form>
-      <p className="mt-8 text-center text-sm text-muted-foreground">
+      <p className="mt-6 text-center text-sm text-muted-foreground">
         {t("hasAccount")}{" "}
         <Link
           href="/login"

@@ -67,7 +67,7 @@ export function CompanyStepForm({
         })();
       }}
     >
-      <div className="space-y-4">
+      <div className="space-y-5">
         <div className="space-y-2">
           <Label htmlFor="companyName">{t("companyName")}</Label>
           <Input
@@ -76,12 +76,20 @@ export function CompanyStepForm({
             required
             autoComplete="organization"
             defaultValue={initialCompanyName}
+            className="h-11"
           />
         </div>
-        <div className="space-y-3">
-          <div className="flex items-baseline justify-between gap-3">
-            <Label>{t("industry")}</Label>
-            <span className="text-xs text-muted-foreground">{t("industryOptional")}</span>
+
+        <section className="space-y-3">
+          <div className="space-y-0.5">
+            <div className="flex items-baseline justify-between gap-3">
+              <h3 className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                {t("industry")}
+              </h3>
+              <span className="text-xs text-muted-foreground">
+                {t("industryOptional")}
+              </span>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-2">
             {INDUSTRY_KEYS.map((key) => (
@@ -95,29 +103,37 @@ export function CompanyStepForm({
                   "rounded-lg border px-3 py-2.5 text-left text-sm transition-colors",
                   industry === key
                     ? "border-primary bg-primary/10 font-medium text-primary"
-                    : "border-border bg-background text-foreground hover:bg-muted/40",
+                    : "border-border bg-card text-foreground hover:bg-muted/40",
                 )}
               >
                 {t(`industries.${key}`)}
               </button>
             ))}
           </div>
-          <div className="min-h-9">
+          <div className="min-h-11">
             {industry === "other" ? (
               <Input
                 name="industryOther"
                 placeholder={t("industryPlaceholder")}
                 defaultValue={initialIndustryOther}
+                className="h-11"
               />
             ) : null}
           </div>
-        </div>
+        </section>
       </div>
 
-      <p className="text-sm text-muted-foreground">{t("trialHint")}</p>
+      <p className="rounded-xl bg-primary/5 px-3.5 py-2.5 text-sm text-muted-foreground">
+        {t("trialHint")}
+      </p>
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
-      <Button type="submit" size="lg" disabled={pending} className="w-full">
+      <Button
+        type="submit"
+        size="lg"
+        disabled={pending}
+        className="h-11 w-full"
+      >
         {pending ? tCommon("loading") : t("submit")}
       </Button>
     </form>

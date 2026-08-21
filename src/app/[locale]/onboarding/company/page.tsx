@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Building2 } from "lucide-react";
 import { redirect } from "@/i18n/navigation";
 
 import { CompanyStepForm } from "@/features/onboarding/components/company-step-form";
@@ -31,6 +32,7 @@ export default async function OnboardingCompanyPage({ params }: Props) {
   return (
     <OnboardingStepFrame
       step={2}
+      icon={Building2}
       title={t("title")}
       description={t("description")}
       backHref="/onboarding/account"

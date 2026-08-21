@@ -6,17 +6,20 @@ import { cn } from "@/lib/utils";
 type OnboardingProgressProps = {
   current: number;
   total?: number;
+  /** Tighter spacing when nested in a card header band. */
+  compact?: boolean;
 };
 
 export async function OnboardingProgress({
   current,
   total = ONBOARDING_STEP_TOTAL,
+  compact = false,
 }: OnboardingProgressProps) {
   const t = await getTranslations("onboarding");
 
   return (
-    <div className="mb-8">
-      <div className="mb-3 flex items-center justify-between gap-3">
+    <div className={cn(compact ? "space-y-2.5" : "mb-8 space-y-3")}>
+      <div className="flex items-center justify-between gap-3">
         <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
           {t("progress", { current, total })}
         </p>
@@ -24,7 +27,7 @@ export async function OnboardingProgress({
           {String(current).padStart(2, "0")} / {String(total).padStart(2, "0")}
         </span>
       </div>
-      <div className="flex gap-1" aria-hidden="true">
+      <div className="flex gap-1.5" aria-hidden="true">
         {Array.from({ length: total }).map((_, index) => (
           <div
             key={index}

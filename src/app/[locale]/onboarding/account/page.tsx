@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { UserRound } from "lucide-react";
 
 import { AccountStepForm } from "@/features/onboarding/components/account-step-form";
 import { OnboardingStepFrame } from "@/features/onboarding/components/onboarding-step-frame";
@@ -13,6 +14,7 @@ export default async function OnboardingAccountPage({ params }: Props) {
   return (
     <OnboardingStepFrame
       step={1}
+      icon={UserRound}
       title={t("title")}
       description={t("description")}
     >

@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { OnboardingStepFrame } from "@/features/onboarding/components/onboarding-step-frame";
@@ -26,10 +27,12 @@ export default async function OnboardingCompletePage({ params }: Props) {
   return (
     <OnboardingStepFrame
       step={2}
+      hideProgress
+      icon={Sparkles}
       title={t("title")}
       description={t("description")}
     >
-      <Button asChild size="lg" className="w-full">
+      <Button asChild size="lg" className="h-11 w-full">
         <Link href="/dashboard">{t("cta")}</Link>
       </Button>
     </OnboardingStepFrame>

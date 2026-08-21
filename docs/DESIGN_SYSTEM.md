@@ -258,21 +258,24 @@ ShellPage (titel + back)
 
 ### 4.9 Onboarding (centered, buiten de app-shell)
 
-Full-bleed foto + navy overlay. Wit logo boven een groot gecentreerd formulierblok.
+Product-entry in **dashboard-taal**: navy gradient-canvas (zelfde DNA als dashboard-hero), wit logo, rustige form-surface.
 
 ```
-Foto (full-bleed) + overlay
-logo-white + Website-knop
-wit blok rounded-3xl, geen border, royale padding
+Navy gradient (#09133A → #1E3A8A) + radial blue glow
+logo-white + Website-pill
+form surface: rounded-2xl · soft shadow · ring-1 ring-black/4
+  ├─ muted band: progress (stap X van 2)
+  ├─ header: icoon in primary/10 rounded-2xl · titel · hint
+  └─ velden · primaire CTA h-11
 ```
 
-1. Logo: `/brand/logo-white.svg` — **geen** achtergrond achter het logo
-2. Achtergrondfoto: `/onboarding/solar-installer.jpg` (vervangbaar via `atmosphere.ts`)
-3. Formulier in het witte blok; geen geneste cards
-4. Progress: segmented bar — 6 stappen (account → bedrijf → team → betaling → inrichten → klaar). Geen welcome-stap.
-5. Branche-chips: modus-chip classes; extra veld reserveert hoogte
+1. Geen stockfoto-ballon meer — gradient matcht dashboard-hero
+2. Surface = dashboard-kaarttaal (`DashboardSurface`), niet zware `rounded-3xl` multi-shadow
+3. Header = EntityFormShell-patroon (icoon-chip + titel)
+4. Progress: 2 stappen (account → bedrijf); complete zonder progress-band
+5. Branche-chips: modus-chip classes; optioneel
 
-**Canonical:** `src/features/onboarding/components/onboarding-shell.tsx`
+**Canonical:** `src/features/onboarding/components/{onboarding-shell,onboarding-step-frame}.tsx`
 
 ### 4.10 Login & app-start (buiten de app-shell)
 
