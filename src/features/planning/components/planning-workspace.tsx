@@ -57,6 +57,12 @@ import {
   CalendarEventOverlay,
   PlanningWeekGrid,
 } from "@/features/planning/components/planning-week-grid";
+import { PlanningSetupWizard } from "@/features/planning/components/planning-setup-wizard";
+import { hoursForSettings } from "@/features/planning/lib/planning-display";
+import {
+  computeEndAcrossWorkDays,
+  type PlanningSettings,
+} from "@/features/planning/lib/planning-settings";
 import {
   createAppointment,
   updateAppointment,
@@ -65,8 +71,6 @@ import { planningDropTargetFromId } from "@/features/planning/lib/planning-drop-
 import {
   APPOINTMENT_STATUSES,
   APPOINTMENT_TYPES,
-  PLANNING_DAY_END_HOUR,
-  PLANNING_DAY_START_HOUR,
   PLANNING_HOUR_HEIGHT,
   addDays,
   addMonths,
@@ -98,6 +102,7 @@ type PlanningWorkspaceProps = {
   projects: PlanningProjectOption[];
   staff: StaffOption[];
   initialWeekStart: string;
+  planningSettings: PlanningSettings;
 };
 
 type PendingMove = {
@@ -124,6 +129,7 @@ export function PlanningWorkspace({
   projects,
   staff,
   initialWeekStart,
+  planningSettings: initialPlanningSettings,
 }: PlanningWorkspaceProps) {
   const t = useTranslations("planning");
   const tCommon = useTranslations("common");
@@ -153,6 +159,10 @@ export function PlanningWorkspace({
     endsAt?: string;
     assigneeUserId?: string | null;
   }>({});
+  const [planningSettings, setPlanningSettings] = useState(initialPlanningSettings);
+  const [showSetupWizard, setShowSetupWizard] = useState(
+    !initialPlanningSettings.setupCompleted,
+  );
   const [localAppointments, setLocalAppointments] = useState(initialAppointments);
   const [localUnplanned, setLocalUnplanned] = useState(initialUnplanned);
   const [activeDrag, setActiveDrag] = useState<CalendarDragData | null>(null);
@@ -163,6 +173,11 @@ export function PlanningWorkspace({
   const [now, setNow] = useState(() => new Date());
 
   const columnRefs = useRef(new Map<string, HTMLDivElement>());
+
+  useEffect(() => {
+    setPlanningSettings(initialPlanningSettings);
+    setShowSetupWizard(!initialPlanningSettings.setupCompleted);
+  }, [initialPlanningSettings]);
 
   useEffect(() => {
     setLocalAppointments(initialAppointments);
@@ -259,15 +274,12 @@ export function PlanningWorkspace({
   }, [anchor, locale, view, weekStart]);
 
   const hours = useMemo(
-    () =>
-      Array.from(
-        { length: PLANNING_DAY_END_HOUR - PLANNING_DAY_START_HOUR },
-        (_, index) => PLANNING_DAY_START_HOUR + index,
-      ),
-    [],
+    () => hoursForSettings(planningSettings),
+    [planningSettings],
   );
   const gridHeight =
-    (PLANNING_DAY_END_HOUR - PLANNING_DAY_START_HOUR) * PLANNING_HOUR_HEIGHT;
+    (planningSettings.dayEndHour - planningSettings.dayStartHour) *
+    PLANNING_HOUR_HEIGHT;
 
   const projectOptions = useMemo(
     () =>
@@ -370,7 +382,11 @@ export function PlanningWorkspace({
     minutesFromStart: number,
     assigneeUserId?: string | null,
   ) {
-    const start = minutesToDateOnDay(day, minutesFromStart);
+    const start = minutesToDateOnDay(
+      day,
+      minutesFromStart,
+      planningSettings.dayStartHour,
+    );
     const end = new Date(start);
     end.setMinutes(end.getMinutes() + 60);
     openCreate({
@@ -515,9 +531,23 @@ export function PlanningWorkspace({
     const rect = column.getBoundingClientRect();
     const translated = event.active.rect.current.translated;
     const dropY = (translated?.top ?? 0) + (translated?.height ?? 0) / 2;
-    const minutes = dropMinutesFromPointer(dropY, rect.top);
+    const minutes = dropMinutesFromPointer(
+      dropY,
+      rect.top,
+      planningSettings.dayStartHour,
+      planningSettings.dayEndHour,
+    );
     setActiveDropColumn(target.columnKey);
     setDropPreviewMinutes(minutes);
+  }
+
+  function resolveDropRange(start: Date, durationMinutes: number) {
+    const endsAt = computeEndAcrossWorkDays(
+      start,
+      durationMinutes,
+      planningSettings,
+    );
+    return { startsAt: start.toISOString(), endsAt: endsAt.toISOString() };
   }
 
   function onDragEnd(event: DragEndEvent) {
@@ -537,12 +567,18 @@ export function PlanningWorkspace({
     const rect = column.getBoundingClientRect();
     const translated = event.active.rect.current.translated;
     const dropY = (translated?.top ?? 0) + (translated?.height ?? 0) / 2;
-    const minutes = dropMinutesFromPointer(dropY, rect.top);
-    const start = minutesToDateOnDay(day, minutes);
-    const end = new Date(start);
-    end.setMinutes(end.getMinutes() + data.durationMinutes);
-    const startsAt = start.toISOString();
-    const endsAt = end.toISOString();
+    const minutes = dropMinutesFromPointer(
+      dropY,
+      rect.top,
+      planningSettings.dayStartHour,
+      planningSettings.dayEndHour,
+    );
+    const start = minutesToDateOnDay(
+      day,
+      minutes,
+      planningSettings.dayStartHour,
+    );
+    const { startsAt, endsAt } = resolveDropRange(start, data.durationMinutes);
 
     const assigneeOverride =
       target.kind === "resource" ? target.assigneeUserId : undefined;
@@ -778,8 +814,8 @@ export function PlanningWorkspace({
             onClick={() => {
               const start = new Date();
               start.setMinutes(0, 0, 0);
-              if (start.getHours() < PLANNING_DAY_START_HOUR) {
-                start.setHours(PLANNING_DAY_START_HOUR);
+              if (start.getHours() < planningSettings.dayStartHour) {
+                start.setHours(planningSettings.dayStartHour);
               }
               const end = new Date(start);
               end.setHours(start.getHours() + 2);
@@ -976,6 +1012,7 @@ export function PlanningWorkspace({
                           includeUnassigned={personFilter === "all"}
                           hours={hours}
                           gridHeight={gridHeight}
+                          settings={planningSettings}
                           timedEvents={timedEvents}
                           allDayEvents={allDayEvents}
                           selectedId={selectedId}
@@ -1000,6 +1037,7 @@ export function PlanningWorkspace({
                         gridHeight={gridHeight}
                         locale={locale}
                         now={now}
+                        settings={planningSettings}
                         allDayLabel={t("allDay")}
                         timedEvents={timedEvents}
                         allDayEvents={allDayEvents}
@@ -1193,6 +1231,16 @@ export function PlanningWorkspace({
           setDialogOpen(false);
           setEditing(null);
           setScheduleItem(null);
+          router.refresh();
+        }}
+      />
+
+      <PlanningSetupWizard
+        open={showSetupWizard}
+        initial={planningSettings}
+        onComplete={(settings) => {
+          setPlanningSettings(settings);
+          setShowSetupWizard(false);
           router.refresh();
         }}
       />

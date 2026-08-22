@@ -1789,14 +1789,15 @@
         "subscriptionEmpty": "Kein Abonnementdatensatz für diesen Account.",
         "noOwner": "Kein Owner mit diesem Account verknüpft.",
         "attributionHint": "First-Touch-Daten von {name}.",
-        "impersonationSoon": "Als Benutzer anmelden folgt im nächsten Sprint.",
         "yes": "Ja",
         "no": "Nein",
         "columns": {
           "name": "Name",
           "email": "E-Mail",
-          "joined": "Mitglied seit"
+          "joined": "Mitglied seit",
+          "actions": "Aktionen"
         },
+        "impersonateOwner": "Als Owner anmelden",
         "fields": {
           "status": "Status",
           "trialEnds": "Test bis",
@@ -1808,6 +1809,14 @@
           "firstTouchAt": "First Touch"
         }
       }
+    },
+    "impersonation": {
+      "banner": "Supportmodus — du siehst WerkOS als {name} ({email}) bei {organization}.",
+      "stop": "Impersonation beenden",
+      "start": "Anmelden als",
+      "confirm": "Möchtest du dich wirklich als dieser Benutzer anmelden? Dies wird protokolliert.",
+      "cannotImpersonateSuperAdmin": "Super Admins können nicht imitiert werden.",
+      "membershipNotFound": "Benutzer gehört nicht zu diesem Account."
     },
     "users": {
       "title": "Benutzer",
@@ -1839,6 +1848,10 @@
       "accountsHint": "Organisationen mit Abonnement sind pro Account gruppiert.",
       "accountsDescription": "Owner-, Büro-, Außendienst- und Kundenaccounts pro Unternehmen.",
       "accountsCta": "Alle Accounts",
+      "searchTitle": "Suche",
+      "searchPlaceholder": "Suche nach E-Mail, Name oder Organisation…",
+      "searchHint": "Mindestens 2 Zeichen eingeben.",
+      "searchEmpty": "Keine Benutzer gefunden.",
       "columns": {
         "name": "Name",
         "email": "E-Mail",
@@ -1851,6 +1864,33 @@
         "office_employee": "Büromitarbeiter",
         "field_employee": "Außendienstmitarbeiter",
         "customer": "Kunde"
+      },
+      "detail": {
+        "fallbackTitle": "Benutzer",
+        "kpi": {
+          "created": "Account erstellt",
+          "signup": "Registrierung",
+          "memberships": "Organisationen",
+          "paid": "Bezahlt seit"
+        },
+        "sections": {
+          "memberships": "Organisationen",
+          "milestones": "Meilensteine",
+          "attribution": "Attribution"
+        },
+        "membershipsEmpty": "Keine Organisationen verknüpft.",
+        "columns": {
+          "organization": "Organisation",
+          "role": "Rolle",
+          "actions": "Aktionen"
+        },
+        "fields": {
+          "companyCreated": "Unternehmen erstellt",
+          "firstProject": "Erstes Projekt",
+          "firstQuote": "Erstes Angebot",
+          "subscriptionStarted": "Abonnement gestartet",
+          "firstTouch": "First Touch"
+        }
       }
     }
   },
@@ -1895,6 +1935,27 @@
       "people": "Personen"
     },
     "resourceEmptyStaff": "Keine Mitarbeiter anzuzeigen. Personenfilter anpassen.",
+    "setup": {
+      "title": "Planung einrichten",
+      "description": "Wähle Arbeitstage und -zeiten. Lange Aufgaben werden automatisch auf mehrere Tage verteilt.",
+      "workDays": "Arbeitstage",
+      "startHour": "Tagesbeginn",
+      "endHour": "Tagesende",
+      "hoursHint": "Maximal {hours} Stunden pro Arbeitstag im Kalender.",
+      "workDaysRequired": "Mindestens einen Arbeitstag wählen.",
+      "hoursInvalid": "Endzeit muss nach der Startzeit liegen.",
+      "save": "Planung starten",
+      "skip": "Standard verwenden"
+    },
+    "weekdays": {
+      "mon": "Mo",
+      "tue": "Di",
+      "wed": "Mi",
+      "thu": "Do",
+      "fri": "Fr",
+      "sat": "Sa",
+      "sun": "So"
+    },
     "filters": {
       "allProjects": "Alle Projekte",
       "allPeople": "Alle",

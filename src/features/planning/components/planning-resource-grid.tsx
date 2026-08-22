@@ -12,7 +12,9 @@ import {
   toDateKey,
   type AppointmentRow,
 } from "@/features/planning/lib/planning";
+import { isVisibleWorkDay } from "@/features/planning/lib/planning-display";
 import { resourceDropId } from "@/features/planning/lib/planning-drop-target";
+import type { PlanningSettings } from "@/features/planning/lib/planning-settings";
 import { cn } from "@/lib/utils";
 
 type ResourceColumn = {
@@ -29,6 +31,7 @@ type PlanningResourceGridProps = {
   includeUnassigned: boolean;
   hours: number[];
   gridHeight: number;
+  settings: PlanningSettings;
   timedEvents: AppointmentRow[];
   allDayEvents: AppointmentRow[];
   selectedId: string | null;
@@ -61,6 +64,7 @@ export function PlanningResourceGrid({
   includeUnassigned,
   hours,
   gridHeight,
+  settings,
   timedEvents,
   allDayEvents,
   selectedId,
@@ -81,7 +85,10 @@ export function PlanningResourceGrid({
     hour: "2-digit",
     minute: "2-digit",
   }).format(now);
-  const nowTop = minutesSinceDayStart(now) * (PLANNING_HOUR_HEIGHT / 60);
+  const nowTop =
+    minutesSinceDayStart(now, settings.dayStartHour) *
+    (PLANNING_HOUR_HEIGHT / 60);
+  const workDay = isVisibleWorkDay(day, settings);
   const showNow = today;
 
   const columns: ResourceColumn[] = [
@@ -212,6 +219,7 @@ export function PlanningResourceGrid({
               gridHeight={gridHeight}
               hours={hours}
               locale={locale}
+              settings={settings}
               events={columnEvents}
               selectedId={selectedId}
               showNow={showNow}
@@ -222,6 +230,7 @@ export function PlanningResourceGrid({
               }
               dropPreviewDurationMinutes={dropPreviewDurationMinutes}
               isDropTarget={activeDropColumn === dropId}
+              isWorkDay={workDay}
               onColumnRef={onColumnRef}
               onSlotClick={(slotDay, minutes) =>
                 onSlotClick(slotDay, minutes, column.id)

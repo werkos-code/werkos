@@ -1809,14 +1809,15 @@
         "subscriptionEmpty": "No subscription record for this account.",
         "noOwner": "No owner linked to this account.",
         "attributionHint": "First-touch data from {name}.",
-        "impersonationSoon": "Sign in as user comes in the next sprint.",
         "yes": "Yes",
         "no": "No",
         "columns": {
           "name": "Name",
           "email": "Email",
-          "joined": "Member since"
+          "joined": "Member since",
+          "actions": "Actions"
         },
+        "impersonateOwner": "Sign in as owner",
         "fields": {
           "status": "Status",
           "trialEnds": "Trial until",
@@ -1828,6 +1829,14 @@
           "firstTouchAt": "First touch"
         }
       }
+    },
+    "impersonation": {
+      "banner": "Support mode — you are viewing WerkOS as {name} ({email}) at {organization}.",
+      "stop": "Stop impersonation",
+      "start": "Sign in as",
+      "confirm": "Are you sure you want to sign in as this user? This will be logged.",
+      "cannotImpersonateSuperAdmin": "Super admins cannot be impersonated.",
+      "membershipNotFound": "User is not a member of this account."
     },
     "users": {
       "title": "Users",
@@ -1859,6 +1868,10 @@
       "accountsHint": "Organizations with a subscription are grouped per account.",
       "accountsDescription": "Owner, office, field and customer accounts per company.",
       "accountsCta": "All accounts",
+      "searchTitle": "Search",
+      "searchPlaceholder": "Search by email, name or organization…",
+      "searchHint": "Type at least 2 characters.",
+      "searchEmpty": "No users found.",
       "columns": {
         "name": "Name",
         "email": "Email",
@@ -1871,6 +1884,33 @@
         "office_employee": "Office employee",
         "field_employee": "Field employee",
         "customer": "Customer"
+      },
+      "detail": {
+        "fallbackTitle": "User",
+        "kpi": {
+          "created": "Account created",
+          "signup": "Signup",
+          "memberships": "Organizations",
+          "paid": "Paid since"
+        },
+        "sections": {
+          "memberships": "Organizations",
+          "milestones": "Milestones",
+          "attribution": "Attribution"
+        },
+        "membershipsEmpty": "No organizations linked.",
+        "columns": {
+          "organization": "Organization",
+          "role": "Role",
+          "actions": "Actions"
+        },
+        "fields": {
+          "companyCreated": "Company created",
+          "firstProject": "First project",
+          "firstQuote": "First quote",
+          "subscriptionStarted": "Subscription started",
+          "firstTouch": "First touch"
+        }
       }
     }
   },
@@ -1915,6 +1955,27 @@
       "people": "People"
     },
     "resourceEmptyStaff": "No team members to show. Adjust the person filter.",
+    "setup": {
+      "title": "Set up your schedule",
+      "description": "Choose which days and hours your team works. Long tasks are split across work days automatically.",
+      "workDays": "Work days",
+      "startHour": "Day starts",
+      "endHour": "Day ends",
+      "hoursHint": "Up to {hours} hours per work day in the calendar.",
+      "workDaysRequired": "Select at least one work day.",
+      "hoursInvalid": "End time must be after start time.",
+      "save": "Start planning",
+      "skip": "Use defaults"
+    },
+    "weekdays": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    },
     "filters": {
       "allProjects": "All projects",
       "allPeople": "Everyone",

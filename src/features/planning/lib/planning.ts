@@ -122,24 +122,23 @@ export function planningColorForItem(item: {
   projectId?: string | null;
   id?: string;
 }) {
-  if (item.type && PLANNING_TYPE_COLORS[item.type]) {
-    const base = PLANNING_TYPE_COLORS[item.type];
-    if (item.status === "cancelled") {
-      return {
-        bg: "bg-muted/60",
-        border: "border-border",
-        text: "text-muted-foreground line-through",
-      };
-    }
-    if (item.status === "done") {
-      return {
-        ...base,
-        bg: `${base.bg}/70`,
-      };
-    }
-    return base;
+  const colorKey = item.id ?? item.projectId ?? "default";
+  const base = planningColorForKey(colorKey);
+
+  if (item.status === "cancelled") {
+    return {
+      bg: "bg-muted/60",
+      border: "border-border",
+      text: "text-muted-foreground line-through",
+    };
   }
-  return planningColorForKey(item.projectId ?? item.id);
+  if (item.status === "done") {
+    return {
+      ...base,
+      bg: `${base.bg}/70`,
+    };
+  }
+  return base;
 }
 
 export const PLANNING_DAY_START_HOUR = 7;

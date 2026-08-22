@@ -22,6 +22,14 @@ export type SubscriptionStatus =
   | "unpaid"
   | "paused";
 
+export type PlatformCostCategory =
+  | "software"
+  | "hosting"
+  | "marketing"
+  | "office"
+  | "professional_services"
+  | "other";
+
 export type ProjectStatus =
   | "preparation"
   | "execution"
@@ -194,6 +202,10 @@ export type Database = {
           invoice_default_notes: string | null;
           invoice_reminder_days_after_due: number | null;
           subscription_started_at: string | null;
+          planning_work_days: number[];
+          planning_day_start_hour: number;
+          planning_day_end_hour: number;
+          planning_setup_completed_at: string | null;
           created_by: string | null;
           created_at: string;
           updated_at: string;
@@ -222,6 +234,10 @@ export type Database = {
           invoice_default_notes?: string | null;
           invoice_reminder_days_after_due?: number | null;
           subscription_started_at?: string | null;
+          planning_work_days?: number[];
+          planning_day_start_hour?: number;
+          planning_day_end_hour?: number;
+          planning_setup_completed_at?: string | null;
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -250,6 +266,10 @@ export type Database = {
           invoice_default_notes?: string | null;
           invoice_reminder_days_after_due?: number | null;
           subscription_started_at?: string | null;
+          planning_work_days?: number[];
+          planning_day_start_hour?: number;
+          planning_day_end_hour?: number;
+          planning_setup_completed_at?: string | null;
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -280,6 +300,81 @@ export type Database = {
           user_id?: string | null;
           organization_id?: string | null;
           created_at?: string;
+        };
+        Relationships: [];
+      };
+      platform_audit_log: {
+        Row: {
+          id: string;
+          actor_user_id: string;
+          action: string;
+          target_type: string | null;
+          target_id: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          actor_user_id: string;
+          action: string;
+          target_type?: string | null;
+          target_id?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          actor_user_id?: string;
+          action?: string;
+          target_type?: string | null;
+          target_id?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      platform_operating_costs: {
+        Row: {
+          id: string;
+          description: string;
+          vendor: string | null;
+          category: PlatformCostCategory;
+          amount_cents: number;
+          vat_rate_bps: number;
+          invoice_date: string;
+          invoice_reference: string | null;
+          notes: string | null;
+          created_by: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          description: string;
+          vendor?: string | null;
+          category?: PlatformCostCategory;
+          amount_cents: number;
+          vat_rate_bps?: number;
+          invoice_date: string;
+          invoice_reference?: string | null;
+          notes?: string | null;
+          created_by: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          description?: string;
+          vendor?: string | null;
+          category?: PlatformCostCategory;
+          amount_cents?: number;
+          vat_rate_bps?: number;
+          invoice_date?: string;
+          invoice_reference?: string | null;
+          notes?: string | null;
+          created_by?: string;
+          created_at?: string;
+          updated_at?: string;
         };
         Relationships: [];
       };

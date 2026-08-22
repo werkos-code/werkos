@@ -1,14 +1,16 @@
 "use client";
 
 import { useDroppable } from "@dnd-kit/core";
-import { useCallback, type MouseEvent as ReactMouseEvent } from "react";
+import { useCallback, useMemo, type MouseEvent as ReactMouseEvent } from "react";
 
 import { DraggableCalendarEvent } from "@/features/planning/components/planning-calendar-event";
+import { layoutDayAppointments } from "@/features/planning/lib/planning-display";
 import {
   PLANNING_HOUR_HEIGHT,
   snapToGridMinutes,
   type AppointmentRow,
 } from "@/features/planning/lib/planning";
+import type { PlanningSettings } from "@/features/planning/lib/planning-settings";
 import { cn } from "@/lib/utils";
 
 type PlanningTimeColumnProps = {
@@ -17,6 +19,7 @@ type PlanningTimeColumnProps = {
   gridHeight: number;
   hours: number[];
   locale: string;
+  settings: PlanningSettings;
   events: AppointmentRow[];
   selectedId: string | null;
   showNow: boolean;
@@ -25,6 +28,7 @@ type PlanningTimeColumnProps = {
   dropPreviewMinutes: number | null;
   dropPreviewDurationMinutes: number;
   isDropTarget: boolean;
+  isWorkDay?: boolean;
   onColumnRef: (key: string, node: HTMLDivElement | null) => void;
   onSlotClick: (day: Date, minutesFromStart: number) => void;
   onEventClick: (item: AppointmentRow) => void;
@@ -38,6 +42,7 @@ export function PlanningTimeColumn({
   gridHeight,
   hours,
   locale,
+  settings,
   events,
   selectedId,
   showNow,
@@ -46,6 +51,7 @@ export function PlanningTimeColumn({
   dropPreviewMinutes,
   dropPreviewDurationMinutes,
   isDropTarget,
+  isWorkDay = true,
   onColumnRef,
   onSlotClick,
   onEventClick,
@@ -57,6 +63,11 @@ export function PlanningTimeColumn({
     data: { day },
   });
 
+  const layouted = useMemo(
+    () => layoutDayAppointments(events, day, settings),
+    [events, day, settings],
+  );
+
   const setRef = useCallback(
     (node: HTMLDivElement | null) => {
       setNodeRef(node);
@@ -66,6 +77,7 @@ export function PlanningTimeColumn({
   );
 
   function handleClick(event: ReactMouseEvent<HTMLDivElement>) {
+    if (!isWorkDay) return;
     if ((event.target as HTMLElement).closest("[data-event-block]")) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const y = event.clientY - rect.top;
@@ -79,7 +91,8 @@ export function PlanningTimeColumn({
       ref={setRef}
       className={cn(
         "relative border-r border-border last:border-r-0",
-        (isOver || isDropTarget) && "bg-primary/5",
+        !isWorkDay && "bg-muted/20",
+        (isOver || isDropTarget) && isWorkDay && "bg-primary/5",
       )}
       style={{ height: gridHeight }}
       onClick={handleClick}
@@ -92,14 +105,19 @@ export function PlanningTimeColumn({
         />
       ))}
 
-      {dropPreviewMinutes !== null ? (
+      {dropPreviewMinutes !== null && isWorkDay ? (
         <div
           className="pointer-events-none absolute right-1 left-1 z-10 rounded-md border-2 border-dashed border-primary/50 bg-primary/10"
           style={{
             top: (dropPreviewMinutes / 60) * PLANNING_HOUR_HEIGHT,
             height: Math.max(
               28,
-              (dropPreviewDurationMinutes / 60) * PLANNING_HOUR_HEIGHT,
+              (Math.min(
+                dropPreviewDurationMinutes,
+                (settings.dayEndHour - settings.dayStartHour) * 60,
+              ) /
+                60) *
+                PLANNING_HOUR_HEIGHT,
             ),
           }}
         />
@@ -118,15 +136,17 @@ export function PlanningTimeColumn({
         </div>
       ) : null}
 
-      {events.map((item) => (
+      {layouted.map((segment) => (
         <DraggableCalendarEvent
-          key={item.id}
-          item={item}
+          key={segment.segmentKey}
+          segment={segment}
           locale={locale}
-          selected={selectedId === item.id}
-          onClick={() => onEventClick(item)}
+          dayStartHour={settings.dayStartHour}
+          dayEndHour={settings.dayEndHour}
+          selected={selectedId === segment.appointment.id}
+          onClick={() => onEventClick(segment.appointment)}
           onDoubleClick={onEventDoubleClick}
-          onResize={(newEndIso) => onEventResize(item, newEndIso)}
+          onResize={(newEndIso) => onEventResize(segment.appointment, newEndIso)}
         />
       ))}
     </div>

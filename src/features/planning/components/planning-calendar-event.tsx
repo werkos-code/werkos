@@ -4,24 +4,24 @@ import { useDraggable } from "@dnd-kit/core";
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
 import {
-  PLANNING_DAY_END_HOUR,
   PLANNING_HOUR_HEIGHT,
   PLANNING_SNAP_MINUTES,
   durationMinutes,
   formatTimeRange,
   minutesSinceDayStart,
-  parseIsoDate,
   planningColorForItem,
   snapToGridMinutes,
   type AppointmentRow,
 } from "@/features/planning/lib/planning";
+import type { LayoutedSegment } from "@/features/planning/lib/planning-display";
+import type { CalendarDragData } from "@/features/planning/lib/planning";
 import { cn } from "@/lib/utils";
 
-import type { CalendarDragData } from "@/features/planning/lib/planning";
-
 type DraggableCalendarEventProps = {
-  item: AppointmentRow;
+  segment: LayoutedSegment;
   locale: string;
+  dayStartHour: number;
+  dayEndHour: number;
   selected: boolean;
   onClick: () => void;
   onDoubleClick?: (item: AppointmentRow) => void;
@@ -29,41 +29,48 @@ type DraggableCalendarEventProps = {
 };
 
 export function DraggableCalendarEvent({
-  item,
+  segment,
   locale,
+  dayStartHour,
+  dayEndHour,
   selected,
   onClick,
   onDoubleClick,
   onResize,
 }: DraggableCalendarEventProps) {
-  const dur = Math.max(
+  const item = segment.appointment;
+  const displayDur = Math.max(
     PLANNING_SNAP_MINUTES,
-    durationMinutes(item.startsAt, item.endsAt),
+    durationMinutes(segment.startsAt, segment.endsAt),
   );
   const [previewEnd, setPreviewEnd] = useState<string | null>(null);
   const previewEndRef = useRef<string | null>(null);
-  const displayEnd = previewEnd ?? item.endsAt;
-  const displayDur = Math.max(
+  const segmentEnd = previewEnd ?? segment.endsAt;
+  const segmentDur = Math.max(
     PLANNING_SNAP_MINUTES,
-    durationMinutes(item.startsAt, displayEnd),
+    durationMinutes(segment.startsAt, segmentEnd),
   );
+
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `event:${item.id}`,
+    id: `event:${segment.segmentKey}`,
     data: {
       kind: "event" as const,
       item,
-      durationMinutes: dur,
+      durationMinutes: durationMinutes(item.startsAt, item.endsAt),
     } satisfies CalendarDragData,
   });
 
-  const start = parseIsoDate(item.startsAt);
-  const mins = minutesSinceDayStart(start);
+  const start = new Date(segment.startsAt);
+  const mins = minutesSinceDayStart(start, dayStartHour);
   const top = (mins / 60) * PLANNING_HOUR_HEIGHT;
-  const height = (displayDur / 60) * PLANNING_HOUR_HEIGHT;
+  const height = (segmentDur / 60) * PLANNING_HOUR_HEIGHT;
   const color = planningColorForItem(item);
+  const widthPct = 100 / segment.columnCount;
+  const leftPct = segment.columnIndex * widthPct;
   const resizeRef = useRef<{ startY: number; startEnd: number } | null>(null);
 
   function onResizePointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    if (segment.segmentCount > 1) return;
     event.stopPropagation();
     event.preventDefault();
     const startEnd = new Date(item.endsAt).getTime();
@@ -82,7 +89,7 @@ export function DraggableCalendarEvent({
       const minEnd =
         new Date(item.startsAt).getTime() + PLANNING_SNAP_MINUTES * 60_000;
       const maxEnd = new Date(item.startsAt);
-      maxEnd.setHours(PLANNING_DAY_END_HOUR, 0, 0, 0);
+      maxEnd.setHours(dayEndHour, 0, 0, 0);
       const clamped = Math.min(
         maxEnd.getTime(),
         Math.max(minEnd, newEnd.getTime()),
@@ -113,10 +120,15 @@ export function DraggableCalendarEvent({
       ref={setNodeRef}
       data-event-block
       className={cn(
-        "absolute right-1 left-1 z-10 touch-manipulation",
+        "absolute z-10 touch-manipulation px-0.5",
         isDragging && "opacity-30",
       )}
-      style={{ top: Math.max(0, top), height: Math.max(32, height - 2) }}
+      style={{
+        top: Math.max(0, top),
+        height: Math.max(32, height - 2),
+        left: `${leftPct}%`,
+        width: `calc(${widthPct}% - 2px)`,
+      }}
     >
       <div
         {...listeners}
@@ -135,11 +147,17 @@ export function DraggableCalendarEvent({
           color.border,
           color.text,
           selected && "ring-2 ring-primary/50",
+          segment.isContinuation && "border-dashed",
         )}
       >
         <p className="truncate text-[10px] font-medium opacity-80">
-          {formatTimeRange(item.startsAt, displayEnd, locale)}
+          {formatTimeRange(segment.startsAt, segmentEnd, locale)}
         </p>
+        {segment.segmentCount > 1 ? (
+          <p className="truncate text-[9px] opacity-70">
+            {segment.segmentIndex + 1}/{segment.segmentCount}
+          </p>
+        ) : null}
         {item.projectName ? (
           <p className="truncate text-[10px] opacity-70">{item.projectName}</p>
         ) : null}
@@ -153,12 +171,14 @@ export function DraggableCalendarEvent({
             {item.assigneeName}
           </p>
         ) : null}
-        <div
-          role="separator"
-          aria-orientation="horizontal"
-          onPointerDown={onResizePointerDown}
-          className="absolute right-0 bottom-0 left-0 h-3 cursor-ns-resize touch-manipulation opacity-0 transition-opacity group-hover:opacity-100"
-        />
+        {segment.segmentCount === 1 ? (
+          <div
+            role="separator"
+            aria-orientation="horizontal"
+            onPointerDown={onResizePointerDown}
+            className="absolute right-0 bottom-0 left-0 h-3 cursor-ns-resize touch-manipulation opacity-0 transition-opacity group-hover:opacity-100"
+          />
+        ) : null}
       </div>
     </div>
   );

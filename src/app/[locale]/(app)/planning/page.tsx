@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { PlanningWorkspace } from "@/features/planning/components/planning-workspace";
-import { listPlanningWorkspaceData } from "@/features/planning/planning-actions";
+import { getPlanningSettings, listPlanningWorkspaceData } from "@/features/planning/planning-actions";
 import { startOfWeek, addDays, toDateKey } from "@/features/planning/lib/planning";
 import { listOrgStaffOptions } from "@/features/projects/projects-actions";
 import { ShellPage } from "@/features/shell/components/shell-page";
@@ -17,9 +17,10 @@ export default async function PlanningPage({ params }: Props) {
   const rangeFrom = addDays(weekStart, -60).toISOString();
   const rangeTo = addDays(weekStart, 90).toISOString();
 
-  const [planningResult, staffResult] = await Promise.all([
+  const [planningResult, staffResult, settingsResult] = await Promise.all([
     listPlanningWorkspaceData({ from: rangeFrom, to: rangeTo }),
     listOrgStaffOptions(),
+    getPlanningSettings(),
   ]);
 
   return (
@@ -33,6 +34,14 @@ export default async function PlanningPage({ params }: Props) {
           projects={planningResult.projects ?? []}
           staff={staffResult.staff ?? []}
           initialWeekStart={`${toDateKey(weekStart)}T12:00:00`}
+          planningSettings={
+            settingsResult.settings ?? {
+              workDays: [1, 2, 3, 4, 5],
+              dayStartHour: 7,
+              dayEndHour: 17,
+              setupCompleted: false,
+            }
+          }
         />
       )}
     </ShellPage>

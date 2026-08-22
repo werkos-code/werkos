@@ -1809,14 +1809,15 @@
         "subscriptionEmpty": "Geen abonnementsrecord voor dit account.",
         "noOwner": "Geen owner gekoppeld aan dit account.",
         "attributionHint": "First-touch gegevens van {name}.",
-        "impersonationSoon": "Inloggen als gebruiker volgt in de volgende sprint.",
         "yes": "Ja",
         "no": "Nee",
         "columns": {
           "name": "Naam",
           "email": "E-mail",
-          "joined": "Lid sinds"
+          "joined": "Lid sinds",
+          "actions": "Acties"
         },
+        "impersonateOwner": "Inloggen als owner",
         "fields": {
           "status": "Status",
           "trialEnds": "Trial tot",
@@ -1828,6 +1829,14 @@
           "firstTouchAt": "First touch"
         }
       }
+    },
+    "impersonation": {
+      "banner": "Supportmodus — je bekijkt WerkOS als {name} ({email}) bij {organization}.",
+      "stop": "Stop impersonatie",
+      "start": "Inloggen als",
+      "confirm": "Weet je zeker dat je wilt inloggen als deze gebruiker? Dit wordt gelogd.",
+      "cannotImpersonateSuperAdmin": "Super admins kunnen niet worden geïmiteerd.",
+      "membershipNotFound": "Gebruiker hoort niet bij dit account."
     },
     "users": {
       "title": "Gebruikers",
@@ -1859,6 +1868,10 @@
       "accountsHint": "Organisaties met abonnement staan per account.",
       "accountsDescription": "Owner, kantoor, uitvoerend en klantaccounts per bedrijf.",
       "accountsCta": "Alle accounts",
+      "searchTitle": "Zoeken",
+      "searchPlaceholder": "Zoek op e-mail, naam of organisatie…",
+      "searchHint": "Typ minimaal 2 tekens.",
+      "searchEmpty": "Geen gebruikers gevonden.",
       "columns": {
         "name": "Naam",
         "email": "E-mail",
@@ -1871,6 +1884,33 @@
         "office_employee": "Kantoormedewerker",
         "field_employee": "Uitvoerend medewerker",
         "customer": "Klant"
+      },
+      "detail": {
+        "fallbackTitle": "Gebruiker",
+        "kpi": {
+          "created": "Account aangemaakt",
+          "signup": "Aanmelding",
+          "memberships": "Organisaties",
+          "paid": "Betaald sinds"
+        },
+        "sections": {
+          "memberships": "Organisaties",
+          "milestones": "Milestones",
+          "attribution": "Attributie"
+        },
+        "membershipsEmpty": "Geen organisaties gekoppeld.",
+        "columns": {
+          "organization": "Organisatie",
+          "role": "Rol",
+          "actions": "Acties"
+        },
+        "fields": {
+          "companyCreated": "Bedrijf aangemaakt",
+          "firstProject": "Eerste project",
+          "firstQuote": "Eerste offerte",
+          "subscriptionStarted": "Abonnement gestart",
+          "firstTouch": "First touch"
+        }
       }
     }
   },
@@ -1915,6 +1955,27 @@
       "people": "Personen"
     },
     "resourceEmptyStaff": "Geen medewerkers om te tonen. Pas het persoonsfilter aan.",
+    "setup": {
+      "title": "Stel je planning in",
+      "description": "Kies op welke dagen en uren je team werkt. Lange taken worden automatisch verdeeld over meerdere werkdagen.",
+      "workDays": "Werkdagen",
+      "startHour": "Start werkdag",
+      "endHour": "Einde werkdag",
+      "hoursHint": "Maximaal {hours} uur per werkdag in de kalender.",
+      "workDaysRequired": "Selecteer minimaal één werkdag.",
+      "hoursInvalid": "Eindtijd moet na starttijd liggen.",
+      "save": "Planning starten",
+      "skip": "Standaard gebruiken"
+    },
+    "weekdays": {
+      "mon": "Ma",
+      "tue": "Di",
+      "wed": "Wo",
+      "thu": "Do",
+      "fri": "Vr",
+      "sat": "Za",
+      "sun": "Zo"
+    },
     "filters": {
       "allProjects": "Alle projecten",
       "allPeople": "Iedereen",

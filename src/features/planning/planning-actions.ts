@@ -4,6 +4,11 @@ import type {
   PlanningProjectOption,
   UnplannedWorkItem,
 } from "@/features/planning/lib/planning";
+import {
+  DEFAULT_PLANNING_SETTINGS,
+  normalizePlanningSettings,
+  type PlanningSettings,
+} from "@/features/planning/lib/planning-settings";
 import type { AppointmentStatus, AppointmentType } from "@/types/database";
 
 function mapNames(
@@ -203,4 +208,70 @@ export async function listPlanningWorkspaceData(range: {
       customerName: projectCustomerById.get(row.id) ?? null,
     })),
   };
+}
+
+export async function getPlanningSettings(): Promise<{
+  settings?: PlanningSettings;
+  error?: string;
+}> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const { data, error } = await ctx.supabase
+    .from("organizations")
+    .select(
+      "planning_work_days, planning_day_start_hour, planning_day_end_hour, planning_setup_completed_at",
+    )
+    .eq("id", ctx.organizationId)
+    .maybeSingle();
+
+  if (error) {
+    if (error.message.includes("planning_work_days")) {
+      return { settings: DEFAULT_PLANNING_SETTINGS };
+    }
+    return { error: error.message };
+  }
+
+  if (!data) return { settings: DEFAULT_PLANNING_SETTINGS };
+
+  return {
+    settings: normalizePlanningSettings({
+      workDays: data.planning_work_days as number[] | null,
+      dayStartHour: data.planning_day_start_hour,
+      dayEndHour: data.planning_day_end_hour,
+      setupCompleted: Boolean(data.planning_setup_completed_at),
+    }),
+  };
+}
+
+export async function savePlanningSettings(input: {
+  workDays: number[];
+  dayStartHour: number;
+  dayEndHour: number;
+  markComplete?: boolean;
+}): Promise<{ settings?: PlanningSettings; error?: string }> {
+  const ctx = await getStaffOrgContext();
+  if ("error" in ctx) return { error: ctx.error };
+
+  const settings = normalizePlanningSettings({
+    workDays: input.workDays,
+    dayStartHour: input.dayStartHour,
+    dayEndHour: input.dayEndHour,
+    setupCompleted: input.markComplete ?? true,
+  });
+
+  const { error } = await ctx.supabase
+    .from("organizations")
+    .update({
+      planning_work_days: settings.workDays,
+      planning_day_start_hour: settings.dayStartHour,
+      planning_day_end_hour: settings.dayEndHour,
+      planning_setup_completed_at: settings.setupCompleted
+        ? new Date().toISOString()
+        : null,
+    })
+    .eq("id", ctx.organizationId);
+
+  if (error) return { error: error.message };
+  return { settings };
 }
