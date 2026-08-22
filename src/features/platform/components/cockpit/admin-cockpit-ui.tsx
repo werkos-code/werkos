@@ -16,13 +16,23 @@ export function CockpitCard({ className, ...props }: CockpitCardProps) {
   );
 }
 
+type CockpitAccent =
+  | "cyan"
+  | "blue"
+  | "emerald"
+  | "violet"
+  | "amber"
+  | "rose"
+  | "orange"
+  | "indigo";
+
 type CockpitKpiProps = {
   label: string;
   value: React.ReactNode;
   source?: string;
   muted?: boolean;
   variant?: "default" | "hero";
-  accent?: "cyan" | "blue" | "emerald";
+  accent?: CockpitAccent;
   className?: string;
 };
 
@@ -37,8 +47,10 @@ export function CockpitKpi({
 }: CockpitKpiProps) {
   return (
     <CockpitCard
+      data-accent={accent}
+      data-variant={variant}
       className={cn(
-        "relative overflow-hidden",
+        "admin-cockpit-kpi relative overflow-hidden",
         variant === "hero" ? "px-6 py-5 lg:px-7 lg:py-6" : "px-4 py-3.5",
         muted && "opacity-55",
         className,
@@ -50,14 +62,14 @@ export function CockpitKpi({
         data-accent={accent}
         aria-hidden
       />
-      <p className="relative text-[10px] font-medium tracking-[0.22em] text-cyan-400/75 uppercase">
+      <p className="admin-cockpit-kpi-label relative text-[10px] font-medium uppercase">
         {label}
       </p>
       <div
         className={cn(
-          "relative mt-2 truncate tabular-nums text-white",
+          "admin-cockpit-kpi-value relative mt-2 truncate tabular-nums",
           variant === "hero"
-            ? "text-4xl font-extralight tracking-tight lg:text-5xl admin-cockpit-kpi-value-hero"
+            ? "text-4xl tracking-tight lg:text-5xl"
             : "text-2xl font-light tracking-tight lg:text-3xl",
           muted && "text-white/35",
         )}

@@ -21,6 +21,14 @@ function displayMoney(label: string | null): string {
   return label ?? "—";
 }
 
+const ADS_KPIS = [
+  { key: "spend", accent: "orange" as const, money: true },
+  { key: "clicks", accent: "cyan" as const, money: false },
+  { key: "impressions", accent: "blue" as const, money: false },
+  { key: "cpc", accent: "violet" as const, money: true },
+  { key: "roas", accent: "emerald" as const, money: false },
+] as const;
+
 export async function GoogleAdsMarketingShell({
   metrics,
   attribution,
@@ -33,80 +41,65 @@ export async function GoogleAdsMarketingShell({
   );
   const tSource = await getTranslations("platform.dashboard.sources");
 
-  if (variant === "administration") {
-    return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <CockpitKpi
-          label={t("kpi.spend")}
-          value={displayMoney(metrics.spendLabel)}
-          source={tSource("googleAdsSpend")}
-          muted={metrics.spendLabel == null}
-        />
-        <CockpitKpi
-          label={t("kpi.clicks")}
-          value={displayMetric(metrics.clicks)}
-          source={tSource("googleAdsClicks")}
-          muted={metrics.clicks == null}
-        />
-        <CockpitKpi
-          label={t("kpi.impressions")}
-          value={displayMetric(metrics.impressions)}
-          source={tSource("googleAdsImpressions")}
-          muted={metrics.impressions == null}
-        />
-        <CockpitKpi
-          label={t("kpi.cpc")}
-          value={displayMoney(metrics.cpcLabel)}
-          source={tSource("googleAdsCpc")}
-          muted={metrics.cpcLabel == null}
-        />
-        <CockpitKpi
-          label={t("kpi.roas")}
-          value={displayMetric(metrics.roas)}
-          source={tSource("googleAdsRoas")}
-          muted={metrics.roas == null}
-        />
-      </div>
-    );
-  }
+  const gridClass =
+    variant === "administration"
+      ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-5"
+      : "grid gap-4 sm:grid-cols-2 lg:grid-cols-6";
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
-      <CockpitKpi
-        label={t("kpi.spend")}
-        value={displayMoney(metrics.spendLabel)}
-        source={tSource("googleAdsSpend")}
-        muted={metrics.spendLabel == null}
-      />
-      <CockpitKpi
-        label={t("kpi.clicks")}
-        value={displayMetric(metrics.clicks)}
-        source={tSource("googleAdsClicks")}
-        muted={metrics.clicks == null}
-      />
-      <CockpitKpi
-        label={t("kpi.impressions")}
-        value={displayMetric(metrics.impressions)}
-        source={tSource("googleAdsImpressions")}
-        muted={metrics.impressions == null}
-      />
-      <CockpitKpi
-        label={t("kpi.cpc")}
-        value={displayMoney(metrics.cpcLabel)}
-        source={tSource("googleAdsCpc")}
-        muted={metrics.cpcLabel == null}
-      />
-      <CockpitKpi
-        label={t("kpi.roas")}
-        value={displayMetric(metrics.roas)}
-        source={tSource("googleAdsRoas")}
-        muted={metrics.roas == null}
-      />
-      {attribution ? (
+    <div className={gridClass}>
+      {ADS_KPIS.map((kpi) => (
+        <CockpitKpi
+          key={kpi.key}
+          label={t(`kpi.${kpi.key}`)}
+          value={
+            kpi.money
+              ? displayMoney(
+                  kpi.key === "spend"
+                    ? metrics.spendLabel
+                    : kpi.key === "cpc"
+                      ? metrics.cpcLabel
+                      : null,
+                )
+              : displayMetric(
+                  kpi.key === "clicks"
+                    ? metrics.clicks
+                    : kpi.key === "impressions"
+                      ? metrics.impressions
+                      : metrics.roas,
+                )
+          }
+          source={tSource(
+            kpi.key === "spend"
+              ? "googleAdsSpend"
+              : kpi.key === "clicks"
+                ? "googleAdsClicks"
+                : kpi.key === "impressions"
+                  ? "googleAdsImpressions"
+                  : kpi.key === "cpc"
+                    ? "googleAdsCpc"
+                    : "googleAdsRoas",
+          )}
+          muted={
+            kpi.key === "spend"
+              ? metrics.spendLabel == null
+              : kpi.key === "clicks"
+                ? metrics.clicks == null
+                : kpi.key === "impressions"
+                  ? metrics.impressions == null
+                  : kpi.key === "cpc"
+                    ? metrics.cpcLabel == null
+                    : metrics.roas == null
+          }
+          accent={kpi.accent}
+        />
+      ))}
+      {variant === "dashboard" && attribution ? (
         <CockpitKpi
           label={t("kpi.gclidSignups")}
           value={String(attribution.signupsWithGclid)}
           source={tSource("gclidSignups")}
+          accent="indigo"
         />
       ) : null}
     </div>

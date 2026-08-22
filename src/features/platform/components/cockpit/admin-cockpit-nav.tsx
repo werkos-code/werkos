@@ -37,16 +37,16 @@ export function AdminCockpitNav() {
             key={item.href}
             href={item.href}
             className={cn(
-              "relative rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
+              "relative rounded-lg px-3.5 py-2 text-sm font-medium transition-all",
               active
-                ? "text-cyan-200"
-                : "text-slate-400 hover:text-slate-200",
+                ? "admin-cockpit-nav-active text-cyan-100"
+                : "text-slate-400 hover:bg-white/5 hover:text-slate-200",
             )}
           >
             {t(item.labelKey)}
             {active ? (
               <span
-                className="absolute inset-x-2 -bottom-px h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_12px_rgb(34_211_238_/_0.6)]"
+                className="absolute inset-x-2 -bottom-px h-px bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400 opacity-80"
                 aria-hidden
               />
             ) : null}

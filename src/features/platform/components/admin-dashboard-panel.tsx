@@ -88,18 +88,21 @@ export async function AdminDashboardPanel({
           value={displayMoney(dashboard.secondary.ltvLabel)}
           source={tSource("ltv")}
           muted={dashboard.secondary.ltvLabel == null}
+          accent="violet"
         />
         <CockpitKpi
           label={t("kpi.cac")}
           value={displayMoney(dashboard.secondary.cacLabel)}
           source={tSource("cac")}
           muted={dashboard.secondary.cacLabel == null}
+          accent="amber"
         />
         <CockpitKpi
           label={t("kpi.churn")}
           value={dashboard.secondary.churnLabel ?? "—"}
           source={tSource("churn")}
           muted={dashboard.secondary.churnLabel == null}
+          accent="rose"
         />
       </div>
 
@@ -109,18 +112,21 @@ export async function AdminDashboardPanel({
           value={displayMetric(dashboard.stripe.activeSubscriptions)}
           source={tSource("activeSubscriptions")}
           muted={dashboard.stripe.activeSubscriptions == null}
+          accent="emerald"
         />
         <CockpitKpi
           label={t("kpi.canceledLast30Days")}
           value={displayMetric(dashboard.stripe.canceledLast30Days)}
           source={tSource("canceledLast30Days")}
           muted={dashboard.stripe.canceledLast30Days == null}
+          accent="rose"
         />
         <CockpitKpi
           label={t("kpi.monthlyCosts")}
           value={displayMoney(dashboard.secondary.monthlyCostsLabel)}
           source={tSource("monthlyCosts")}
           muted={dashboard.secondary.monthlyCostsLabel == null}
+          accent="amber"
         />
       </div>
 
@@ -131,7 +137,7 @@ export async function AdminDashboardPanel({
 
       <CockpitCard className="overflow-hidden">
         <div className="grid lg:grid-cols-2">
-          <div className="overflow-x-auto border-b border-white/10 lg:border-r lg:border-b-0">
+          <div className="admin-cockpit-table-panel admin-cockpit-table-panel--cyan overflow-x-auto border-b border-white/10 lg:border-r lg:border-b-0">
             <table className="data-table min-w-[16rem]">
               <thead>
                 <tr>
@@ -164,7 +170,7 @@ export async function AdminDashboardPanel({
             </table>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="admin-cockpit-table-panel admin-cockpit-table-panel--violet overflow-x-auto">
             <table className="data-table min-w-[16rem]">
               <thead>
                 <tr>

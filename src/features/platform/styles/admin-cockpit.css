@@ -33,9 +33,11 @@
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 80% 50% at 15% -10%, rgb(34 211 238 / 0.14), transparent 55%),
-    radial-gradient(ellipse 60% 45% at 85% 5%, rgb(59 130 246 / 0.12), transparent 50%),
-    radial-gradient(ellipse 50% 40% at 50% 100%, rgb(99 102 241 / 0.08), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 8% -5%, rgb(34 211 238 / 0.18), transparent 52%),
+    radial-gradient(ellipse 55% 50% at 92% 0%, rgb(59 130 246 / 0.16), transparent 48%),
+    radial-gradient(ellipse 45% 40% at 78% 88%, rgb(251 191 36 / 0.1), transparent 50%),
+    radial-gradient(ellipse 40% 35% at 12% 92%, rgb(167 139 250 / 0.12), transparent 48%),
+    radial-gradient(ellipse 50% 40% at 50% 100%, rgb(99 102 241 / 0.1), transparent 55%),
     linear-gradient(180deg, #020617 0%, #030712 45%, #020617 100%);
 }
 
@@ -68,13 +70,49 @@
 }
 
 .admin-cockpit-header {
-  border-bottom: 1px solid rgb(34 211 238 / 0.12);
-  background: rgb(2 6 23 / 0.72);
+  border-bottom: 1px solid rgb(34 211 238 / 0.14);
+  background:
+    linear-gradient(
+      180deg,
+      rgb(2 6 23 / 0.88) 0%,
+      rgb(2 6 23 / 0.72) 100%
+    );
   backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 rgb(59 130 246 / 0.08);
 }
 
 .admin-cockpit-title {
-  text-shadow: 0 0 40px rgb(34 211 238 / 0.15);
+  background: linear-gradient(90deg, #ecfeff 0%, #bae6fd 45%, #c4b5fd 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 0 28px rgb(34 211 238 / 0.18));
+}
+
+.admin-cockpit-kpi {
+  border: 1px solid rgb(148 163 184 / 0.12);
+  background: linear-gradient(
+    145deg,
+    rgb(15 23 42 / 0.72) 0%,
+    rgb(2 6 23 / 0.55) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.04),
+    0 0 0 1px rgb(2 6 23 / 0.5),
+    0 12px 40px rgb(0 0 0 / 0.35);
+  backdrop-filter: blur(12px);
+}
+
+.admin-cockpit-kpi::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 9999px 0 0 9999px;
+  opacity: 0.85;
 }
 
 .admin-cockpit-kpi-glow {
@@ -85,23 +123,232 @@
   height: 90%;
   border-radius: 9999px;
   filter: blur(40px);
-  opacity: 0.35;
+  opacity: 0.42;
 }
 
+.admin-cockpit-kpi-label {
+  letter-spacing: 0.22em;
+}
+
+.admin-cockpit-kpi-value {
+  color: #f8fafc;
+}
+
+.admin-cockpit-kpi[data-variant="hero"] .admin-cockpit-kpi-value {
+  font-weight: 200;
+}
+
+.admin-cockpit-kpi[data-variant="hero"] .admin-cockpit-kpi-glow {
+  opacity: 0.55;
+  filter: blur(48px);
+}
+
+/* Accent: cyan */
+.admin-cockpit-kpi[data-accent="cyan"] {
+  border-color: rgb(34 211 238 / 0.24);
+  background: linear-gradient(
+    135deg,
+    rgb(34 211 238 / 0.12) 0%,
+    rgb(15 23 42 / 0.72) 42%,
+    rgb(2 6 23 / 0.58) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(34 211 238 / 0.1),
+    0 0 32px rgb(34 211 238 / 0.08);
+}
+.admin-cockpit-kpi[data-accent="cyan"]::before {
+  background: linear-gradient(180deg, #67e8f9, #0891b2);
+}
+.admin-cockpit-kpi[data-accent="cyan"] .admin-cockpit-kpi-label {
+  color: rgb(103 232 249 / 0.92);
+}
+.admin-cockpit-kpi[data-accent="cyan"] .admin-cockpit-kpi-value {
+  text-shadow: 0 0 28px rgb(34 211 238 / 0.28);
+}
 .admin-cockpit-kpi-glow[data-accent="cyan"] {
-  background: rgb(34 211 238 / 0.35);
+  background: rgb(34 211 238 / 0.4);
 }
 
+/* Accent: blue */
+.admin-cockpit-kpi[data-accent="blue"] {
+  border-color: rgb(59 130 246 / 0.24);
+  background: linear-gradient(
+    135deg,
+    rgb(59 130 246 / 0.12) 0%,
+    rgb(15 23 42 / 0.72) 42%,
+    rgb(2 6 23 / 0.58) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(59 130 246 / 0.1),
+    0 0 32px rgb(59 130 246 / 0.07);
+}
+.admin-cockpit-kpi[data-accent="blue"]::before {
+  background: linear-gradient(180deg, #93c5fd, #2563eb);
+}
+.admin-cockpit-kpi[data-accent="blue"] .admin-cockpit-kpi-label {
+  color: rgb(147 197 253 / 0.92);
+}
+.admin-cockpit-kpi[data-accent="blue"] .admin-cockpit-kpi-value {
+  text-shadow: 0 0 24px rgb(59 130 246 / 0.24);
+}
 .admin-cockpit-kpi-glow[data-accent="blue"] {
-  background: rgb(59 130 246 / 0.35);
+  background: rgb(59 130 246 / 0.38);
 }
 
+/* Accent: emerald */
+.admin-cockpit-kpi[data-accent="emerald"] {
+  border-color: rgb(52 211 153 / 0.24);
+  background: linear-gradient(
+    135deg,
+    rgb(52 211 153 / 0.12) 0%,
+    rgb(15 23 42 / 0.72) 42%,
+    rgb(2 6 23 / 0.58) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(52 211 153 / 0.1),
+    0 0 32px rgb(52 211 153 / 0.07);
+}
+.admin-cockpit-kpi[data-accent="emerald"]::before {
+  background: linear-gradient(180deg, #6ee7b7, #059669);
+}
+.admin-cockpit-kpi[data-accent="emerald"] .admin-cockpit-kpi-label {
+  color: rgb(110 231 183 / 0.92);
+}
+.admin-cockpit-kpi[data-accent="emerald"] .admin-cockpit-kpi-value {
+  text-shadow: 0 0 28px rgb(52 211 153 / 0.26);
+}
 .admin-cockpit-kpi-glow[data-accent="emerald"] {
-  background: rgb(52 211 153 / 0.3);
+  background: rgb(52 211 153 / 0.36);
 }
 
-.admin-cockpit-kpi-value-hero {
-  text-shadow: 0 0 32px rgb(34 211 238 / 0.25);
+/* Accent: violet */
+.admin-cockpit-kpi[data-accent="violet"] {
+  border-color: rgb(167 139 250 / 0.24);
+  background: linear-gradient(
+    135deg,
+    rgb(167 139 250 / 0.12) 0%,
+    rgb(15 23 42 / 0.72) 42%,
+    rgb(2 6 23 / 0.58) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(167 139 250 / 0.1),
+    0 0 32px rgb(167 139 250 / 0.07);
+}
+.admin-cockpit-kpi[data-accent="violet"]::before {
+  background: linear-gradient(180deg, #c4b5fd, #7c3aed);
+}
+.admin-cockpit-kpi[data-accent="violet"] .admin-cockpit-kpi-label {
+  color: rgb(196 181 253 / 0.92);
+}
+.admin-cockpit-kpi[data-accent="violet"] .admin-cockpit-kpi-value {
+  text-shadow: 0 0 24px rgb(167 139 250 / 0.22);
+}
+.admin-cockpit-kpi-glow[data-accent="violet"] {
+  background: rgb(167 139 250 / 0.36);
+}
+
+/* Accent: amber */
+.admin-cockpit-kpi[data-accent="amber"] {
+  border-color: rgb(251 191 36 / 0.24);
+  background: linear-gradient(
+    135deg,
+    rgb(251 191 36 / 0.11) 0%,
+    rgb(15 23 42 / 0.72) 42%,
+    rgb(2 6 23 / 0.58) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(251 191 36 / 0.1),
+    0 0 32px rgb(251 191 36 / 0.06);
+}
+.admin-cockpit-kpi[data-accent="amber"]::before {
+  background: linear-gradient(180deg, #fcd34d, #d97706);
+}
+.admin-cockpit-kpi[data-accent="amber"] .admin-cockpit-kpi-label {
+  color: rgb(252 211 77 / 0.92);
+}
+.admin-cockpit-kpi[data-accent="amber"] .admin-cockpit-kpi-value {
+  text-shadow: 0 0 24px rgb(251 191 36 / 0.2);
+}
+.admin-cockpit-kpi-glow[data-accent="amber"] {
+  background: rgb(251 191 36 / 0.34);
+}
+
+/* Accent: rose */
+.admin-cockpit-kpi[data-accent="rose"] {
+  border-color: rgb(251 113 133 / 0.24);
+  background: linear-gradient(
+    135deg,
+    rgb(251 113 133 / 0.11) 0%,
+    rgb(15 23 42 / 0.72) 42%,
+    rgb(2 6 23 / 0.58) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(251 113 133 / 0.1),
+    0 0 32px rgb(251 113 133 / 0.06);
+}
+.admin-cockpit-kpi[data-accent="rose"]::before {
+  background: linear-gradient(180deg, #fda4af, #e11d48);
+}
+.admin-cockpit-kpi[data-accent="rose"] .admin-cockpit-kpi-label {
+  color: rgb(253 164 175 / 0.92);
+}
+.admin-cockpit-kpi[data-accent="rose"] .admin-cockpit-kpi-value {
+  text-shadow: 0 0 24px rgb(251 113 133 / 0.2);
+}
+.admin-cockpit-kpi-glow[data-accent="rose"] {
+  background: rgb(251 113 133 / 0.34);
+}
+
+/* Accent: orange */
+.admin-cockpit-kpi[data-accent="orange"] {
+  border-color: rgb(251 146 60 / 0.24);
+  background: linear-gradient(
+    135deg,
+    rgb(251 146 60 / 0.11) 0%,
+    rgb(15 23 42 / 0.72) 42%,
+    rgb(2 6 23 / 0.58) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(251 146 60 / 0.1),
+    0 0 32px rgb(251 146 60 / 0.06);
+}
+.admin-cockpit-kpi[data-accent="orange"]::before {
+  background: linear-gradient(180deg, #fdba74, #ea580c);
+}
+.admin-cockpit-kpi[data-accent="orange"] .admin-cockpit-kpi-label {
+  color: rgb(253 186 116 / 0.92);
+}
+.admin-cockpit-kpi[data-accent="orange"] .admin-cockpit-kpi-value {
+  text-shadow: 0 0 24px rgb(251 146 60 / 0.2);
+}
+.admin-cockpit-kpi-glow[data-accent="orange"] {
+  background: rgb(251 146 60 / 0.34);
+}
+
+/* Accent: indigo */
+.admin-cockpit-kpi[data-accent="indigo"] {
+  border-color: rgb(129 140 248 / 0.24);
+  background: linear-gradient(
+    135deg,
+    rgb(129 140 248 / 0.12) 0%,
+    rgb(15 23 42 / 0.72) 42%,
+    rgb(2 6 23 / 0.58) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(129 140 248 / 0.1),
+    0 0 32px rgb(129 140 248 / 0.07);
+}
+.admin-cockpit-kpi[data-accent="indigo"]::before {
+  background: linear-gradient(180deg, #a5b4fc, #4f46e5);
+}
+.admin-cockpit-kpi[data-accent="indigo"] .admin-cockpit-kpi-label {
+  color: rgb(165 180 252 / 0.92);
+}
+.admin-cockpit-kpi[data-accent="indigo"] .admin-cockpit-kpi-value {
+  text-shadow: 0 0 24px rgb(129 140 248 / 0.22);
+}
+.admin-cockpit-kpi-glow[data-accent="indigo"] {
+  background: rgb(129 140 248 / 0.36);
 }
 
 .admin-cockpit-card {
@@ -118,15 +365,55 @@
   backdrop-filter: blur(12px);
 }
 
+.admin-cockpit-table-panel {
+  position: relative;
+}
+
+.admin-cockpit-table-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0.75;
+}
+
+.admin-cockpit-table-panel--cyan::before {
+  background: linear-gradient(90deg, #22d3ee, transparent 85%);
+}
+
+.admin-cockpit-table-panel--violet::before {
+  background: linear-gradient(90deg, #a78bfa, transparent 85%);
+}
+
+.admin-cockpit-table-panel--cyan thead th {
+  color: rgb(103 232 249 / 0.85);
+}
+
+.admin-cockpit-table-panel--violet thead th {
+  color: rgb(196 181 253 / 0.85);
+}
+
 .admin-cockpit-section-line {
   height: 1px;
   flex: 1;
   background: linear-gradient(
     90deg,
     rgb(34 211 238 / 0.45),
-    rgb(34 211 238 / 0.05) 70%,
+    rgb(167 139 250 / 0.35) 45%,
     transparent
   );
+}
+
+.admin-cockpit-nav-active {
+  border: 1px solid rgb(34 211 238 / 0.22);
+  background: linear-gradient(
+    135deg,
+    rgb(34 211 238 / 0.12),
+    rgb(59 130 246 / 0.08)
+  );
+  box-shadow: 0 0 24px rgb(34 211 238 / 0.1);
 }
 
 .admin-cockpit-link {
@@ -138,17 +425,16 @@
   color: #a5f3fc;
 }
 
-.admin-cockpit table.data-table thead th {
-  color: rgb(148 163 184 / 0.85);
-  border-bottom-color: rgb(148 163 184 / 0.12);
-}
-
-.admin-cockpit table.data-table tbody td {
-  border-bottom-color: rgb(148 163 184 / 0.08);
-}
-
 .admin-cockpit table.data-table tbody tr:hover td {
   background: rgb(34 211 238 / 0.04);
+}
+
+.admin-cockpit-table-panel--cyan tbody tr:hover td {
+  background: rgb(34 211 238 / 0.05);
+}
+
+.admin-cockpit-table-panel--violet tbody tr:hover td {
+  background: rgb(167 139 250 / 0.05);
 }
 
 .admin-cockpit input,
@@ -174,4 +460,13 @@
     rgb(251 191 36 / 0.12),
     rgb(251 191 36 / 0.04)
   );
+}
+
+.admin-cockpit table.data-table thead th {
+  color: rgb(148 163 184 / 0.85);
+  border-bottom-color: rgb(148 163 184 / 0.12);
+}
+
+.admin-cockpit table.data-table tbody td {
+  border-bottom-color: rgb(148 163 184 / 0.08);
 }
