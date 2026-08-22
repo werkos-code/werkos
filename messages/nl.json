@@ -152,6 +152,7 @@
     "settings": "Instellingen",
     "admin": "Admin",
     "adminDashboard": "Dashboard",
+    "adminAccounts": "Accounts",
     "adminUsers": "Gebruikers",
     "adminAdministration": "Administratie",
     "newRequest": "Nieuwe opdracht",
@@ -1763,7 +1764,70 @@
     },
     "administration": {
       "title": "Administratie",
-      "description": "Platformadministratie volgt in een volgende fase."
+      "description": "Stripe-export, Google Ads en handmatige kosten voor belastingaangifte volgen in een volgende fase."
+    },
+    "accounts": {
+      "title": "Accounts",
+      "searchPlaceholder": "Zoek op bedrijfsnaam, slug of owner…",
+      "empty": "Geen accounts voor deze filters.",
+      "noSubscription": "Geen abonnement",
+      "stripeLinkedYes": "Abonnement gekoppeld",
+      "stripeCustomerOnly": "Alleen klant",
+      "openAccount": "Open {name}",
+      "kpi": {
+        "total": "Accounts",
+        "active": "Actief",
+        "trialing": "Proefperiode",
+        "stripeLinked": "Stripe-abonnement"
+      },
+      "filters": {
+        "all": "Alle",
+        "noSubscription": "Zonder abonnement"
+      },
+      "columns": {
+        "account": "Account",
+        "owner": "Owner",
+        "status": "Status",
+        "members": "Leden",
+        "stripe": "Stripe",
+        "created": "Aangemaakt"
+      },
+      "detail": {
+        "fallbackTitle": "Account",
+        "kpi": {
+          "members": "Leden",
+          "officeSeats": "Kantoorseats",
+          "fieldSeats": "Uitvoerende seats",
+          "paidSince": "Betaald sinds"
+        },
+        "sections": {
+          "members": "Leden",
+          "subscription": "Abonnement",
+          "attribution": "Attributie (owner)"
+        },
+        "membersEmpty": "Nog geen leden gekoppeld aan dit account.",
+        "subscriptionEmpty": "Geen abonnementsrecord voor dit account.",
+        "noOwner": "Geen owner gekoppeld aan dit account.",
+        "attributionHint": "First-touch gegevens van {name}.",
+        "impersonationSoon": "Inloggen als gebruiker volgt in de volgende sprint.",
+        "yes": "Ja",
+        "no": "Nee",
+        "columns": {
+          "name": "Naam",
+          "email": "E-mail",
+          "joined": "Lid sinds"
+        },
+        "fields": {
+          "status": "Status",
+          "trialEnds": "Trial tot",
+          "periodEnd": "Periode tot",
+          "cancelAtPeriodEnd": "Opzeggen aan einde periode",
+          "stripeCustomer": "Stripe-klant",
+          "stripeSubscription": "Stripe-abonnement",
+          "signupAt": "Aanmelding",
+          "firstTouchAt": "First touch"
+        }
+      }
     },
     "users": {
       "title": "Gebruikers",
@@ -1789,8 +1853,12 @@
       "cannotDeleteSuperAdmin": "Super admins kunnen niet worden verwijderd.",
       "cannotDeleteSelf": "Je kunt je eigen account niet verwijderen.",
       "sections": {
-        "unassigned": "Zonder organisatie"
+        "unassigned": "Zonder organisatie",
+        "accounts": "Abonnementsaccounts"
       },
+      "accountsHint": "Organisaties met abonnement staan per account.",
+      "accountsDescription": "Owner, kantoor, uitvoerend en klantaccounts per bedrijf.",
+      "accountsCta": "Alle accounts",
       "columns": {
         "name": "Naam",
         "email": "E-mail",
@@ -1823,6 +1891,12 @@
     "searchPlaceholder": "Zoek projecten, taken of personen…",
     "unplanned": "Niet gepland",
     "unplannedEmpty": "Geen openstaande werkzaamheden zonder planning.",
+    "unplannedNoResults": "Geen resultaten in niet-gepland.",
+    "unplannedSearchPlaceholder": "Zoek in niet-gepland…",
+    "dragToSchedule": "Sleep {title} naar de kalender",
+    "emptyCalendar": "Geen geplande items. Klik op een tijdslot of sleep werk uit niet-gepland.",
+    "emptyFiltered": "Geen resultaten voor deze filters.",
+    "saveFailed": "Opslaan mislukt. Wijziging is teruggedraaid.",
     "allDay": "Hele dag",
     "noAssignee": "Niemand toegewezen",
     "edit": "Bewerken",
@@ -1836,11 +1910,28 @@
       "month": "Maand",
       "agenda": "Agenda"
     },
+    "weekLayout": {
+      "days": "Dagen",
+      "people": "Personen"
+    },
+    "resourceEmptyStaff": "Geen medewerkers om te tonen. Pas het persoonsfilter aan.",
     "filters": {
       "allProjects": "Alle projecten",
-      "allPeople": "Alle personen",
+      "allPeople": "Iedereen",
       "allTypes": "Alle typen",
-      "allStatuses": "Alle statussen"
+      "allStatuses": "Alle statussen",
+      "projectLabel": "Project",
+      "personLabel": "Persoon",
+      "projectSearch": "Zoek project of klant…",
+      "personSearch": "Zoek medewerker…",
+      "noResults": "Geen resultaten",
+      "clear": "Wis filters"
+    },
+    "conflict": {
+      "title": "{name} is op dit moment al ingepland",
+      "description": "Er overlapt al een planning op dit tijdstip.",
+      "cancel": "Annuleren",
+      "confirm": "Toch plannen"
     },
     "types": {
       "work": "Werk",

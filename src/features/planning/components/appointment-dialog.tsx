@@ -38,7 +38,7 @@ type AppointmentDialogProps = {
   onOpenChange: (open: boolean) => void;
   editing: AppointmentRow | null;
   scheduleItem: UnplannedWorkItem | null;
-  defaults: { startsAt?: string; endsAt?: string };
+  defaults: { startsAt?: string; endsAt?: string; assigneeUserId?: string | null };
   projects: PlanningProjectOption[];
   staff: StaffOption[];
   onSaved: () => void;
@@ -90,12 +90,14 @@ export function AppointmentDialog({
       setType("work");
       setStatus("planned");
       setProjectId(scheduleItem?.projectId ?? "");
-      setAssigneeUserId(scheduleItem?.assigneeUserId ?? "");
+      setAssigneeUserId(
+        defaults.assigneeUserId ?? scheduleItem?.assigneeUserId ?? "",
+      );
       setLocation("");
       setNotes("");
     }
     setError(null);
-  }, [open, editing, scheduleItem, defaults.startsAt, defaults.endsAt]);
+  }, [open, editing, scheduleItem, defaults.startsAt, defaults.endsAt, defaults.assigneeUserId]);
 
   function submit(event: FormEvent) {
     event.preventDefault();

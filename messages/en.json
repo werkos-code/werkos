@@ -152,6 +152,7 @@
     "settings": "Settings",
     "admin": "Admin",
     "adminDashboard": "Dashboard",
+    "adminAccounts": "Accounts",
     "adminUsers": "Users",
     "adminAdministration": "Administration",
     "newRequest": "New assignment",
@@ -1763,7 +1764,70 @@
     },
     "administration": {
       "title": "Administration",
-      "description": "Platform administration comes in a later phase."
+      "description": "Stripe exports, Google Ads and manual operating costs for tax filing come in a later phase."
+    },
+    "accounts": {
+      "title": "Accounts",
+      "searchPlaceholder": "Search by company name, slug or owner…",
+      "empty": "No accounts for these filters.",
+      "noSubscription": "No subscription",
+      "stripeLinkedYes": "Subscription linked",
+      "stripeCustomerOnly": "Customer only",
+      "openAccount": "Open {name}",
+      "kpi": {
+        "total": "Accounts",
+        "active": "Active",
+        "trialing": "Trialing",
+        "stripeLinked": "Stripe subscription"
+      },
+      "filters": {
+        "all": "All",
+        "noSubscription": "No subscription"
+      },
+      "columns": {
+        "account": "Account",
+        "owner": "Owner",
+        "status": "Status",
+        "members": "Members",
+        "stripe": "Stripe",
+        "created": "Created"
+      },
+      "detail": {
+        "fallbackTitle": "Account",
+        "kpi": {
+          "members": "Members",
+          "officeSeats": "Office seats",
+          "fieldSeats": "Field seats",
+          "paidSince": "Paid since"
+        },
+        "sections": {
+          "members": "Members",
+          "subscription": "Subscription",
+          "attribution": "Attribution (owner)"
+        },
+        "membersEmpty": "No members linked to this account yet.",
+        "subscriptionEmpty": "No subscription record for this account.",
+        "noOwner": "No owner linked to this account.",
+        "attributionHint": "First-touch data from {name}.",
+        "impersonationSoon": "Sign in as user comes in the next sprint.",
+        "yes": "Yes",
+        "no": "No",
+        "columns": {
+          "name": "Name",
+          "email": "Email",
+          "joined": "Member since"
+        },
+        "fields": {
+          "status": "Status",
+          "trialEnds": "Trial until",
+          "periodEnd": "Period until",
+          "cancelAtPeriodEnd": "Cancel at period end",
+          "stripeCustomer": "Stripe customer",
+          "stripeSubscription": "Stripe subscription",
+          "signupAt": "Signup",
+          "firstTouchAt": "First touch"
+        }
+      }
     },
     "users": {
       "title": "Users",
@@ -1789,8 +1853,12 @@
       "cannotDeleteSuperAdmin": "Super admins cannot be deleted.",
       "cannotDeleteSelf": "You cannot delete your own account.",
       "sections": {
-        "unassigned": "Without organization"
+        "unassigned": "Without organization",
+        "accounts": "Subscription accounts"
       },
+      "accountsHint": "Organizations with a subscription are grouped per account.",
+      "accountsDescription": "Owner, office, field and customer accounts per company.",
+      "accountsCta": "All accounts",
       "columns": {
         "name": "Name",
         "email": "Email",
@@ -1823,6 +1891,12 @@
     "searchPlaceholder": "Search projects, tasks or people…",
     "unplanned": "Unplanned",
     "unplannedEmpty": "No open work items without a schedule.",
+    "unplannedNoResults": "No results in unplanned.",
+    "unplannedSearchPlaceholder": "Search unplanned…",
+    "dragToSchedule": "Drag {title} to the calendar",
+    "emptyCalendar": "No scheduled items. Click a time slot or drag work from unplanned.",
+    "emptyFiltered": "No results for these filters.",
+    "saveFailed": "Save failed. Change was reverted.",
     "allDay": "All day",
     "noAssignee": "Unassigned",
     "edit": "Edit",
@@ -1836,11 +1910,28 @@
       "month": "Month",
       "agenda": "Agenda"
     },
+    "weekLayout": {
+      "days": "Days",
+      "people": "People"
+    },
+    "resourceEmptyStaff": "No team members to show. Adjust the person filter.",
     "filters": {
       "allProjects": "All projects",
-      "allPeople": "All people",
+      "allPeople": "Everyone",
       "allTypes": "All types",
-      "allStatuses": "All statuses"
+      "allStatuses": "All statuses",
+      "projectLabel": "Project",
+      "personLabel": "Person",
+      "projectSearch": "Search project or customer…",
+      "personSearch": "Search team member…",
+      "noResults": "No results",
+      "clear": "Clear filters"
+    },
+    "conflict": {
+      "title": "{name} is already scheduled at this time",
+      "description": "Another item overlaps this time slot.",
+      "cancel": "Cancel",
+      "confirm": "Schedule anyway"
     },
     "types": {
       "work": "Work",

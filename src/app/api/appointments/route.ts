@@ -296,6 +296,17 @@ export async function DELETE(request: Request) {
     }
 
     const admin = createAdminClient();
+    const { data: existing } = await admin
+      .from("appointments")
+      .select("id, work_item_id")
+      .eq("organization_id", gate.organizationId)
+      .eq("id", id)
+      .maybeSingle();
+
+    if (!existing) {
+      return NextResponse.json({ error: "not_found" }, { status: 404 });
+    }
+
     const { error } = await admin
       .from("appointments")
       .delete()
@@ -304,6 +315,14 @@ export async function DELETE(request: Request) {
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    if (existing.work_item_id) {
+      await admin
+        .from("work_items")
+        .update({ planned_start: null, planned_end: null })
+        .eq("organization_id", gate.organizationId)
+        .eq("id", existing.work_item_id);
     }
 
     return NextResponse.json({ success: true });

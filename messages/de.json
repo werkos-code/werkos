@@ -152,6 +152,7 @@
     "settings": "Einstellungen",
     "admin": "Admin",
     "adminDashboard": "Dashboard",
+    "adminAccounts": "Accounts",
     "adminUsers": "Benutzer",
     "adminAdministration": "Administration",
     "newRequest": "Neuer Auftrag",
@@ -1743,7 +1744,70 @@
     },
     "administration": {
       "title": "Administration",
-      "description": "Plattformadministration folgt in einer späteren Phase."
+      "description": "Stripe-Exporte, Google Ads und manuelle Betriebskosten für die Steuererklärung folgen in einer späteren Phase."
+    },
+    "accounts": {
+      "title": "Accounts",
+      "searchPlaceholder": "Suche nach Firmenname, Slug oder Owner…",
+      "empty": "Keine Accounts für diese Filter.",
+      "noSubscription": "Kein Abonnement",
+      "stripeLinkedYes": "Abonnement verknüpft",
+      "stripeCustomerOnly": "Nur Kunde",
+      "openAccount": "{name} öffnen",
+      "kpi": {
+        "total": "Accounts",
+        "active": "Aktiv",
+        "trialing": "Testphase",
+        "stripeLinked": "Stripe-Abonnement"
+      },
+      "filters": {
+        "all": "Alle",
+        "noSubscription": "Ohne Abonnement"
+      },
+      "columns": {
+        "account": "Account",
+        "owner": "Owner",
+        "status": "Status",
+        "members": "Mitglieder",
+        "stripe": "Stripe",
+        "created": "Erstellt"
+      },
+      "detail": {
+        "fallbackTitle": "Account",
+        "kpi": {
+          "members": "Mitglieder",
+          "officeSeats": "Büro-Seats",
+          "fieldSeats": "Außendienst-Seats",
+          "paidSince": "Bezahlt seit"
+        },
+        "sections": {
+          "members": "Mitglieder",
+          "subscription": "Abonnement",
+          "attribution": "Attribution (Owner)"
+        },
+        "membersEmpty": "Noch keine Mitglieder mit diesem Account verknüpft.",
+        "subscriptionEmpty": "Kein Abonnementdatensatz für diesen Account.",
+        "noOwner": "Kein Owner mit diesem Account verknüpft.",
+        "attributionHint": "First-Touch-Daten von {name}.",
+        "impersonationSoon": "Als Benutzer anmelden folgt im nächsten Sprint.",
+        "yes": "Ja",
+        "no": "Nein",
+        "columns": {
+          "name": "Name",
+          "email": "E-Mail",
+          "joined": "Mitglied seit"
+        },
+        "fields": {
+          "status": "Status",
+          "trialEnds": "Test bis",
+          "periodEnd": "Periode bis",
+          "cancelAtPeriodEnd": "Kündigung zum Periodenende",
+          "stripeCustomer": "Stripe-Kunde",
+          "stripeSubscription": "Stripe-Abonnement",
+          "signupAt": "Registrierung",
+          "firstTouchAt": "First Touch"
+        }
+      }
     },
     "users": {
       "title": "Benutzer",
@@ -1769,8 +1833,12 @@
       "cannotDeleteSuperAdmin": "Super-Admins können nicht gelöscht werden.",
       "cannotDeleteSelf": "Du kannst dein eigenes Konto nicht löschen.",
       "sections": {
-        "unassigned": "Ohne Organisation"
+        "unassigned": "Ohne Organisation",
+        "accounts": "Abonnement-Accounts"
       },
+      "accountsHint": "Organisationen mit Abonnement sind pro Account gruppiert.",
+      "accountsDescription": "Owner-, Büro-, Außendienst- und Kundenaccounts pro Unternehmen.",
+      "accountsCta": "Alle Accounts",
       "columns": {
         "name": "Name",
         "email": "E-Mail",
@@ -1803,6 +1871,12 @@
     "searchPlaceholder": "Projekte, Aufgaben oder Personen suchen…",
     "unplanned": "Nicht geplant",
     "unplannedEmpty": "Keine offenen Arbeitsposten ohne Planung.",
+    "unplannedNoResults": "Keine Ergebnisse in Nicht geplant.",
+    "unplannedSearchPlaceholder": "In Nicht geplant suchen…",
+    "dragToSchedule": "Ziehe {title} in den Kalender",
+    "emptyCalendar": "Keine geplanten Einträge. Klicke auf ein Zeitfenster oder ziehe Arbeit aus Nicht geplant.",
+    "emptyFiltered": "Keine Ergebnisse für diese Filter.",
+    "saveFailed": "Speichern fehlgeschlagen. Änderung wurde rückgängig gemacht.",
     "allDay": "Ganztägig",
     "noAssignee": "Nicht zugewiesen",
     "edit": "Bearbeiten",
@@ -1816,11 +1890,28 @@
       "month": "Monat",
       "agenda": "Agenda"
     },
+    "weekLayout": {
+      "days": "Tage",
+      "people": "Personen"
+    },
+    "resourceEmptyStaff": "Keine Mitarbeiter anzuzeigen. Personenfilter anpassen.",
     "filters": {
       "allProjects": "Alle Projekte",
-      "allPeople": "Alle Personen",
+      "allPeople": "Alle",
       "allTypes": "Alle Typen",
-      "allStatuses": "Alle Status"
+      "allStatuses": "Alle Status",
+      "projectLabel": "Projekt",
+      "personLabel": "Person",
+      "projectSearch": "Projekt oder Kunde suchen…",
+      "personSearch": "Mitarbeiter suchen…",
+      "noResults": "Keine Ergebnisse",
+      "clear": "Filter löschen"
+    },
+    "conflict": {
+      "title": "{name} ist zu dieser Zeit bereits eingeplant",
+      "description": "Es gibt bereits eine Überschneidung in diesem Zeitraum.",
+      "cancel": "Abbrechen",
+      "confirm": "Trotzdem planen"
     },
     "types": {
       "work": "Arbeit",

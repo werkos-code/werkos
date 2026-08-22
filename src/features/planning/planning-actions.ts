@@ -50,7 +50,7 @@ export async function listPlanningWorkspaceData(range: {
         .order("sort_order", { ascending: true }),
       ctx.supabase
         .from("projects")
-        .select("id, name")
+        .select("id, name, customers(name)")
         .eq("organization_id", ctx.organizationId)
         .order("name", { ascending: true }),
     ]);
@@ -67,6 +67,15 @@ export async function listPlanningWorkspaceData(range: {
 
   const projectNameById = new Map(
     (projectsResult.data ?? []).map((row) => [row.id, row.name] as const),
+  );
+  const projectCustomerById = new Map(
+    (projectsResult.data ?? []).map((row) => {
+      const customer = row.customers as { name?: string } | { name?: string }[] | null;
+      const customerName = Array.isArray(customer)
+        ? customer[0]?.name
+        : customer?.name;
+      return [row.id, customerName ?? null] as const;
+    }),
   );
 
   const appointmentWorkItemIds = new Set(
@@ -191,6 +200,7 @@ export async function listPlanningWorkspaceData(range: {
     projects: (projectsResult.data ?? []).map((row) => ({
       id: row.id,
       name: row.name,
+      customerName: projectCustomerById.get(row.id) ?? null,
     })),
   };
 }
