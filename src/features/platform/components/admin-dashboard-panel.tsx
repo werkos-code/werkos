@@ -84,6 +84,27 @@ export async function AdminDashboardPanel({
           accent="blue"
         />
         <CockpitKpi
+          label={t("kpi.ltv")}
+          value={displayMoney(dashboard.secondary.ltvLabel)}
+          source={tSource("ltv")}
+          muted={dashboard.secondary.ltvLabel == null}
+        />
+        <CockpitKpi
+          label={t("kpi.cac")}
+          value={displayMoney(dashboard.secondary.cacLabel)}
+          source={tSource("cac")}
+          muted={dashboard.secondary.cacLabel == null}
+        />
+        <CockpitKpi
+          label={t("kpi.churn")}
+          value={dashboard.secondary.churnLabel ?? "—"}
+          source={tSource("churn")}
+          muted={dashboard.secondary.churnLabel == null}
+        />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-3">
+        <CockpitKpi
           label={t("kpi.activeSubscriptions")}
           value={displayMetric(dashboard.stripe.activeSubscriptions)}
           source={tSource("activeSubscriptions")}
@@ -100,27 +121,6 @@ export async function AdminDashboardPanel({
           value={displayMoney(dashboard.secondary.monthlyCostsLabel)}
           source={tSource("monthlyCosts")}
           muted={dashboard.secondary.monthlyCostsLabel == null}
-        />
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-3">
-        <CockpitKpi
-          label={t("kpi.cac")}
-          value={displayMoney(dashboard.secondary.cacLabel)}
-          source={tSource("cac")}
-          muted={dashboard.secondary.cacLabel == null}
-        />
-        <CockpitKpi
-          label={t("kpi.ltv")}
-          value={displayMoney(dashboard.secondary.ltvLabel)}
-          source={tSource("ltv")}
-          muted={dashboard.secondary.ltvLabel == null}
-        />
-        <CockpitKpi
-          label={t("kpi.churn")}
-          value={dashboard.secondary.churnLabel ?? "—"}
-          source={tSource("churn")}
-          muted={dashboard.secondary.churnLabel == null}
         />
       </div>
 
