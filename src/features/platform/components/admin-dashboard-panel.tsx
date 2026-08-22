@@ -119,6 +119,11 @@ export async function AdminDashboardPanel({
         />
       </div>
 
+      <GoogleAdsMarketingShell
+        metrics={dashboard.googleAds}
+        attribution={dashboard.attribution}
+      />
+
       <CockpitCard className="overflow-hidden">
         <div className="grid lg:grid-cols-2">
           <div className="overflow-x-auto border-b border-white/10 lg:border-r lg:border-b-0">
@@ -176,11 +181,6 @@ export async function AdminDashboardPanel({
           </div>
         </div>
       </CockpitCard>
-
-      <GoogleAdsMarketingShell
-        metrics={dashboard.googleAds}
-        attribution={dashboard.attribution}
-      />
     </div>
   );
 }
