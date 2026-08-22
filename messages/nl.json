@@ -1797,7 +1797,62 @@
     },
     "administration": {
       "title": "Administratie",
-      "description": "Stripe-export, Google Ads en handmatige kosten voor belastingaangifte volgen in een volgende fase."
+      "period": "Periode",
+      "exportCsv": "Exporteer CSV",
+      "exportFailed": "Export mislukt.",
+      "stripeNotConfigured": "Stripe is niet gekoppeld. Omzetgegevens verschijnen pas wanneer STRIPE_SECRET_KEY is geconfigureerd.",
+      "stripeError": "Stripe-data kon niet worden geladen: {message}",
+      "stripeHint": "Betaalde Stripe-facturen en fees in deze periode.",
+      "costsHint": "Handmatige kosten buiten WerkOS (excl. btw).",
+      "stripeInvoicesEmpty": "Geen betaalde Stripe-facturen in deze periode.",
+      "costsEmpty": "Nog geen handmatige kosten in deze periode.",
+      "addCostTitle": "Kosten toevoegen",
+      "addCost": "Opslaan",
+      "deleteConfirm": "Deze kostenregel verwijderen?",
+      "invalidAmount": "Vul een geldig bedrag in.",
+      "invalidInput": "Controleer de invoer.",
+      "sections": {
+        "stripe": "Omzet (Stripe)",
+        "costs": "Handmatige kosten"
+      },
+      "kpi": {
+        "gross": "Bruto omzet",
+        "tax": "Btw (Stripe)",
+        "fees": "Stripe fees",
+        "net": "Netto na fees",
+        "costsExcl": "Kosten excl. btw",
+        "costsVat": "Btw op kosten",
+        "costsIncl": "Kosten incl. btw"
+      },
+      "columns": {
+        "invoiceNumber": "Factuurnummer",
+        "customer": "Klant",
+        "paidAt": "Betaald op",
+        "total": "Totaal",
+        "date": "Datum",
+        "description": "Omschrijving",
+        "vendor": "Leverancier",
+        "category": "Categorie",
+        "amountExcl": "Bedrag excl."
+      },
+      "fields": {
+        "description": "Omschrijving",
+        "vendor": "Leverancier",
+        "category": "Categorie",
+        "amountExcl": "Bedrag excl. btw (EUR)",
+        "vatRate": "Btw %",
+        "invoiceDate": "Factuurdatum",
+        "invoiceReference": "Factuurnummer / referentie",
+        "notes": "Notities"
+      },
+      "categories": {
+        "software": "Software",
+        "hosting": "Hosting",
+        "marketing": "Marketing",
+        "office": "Kantoor",
+        "professional_services": "Dienstverlening",
+        "other": "Overig"
+      }
     },
     "accounts": {
       "title": "Accounts",

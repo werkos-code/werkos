@@ -1777,7 +1777,62 @@
     },
     "administration": {
       "title": "Administration",
-      "description": "Stripe-Exporte, Google Ads und manuelle Betriebskosten für die Steuererklärung folgen in einer späteren Phase."
+      "period": "Zeitraum",
+      "exportCsv": "CSV exportieren",
+      "exportFailed": "Export fehlgeschlagen.",
+      "stripeNotConfigured": "Stripe ist nicht verbunden. Umsatzdaten erscheinen erst, wenn STRIPE_SECRET_KEY konfiguriert ist.",
+      "stripeError": "Stripe-Daten konnten nicht geladen werden: {message}",
+      "stripeHint": "Bezahlte Stripe-Rechnungen und Gebühren in diesem Zeitraum.",
+      "costsHint": "Manuelle Kosten außerhalb von WerkOS (exkl. MwSt.).",
+      "stripeInvoicesEmpty": "Keine bezahlten Stripe-Rechnungen in diesem Zeitraum.",
+      "costsEmpty": "Noch keine manuellen Kosten in diesem Zeitraum.",
+      "addCostTitle": "Kosten hinzufügen",
+      "addCost": "Speichern",
+      "deleteConfirm": "Diesen Kostenposten löschen?",
+      "invalidAmount": "Gültigen Betrag eingeben.",
+      "invalidInput": "Eingabe prüfen.",
+      "sections": {
+        "stripe": "Umsatz (Stripe)",
+        "costs": "Manuelle Kosten"
+      },
+      "kpi": {
+        "gross": "Bruttoumsatz",
+        "tax": "MwSt. (Stripe)",
+        "fees": "Stripe-Gebühren",
+        "net": "Netto nach Gebühren",
+        "costsExcl": "Kosten exkl. MwSt.",
+        "costsVat": "MwSt. auf Kosten",
+        "costsIncl": "Kosten inkl. MwSt."
+      },
+      "columns": {
+        "invoiceNumber": "Rechnungsnummer",
+        "customer": "Kunde",
+        "paidAt": "Bezahlt am",
+        "total": "Gesamt",
+        "date": "Datum",
+        "description": "Beschreibung",
+        "vendor": "Anbieter",
+        "category": "Kategorie",
+        "amountExcl": "Betrag exkl."
+      },
+      "fields": {
+        "description": "Beschreibung",
+        "vendor": "Anbieter",
+        "category": "Kategorie",
+        "amountExcl": "Betrag exkl. MwSt. (EUR)",
+        "vatRate": "MwSt. %",
+        "invoiceDate": "Rechnungsdatum",
+        "invoiceReference": "Rechnungsnummer / Referenz",
+        "notes": "Notizen"
+      },
+      "categories": {
+        "software": "Software",
+        "hosting": "Hosting",
+        "marketing": "Marketing",
+        "office": "Büro",
+        "professional_services": "Dienstleistungen",
+        "other": "Sonstiges"
+      }
     },
     "accounts": {
       "title": "Accounts",

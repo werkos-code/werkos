@@ -1797,7 +1797,62 @@
     },
     "administration": {
       "title": "Administration",
-      "description": "Stripe exports, Google Ads and manual operating costs for tax filing come in a later phase."
+      "period": "Period",
+      "exportCsv": "Export CSV",
+      "exportFailed": "Export failed.",
+      "stripeNotConfigured": "Stripe is not connected. Revenue data appears only when STRIPE_SECRET_KEY is configured.",
+      "stripeError": "Could not load Stripe data: {message}",
+      "stripeHint": "Paid Stripe invoices and fees in this period.",
+      "costsHint": "Manual costs outside WerkOS (excl. VAT).",
+      "stripeInvoicesEmpty": "No paid Stripe invoices in this period.",
+      "costsEmpty": "No manual costs in this period yet.",
+      "addCostTitle": "Add cost",
+      "addCost": "Save",
+      "deleteConfirm": "Delete this cost entry?",
+      "invalidAmount": "Enter a valid amount.",
+      "invalidInput": "Check your input.",
+      "sections": {
+        "stripe": "Revenue (Stripe)",
+        "costs": "Manual costs"
+      },
+      "kpi": {
+        "gross": "Gross revenue",
+        "tax": "VAT (Stripe)",
+        "fees": "Stripe fees",
+        "net": "Net after fees",
+        "costsExcl": "Costs excl. VAT",
+        "costsVat": "VAT on costs",
+        "costsIncl": "Costs incl. VAT"
+      },
+      "columns": {
+        "invoiceNumber": "Invoice number",
+        "customer": "Customer",
+        "paidAt": "Paid on",
+        "total": "Total",
+        "date": "Date",
+        "description": "Description",
+        "vendor": "Vendor",
+        "category": "Category",
+        "amountExcl": "Amount excl."
+      },
+      "fields": {
+        "description": "Description",
+        "vendor": "Vendor",
+        "category": "Category",
+        "amountExcl": "Amount excl. VAT (EUR)",
+        "vatRate": "VAT %",
+        "invoiceDate": "Invoice date",
+        "invoiceReference": "Invoice number / reference",
+        "notes": "Notes"
+      },
+      "categories": {
+        "software": "Software",
+        "hosting": "Hosting",
+        "marketing": "Marketing",
+        "office": "Office",
+        "professional_services": "Professional services",
+        "other": "Other"
+      }
     },
     "accounts": {
       "title": "Accounts",
