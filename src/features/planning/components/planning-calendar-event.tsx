@@ -20,8 +20,8 @@ import { cn } from "@/lib/utils";
 type DraggableCalendarEventProps = {
   segment: LayoutedSegment;
   locale: string;
-  dayStartHour: number;
-  dayEndHour: number;
+  gridStartHour: number;
+  gridEndHour: number;
   selected: boolean;
   onClick: () => void;
   onDoubleClick?: (item: AppointmentRow) => void;
@@ -31,8 +31,8 @@ type DraggableCalendarEventProps = {
 export function DraggableCalendarEvent({
   segment,
   locale,
-  dayStartHour,
-  dayEndHour,
+  gridStartHour,
+  gridEndHour,
   selected,
   onClick,
   onDoubleClick,
@@ -61,7 +61,7 @@ export function DraggableCalendarEvent({
   });
 
   const start = new Date(segment.startsAt);
-  const mins = minutesSinceDayStart(start, dayStartHour);
+  const mins = minutesSinceDayStart(start, gridStartHour);
   const top = (mins / 60) * PLANNING_HOUR_HEIGHT;
   const height = (segmentDur / 60) * PLANNING_HOUR_HEIGHT;
   const color = planningColorForItem(item);
@@ -89,7 +89,7 @@ export function DraggableCalendarEvent({
       const minEnd =
         new Date(item.startsAt).getTime() + PLANNING_SNAP_MINUTES * 60_000;
       const maxEnd = new Date(item.startsAt);
-      maxEnd.setHours(dayEndHour, 0, 0, 0);
+      maxEnd.setHours(gridEndHour, 0, 0, 0);
       const clamped = Math.min(
         maxEnd.getTime(),
         Math.max(minEnd, newEnd.getTime()),

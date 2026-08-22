@@ -12,6 +12,7 @@ import {
   type AppointmentRow,
 } from "@/features/planning/lib/planning";
 import { isVisibleWorkDay } from "@/features/planning/lib/planning-display";
+import { CALENDAR_GRID_START_HOUR } from "@/features/planning/lib/planning-settings";
 import { dayDropId } from "@/features/planning/lib/planning-drop-target";
 import type { PlanningSettings } from "@/features/planning/lib/planning-settings";
 import { cn } from "@/lib/utils";
@@ -170,7 +171,7 @@ export function PlanningWeekGrid({
           );
           const showNow = isSameDay(day, now);
           const nowTop =
-            minutesSinceDayStart(now, settings.dayStartHour) *
+            minutesSinceDayStart(now, CALENDAR_GRID_START_HOUR) *
             (PLANNING_HOUR_HEIGHT / 60);
           const workDay = isVisibleWorkDay(day, settings);
 

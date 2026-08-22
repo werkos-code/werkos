@@ -1,5 +1,9 @@
 export const DEFAULT_PLANNING_WORK_DAYS = [1, 2, 3, 4, 5] as const;
 
+/** Calendar grid always shows this range; work settings are for splitting logic only. */
+export const CALENDAR_GRID_START_HOUR = 6;
+export const CALENDAR_GRID_END_HOUR = 22;
+
 export type PlanningSettings = {
   workDays: number[];
   dayStartHour: number;
@@ -108,4 +112,24 @@ export function computeEndAcrossWorkDays(
   }
 
   return cursor;
+}
+
+export function hoursForGrid() {
+  return Array.from(
+    { length: CALENDAR_GRID_END_HOUR - CALENDAR_GRID_START_HOUR },
+    (_, index) => CALENDAR_GRID_START_HOUR + index,
+  );
+}
+
+export function gridHeightPx(hourHeight: number) {
+  return (CALENDAR_GRID_END_HOUR - CALENDAR_GRID_START_HOUR) * hourHeight;
+}
+
+/** Preferred slot = work day within configured work hours (used for smart splitting, not blocking). */
+export function isPreferredWorkSlot(start: Date, settings: PlanningSettings) {
+  if (!isWorkDay(start, settings.workDays)) return false;
+  const minutes =
+    start.getHours() * 60 + start.getMinutes() - settings.dayStartHour * 60;
+  const endMinutes = (settings.dayEndHour - settings.dayStartHour) * 60;
+  return minutes >= 0 && minutes < endMinutes;
 }

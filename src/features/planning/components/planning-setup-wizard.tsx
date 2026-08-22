@@ -175,9 +175,7 @@ export function PlanningSetupWizard({
           </div>
 
           <p className="rounded-lg bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
-            {t("hoursHint", {
-              hours: Math.round((hoursPerDay / 60) * 10) / 10,
-            })}
+            {t("hoursHint")}
           </p>
 
           {error ? <p className="text-sm text-destructive">{error}</p> : null}

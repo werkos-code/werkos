@@ -4,7 +4,13 @@ import { useDroppable } from "@dnd-kit/core";
 import { useCallback, useMemo, type MouseEvent as ReactMouseEvent } from "react";
 
 import { DraggableCalendarEvent } from "@/features/planning/components/planning-calendar-event";
-import { layoutDayAppointments } from "@/features/planning/lib/planning-display";
+import {
+  CALENDAR_GRID_END_HOUR,
+  CALENDAR_GRID_START_HOUR,
+  layoutDayAppointments,
+  preferredWorkBandHeight,
+  preferredWorkBandTop,
+} from "@/features/planning/lib/planning-display";
 import {
   PLANNING_HOUR_HEIGHT,
   snapToGridMinutes,
@@ -68,6 +74,9 @@ export function PlanningTimeColumn({
     [events, day, settings],
   );
 
+  const workBandTop = preferredWorkBandTop(settings, PLANNING_HOUR_HEIGHT);
+  const workBandHeight = preferredWorkBandHeight(settings, PLANNING_HOUR_HEIGHT);
+
   const setRef = useCallback(
     (node: HTMLDivElement | null) => {
       setNodeRef(node);
@@ -77,7 +86,6 @@ export function PlanningTimeColumn({
   );
 
   function handleClick(event: ReactMouseEvent<HTMLDivElement>) {
-    if (!isWorkDay) return;
     if ((event.target as HTMLElement).closest("[data-event-block]")) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const y = event.clientY - rect.top;
@@ -91,12 +99,19 @@ export function PlanningTimeColumn({
       ref={setRef}
       className={cn(
         "relative border-r border-border last:border-r-0",
-        !isWorkDay && "bg-muted/20",
-        (isOver || isDropTarget) && isWorkDay && "bg-primary/5",
+        !isWorkDay && "bg-muted/15",
+        (isOver || isDropTarget) && "bg-primary/5",
       )}
       style={{ height: gridHeight }}
       onClick={handleClick}
     >
+      {isWorkDay ? (
+        <div
+          className="pointer-events-none absolute right-0 left-0 bg-primary/[0.03]"
+          style={{ top: workBandTop, height: workBandHeight }}
+        />
+      ) : null}
+
       {hours.map((hour) => (
         <div
           key={`${dropId}-${hour}`}
@@ -105,19 +120,14 @@ export function PlanningTimeColumn({
         />
       ))}
 
-      {dropPreviewMinutes !== null && isWorkDay ? (
+      {dropPreviewMinutes !== null ? (
         <div
           className="pointer-events-none absolute right-1 left-1 z-10 rounded-md border-2 border-dashed border-primary/50 bg-primary/10"
           style={{
             top: (dropPreviewMinutes / 60) * PLANNING_HOUR_HEIGHT,
             height: Math.max(
               28,
-              (Math.min(
-                dropPreviewDurationMinutes,
-                (settings.dayEndHour - settings.dayStartHour) * 60,
-              ) /
-                60) *
-                PLANNING_HOUR_HEIGHT,
+              (dropPreviewDurationMinutes / 60) * PLANNING_HOUR_HEIGHT,
             ),
           }}
         />
@@ -141,8 +151,8 @@ export function PlanningTimeColumn({
           key={segment.segmentKey}
           segment={segment}
           locale={locale}
-          dayStartHour={settings.dayStartHour}
-          dayEndHour={settings.dayEndHour}
+          gridStartHour={CALENDAR_GRID_START_HOUR}
+          gridEndHour={CALENDAR_GRID_END_HOUR}
           selected={selectedId === segment.appointment.id}
           onClick={() => onEventClick(segment.appointment)}
           onDoubleClick={onEventDoubleClick}

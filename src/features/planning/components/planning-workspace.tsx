@@ -60,7 +60,12 @@ import {
 import { PlanningSetupWizard } from "@/features/planning/components/planning-setup-wizard";
 import { hoursForSettings } from "@/features/planning/lib/planning-display";
 import {
+  CALENDAR_GRID_END_HOUR,
+  CALENDAR_GRID_START_HOUR,
   computeEndAcrossWorkDays,
+  gridHeightPx,
+  isPreferredWorkSlot,
+  minutesPerWorkDay,
   type PlanningSettings,
 } from "@/features/planning/lib/planning-settings";
 import {
@@ -95,6 +100,7 @@ import { cn } from "@/lib/utils";
 
 type ViewMode = "day" | "week" | "month" | "agenda";
 type WeekLayout = "days" | "people";
+type ResourcePeriod = "day" | "week" | "month";
 
 type PlanningWorkspaceProps = {
   appointments: AppointmentRow[];
@@ -138,6 +144,7 @@ export function PlanningWorkspace({
 
   const [view, setView] = useState<ViewMode>("week");
   const [weekLayout, setWeekLayout] = useState<WeekLayout>("days");
+  const [resourcePeriod, setResourcePeriod] = useState<ResourcePeriod>("day");
   const [anchor, setAnchor] = useState(() => new Date(initialWeekStart));
   const [resourceDay, setResourceDay] = useState(() => {
     const today = new Date();
@@ -246,6 +253,12 @@ export function PlanningWorkspace({
     null;
 
   const periodLabel = useMemo(() => {
+    if (view === "week" && weekLayout === "people" && resourcePeriod === "month") {
+      return new Intl.DateTimeFormat(locale, {
+        month: "long",
+        year: "numeric",
+      }).format(anchor);
+    }
     if (view === "day") {
       return new Intl.DateTimeFormat(locale, {
         weekday: "long",
@@ -271,15 +284,13 @@ export function PlanningWorkspace({
       month: "short",
     });
     return `${short.format(weekStart)} – ${fmt.format(end)}`;
-  }, [anchor, locale, view, weekStart]);
+  }, [anchor, locale, resourcePeriod, view, weekLayout, weekStart]);
 
   const hours = useMemo(
     () => hoursForSettings(planningSettings),
     [planningSettings],
   );
-  const gridHeight =
-    (planningSettings.dayEndHour - planningSettings.dayStartHour) *
-    PLANNING_HOUR_HEIGHT;
+  const gridHeight = gridHeightPx(PLANNING_HOUR_HEIGHT);
 
   const projectOptions = useMemo(
     () =>
@@ -385,7 +396,7 @@ export function PlanningWorkspace({
     const start = minutesToDateOnDay(
       day,
       minutesFromStart,
-      planningSettings.dayStartHour,
+      CALENDAR_GRID_START_HOUR,
     );
     const end = new Date(start);
     end.setMinutes(end.getMinutes() + 60);
@@ -397,12 +408,20 @@ export function PlanningWorkspace({
   }
 
   function navigatePrev() {
+    if (view === "week" && weekLayout === "people" && resourcePeriod === "month") {
+      setAnchor(addMonths(anchor, -1));
+      return;
+    }
     if (view === "day") setAnchor(addDays(anchor, -1));
     else if (view === "month") setAnchor(addMonths(anchor, -1));
     else setAnchor(addDays(weekStart, -7));
   }
 
   function navigateNext() {
+    if (view === "week" && weekLayout === "people" && resourcePeriod === "month") {
+      setAnchor(addMonths(anchor, 1));
+      return;
+    }
     if (view === "day") setAnchor(addDays(anchor, 1));
     else if (view === "month") setAnchor(addMonths(anchor, 1));
     else setAnchor(addDays(weekStart, 7));
@@ -534,20 +553,29 @@ export function PlanningWorkspace({
     const minutes = dropMinutesFromPointer(
       dropY,
       rect.top,
-      planningSettings.dayStartHour,
-      planningSettings.dayEndHour,
+      CALENDAR_GRID_START_HOUR,
+      CALENDAR_GRID_END_HOUR,
     );
     setActiveDropColumn(target.columnKey);
     setDropPreviewMinutes(minutes);
   }
 
   function resolveDropRange(start: Date, durationMinutes: number) {
-    const endsAt = computeEndAcrossWorkDays(
-      start,
-      durationMinutes,
-      planningSettings,
-    );
-    return { startsAt: start.toISOString(), endsAt: endsAt.toISOString() };
+    const useWorkDaySplit =
+      isPreferredWorkSlot(start, planningSettings) &&
+      durationMinutes > minutesPerWorkDay(planningSettings);
+
+    if (useWorkDaySplit) {
+      const endsAt = computeEndAcrossWorkDays(
+        start,
+        durationMinutes,
+        planningSettings,
+      );
+      return { startsAt: start.toISOString(), endsAt: endsAt.toISOString() };
+    }
+
+    const end = new Date(start.getTime() + durationMinutes * 60_000);
+    return { startsAt: start.toISOString(), endsAt: end.toISOString() };
   }
 
   function onDragEnd(event: DragEndEvent) {
@@ -570,13 +598,13 @@ export function PlanningWorkspace({
     const minutes = dropMinutesFromPointer(
       dropY,
       rect.top,
-      planningSettings.dayStartHour,
-      planningSettings.dayEndHour,
+      CALENDAR_GRID_START_HOUR,
+      CALENDAR_GRID_END_HOUR,
     );
     const start = minutesToDateOnDay(
       day,
       minutes,
-      planningSettings.dayStartHour,
+      CALENDAR_GRID_START_HOUR,
     );
     const { startsAt, endsAt } = resolveDropRange(start, data.durationMinutes);
 
@@ -813,10 +841,7 @@ export function PlanningWorkspace({
             size="sm"
             onClick={() => {
               const start = new Date();
-              start.setMinutes(0, 0, 0);
-              if (start.getHours() < planningSettings.dayStartHour) {
-                start.setHours(planningSettings.dayStartHour);
-              }
+              start.setMinutes(Math.ceil(start.getMinutes() / 15) * 15, 0, 0);
               const end = new Date(start);
               end.setHours(start.getHours() + 2);
               openCreate({
@@ -957,31 +982,52 @@ export function PlanningWorkspace({
                     ))}
                   </div>
                   {weekLayout === "people" ? (
-                    <div className="flex flex-wrap gap-1">
-                      {days.map((day) => {
-                        const key = toDateKey(day);
-                        const active = isSameDay(day, resourceDay);
-                        const today = isSameDay(day, now);
-                        return (
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="bg-muted/40 inline-flex rounded-lg p-0.5">
+                        {(["day", "week", "month"] as ResourcePeriod[]).map((period) => (
                           <button
-                            key={key}
+                            key={period}
                             type="button"
-                            onClick={() => setResourceDay(day)}
+                            onClick={() => setResourcePeriod(period)}
                             className={cn(
-                              "rounded-md px-2 py-1 text-xs font-medium transition-colors",
-                              active
+                              "rounded-md px-3 py-1 text-xs font-medium transition-colors",
+                              resourcePeriod === period
                                 ? "bg-primary/10 text-primary"
-                                : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
-                              today && !active && "ring-1 ring-primary/30",
+                                : "text-muted-foreground hover:text-foreground",
                             )}
                           >
-                            {new Intl.DateTimeFormat(locale, {
-                              weekday: "short",
-                              day: "numeric",
-                            }).format(day)}
+                            {t(`resourcePeriod.${period}`)}
                           </button>
-                        );
-                      })}
+                        ))}
+                      </div>
+                      {resourcePeriod === "day" ? (
+                        <div className="flex flex-wrap gap-1">
+                          {days.map((day) => {
+                            const key = toDateKey(day);
+                            const active = isSameDay(day, resourceDay);
+                            const today = isSameDay(day, now);
+                            return (
+                              <button
+                                key={key}
+                                type="button"
+                                onClick={() => setResourceDay(day)}
+                                className={cn(
+                                  "rounded-md px-2 py-1 text-xs font-medium transition-colors",
+                                  active
+                                    ? "bg-primary/10 text-primary"
+                                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                                  today && !active && "ring-1 ring-primary/30",
+                                )}
+                              >
+                                {new Intl.DateTimeFormat(locale, {
+                                  weekday: "short",
+                                  day: "numeric",
+                                }).format(day)}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ) : null}
                     </div>
                   ) : null}
                 </div>
@@ -999,7 +1045,47 @@ export function PlanningWorkspace({
                         {hasActiveFilters ? t("emptyFiltered") : t("emptyCalendar")}
                       </div>
                     ) : weekLayout === "people" ? (
-                      resourceStaff.length === 0 ? (
+                      resourcePeriod === "week" ? (
+                        <PlanningWeekGrid
+                          days={days}
+                          hours={hours}
+                          gridHeight={gridHeight}
+                          locale={locale}
+                          now={now}
+                          settings={planningSettings}
+                          allDayLabel={t("allDay")}
+                          timedEvents={timedEvents}
+                          allDayEvents={allDayEvents}
+                          selectedId={selectedId}
+                          activeDropColumn={activeDropColumn}
+                          dropPreviewMinutes={dropPreviewMinutes}
+                          dropPreviewDurationMinutes={
+                            activeDrag?.durationMinutes ?? 60
+                          }
+                          onColumnRef={onColumnRef}
+                          onSlotClick={handleSlotClick}
+                          onEventClick={(item) => setSelectedId(item.id)}
+                          onEventDoubleClick={openEdit}
+                          onAllDayClick={(item) => setSelectedId(item.id)}
+                          onEventResize={handleEventResize}
+                        />
+                      ) : resourcePeriod === "month" ? (
+                        <PlanningMonthView
+                          month={startOfMonth(anchor)}
+                          locale={locale}
+                          now={now}
+                          events={filteredAppointments}
+                          selectedId={selectedId}
+                          onDayClick={(day) => {
+                            setResourceDay(day);
+                            setResourcePeriod("day");
+                          }}
+                          onEventClick={(item) => {
+                            setSelectedId(item.id);
+                            openEdit(item);
+                          }}
+                        />
+                      ) : resourceStaff.length === 0 ? (
                         <div className="flex min-h-[20rem] items-center justify-center p-8 text-center text-sm text-muted-foreground">
                           {t("resourceEmptyStaff")}
                         </div>

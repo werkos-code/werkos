@@ -5,7 +5,11 @@ import {
   type AppointmentRow,
 } from "@/features/planning/lib/planning";
 import {
+  CALENDAR_GRID_END_HOUR,
+  CALENDAR_GRID_START_HOUR,
   endOfWorkDay,
+  hoursForGrid,
+  isPreferredWorkSlot,
   isWorkDay,
   minutesPerWorkDay,
   nextWorkDayStart,
@@ -30,27 +34,48 @@ export type LayoutedSegment = CalendarDisplaySegment & {
   columnCount: number;
 };
 
-/** Split appointment duration across work days for calendar display. */
-export function expandAppointmentSegments(
+function expandWallClockSegments(item: AppointmentRow): CalendarDisplaySegment[] {
+  const start = new Date(item.startsAt);
+  const end = new Date(item.endsAt);
+  const totalWorkMinutes = durationMinutes(item.startsAt, item.endsAt);
+  if (totalWorkMinutes <= 0) return [];
+
+  const segments: CalendarDisplaySegment[] = [];
+  let cursor = new Date(start);
+  cursor.setHours(0, 0, 0, 0);
+  let segmentIndex = 0;
+
+  while (cursor <= end) {
+    const dayEnd = new Date(cursor);
+    dayEnd.setHours(23, 59, 59, 999);
+    const segStart = new Date(Math.max(start.getTime(), cursor.getTime()));
+    const segEnd = new Date(Math.min(end.getTime(), dayEnd.getTime()));
+
+    if (segStart < segEnd) {
+      segments.push({
+        segmentKey: `${item.id}:${segmentIndex}`,
+        appointment: item,
+        segmentIndex,
+        segmentCount: 0,
+        startsAt: segStart.toISOString(),
+        endsAt: segEnd.toISOString(),
+        dayKey: toDateKey(cursor),
+        isContinuation: segmentIndex > 0,
+        totalWorkMinutes,
+      });
+      segmentIndex += 1;
+    }
+    cursor = addDays(cursor, 1);
+  }
+
+  const count = segments.length;
+  return segments.map((segment) => ({ ...segment, segmentCount: count }));
+}
+
+function expandWorkDaySegments(
   item: AppointmentRow,
   settings: PlanningSettings,
 ): CalendarDisplaySegment[] {
-  if (item.allDay) {
-    return [
-      {
-        segmentKey: `${item.id}:0`,
-        appointment: item,
-        segmentIndex: 0,
-        segmentCount: 1,
-        startsAt: item.startsAt,
-        endsAt: item.endsAt,
-        dayKey: toDateKey(new Date(item.startsAt)),
-        isContinuation: false,
-        totalWorkMinutes: durationMinutes(item.startsAt, item.endsAt),
-      },
-    ];
-  }
-
   const totalWorkMinutes = durationMinutes(item.startsAt, item.endsAt);
   if (totalWorkMinutes <= 0) return [];
 
@@ -101,6 +126,44 @@ export function expandAppointmentSegments(
 
   const count = segments.length;
   return segments.map((segment) => ({ ...segment, segmentCount: count }));
+}
+
+/**
+ * Split for display: work-day distribution for long tasks in preferred slots;
+ * wall-clock segments for weekend/evening or short tasks.
+ */
+export function expandAppointmentSegments(
+  item: AppointmentRow,
+  settings: PlanningSettings,
+): CalendarDisplaySegment[] {
+  if (item.allDay) {
+    return [
+      {
+        segmentKey: `${item.id}:0`,
+        appointment: item,
+        segmentIndex: 0,
+        segmentCount: 1,
+        startsAt: item.startsAt,
+        endsAt: item.endsAt,
+        dayKey: toDateKey(new Date(item.startsAt)),
+        isContinuation: false,
+        totalWorkMinutes: durationMinutes(item.startsAt, item.endsAt),
+      },
+    ];
+  }
+
+  const totalWorkMinutes = durationMinutes(item.startsAt, item.endsAt);
+  if (totalWorkMinutes <= 0) return [];
+
+  const start = new Date(item.startsAt);
+  const useWorkDaySplit =
+    isPreferredWorkSlot(start, settings) &&
+    totalWorkMinutes > minutesPerWorkDay(settings);
+
+  if (useWorkDaySplit) {
+    return expandWorkDaySegments(item, settings);
+  }
+  return expandWallClockSegments(item);
 }
 
 export function expandAppointmentsForDay(
@@ -186,14 +249,21 @@ export function layoutDayAppointments(
   return layoutOverlappingSegments(daySegments);
 }
 
-/** Filter week grid days to work days only (optional visual dim for non-work days). */
+/** Visual hint only — scheduling is never blocked on non-work days. */
 export function isVisibleWorkDay(day: Date, settings: PlanningSettings) {
   return isWorkDay(day, settings.workDays);
 }
 
+export { hoursForGrid, CALENDAR_GRID_START_HOUR, CALENDAR_GRID_END_HOUR };
+
 export function hoursForSettings(settings: PlanningSettings) {
-  return Array.from(
-    { length: settings.dayEndHour - settings.dayStartHour },
-    (_, index) => settings.dayStartHour + index,
-  );
+  return hoursForGrid();
+}
+
+export function preferredWorkBandTop(settings: PlanningSettings, hourHeight: number) {
+  return (settings.dayStartHour - CALENDAR_GRID_START_HOUR) * hourHeight;
+}
+
+export function preferredWorkBandHeight(settings: PlanningSettings, hourHeight: number) {
+  return (settings.dayEndHour - settings.dayStartHour) * hourHeight;
 }
