@@ -120,58 +120,60 @@ export async function AdminDashboardPanel({
       </div>
 
       <CockpitCard className="overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="data-table min-w-[32rem]">
-            <thead>
-              <tr>
-                <th>{t("columns.status")}</th>
-                <th>{t("columns.count")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {SUBSCRIPTION_STATUS_ORDER.map((status) => (
-                <tr key={status}>
-                  <td className="text-slate-100">{tBilling(status)}</td>
+        <div className="grid lg:grid-cols-2">
+          <div className="overflow-x-auto border-b border-white/10 lg:border-r lg:border-b-0">
+            <table className="data-table min-w-[16rem]">
+              <thead>
+                <tr>
+                  <th>{t("columns.status")}</th>
+                  <th>{t("columns.count")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {SUBSCRIPTION_STATUS_ORDER.map((status) => (
+                  <tr key={status}>
+                    <td className="text-slate-100">{tBilling(status)}</td>
+                    <td className="text-slate-400">
+                      {dashboard.subscriptions[status]}
+                    </td>
+                  </tr>
+                ))}
+                <tr>
+                  <td className="text-slate-100">{t("status.missing")}</td>
                   <td className="text-slate-400">
-                    {dashboard.subscriptions[status]}
+                    {dashboard.subscriptions.missing}
                   </td>
                 </tr>
-              ))}
-              <tr>
-                <td className="text-slate-100">{t("status.missing")}</td>
-                <td className="text-slate-400">
-                  {dashboard.subscriptions.missing}
-                </td>
-              </tr>
-              <tr>
-                <td className="text-slate-100">{t("kpi.pendingCancel")}</td>
-                <td className="text-slate-400">
-                  {dashboard.subscriptions.cancelAtPeriodEnd}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </CockpitCard>
-
-      <CockpitCard className="overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="data-table min-w-[32rem]">
-            <thead>
-              <tr>
-                <th>{t("columns.step")}</th>
-                <th>{t("columns.count")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {funnelSteps.map((step) => (
-                <tr key={step.key}>
-                  <td className="text-slate-100">{t(`funnel.${step.key}`)}</td>
-                  <td className="text-slate-400">{step.value}</td>
+                <tr>
+                  <td className="text-slate-100">{t("kpi.pendingCancel")}</td>
+                  <td className="text-slate-400">
+                    {dashboard.subscriptions.cancelAtPeriodEnd}
+                  </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="data-table min-w-[16rem]">
+              <thead>
+                <tr>
+                  <th>{t("columns.step")}</th>
+                  <th>{t("columns.count")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {funnelSteps.map((step) => (
+                  <tr key={step.key}>
+                    <td className="text-slate-100">
+                      {t(`funnel.${step.key}`)}
+                    </td>
+                    <td className="text-slate-400">{step.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </CockpitCard>
 
