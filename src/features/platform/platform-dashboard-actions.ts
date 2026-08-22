@@ -31,8 +31,10 @@ export type PlatformDashboardData = {
     configured: boolean;
     mrrCents: number | null;
     arrCents: number | null;
+    balanceCents: number | null;
     mrrLabel: string | null;
     arrLabel: string | null;
+    balanceLabel: string | null;
     activeSubscriptions: number | null;
     canceledLast30Days: number | null;
     error?: string;
@@ -192,6 +194,11 @@ export async function loadPlatformDashboard(): Promise<{
         arrLabel:
           stripeMetrics.arrCents != null
             ? formatEurFromCents(stripeMetrics.arrCents)
+            : null,
+        balanceCents: stripeMetrics.balanceCents,
+        balanceLabel:
+          stripeMetrics.balanceCents != null
+            ? formatEurFromCents(stripeMetrics.balanceCents)
             : null,
         activeSubscriptions: stripeMetrics.activeSubscriptions,
         canceledLast30Days: stripeMetrics.canceledLast30Days,

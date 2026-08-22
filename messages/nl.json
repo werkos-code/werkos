@@ -1775,6 +1775,7 @@
       "kpi": {
         "mrr": "MRR",
         "arr": "ARR",
+        "stripeBalance": "Stripe balans",
         "activeSubscriptions": "Actieve abonnementen",
         "canceledLast30Days": "Opgezegd (30 dagen)",
         "cac": "CAC",
@@ -1786,6 +1787,7 @@
       "sources": {
         "mrr": "Som van actieve Stripe-abonnementen, genormaliseerd naar maandbedrag.",
         "arr": "MRR × 12 uit Stripe.",
+        "stripeBalance": "Beschikbaar saldo op je Stripe-account (EUR).",
         "activeSubscriptions": "Aantal actieve abonnementen in Stripe.",
         "canceledLast30Days": "Abonnementen opgezegd in Stripe in de laatste 30 dagen.",
         "cac": "Google Ads spend + marketingkosten (administratie) gedeeld door nieuwe betalende klanten deze maand.",

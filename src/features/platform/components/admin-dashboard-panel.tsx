@@ -56,9 +56,8 @@ export async function AdminDashboardPanel({
         </CockpitAlert>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-12">
+      <div className="grid gap-4 lg:grid-cols-2">
         <CockpitKpi
-          className="lg:col-span-3"
           label={t("kpi.mrr")}
           value={displayMoney(dashboard.stripe.mrrLabel)}
           source={tSource("mrr")}
@@ -67,32 +66,44 @@ export async function AdminDashboardPanel({
           accent="cyan"
         />
         <CockpitKpi
-          className="lg:col-span-3"
+          label={t("kpi.stripeBalance")}
+          value={displayMoney(dashboard.stripe.balanceLabel)}
+          source={tSource("stripeBalance")}
+          muted={dashboard.stripe.balanceLabel == null}
+          variant="hero"
+          accent="emerald"
+        />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <CockpitKpi
           label={t("kpi.arr")}
           value={displayMoney(dashboard.stripe.arrLabel)}
           source={tSource("arr")}
           muted={dashboard.stripe.arrLabel == null}
-          variant="hero"
           accent="blue"
         />
         <CockpitKpi
-          className="lg:col-span-3"
           label={t("kpi.activeSubscriptions")}
           value={displayMetric(dashboard.stripe.activeSubscriptions)}
           source={tSource("activeSubscriptions")}
           muted={dashboard.stripe.activeSubscriptions == null}
-          accent="emerald"
         />
         <CockpitKpi
-          className="lg:col-span-3"
           label={t("kpi.canceledLast30Days")}
           value={displayMetric(dashboard.stripe.canceledLast30Days)}
           source={tSource("canceledLast30Days")}
           muted={dashboard.stripe.canceledLast30Days == null}
         />
+        <CockpitKpi
+          label={t("kpi.monthlyCosts")}
+          value={displayMoney(dashboard.secondary.monthlyCostsLabel)}
+          source={tSource("monthlyCosts")}
+          muted={dashboard.secondary.monthlyCostsLabel == null}
+        />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-3">
         <CockpitKpi
           label={t("kpi.cac")}
           value={displayMoney(dashboard.secondary.cacLabel)}
@@ -110,12 +121,6 @@ export async function AdminDashboardPanel({
           value={dashboard.secondary.churnLabel ?? "—"}
           source={tSource("churn")}
           muted={dashboard.secondary.churnLabel == null}
-        />
-        <CockpitKpi
-          label={t("kpi.monthlyCosts")}
-          value={displayMoney(dashboard.secondary.monthlyCostsLabel)}
-          source={tSource("monthlyCosts")}
-          muted={dashboard.secondary.monthlyCostsLabel == null}
         />
       </div>
 

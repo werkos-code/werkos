@@ -1775,6 +1775,7 @@
       "kpi": {
         "mrr": "MRR",
         "arr": "ARR",
+        "stripeBalance": "Stripe balance",
         "activeSubscriptions": "Active subscriptions",
         "canceledLast30Days": "Canceled (30 days)",
         "cac": "CAC",
@@ -1786,6 +1787,7 @@
       "sources": {
         "mrr": "Sum of active Stripe subscriptions, normalized to a monthly amount.",
         "arr": "MRR × 12 from Stripe.",
+        "stripeBalance": "Available balance on your Stripe account (EUR).",
         "activeSubscriptions": "Count of active subscriptions in Stripe.",
         "canceledLast30Days": "Subscriptions canceled in Stripe in the last 30 days.",
         "cac": "Google Ads spend + marketing costs (administration) divided by new paying customers this month.",

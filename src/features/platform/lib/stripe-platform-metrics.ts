@@ -4,6 +4,7 @@ export type StripePlatformMetrics = {
   configured: boolean;
   mrrCents: number | null;
   arrCents: number | null;
+  balanceCents: number | null;
   activeSubscriptions: number | null;
   canceledLast30Days: number | null;
   averageLtvCents: number | null;
@@ -91,12 +92,30 @@ async function fetchAverageLtvCents(stripe: ReturnType<typeof getStripe>): Promi
   return Math.round(total / totalsByCustomer.size);
 }
 
+function readStripeBalanceCents(
+  balance: Awaited<
+    ReturnType<ReturnType<typeof getStripe>["balance"]["retrieve"]>
+  >,
+): number {
+  const eurAvailable = balance.available.find((entry) => entry.currency === "eur");
+  if (eurAvailable) return eurAvailable.amount;
+
+  const eurPending = balance.pending.find((entry) => entry.currency === "eur");
+  if (eurPending) return eurPending.amount;
+
+  if (balance.available.length > 0) return balance.available[0]!.amount;
+  if (balance.pending.length > 0) return balance.pending[0]!.amount;
+
+  return 0;
+}
+
 export async function fetchStripePlatformMetrics(): Promise<StripePlatformMetrics> {
   if (!getStripeSecretKey()) {
     return {
       configured: false,
       mrrCents: null,
       arrCents: null,
+      balanceCents: null,
       activeSubscriptions: null,
       canceledLast30Days: null,
       averageLtvCents: null,
@@ -153,11 +172,14 @@ export async function fetchStripePlatformMetrics(): Promise<StripePlatformMetric
     } while (canceledStartingAfter);
 
     const averageLtvCents = await fetchAverageLtvCents(stripe);
+    const balance = await stripe.balance.retrieve();
+    const balanceCents = readStripeBalanceCents(balance);
 
     return {
       configured: true,
       mrrCents,
       arrCents: mrrCents * 12,
+      balanceCents,
       activeSubscriptions,
       canceledLast30Days,
       averageLtvCents,
@@ -167,6 +189,7 @@ export async function fetchStripePlatformMetrics(): Promise<StripePlatformMetric
       configured: true,
       mrrCents: null,
       arrCents: null,
+      balanceCents: null,
       activeSubscriptions: null,
       canceledLast30Days: null,
       averageLtvCents: null,
