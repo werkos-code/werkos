@@ -6,7 +6,10 @@ import { useTranslations } from "next-intl";
 
 import { Input } from "@/components/ui/input";
 import type { PlatformUserRow } from "@/features/platform/users-actions";
-import { PageCard } from "@/features/shell/components/page-card";
+import {
+  CockpitCard,
+  CockpitSection,
+} from "@/features/platform/components/cockpit/admin-cockpit-ui";
 import { Link } from "@/i18n/navigation";
 
 type UsersGlobalSearchProps = {
@@ -38,24 +41,21 @@ export function UsersGlobalSearch({ users }: UsersGlobalSearchProps) {
   }, [query, users]);
 
   return (
-    <section className="space-y-3">
-      <h2 className="text-sm font-medium text-foreground">
-        {t("searchTitle")}
-      </h2>
-      <PageCard className="space-y-3 p-3">
+    <CockpitSection title={t("searchTitle")}>
+      <CockpitCard className="space-y-3 p-3">
         <div className="relative max-w-md">
-          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-500" />
           <Input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t("searchPlaceholder")}
-            className="pl-9"
+            className="border-white/10 bg-slate-950/50 pl-9 text-slate-100 placeholder:text-slate-500"
           />
         </div>
         {query.trim().length < 2 ? (
-          <p className="text-sm text-muted-foreground">{t("searchHint")}</p>
+          <p className="text-sm text-slate-400">{t("searchHint")}</p>
         ) : results.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t("searchEmpty")}</p>
+          <p className="text-sm text-slate-400">{t("searchEmpty")}</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="data-table min-w-[36rem]">
@@ -72,15 +72,13 @@ export function UsersGlobalSearch({ users }: UsersGlobalSearchProps) {
                     <td>
                       <Link
                         href={`/platform/admin/gebruikers/${user.id}`}
-                        className="font-medium text-foreground hover:text-primary"
+                        className="admin-cockpit-link font-medium"
                       >
                         {user.fullName || "—"}
                       </Link>
                     </td>
-                    <td className="text-muted-foreground">
-                      {user.email || "—"}
-                    </td>
-                    <td className="text-muted-foreground">
+                    <td className="text-slate-400">{user.email || "—"}</td>
+                    <td className="text-slate-400">
                       {user.memberships.length === 0
                         ? "—"
                         : user.memberships
@@ -96,7 +94,7 @@ export function UsersGlobalSearch({ users }: UsersGlobalSearchProps) {
             </table>
           </div>
         )}
-      </PageCard>
-    </section>
+      </CockpitCard>
+    </CockpitSection>
   );
 }

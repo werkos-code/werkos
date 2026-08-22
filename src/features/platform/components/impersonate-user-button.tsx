@@ -32,6 +32,11 @@ export function ImpersonateUserButton({
         type="button"
         variant={variant}
         size={size}
+        className={
+          variant === "ghost"
+            ? "border-white/10 text-cyan-200 hover:bg-cyan-400/10 hover:text-cyan-100"
+            : "border-cyan-400/30 bg-cyan-400/10 text-cyan-100 hover:bg-cyan-400/20"
+        }
         disabled={isPending}
         onClick={() => {
           if (!window.confirm(t("confirm"))) return;
@@ -58,7 +63,7 @@ export function ImpersonateUserButton({
         <LogIn className="size-4" />
         {label ?? t("start")}
       </Button>
-      {error ? <span className="text-xs text-destructive">{error}</span> : null}
+      {error ? <span className="text-xs text-red-300">{error}</span> : null}
     </div>
   );
 }

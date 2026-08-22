@@ -7,7 +7,11 @@ import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import type { PlatformAccountRow } from "@/features/platform/accounts-actions";
-import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
+import {
+  CockpitCard,
+  CockpitFilterChip,
+  CockpitKpi,
+} from "@/features/platform/components/cockpit/admin-cockpit-ui";
 import { Link } from "@/i18n/navigation";
 import type { SubscriptionStatus } from "@/types/database";
 
@@ -105,57 +109,56 @@ export function AccountsWorkspace({ accounts }: AccountsWorkspaceProps) {
   ];
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <MetaStatCard label={t("kpi.total")} value={String(stats.total)} />
-        <MetaStatCard label={t("kpi.active")} value={String(stats.active)} />
-        <MetaStatCard label={t("kpi.trialing")} value={String(stats.trialing)} />
-        <MetaStatCard
+    <div className="space-y-6">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <CockpitKpi label={t("kpi.total")} value={String(stats.total)} />
+        <CockpitKpi
+          label={t("kpi.active")}
+          value={String(stats.active)}
+          accent="emerald"
+        />
+        <CockpitKpi label={t("kpi.trialing")} value={String(stats.trialing)} />
+        <CockpitKpi
           label={t("kpi.stripeLinked")}
           value={String(stats.stripeLinked)}
         />
       </div>
 
-      <PageCard className="space-y-3 p-3">
+      <CockpitCard className="space-y-3 p-3">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative max-w-md flex-1">
-            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-500" />
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={t("searchPlaceholder")}
-              className="pl-9"
+              className="border-white/10 bg-slate-950/50 pl-9 text-slate-100 placeholder:text-slate-500"
             />
           </div>
           <div className="flex flex-wrap gap-1.5">
             {statusFilters.map((filter) => (
-              <button
+              <CockpitFilterChip
                 key={filter}
-                type="button"
+                active={statusFilter === filter}
                 onClick={() => setStatusFilter(filter)}
-                className={
-                  statusFilter === filter
-                    ? "rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
-                    : "rounded-full px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-muted/60"
-                }
               >
                 {filter === "all"
                   ? t("filters.all")
                   : filter === "no_subscription"
                     ? t("filters.noSubscription")
                     : tBilling(filter)}
-              </button>
+              </CockpitFilterChip>
             ))}
           </div>
         </div>
-      </PageCard>
+      </CockpitCard>
 
       {filtered.length === 0 ? (
-        <PageCard className="px-5 py-10 text-sm text-muted-foreground">
+        <CockpitCard className="px-5 py-10 text-sm text-slate-400">
           {t("empty")}
-        </PageCard>
+        </CockpitCard>
       ) : (
-        <PageCard className="overflow-hidden">
+        <CockpitCard className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="data-table min-w-[48rem]">
               <thead>
@@ -181,18 +184,18 @@ export function AccountsWorkspace({ accounts }: AccountsWorkspaceProps) {
                       <td>
                         <Link
                           href={`/platform/admin/accounts/${account.id}`}
-                          className="flex items-start gap-2 font-medium text-foreground hover:text-primary"
+                          className="admin-cockpit-link flex items-start gap-2 font-medium"
                         >
-                          <Building2 className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                          <Building2 className="mt-0.5 size-4 shrink-0 text-slate-500" />
                           <span>
                             {account.name}
-                            <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
+                            <span className="mt-0.5 block text-xs font-normal text-slate-500">
                               {account.slug}
                             </span>
                           </span>
                         </Link>
                       </td>
-                      <td className="text-muted-foreground">
+                      <td className="text-slate-400">
                         {account.owner ? (
                           <span>
                             {account.owner.fullName || "—"}
@@ -211,23 +214,21 @@ export function AccountsWorkspace({ accounts }: AccountsWorkspaceProps) {
                           {statusLabel}
                         </Badge>
                       </td>
-                      <td className="text-muted-foreground">
-                        {account.totalMembers}
-                      </td>
-                      <td className="text-muted-foreground">
+                      <td className="text-slate-400">{account.totalMembers}</td>
+                      <td className="text-slate-400">
                         {account.subscription?.stripeSubscriptionId
                           ? t("stripeLinkedYes")
                           : account.subscription?.stripeCustomerId
                             ? t("stripeCustomerOnly")
                             : "—"}
                       </td>
-                      <td className="text-muted-foreground">
+                      <td className="text-slate-400">
                         {formatDate(account.createdAt, "nl-NL")}
                       </td>
                       <td className="w-8">
                         <Link
                           href={`/platform/admin/accounts/${account.id}`}
-                          className="inline-flex text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-primary"
+                          className="inline-flex text-slate-500 opacity-0 transition-opacity group-hover:opacity-100 hover:text-cyan-300"
                           aria-label={t("openAccount", { name: account.name })}
                         >
                           <ChevronRight className="size-4" />
@@ -239,7 +240,7 @@ export function AccountsWorkspace({ accounts }: AccountsWorkspaceProps) {
               </tbody>
             </table>
           </div>
-        </PageCard>
+        </CockpitCard>
       )}
     </div>
   );

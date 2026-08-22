@@ -18,7 +18,12 @@ import {
   exportPlatformAdministrationCsv,
   type PlatformAdministrationData,
 } from "@/features/platform/platform-administration-actions";
-import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
+import {
+  CockpitAlert,
+  CockpitCard,
+  CockpitKpi,
+  CockpitSection,
+} from "@/features/platform/components/cockpit/admin-cockpit-ui";
 import { useRouter } from "@/i18n/navigation";
 import type { PlatformCostCategory } from "@/types/database";
 
@@ -59,10 +64,12 @@ export function AdministrationWorkspace({ page }: AdministrationWorkspaceProps) 
   }, [page.month, page.year]);
 
   return (
-    <div className="space-y-6">
-      <PageCard className="flex flex-col gap-4 p-3 sm:flex-row sm:items-end sm:justify-between">
+    <div className="space-y-10">
+      <CockpitCard className="flex flex-col gap-4 p-3 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-2">
-          <Label htmlFor="administration-month">{t("period")}</Label>
+          <Label htmlFor="administration-month" className="text-slate-400">
+            {t("period")}
+          </Label>
           <Input
             id="administration-month"
             type="month"
@@ -72,13 +79,14 @@ export function AdministrationWorkspace({ page }: AdministrationWorkspaceProps) 
               if (!value) return;
               router.push(`/platform/admin/administratie?month=${value}`);
             }}
-            className="max-w-[12rem]"
+            className="max-w-[12rem] border-white/10 bg-slate-950/50 text-slate-100"
           />
         </div>
         <Button
           type="button"
           variant="outline"
           disabled={isPending}
+          className="border-white/15 bg-white/5 text-slate-200 hover:border-cyan-400/30 hover:bg-cyan-400/10 hover:text-cyan-100"
           onClick={() => {
             setError(null);
             startTransition(() => {
@@ -99,51 +107,49 @@ export function AdministrationWorkspace({ page }: AdministrationWorkspaceProps) 
           <Download className="size-4" />
           {t("exportCsv")}
         </Button>
-      </PageCard>
+      </CockpitCard>
 
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
+      {error ? <p className="text-sm text-red-300">{error}</p> : null}
 
       {!page.stripe.configured ? (
-        <PageCard className="px-5 py-4 text-sm text-muted-foreground">
-          {t("stripeNotConfigured")}
-        </PageCard>
+        <CockpitAlert>{t("stripeNotConfigured")}</CockpitAlert>
       ) : page.stripe.error ? (
-        <PageCard className="px-5 py-4 text-sm text-destructive">
+        <CockpitAlert variant="error">
           {t("stripeError", { message: page.stripe.error })}
-        </PageCard>
+        </CockpitAlert>
       ) : null}
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-foreground">
-          {t("sections.stripe")}
-        </h2>
-        <p className="text-sm text-muted-foreground">{t("stripeHint")}</p>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <MetaStatCard
+      <CockpitSection title={t("sections.stripe")} hint={t("stripeHint")}>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <CockpitKpi
             label={t("kpi.gross")}
             value={displayMoney(page.stripe.grossLabel)}
             muted={page.stripe.grossLabel == null}
+            variant="hero"
+            accent="cyan"
           />
-          <MetaStatCard
+          <CockpitKpi
+            label={t("kpi.net")}
+            value={displayMoney(page.stripe.netLabel)}
+            muted={page.stripe.netLabel == null}
+            variant="hero"
+            accent="emerald"
+          />
+          <CockpitKpi
             label={t("kpi.tax")}
             value={displayMoney(page.stripe.taxLabel)}
             muted={page.stripe.taxLabel == null}
           />
-          <MetaStatCard
+          <CockpitKpi
             label={t("kpi.fees")}
             value={displayMoney(page.stripe.feesLabel)}
             muted={page.stripe.feesLabel == null}
           />
-          <MetaStatCard
-            label={t("kpi.net")}
-            value={displayMoney(page.stripe.netLabel)}
-            muted={page.stripe.netLabel == null}
-          />
         </div>
 
-        <PageCard className="overflow-hidden">
+        <CockpitCard className="overflow-hidden">
           {page.stripe.invoices.length === 0 ? (
-            <p className="px-5 py-8 text-sm text-muted-foreground">
+            <p className="px-5 py-8 text-sm text-slate-400">
               {t("stripeInvoicesEmpty")}
             </p>
           ) : (
@@ -160,16 +166,16 @@ export function AdministrationWorkspace({ page }: AdministrationWorkspaceProps) 
                 <tbody>
                   {page.stripe.invoices.map((invoice) => (
                     <tr key={invoice.id}>
-                      <td className="text-foreground">
+                      <td className="text-slate-100">
                         {invoice.number || "—"}
                       </td>
-                      <td className="text-muted-foreground">
+                      <td className="text-slate-400">
                         {invoice.customerEmail || "—"}
                       </td>
-                      <td className="text-muted-foreground">
+                      <td className="text-slate-400">
                         {invoice.paidAt?.slice(0, 10) ?? "—"}
                       </td>
-                      <td className="text-muted-foreground">
+                      <td className="text-slate-400">
                         {formatEurFromCents(invoice.totalCents)}
                       </td>
                     </tr>
@@ -178,34 +184,19 @@ export function AdministrationWorkspace({ page }: AdministrationWorkspaceProps) 
               </table>
             </div>
           )}
-        </PageCard>
-      </section>
+        </CockpitCard>
+      </CockpitSection>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-foreground">
-          {t("sections.costs")}
-        </h2>
-        <p className="text-sm text-muted-foreground">{t("costsHint")}</p>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <MetaStatCard
-            label={t("kpi.costsExcl")}
-            value={page.costTotalsLabels.excl}
-          />
-          <MetaStatCard
-            label={t("kpi.costsVat")}
-            value={page.costTotalsLabels.vat}
-          />
-          <MetaStatCard
-            label={t("kpi.costsIncl")}
-            value={page.costTotalsLabels.incl}
-          />
+      <CockpitSection title={t("sections.costs")} hint={t("costsHint")}>
+        <div className="grid gap-4 sm:grid-cols-3">
+          <CockpitKpi label={t("kpi.costsExcl")} value={page.costTotalsLabels.excl} />
+          <CockpitKpi label={t("kpi.costsVat")} value={page.costTotalsLabels.vat} />
+          <CockpitKpi label={t("kpi.costsIncl")} value={page.costTotalsLabels.incl} />
         </div>
 
-        <PageCard className="overflow-hidden">
+        <CockpitCard className="overflow-hidden">
           {page.costs.length === 0 ? (
-            <p className="px-5 py-8 text-sm text-muted-foreground">
-              {t("costsEmpty")}
-            </p>
+            <p className="px-5 py-8 text-sm text-slate-400">{t("costsEmpty")}</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="data-table min-w-[48rem]">
@@ -222,17 +213,13 @@ export function AdministrationWorkspace({ page }: AdministrationWorkspaceProps) 
                 <tbody>
                   {page.costs.map((cost) => (
                     <tr key={cost.id}>
-                      <td className="text-muted-foreground">
-                        {cost.invoiceDate}
-                      </td>
-                      <td className="text-foreground">{cost.description}</td>
-                      <td className="text-muted-foreground">
-                        {cost.vendor || "—"}
-                      </td>
-                      <td className="text-muted-foreground">
+                      <td className="text-slate-400">{cost.invoiceDate}</td>
+                      <td className="text-slate-100">{cost.description}</td>
+                      <td className="text-slate-400">{cost.vendor || "—"}</td>
+                      <td className="text-slate-400">
                         {t(`categories.${cost.category}`)}
                       </td>
-                      <td className="text-muted-foreground">
+                      <td className="text-slate-400">
                         {formatEurFromCents(cost.amountCents)}
                       </td>
                       <td>
@@ -240,7 +227,7 @@ export function AdministrationWorkspace({ page }: AdministrationWorkspaceProps) 
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="text-destructive hover:text-destructive"
+                          className="text-red-300 hover:bg-red-500/10 hover:text-red-200"
                           disabled={isPending}
                           onClick={() => {
                             if (!window.confirm(t("deleteConfirm"))) return;
@@ -268,10 +255,10 @@ export function AdministrationWorkspace({ page }: AdministrationWorkspaceProps) 
               </table>
             </div>
           )}
-        </PageCard>
+        </CockpitCard>
 
-        <PageCard className="p-5">
-          <h3 className="text-sm font-medium text-foreground">
+        <CockpitCard className="p-5">
+          <h3 className="text-[11px] font-medium tracking-[0.2em] text-slate-300 uppercase">
             {t("addCostTitle")}
           </h3>
           <form
@@ -334,7 +321,7 @@ export function AdministrationWorkspace({ page }: AdministrationWorkspaceProps) 
                 id="cost-category"
                 name="category"
                 defaultValue="software"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs"
+                className="flex h-9 w-full rounded-md border border-white/10 bg-slate-950/50 px-3 py-1 text-sm text-slate-100"
               >
                 {PLATFORM_COST_CATEGORIES.map((category) => (
                   <option key={category} value={category}>
@@ -386,13 +373,17 @@ export function AdministrationWorkspace({ page }: AdministrationWorkspaceProps) 
               <Input id="cost-notes" name="notes" />
             </div>
             <div className="sm:col-span-2">
-              <Button type="submit" disabled={isPending}>
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="bg-cyan-500 text-slate-950 hover:bg-cyan-400"
+              >
                 {t("addCost")}
               </Button>
             </div>
           </form>
-        </PageCard>
-      </section>
+        </CockpitCard>
+      </CockpitSection>
     </div>
   );
 }

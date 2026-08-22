@@ -82,7 +82,7 @@ export function CreateUserForm({ organizations }: CreateUserFormProps) {
     >
       <div className="space-y-2">
         <Label htmlFor="fullName">{t("fullName")}</Label>
-        <Input id="fullName" name="fullName" required autoComplete="off" />
+        <Input id="fullName" name="fullName" required autoComplete="off" className="border-white/10 bg-slate-950/50 text-slate-100" />
       </div>
       <div className="space-y-2">
         <Label htmlFor="email">{t("email")}</Label>
@@ -91,6 +91,7 @@ export function CreateUserForm({ organizations }: CreateUserFormProps) {
           name="email"
           type="email"
           required
+          className="border-white/10 bg-slate-950/50 text-slate-100"
           autoComplete="off"
         />
       </div>
@@ -103,8 +104,9 @@ export function CreateUserForm({ organizations }: CreateUserFormProps) {
           required
           minLength={8}
           autoComplete="new-password"
+          className="border-white/10 bg-slate-950/50 text-slate-100"
         />
-        <p className="text-xs text-muted-foreground">{t("passwordHint")}</p>
+        <p className="text-xs text-slate-500">{t("passwordHint")}</p>
       </div>
       <div className="space-y-2">
         <Label htmlFor="role">{t("role")}</Label>
@@ -113,7 +115,7 @@ export function CreateUserForm({ organizations }: CreateUserFormProps) {
           name="role"
           value={role}
           onChange={(event) => setRole(event.target.value as UserRole)}
-          className="border-input bg-background h-9 w-full rounded-lg border px-3 text-sm"
+          className="border-white/10 bg-slate-950/50 text-slate-100"
         >
           {ROLE_OPTIONS.map((option) => (
             <option key={option} value={option}>
@@ -126,8 +128,13 @@ export function CreateUserForm({ organizations }: CreateUserFormProps) {
       {needsNewOrg ? (
         <div className="space-y-2">
           <Label htmlFor="organizationName">{t("organizationName")}</Label>
-          <Input id="organizationName" name="organizationName" required />
-          <p className="text-xs text-muted-foreground">
+          <Input
+            id="organizationName"
+            name="organizationName"
+            required
+            className="border-white/10 bg-slate-950/50 text-slate-100"
+          />
+          <p className="text-xs text-slate-500">
             {t("organizationNameHint")}
           </p>
         </div>
@@ -140,7 +147,7 @@ export function CreateUserForm({ organizations }: CreateUserFormProps) {
             id="organizationId"
             name="organizationId"
             required
-            className="border-input bg-background h-9 w-full rounded-lg border px-3 text-sm"
+            className="border-white/10 bg-slate-950/50 text-slate-100"
             defaultValue=""
           >
             <option value="" disabled>
@@ -155,9 +162,13 @@ export function CreateUserForm({ organizations }: CreateUserFormProps) {
         </div>
       ) : null}
 
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
+      {error ? <p className="text-sm text-red-300">{error}</p> : null}
 
-      <Button type="submit" disabled={pending} className="w-fit">
+      <Button
+        type="submit"
+        disabled={pending}
+        className="w-fit bg-cyan-500 text-slate-950 hover:bg-cyan-400"
+      >
         {pending ? tCommon("loading") : t("create")}
       </Button>
     </form>

@@ -9,7 +9,7 @@ import {
   deletePlatformUser,
   type PlatformUserRow,
 } from "@/features/platform/users-actions";
-import { PageCard } from "@/features/shell/components/page-card";
+import { CockpitCard } from "@/features/platform/components/cockpit/admin-cockpit-ui";
 import { Link } from "@/i18n/navigation";
 
 type UsersTableProps = {
@@ -27,16 +27,16 @@ export function UsersTable({ users, allowDelete = true }: UsersTableProps) {
 
   if (users.length === 0) {
     return (
-      <PageCard className="px-5 py-8 text-sm text-muted-foreground">
+      <CockpitCard className="px-5 py-8 text-sm text-slate-400">
         {t("empty")}
-      </PageCard>
+      </CockpitCard>
     );
   }
 
   return (
     <div className="space-y-2">
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
-      <PageCard className="overflow-hidden">
+      {error ? <p className="text-sm text-red-300">{error}</p> : null}
+      <CockpitCard className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="data-table min-w-[40rem]">
             <thead>
@@ -44,34 +44,29 @@ export function UsersTable({ users, allowDelete = true }: UsersTableProps) {
                 <th>{t("columns.name")}</th>
                 <th>{t("columns.email")}</th>
                 <th>{t("columns.memberships")}</th>
-                {allowDelete ? (
-                  <th>{t("columns.actions")}</th>
-                ) : null}
+                {allowDelete ? <th>{t("columns.actions")}</th> : null}
               </tr>
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr
-                  key={user.id}
-                  className="align-top"
-                >
-                  <td className="text-foreground">
+                <tr key={user.id} className="align-top">
+                  <td>
                     <Link
                       href={`/platform/admin/gebruikers/${user.id}`}
-                      className="hover:text-primary"
+                      className="admin-cockpit-link font-medium text-slate-100"
                     >
                       {user.fullName || "—"}
                     </Link>
                   </td>
-                  <td className="text-foreground">
+                  <td>
                     <Link
                       href={`/platform/admin/gebruikers/${user.id}`}
-                      className="hover:text-primary"
+                      className="admin-cockpit-link text-slate-300"
                     >
                       {user.email || "—"}
                     </Link>
                   </td>
-                  <td className="text-muted-foreground">
+                  <td className="text-slate-400">
                     {user.memberships.length === 0
                       ? "—"
                       : user.memberships
@@ -87,7 +82,7 @@ export function UsersTable({ users, allowDelete = true }: UsersTableProps) {
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="text-destructive hover:text-destructive"
+                        className="text-red-300 hover:bg-red-500/10 hover:text-red-200"
                         disabled={isPending && pendingId === user.id}
                         onClick={() => {
                           const label = user.email || user.fullName || user.id;
@@ -129,7 +124,7 @@ export function UsersTable({ users, allowDelete = true }: UsersTableProps) {
             </tbody>
           </table>
         </div>
-      </PageCard>
+      </CockpitCard>
     </div>
   );
 }

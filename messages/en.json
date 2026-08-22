@@ -1758,8 +1758,20 @@
     }
   },
   "platform": {
+    "cockpit": {
+      "controlRoom": "Control room",
+      "exitToApp": "Back to app",
+      "nav": {
+        "aria": "Platform admin navigation",
+        "dashboard": "Dashboard",
+        "accounts": "Accounts",
+        "users": "Users",
+        "administration": "Administration"
+      }
+    },
     "dashboard": {
       "title": "Admin",
+      "cockpitSubtitle": "Live platform signals — revenue from Stripe, growth from WerkOS.",
       "stripeNotConfigured": "Stripe is not connected. Revenue KPIs appear only when STRIPE_SECRET_KEY is configured.",
       "stripeError": "Could not load Stripe data: {message}",
       "revenueHint": "Revenue from Stripe — no estimates.",

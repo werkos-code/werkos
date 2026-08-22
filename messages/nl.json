@@ -1758,8 +1758,20 @@
     }
   },
   "platform": {
+    "cockpit": {
+      "controlRoom": "Control room",
+      "exitToApp": "Naar app",
+      "nav": {
+        "aria": "Platform admin navigatie",
+        "dashboard": "Dashboard",
+        "accounts": "Accounts",
+        "users": "Gebruikers",
+        "administration": "Administratie"
+      }
+    },
     "dashboard": {
       "title": "Admin",
+      "cockpitSubtitle": "Live platformsignalen — omzet uit Stripe, groei uit WerkOS.",
       "stripeNotConfigured": "Stripe is niet gekoppeld. Omzet-KPI's tonen we pas wanneer STRIPE_SECRET_KEY is geconfigureerd.",
       "stripeError": "Stripe-data kon niet worden geladen: {message}",
       "revenueHint": "Omzet uit Stripe — geen schattingen.",

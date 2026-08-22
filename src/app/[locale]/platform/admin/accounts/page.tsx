@@ -1,8 +1,9 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { AccountsWorkspace } from "@/features/platform/components/accounts-workspace";
+import { AdminCockpitPage } from "@/features/platform/components/cockpit/admin-cockpit-page";
+import { CockpitAlert } from "@/features/platform/components/cockpit/admin-cockpit-ui";
 import { loadPlatformAccountsPage } from "@/features/platform/accounts-actions";
-import { ShellPage } from "@/features/shell/components/shell-page";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -14,12 +15,12 @@ export default async function PlatformAccountsPage({ params }: Props) {
   const pageData = await loadPlatformAccountsPage();
 
   return (
-    <ShellPage title={t("title")}>
+    <AdminCockpitPage title={t("title")}>
       {pageData.error ? (
-        <p className="text-sm text-destructive">{pageData.error}</p>
+        <CockpitAlert variant="error">{pageData.error}</CockpitAlert>
       ) : (
         <AccountsWorkspace accounts={pageData.accounts ?? []} />
       )}
-    </ShellPage>
+    </AdminCockpitPage>
   );
 }

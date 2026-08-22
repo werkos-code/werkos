@@ -1738,8 +1738,20 @@
     }
   },
   "platform": {
+    "cockpit": {
+      "controlRoom": "Control room",
+      "exitToApp": "Zur App",
+      "nav": {
+        "aria": "Platform-Admin-Navigation",
+        "dashboard": "Dashboard",
+        "accounts": "Accounts",
+        "users": "Benutzer",
+        "administration": "Verwaltung"
+      }
+    },
     "dashboard": {
       "title": "Admin",
+      "cockpitSubtitle": "Live-Plattformsignale — Umsatz aus Stripe, Wachstum aus WerkOS.",
       "stripeNotConfigured": "Stripe ist nicht verbunden. Umsatz-KPIs erscheinen erst, wenn STRIPE_SECRET_KEY konfiguriert ist.",
       "stripeError": "Stripe-Daten konnten nicht geladen werden: {message}",
       "revenueHint": "Umsatz aus Stripe — keine Schätzungen.",

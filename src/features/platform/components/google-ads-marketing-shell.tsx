@@ -4,7 +4,12 @@ import type {
   GoogleAdsAttributionMetrics,
   GoogleAdsPlatformMetrics,
 } from "@/features/platform/lib/google-ads-platform-metrics";
-import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
+import {
+  CockpitAlert,
+  CockpitCard,
+  CockpitKpi,
+  CockpitSection,
+} from "@/features/platform/components/cockpit/admin-cockpit-ui";
 
 type GoogleAdsMarketingShellProps = {
   metrics: GoogleAdsPlatformMetrics;
@@ -33,38 +38,33 @@ export async function GoogleAdsMarketingShell({
   );
 
   return (
-    <section className="space-y-3">
-      <h2 className="text-sm font-medium text-foreground">{t("title")}</h2>
-      <p className="text-sm text-muted-foreground">{t("hint")}</p>
-
+    <CockpitSection title={t("title")} hint={t("hint")}>
       {!metrics.configured ? (
-        <PageCard className="px-5 py-4 text-sm text-muted-foreground">
-          {t("notConfigured")}
-        </PageCard>
+        <CockpitAlert>{t("notConfigured")}</CockpitAlert>
       ) : null}
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        <MetaStatCard
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <CockpitKpi
           label={t("kpi.spend")}
           value={displayMoney(metrics.spendLabel)}
           muted={metrics.spendLabel == null}
         />
-        <MetaStatCard
+        <CockpitKpi
           label={t("kpi.clicks")}
           value={displayMetric(metrics.clicks)}
           muted={metrics.clicks == null}
         />
-        <MetaStatCard
+        <CockpitKpi
           label={t("kpi.impressions")}
           value={displayMetric(metrics.impressions)}
           muted={metrics.impressions == null}
         />
-        <MetaStatCard
+        <CockpitKpi
           label={t("kpi.cpc")}
           value={displayMoney(metrics.cpcLabel)}
           muted={metrics.cpcLabel == null}
         />
-        <MetaStatCard
+        <CockpitKpi
           label={t("kpi.roas")}
           value={displayMetric(metrics.roas)}
           muted={metrics.roas == null}
@@ -72,24 +72,22 @@ export async function GoogleAdsMarketingShell({
       </div>
 
       {variant === "administration" ? (
-        <PageCard className="px-5 py-4 text-sm text-muted-foreground">
-          {t("exportPending")}
-        </PageCard>
+        <CockpitAlert>{t("exportPending")}</CockpitAlert>
       ) : null}
 
       {attribution ? (
-        <PageCard className="space-y-2 px-5 py-4">
-          <p className="text-sm font-medium text-foreground">
+        <CockpitCard className="space-y-2 px-5 py-4">
+          <p className="text-sm font-medium text-slate-200">
             {t("attributionTitle")}
           </p>
-          <p className="text-sm text-muted-foreground">{t("attributionHint")}</p>
-          <p className="text-sm text-foreground">
+          <p className="text-sm text-slate-400">{t("attributionHint")}</p>
+          <p className="text-2xl font-light tabular-nums text-cyan-100">
             {t("attributionSignups", {
               count: attribution.signupsWithGclid,
             })}
           </p>
-        </PageCard>
+        </CockpitCard>
       ) : null}
-    </section>
+    </CockpitSection>
   );
 }

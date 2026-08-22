@@ -2,7 +2,12 @@ import { getTranslations } from "next-intl/server";
 
 import type { PlatformDashboardData } from "@/features/platform/platform-dashboard-actions";
 import { GoogleAdsMarketingShell } from "@/features/platform/components/google-ads-marketing-shell";
-import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
+import {
+  CockpitAlert,
+  CockpitCard,
+  CockpitKpi,
+  CockpitSection,
+} from "@/features/platform/components/cockpit/admin-cockpit-ui";
 import type { SubscriptionStatus } from "@/types/database";
 
 type AdminDashboardPanelProps = {
@@ -44,71 +49,74 @@ export async function AdminDashboardPanel({
   ] as const;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       {!dashboard.stripe.configured ? (
-        <PageCard className="px-5 py-4 text-sm text-muted-foreground">
-          {t("stripeNotConfigured")}
-        </PageCard>
+        <CockpitAlert>{t("stripeNotConfigured")}</CockpitAlert>
       ) : dashboard.stripe.error ? (
-        <PageCard className="px-5 py-4 text-sm text-destructive">
+        <CockpitAlert variant="error">
           {t("stripeError", { message: dashboard.stripe.error })}
-        </PageCard>
+        </CockpitAlert>
       ) : null}
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-foreground">
-          {t("sections.revenue")}
-        </h2>
-        <p className="text-sm text-muted-foreground">{t("revenueHint")}</p>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <MetaStatCard
+      <CockpitSection title={t("sections.revenue")} hint={t("revenueHint")}>
+        <div className="grid gap-4 lg:grid-cols-12">
+          <CockpitKpi
+            className="lg:col-span-3"
             label={t("kpi.mrr")}
             value={displayMoney(dashboard.stripe.mrrLabel)}
             muted={dashboard.stripe.mrrLabel == null}
+            variant="hero"
+            accent="cyan"
           />
-          <MetaStatCard
+          <CockpitKpi
+            className="lg:col-span-3"
             label={t("kpi.arr")}
             value={displayMoney(dashboard.stripe.arrLabel)}
             muted={dashboard.stripe.arrLabel == null}
+            variant="hero"
+            accent="blue"
           />
-          <MetaStatCard
+          <CockpitKpi
+            className="lg:col-span-3"
             label={t("kpi.stripeActive")}
             value={displayMetric(dashboard.stripe.activeSubscriptions)}
             muted={dashboard.stripe.activeSubscriptions == null}
+            accent="emerald"
           />
-          <MetaStatCard
+          <CockpitKpi
+            className="lg:col-span-3"
             label={t("kpi.canceledLast30Days")}
             value={displayMetric(dashboard.stripe.canceledLast30Days)}
             muted={dashboard.stripe.canceledLast30Days == null}
           />
         </div>
-      </section>
+      </CockpitSection>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-foreground">
-          {t("sections.subscriptions")}
-        </h2>
-        <p className="text-sm text-muted-foreground">{t("subscriptionsHint")}</p>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <MetaStatCard
+      <CockpitSection
+        title={t("sections.subscriptions")}
+        hint={t("subscriptionsHint")}
+      >
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <CockpitKpi
             label={t("kpi.accounts")}
             value={String(dashboard.organizations.total)}
           />
-          <MetaStatCard
+          <CockpitKpi
             label={tBilling("active")}
             value={String(dashboard.subscriptions.active)}
+            accent="emerald"
           />
-          <MetaStatCard
+          <CockpitKpi
             label={tBilling("trialing")}
             value={String(dashboard.subscriptions.trialing)}
           />
-          <MetaStatCard
+          <CockpitKpi
             label={t("kpi.pendingCancel")}
             value={String(dashboard.subscriptions.cancelAtPeriodEnd)}
           />
         </div>
 
-        <PageCard className="overflow-hidden">
+        <CockpitCard className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="data-table min-w-[32rem]">
               <thead>
@@ -120,36 +128,32 @@ export async function AdminDashboardPanel({
               <tbody>
                 {SUBSCRIPTION_STATUS_ORDER.map((status) => (
                   <tr key={status}>
-                    <td className="text-foreground">{tBilling(status)}</td>
-                    <td className="text-muted-foreground">
+                    <td className="text-slate-100">{tBilling(status)}</td>
+                    <td className="text-slate-400">
                       {dashboard.subscriptions[status]}
                     </td>
                   </tr>
                 ))}
                 <tr>
-                  <td className="text-foreground">{t("status.missing")}</td>
-                  <td className="text-muted-foreground">
+                  <td className="text-slate-100">{t("status.missing")}</td>
+                  <td className="text-slate-400">
                     {dashboard.subscriptions.missing}
                   </td>
                 </tr>
                 <tr>
-                  <td className="text-foreground">{t("kpi.stripeLinked")}</td>
-                  <td className="text-muted-foreground">
+                  <td className="text-slate-100">{t("kpi.stripeLinked")}</td>
+                  <td className="text-slate-400">
                     {dashboard.subscriptions.stripeLinked}
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </PageCard>
-      </section>
+        </CockpitCard>
+      </CockpitSection>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-foreground">
-          {t("sections.funnel")}
-        </h2>
-        <p className="text-sm text-muted-foreground">{t("funnelHint")}</p>
-        <PageCard className="overflow-hidden">
+      <CockpitSection title={t("sections.funnel")} hint={t("funnelHint")}>
+        <CockpitCard className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="data-table min-w-[32rem]">
               <thead>
@@ -161,17 +165,15 @@ export async function AdminDashboardPanel({
               <tbody>
                 {funnelSteps.map((step) => (
                   <tr key={step.key}>
-                    <td className="text-foreground">
-                      {t(`funnel.${step.key}`)}
-                    </td>
-                    <td className="text-muted-foreground">{step.value}</td>
+                    <td className="text-slate-100">{t(`funnel.${step.key}`)}</td>
+                    <td className="text-slate-400">{step.value}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </PageCard>
-      </section>
+        </CockpitCard>
+      </CockpitSection>
 
       <GoogleAdsMarketingShell
         metrics={dashboard.googleAds}

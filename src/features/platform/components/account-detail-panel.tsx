@@ -1,12 +1,18 @@
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { ORGANIZATION_ROLES } from "@/config/roles";
 import { ImpersonateUserButton } from "@/features/platform/components/impersonate-user-button";
 import type { PlatformAccountDetail } from "@/features/platform/accounts-actions";
-import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
+import {
+  CockpitCard,
+  CockpitField,
+  CockpitFieldGrid,
+  CockpitKpi,
+  CockpitSection,
+  CockpitSubheading,
+} from "@/features/platform/components/cockpit/admin-cockpit-ui";
 import { Link } from "@/i18n/navigation";
 import type { OrganizationRole, SubscriptionStatus } from "@/types/database";
 
@@ -70,7 +76,6 @@ export async function AccountDetailPanel({
   const t = await getTranslations("platform.accounts");
   const tUsers = await getTranslations("platform.users.roles");
   const tBilling = await getTranslations("billingSettings.status");
-  const tShell = await getTranslations("shell");
 
   const status = account.subscription?.status ?? null;
   const statusLabel = status ? tBilling(status) : t("noSubscription");
@@ -81,39 +86,27 @@ export async function AccountDetailPanel({
   })).filter((group) => group.members.length > 0);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <Button variant="ghost" size="sm" className="-ml-2 mb-3" asChild>
-          <Link href="/platform/admin/accounts">
-            <ArrowLeft className="size-4" />
-            {tShell("back")}
-          </Link>
-        </Button>
-
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">
-              {account.name}
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">{account.slug}</p>
-          </div>
-          <Badge variant={statusBadgeVariant(status)}>{statusLabel}</Badge>
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="text-sm text-slate-400">{account.slug}</p>
         </div>
-        {account.owner ? (
-          <ImpersonateUserButton
-            targetUserId={account.owner.id}
-            organizationId={account.id}
-            label={t("detail.impersonateOwner")}
-          />
-        ) : null}
+        <Badge variant={statusBadgeVariant(status)}>{statusLabel}</Badge>
       </div>
+      {account.owner ? (
+        <ImpersonateUserButton
+          targetUserId={account.owner.id}
+          organizationId={account.id}
+          label={t("detail.impersonateOwner")}
+        />
+      ) : null}
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <MetaStatCard
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <CockpitKpi
           label={t("detail.kpi.members")}
           value={String(account.totalMembers)}
         />
-        <MetaStatCard
+        <CockpitKpi
           label={t("detail.kpi.officeSeats")}
           value={
             account.subscription
@@ -121,7 +114,7 @@ export async function AccountDetailPanel({
               : "—"
           }
         />
-        <MetaStatCard
+        <CockpitKpi
           label={t("detail.kpi.fieldSeats")}
           value={
             account.subscription
@@ -129,30 +122,24 @@ export async function AccountDetailPanel({
               : "—"
           }
         />
-        <MetaStatCard
+        <CockpitKpi
           label={t("detail.kpi.paidSince")}
           value={formatDate(account.subscriptionStartedAt, locale)}
         />
       </div>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-foreground">
-          {t("detail.sections.members")}
-        </h2>
+      <CockpitSection title={t("detail.sections.members")}>
         {membersByRole.length === 0 ? (
-          <PageCard className="px-5 py-8 text-sm text-muted-foreground">
+          <CockpitCard className="px-5 py-8 text-sm text-slate-400">
             {t("detail.membersEmpty")}
-          </PageCard>
+          </CockpitCard>
         ) : (
           membersByRole.map(({ role, members }) => (
-            <PageCard key={role} className="overflow-hidden">
-              <div className="border-b border-border/60 px-5 py-3">
-                <h3 className="text-sm font-medium text-foreground">
+            <CockpitCard key={role} className="overflow-hidden">
+              <div className="border-b border-white/10 px-5 py-3">
+                <CockpitSubheading count={members.length}>
                   {tUsers(role as OrganizationRole)}
-                  <span className="ml-2 font-normal text-muted-foreground">
-                    ({members.length})
-                  </span>
-                </h3>
+                </CockpitSubheading>
               </div>
               <div className="overflow-x-auto">
                 <table className="data-table min-w-[36rem]">
@@ -167,18 +154,18 @@ export async function AccountDetailPanel({
                   <tbody>
                     {members.map((member) => (
                       <tr key={`${member.userId}-${member.role}`}>
-                        <td className="text-foreground">
+                        <td className="text-slate-100">
                           <Link
                             href={`/platform/admin/gebruikers/${member.userId}`}
-                            className="hover:text-primary"
+                            className="admin-cockpit-link"
                           >
                             {member.fullName || "—"}
                           </Link>
                         </td>
-                        <td className="text-muted-foreground">
+                        <td className="text-slate-400">
                           {member.email || "—"}
                         </td>
-                        <td className="text-muted-foreground">
+                        <td className="text-slate-400">
                           {formatDate(member.joinedAt, locale)}
                         </td>
                         <td>
@@ -193,179 +180,130 @@ export async function AccountDetailPanel({
                   </tbody>
                 </table>
               </div>
-            </PageCard>
+            </CockpitCard>
           ))
         )}
-      </section>
+      </CockpitSection>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-foreground">
-          {t("detail.sections.subscription")}
-        </h2>
-        <PageCard className="space-y-4 p-5">
+      <CockpitSection title={t("detail.sections.subscription")}>
+        <CockpitCard className="space-y-4 p-5">
           {!account.subscription ? (
-            <p className="text-sm text-muted-foreground">
-              {t("detail.subscriptionEmpty")}
-            </p>
+            <p className="text-sm text-slate-400">{t("detail.subscriptionEmpty")}</p>
           ) : (
-            <dl className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  {t("detail.fields.status")}
-                </dt>
-                <dd className="mt-1 text-sm text-foreground">{statusLabel}</dd>
-              </div>
-              <div>
-                <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  {t("detail.fields.trialEnds")}
-                </dt>
-                <dd className="mt-1 text-sm text-foreground">
-                  {formatDate(account.subscription.trialEndsAt, locale)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  {t("detail.fields.periodEnd")}
-                </dt>
-                <dd className="mt-1 text-sm text-foreground">
-                  {formatDate(account.subscription.currentPeriodEnd, locale)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  {t("detail.fields.cancelAtPeriodEnd")}
-                </dt>
-                <dd className="mt-1 text-sm text-foreground">
-                  {account.subscription.cancelAtPeriodEnd
+            <CockpitFieldGrid>
+              <CockpitField label={t("detail.fields.status")} value={statusLabel} />
+              <CockpitField
+                label={t("detail.fields.trialEnds")}
+                value={formatDate(account.subscription.trialEndsAt, locale)}
+              />
+              <CockpitField
+                label={t("detail.fields.periodEnd")}
+                value={formatDate(account.subscription.currentPeriodEnd, locale)}
+              />
+              <CockpitField
+                label={t("detail.fields.cancelAtPeriodEnd")}
+                value={
+                  account.subscription.cancelAtPeriodEnd
                     ? t("detail.yes")
-                    : t("detail.no")}
-                </dd>
+                    : t("detail.no")
+                }
+              />
+              <div className="sm:col-span-2">
+                <CockpitField
+                  label={t("detail.fields.stripeCustomer")}
+                  value={
+                    account.subscription.stripeCustomerId ? (
+                      <a
+                        href={stripeCustomerUrl(
+                          account.subscription.stripeCustomerId,
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="admin-cockpit-link inline-flex items-center gap-1"
+                      >
+                        {account.subscription.stripeCustomerId}
+                        <ExternalLink className="size-3.5" />
+                      </a>
+                    ) : (
+                      "—"
+                    )
+                  }
+                />
               </div>
               <div className="sm:col-span-2">
-                <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  {t("detail.fields.stripeCustomer")}
-                </dt>
-                <dd className="mt-1 text-sm text-foreground">
-                  {account.subscription.stripeCustomerId ? (
-                    <a
-                      href={stripeCustomerUrl(
-                        account.subscription.stripeCustomerId,
-                      )}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-primary hover:underline"
-                    >
-                      {account.subscription.stripeCustomerId}
-                      <ExternalLink className="size-3.5" />
-                    </a>
-                  ) : (
-                    "—"
-                  )}
-                </dd>
+                <CockpitField
+                  label={t("detail.fields.stripeSubscription")}
+                  value={
+                    account.subscription.stripeSubscriptionId ? (
+                      <a
+                        href={stripeSubscriptionUrl(
+                          account.subscription.stripeSubscriptionId,
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="admin-cockpit-link inline-flex items-center gap-1"
+                      >
+                        {account.subscription.stripeSubscriptionId}
+                        <ExternalLink className="size-3.5" />
+                      </a>
+                    ) : (
+                      "—"
+                    )
+                  }
+                />
               </div>
-              <div className="sm:col-span-2">
-                <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  {t("detail.fields.stripeSubscription")}
-                </dt>
-                <dd className="mt-1 text-sm text-foreground">
-                  {account.subscription.stripeSubscriptionId ? (
-                    <a
-                      href={stripeSubscriptionUrl(
-                        account.subscription.stripeSubscriptionId,
-                      )}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-primary hover:underline"
-                    >
-                      {account.subscription.stripeSubscriptionId}
-                      <ExternalLink className="size-3.5" />
-                    </a>
-                  ) : (
-                    "—"
-                  )}
-                </dd>
-              </div>
-            </dl>
+            </CockpitFieldGrid>
           )}
-        </PageCard>
-      </section>
+        </CockpitCard>
+      </CockpitSection>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-foreground">
-          {t("detail.sections.attribution")}
-        </h2>
-        <PageCard className="space-y-4 p-5">
+      <CockpitSection title={t("detail.sections.attribution")}>
+        <CockpitCard className="space-y-4 p-5">
           {!account.owner ? (
-            <p className="text-sm text-muted-foreground">
-              {t("detail.noOwner")}
-            </p>
+            <p className="text-sm text-slate-400">{t("detail.noOwner")}</p>
           ) : !account.ownerAttribution ? (
-            <p className="text-sm text-muted-foreground">—</p>
+            <p className="text-sm text-slate-400">—</p>
           ) : (
             <>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-slate-400">
                 {t("detail.attributionHint", {
                   name: account.owner.fullName || account.owner.email,
                 })}
               </p>
-              <dl className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                    {t("detail.fields.signupAt")}
-                  </dt>
-                  <dd className="mt-1 text-sm text-foreground">
-                    {formatDate(account.ownerAttribution.signupAt, locale, true)}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                    {t("detail.fields.firstTouchAt")}
-                  </dt>
-                  <dd className="mt-1 text-sm text-foreground">
-                    {formatDate(
-                      account.ownerAttribution.firstTouchAt,
-                      locale,
-                      true,
-                    )}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                    gclid
-                  </dt>
-                  <dd className="mt-1 text-sm text-foreground">
-                    {account.ownerAttribution.gclid || "—"}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                    utm_source
-                  </dt>
-                  <dd className="mt-1 text-sm text-foreground">
-                    {account.ownerAttribution.utmSource || "—"}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                    utm_medium
-                  </dt>
-                  <dd className="mt-1 text-sm text-foreground">
-                    {account.ownerAttribution.utmMedium || "—"}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                    utm_campaign
-                  </dt>
-                  <dd className="mt-1 text-sm text-foreground">
-                    {account.ownerAttribution.utmCampaign || "—"}
-                  </dd>
-                </div>
-              </dl>
+              <CockpitFieldGrid>
+                <CockpitField
+                  label={t("detail.fields.signupAt")}
+                  value={formatDate(account.ownerAttribution.signupAt, locale, true)}
+                />
+                <CockpitField
+                  label={t("detail.fields.firstTouchAt")}
+                  value={formatDate(
+                    account.ownerAttribution.firstTouchAt,
+                    locale,
+                    true,
+                  )}
+                />
+                <CockpitField
+                  label="gclid"
+                  value={account.ownerAttribution.gclid || "—"}
+                />
+                <CockpitField
+                  label="utm_source"
+                  value={account.ownerAttribution.utmSource || "—"}
+                />
+                <CockpitField
+                  label="utm_medium"
+                  value={account.ownerAttribution.utmMedium || "—"}
+                />
+                <CockpitField
+                  label="utm_campaign"
+                  value={account.ownerAttribution.utmCampaign || "—"}
+                />
+              </CockpitFieldGrid>
             </>
           )}
-        </PageCard>
-      </section>
+        </CockpitCard>
+      </CockpitSection>
     </div>
   );
 }

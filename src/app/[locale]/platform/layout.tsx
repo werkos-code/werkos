@@ -1,4 +1,4 @@
-import { AppShell } from "@/features/shell/components/app-shell";
+import { AdminCockpitShell } from "@/features/platform/components/cockpit/admin-cockpit-shell";
 
 type Props = {
   children: React.ReactNode;
@@ -6,9 +6,5 @@ type Props = {
 };
 
 export default function PlatformLayout({ children, params }: Props) {
-  return (
-    <AppShell params={params} requireSuperAdminSession>
-      {children}
-    </AppShell>
-  );
+  return <AdminCockpitShell params={params}>{children}</AdminCockpitShell>;
 }

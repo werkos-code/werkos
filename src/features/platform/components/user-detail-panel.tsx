@@ -1,12 +1,16 @@
-import { ArrowLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { USER_ROLES } from "@/config/roles";
 import type { PlatformUserDetail } from "@/features/platform/users-actions";
 import { ImpersonateUserButton } from "@/features/platform/components/impersonate-user-button";
-import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
+import {
+  CockpitCard,
+  CockpitField,
+  CockpitFieldGrid,
+  CockpitKpi,
+  CockpitSection,
+} from "@/features/platform/components/cockpit/admin-cockpit-ui";
 import { Link } from "@/i18n/navigation";
 import type { OrganizationRole } from "@/types/database";
 
@@ -37,62 +41,48 @@ function formatDate(
 
 export async function UserDetailPanel({ user, locale }: UserDetailPanelProps) {
   const t = await getTranslations("platform.users");
-  const tShell = await getTranslations("shell");
 
   const isSuperAdmin = user.platformRole === USER_ROLES.SUPER_ADMIN;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <Button variant="ghost" size="sm" className="-ml-2 mb-3" asChild>
-          <Link href="/platform/admin/gebruikers">
-            <ArrowLeft className="size-4" />
-            {tShell("back")}
-          </Link>
-        </Button>
-
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">
-              {user.fullName || user.email || "—"}
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">{user.email}</p>
-          </div>
-          {isSuperAdmin ? (
-            <Badge>{t(`roles.${USER_ROLES.SUPER_ADMIN}`)}</Badge>
-          ) : null}
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="text-sm text-slate-400">{user.email}</p>
         </div>
+        {isSuperAdmin ? (
+          <Badge className="border-cyan-400/30 bg-cyan-400/10 text-cyan-100">
+            {t(`roles.${USER_ROLES.SUPER_ADMIN}`)}
+          </Badge>
+        ) : null}
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <MetaStatCard
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <CockpitKpi
           label={t("detail.kpi.created")}
           value={formatDate(user.createdAt, locale, true)}
         />
-        <MetaStatCard
+        <CockpitKpi
           label={t("detail.kpi.signup")}
           value={formatDate(user.signupAt, locale, true)}
         />
-        <MetaStatCard
+        <CockpitKpi
           label={t("detail.kpi.memberships")}
           value={String(user.memberships.length)}
         />
-        <MetaStatCard
+        <CockpitKpi
           label={t("detail.kpi.paid")}
           value={formatDate(user.subscriptionStartedAt, locale)}
         />
       </div>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-foreground">
-          {t("detail.sections.memberships")}
-        </h2>
+      <CockpitSection title={t("detail.sections.memberships")}>
         {user.memberships.length === 0 ? (
-          <PageCard className="px-5 py-8 text-sm text-muted-foreground">
+          <CockpitCard className="px-5 py-8 text-sm text-slate-400">
             {t("detail.membershipsEmpty")}
-          </PageCard>
+          </CockpitCard>
         ) : (
-          <PageCard className="overflow-hidden">
+          <CockpitCard className="overflow-hidden">
             <div className="overflow-x-auto">
               <table className="data-table min-w-[40rem]">
                 <thead>
@@ -108,12 +98,12 @@ export async function UserDetailPanel({ user, locale }: UserDetailPanelProps) {
                       <td>
                         <Link
                           href={`/platform/admin/accounts/${membership.organizationId}`}
-                          className="font-medium text-foreground hover:text-primary"
+                          className="admin-cockpit-link font-medium"
                         >
                           {membership.organizationName}
                         </Link>
                       </td>
-                      <td className="text-muted-foreground">
+                      <td className="text-slate-400">
                         {t(`roles.${membership.role as OrganizationRole}`)}
                       </td>
                       <td>
@@ -131,101 +121,50 @@ export async function UserDetailPanel({ user, locale }: UserDetailPanelProps) {
                 </tbody>
               </table>
             </div>
-          </PageCard>
+          </CockpitCard>
         )}
-      </section>
+      </CockpitSection>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-foreground">
-          {t("detail.sections.milestones")}
-        </h2>
-        <PageCard className="p-5">
-          <dl className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                {t("detail.fields.companyCreated")}
-              </dt>
-              <dd className="mt-1 text-sm text-foreground">
-                {formatDate(user.companyCreatedAt, locale, true)}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                {t("detail.fields.firstProject")}
-              </dt>
-              <dd className="mt-1 text-sm text-foreground">
-                {formatDate(user.firstProjectAt, locale, true)}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                {t("detail.fields.firstQuote")}
-              </dt>
-              <dd className="mt-1 text-sm text-foreground">
-                {formatDate(user.firstQuoteAt, locale, true)}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                {t("detail.fields.subscriptionStarted")}
-              </dt>
-              <dd className="mt-1 text-sm text-foreground">
-                {formatDate(user.subscriptionStartedAt, locale, true)}
-              </dd>
-            </div>
-          </dl>
-        </PageCard>
-      </section>
+      <CockpitSection title={t("detail.sections.milestones")}>
+        <CockpitCard className="p-5">
+          <CockpitFieldGrid>
+            <CockpitField
+              label={t("detail.fields.companyCreated")}
+              value={formatDate(user.companyCreatedAt, locale, true)}
+            />
+            <CockpitField
+              label={t("detail.fields.firstProject")}
+              value={formatDate(user.firstProjectAt, locale, true)}
+            />
+            <CockpitField
+              label={t("detail.fields.firstQuote")}
+              value={formatDate(user.firstQuoteAt, locale, true)}
+            />
+            <CockpitField
+              label={t("detail.fields.subscriptionStarted")}
+              value={formatDate(user.subscriptionStartedAt, locale, true)}
+            />
+          </CockpitFieldGrid>
+        </CockpitCard>
+      </CockpitSection>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-foreground">
-          {t("detail.sections.attribution")}
-        </h2>
-        <PageCard className="p-5">
-          <dl className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                {t("detail.fields.firstTouch")}
-              </dt>
-              <dd className="mt-1 text-sm text-foreground">
-                {formatDate(user.firstTouchAt, locale, true)}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                gclid
-              </dt>
-              <dd className="mt-1 text-sm text-foreground">
-                {user.gclid || "—"}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                utm_source
-              </dt>
-              <dd className="mt-1 text-sm text-foreground">
-                {user.utmSource || "—"}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                utm_medium
-              </dt>
-              <dd className="mt-1 text-sm text-foreground">
-                {user.utmMedium || "—"}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                utm_campaign
-              </dt>
-              <dd className="mt-1 text-sm text-foreground">
-                {user.utmCampaign || "—"}
-              </dd>
-            </div>
-          </dl>
-        </PageCard>
-      </section>
+      <CockpitSection title={t("detail.sections.attribution")}>
+        <CockpitCard className="p-5">
+          <CockpitFieldGrid>
+            <CockpitField
+              label={t("detail.fields.firstTouch")}
+              value={formatDate(user.firstTouchAt, locale, true)}
+            />
+            <CockpitField label="gclid" value={user.gclid || "—"} />
+            <CockpitField label="utm_source" value={user.utmSource || "—"} />
+            <CockpitField label="utm_medium" value={user.utmMedium || "—"} />
+            <CockpitField
+              label="utm_campaign"
+              value={user.utmCampaign || "—"}
+            />
+          </CockpitFieldGrid>
+        </CockpitCard>
+      </CockpitSection>
     </div>
   );
 }

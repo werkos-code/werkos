@@ -1,5 +1,9 @@
-import { PageSkeleton } from "@/features/shell/components/page-skeleton";
-
 export default function PlatformLoading() {
-  return <PageSkeleton />;
+  return (
+    <div className="admin-cockpit flex min-h-[50vh] items-center justify-center">
+      <p className="text-sm tracking-[0.24em] text-cyan-400/60 uppercase">
+        Loading
+      </p>
+    </div>
+  );
 }
