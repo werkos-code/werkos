@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
 import type { PlatformDashboardData } from "@/features/platform/platform-dashboard-actions";
+import { GoogleAdsMarketingShell } from "@/features/platform/components/google-ads-marketing-shell";
 import { MetaStatCard, PageCard } from "@/features/shell/components/page-card";
 import type { SubscriptionStatus } from "@/types/database";
 
@@ -171,6 +172,11 @@ export async function AdminDashboardPanel({
           </div>
         </PageCard>
       </section>
+
+      <GoogleAdsMarketingShell
+        metrics={dashboard.googleAds}
+        attribution={dashboard.attribution}
+      />
     </div>
   );
 }

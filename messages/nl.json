@@ -1793,6 +1793,21 @@
         "firstProject": "Eerste project",
         "firstQuote": "Eerste offerte",
         "paidSubscriptions": "Betaald abonnement"
+      },
+      "googleAds": {
+        "title": "Marketing (Google Ads)",
+        "hint": "Advertentieprestaties uit Google Ads — geen schattingen.",
+        "notConfigured": "Google Ads is nog niet gekoppeld. KPI's verschijnen zodra GOOGLE_ADS_* credentials zijn geconfigureerd.",
+        "attributionTitle": "Attributie (WerkOS)",
+        "attributionHint": "First-touch gclid opgeslagen in WerkOS — nog geen Google Ads API-data.",
+        "attributionSignups": "Profielen met gclid: {count}",
+        "kpi": {
+          "spend": "Ad spend",
+          "clicks": "Clicks",
+          "impressions": "Impressies",
+          "cpc": "CPC",
+          "roas": "ROAS"
+        }
       }
     },
     "administration": {
@@ -1852,6 +1867,22 @@
         "office": "Kantoor",
         "professional_services": "Dienstverlening",
         "other": "Overig"
+      },
+      "googleAds": {
+        "title": "Marketing (Google Ads)",
+        "hint": "Advertentie-uitgaven per maand uit Google Ads.",
+        "notConfigured": "Google Ads is nog niet gekoppeld. Data verschijnt zodra GOOGLE_ADS_* credentials zijn geconfigureerd.",
+        "exportPending": "Google Ads export volgt zodra de API-koppeling actief is.",
+        "attributionTitle": "Attributie (WerkOS)",
+        "attributionHint": "First-touch gclid in WerkOS — ter referentie naast toekomstige Ads-data.",
+        "attributionSignups": "Profielen met gclid: {count}",
+        "kpi": {
+          "spend": "Ad spend",
+          "clicks": "Clicks",
+          "impressions": "Impressies",
+          "cpc": "CPC",
+          "roas": "ROAS"
+        }
       }
     },
     "accounts": {

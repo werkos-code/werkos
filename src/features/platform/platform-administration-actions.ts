@@ -4,6 +4,11 @@ import { formatEurFromCents } from "@/config/pricing";
 import { assertCallerIsSuperAdmin } from "@/features/platform/lib/platform-auth";
 import { monthDateRange } from "@/features/platform/lib/administration-month";
 import {
+  fetchGoogleAdsMonthMetrics,
+  type GoogleAdsAttributionMetrics,
+  type GoogleAdsPlatformMetrics,
+} from "@/features/platform/lib/google-ads-platform-metrics";
+import {
   buildAdministrationCsv,
   fetchStripeMonthSummary,
   type StripeMonthSummary,
@@ -45,6 +50,8 @@ export type PlatformAdministrationData = {
     vat: string;
     incl: string;
   };
+  googleAds: GoogleAdsPlatformMetrics;
+  attribution: GoogleAdsAttributionMetrics;
 };
 
 function computeCostTotals(
@@ -75,7 +82,8 @@ export async function loadPlatformAdministrationPage(input: {
   const admin = createAdminClient();
   const { start, end } = monthDateRange(input.year, input.month);
 
-  const [stripeMetrics, { data: costs, error: costsError }] = await Promise.all([
+  const [stripeMetrics, { data: costs, error: costsError }, googleAdsMetrics, signupsWithGclidResult] =
+    await Promise.all([
     fetchStripeMonthSummary(input.year, input.month),
     admin
       .from("platform_operating_costs")
@@ -85,9 +93,17 @@ export async function loadPlatformAdministrationPage(input: {
       .gte("invoice_date", start)
       .lte("invoice_date", end)
       .order("invoice_date", { ascending: false }),
+    fetchGoogleAdsMonthMetrics(input),
+    admin
+      .from("profiles")
+      .select("*", { count: "exact", head: true })
+      .not("gclid", "is", null),
   ]);
 
   if (costsError) return { error: costsError.message };
+  if (signupsWithGclidResult.error) {
+    return { error: signupsWithGclidResult.error.message };
+  }
 
   const mappedCosts: PlatformOperatingCostRow[] = (costs ?? []).map((row) => ({
     id: row.id,
@@ -132,6 +148,10 @@ export async function loadPlatformAdministrationPage(input: {
         excl: formatEurFromCents(costTotals.exclCents),
         vat: formatEurFromCents(costTotals.vatCents),
         incl: formatEurFromCents(costTotals.inclCents),
+      },
+      googleAds: googleAdsMetrics,
+      attribution: {
+        signupsWithGclid: signupsWithGclidResult.count ?? 0,
       },
     },
   };

@@ -1793,6 +1793,21 @@
         "firstProject": "First project",
         "firstQuote": "First quote",
         "paidSubscriptions": "Paid subscription"
+      },
+      "googleAds": {
+        "title": "Marketing (Google Ads)",
+        "hint": "Ad performance from Google Ads — no estimates.",
+        "notConfigured": "Google Ads is not connected. KPIs appear once GOOGLE_ADS_* credentials are configured.",
+        "attributionTitle": "Attribution (WerkOS)",
+        "attributionHint": "First-touch gclid stored in WerkOS — not Google Ads API data yet.",
+        "attributionSignups": "Profiles with gclid: {count}",
+        "kpi": {
+          "spend": "Ad spend",
+          "clicks": "Clicks",
+          "impressions": "Impressions",
+          "cpc": "CPC",
+          "roas": "ROAS"
+        }
       }
     },
     "administration": {
@@ -1852,6 +1867,22 @@
         "office": "Office",
         "professional_services": "Professional services",
         "other": "Other"
+      },
+      "googleAds": {
+        "title": "Marketing (Google Ads)",
+        "hint": "Monthly ad spend from Google Ads.",
+        "notConfigured": "Google Ads is not connected. Data appears once GOOGLE_ADS_* credentials are configured.",
+        "exportPending": "Google Ads export follows when the API connection is active.",
+        "attributionTitle": "Attribution (WerkOS)",
+        "attributionHint": "First-touch gclid in WerkOS — for reference alongside future Ads data.",
+        "attributionSignups": "Profiles with gclid: {count}",
+        "kpi": {
+          "spend": "Ad spend",
+          "clicks": "Clicks",
+          "impressions": "Impressions",
+          "cpc": "CPC",
+          "roas": "ROAS"
+        }
       }
     },
     "accounts": {

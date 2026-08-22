@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { AdministrationWorkspace } from "@/features/platform/components/administration-workspace";
+import { GoogleAdsMarketingShell } from "@/features/platform/components/google-ads-marketing-shell";
 import { parseAdministrationMonth } from "@/features/platform/lib/administration-month";
 import { loadPlatformAdministrationPage } from "@/features/platform/platform-administration-actions";
 import { ShellPage } from "@/features/shell/components/shell-page";
@@ -30,7 +31,14 @@ export default async function PlatformAdministrationPage({
       {pageData.error ? (
         <p className="text-sm text-destructive">{pageData.error}</p>
       ) : pageData.page ? (
-        <AdministrationWorkspace page={pageData.page} />
+        <div className="space-y-6">
+          <AdministrationWorkspace page={pageData.page} />
+          <GoogleAdsMarketingShell
+            metrics={pageData.page.googleAds}
+            attribution={pageData.page.attribution}
+            variant="administration"
+          />
+        </div>
       ) : null}
     </ShellPage>
   );

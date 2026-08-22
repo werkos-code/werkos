@@ -2,6 +2,11 @@
 
 import { formatEurFromCents } from "@/config/pricing";
 import { assertCallerIsSuperAdmin } from "@/features/platform/lib/platform-auth";
+import {
+  fetchGoogleAdsPlatformMetrics,
+  type GoogleAdsAttributionMetrics,
+  type GoogleAdsPlatformMetrics,
+} from "@/features/platform/lib/google-ads-platform-metrics";
 import { fetchStripePlatformMetrics } from "@/features/platform/lib/stripe-platform-metrics";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { SubscriptionStatus } from "@/types/database";
@@ -35,6 +40,8 @@ export type PlatformDashboardData = {
     stripeLinked: number;
   };
   funnel: PlatformFunnelMetrics;
+  googleAds: GoogleAdsPlatformMetrics;
+  attribution: GoogleAdsAttributionMetrics;
 };
 
 function emptySubscriptionBreakdown(): PlatformSubscriptionBreakdown {
@@ -79,6 +86,7 @@ export async function loadPlatformDashboard(): Promise<{
 
   const [
     stripeMetrics,
+    googleAdsMetrics,
     organizationsResult,
     subscriptionsResult,
     signups,
@@ -86,8 +94,10 @@ export async function loadPlatformDashboard(): Promise<{
     firstProject,
     firstQuote,
     paidSubscriptionsResult,
+    signupsWithGclidResult,
   ] = await Promise.all([
     fetchStripePlatformMetrics(),
+    fetchGoogleAdsPlatformMetrics(),
     admin.from("organizations").select("*", { count: "exact", head: true }),
     admin.from("subscriptions").select("status, cancel_at_period_end, stripe_subscription_id"),
     countProfilesWhere(admin, "signup_at"),
@@ -98,6 +108,10 @@ export async function loadPlatformDashboard(): Promise<{
       .from("organizations")
       .select("*", { count: "exact", head: true })
       .not("subscription_started_at", "is", null),
+    admin
+      .from("profiles")
+      .select("*", { count: "exact", head: true })
+      .not("gclid", "is", null),
   ]);
 
   if (organizationsResult.error) {
@@ -108,6 +122,9 @@ export async function loadPlatformDashboard(): Promise<{
   }
   if (paidSubscriptionsResult.error) {
     return { error: paidSubscriptionsResult.error.message };
+  }
+  if (signupsWithGclidResult.error) {
+    return { error: signupsWithGclidResult.error.message };
   }
 
   const breakdown = emptySubscriptionBreakdown();
@@ -162,6 +179,10 @@ export async function loadPlatformDashboard(): Promise<{
         firstProject,
         firstQuote,
         paidSubscriptions: paidSubscriptionsResult.count ?? 0,
+      },
+      googleAds: googleAdsMetrics,
+      attribution: {
+        signupsWithGclid: signupsWithGclidResult.count ?? 0,
       },
     },
   };
