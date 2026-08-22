@@ -1954,6 +1954,11 @@
       "days": "Dagen",
       "people": "Personen"
     },
+    "resourcePeriod": {
+      "day": "Dag",
+      "week": "Week",
+      "month": "Maand"
+    },
     "resourceEmptyStaff": "Geen medewerkers om te tonen. Pas het persoonsfilter aan.",
     "setup": {
       "title": "Stel je planning in",
@@ -1961,7 +1966,7 @@
       "workDays": "Werkdagen",
       "startHour": "Start werkdag",
       "endHour": "Einde werkdag",
-      "hoursHint": "Maximaal {hours} uur per werkdag in de kalender.",
+      "hoursHint": "Lange taken worden over deze uren verdeeld. Je kunt altijd buiten werktijden plannen.",
       "workDaysRequired": "Selecteer minimaal één werkdag.",
       "hoursInvalid": "Eindtijd moet na starttijd liggen.",
       "save": "Planning starten",

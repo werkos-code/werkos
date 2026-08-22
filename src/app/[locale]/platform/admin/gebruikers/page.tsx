@@ -1,15 +1,18 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { CreateUserForm } from "@/features/platform/components/create-user-form";
+import { UsersGlobalSearch } from "@/features/platform/components/users-global-search";
 import { UsersTable } from "@/features/platform/components/users-table";
 import {
   groupUsersByRole,
-  PLATFORM_USER_TABLE_ORDER,
 } from "@/features/platform/lib/group-users-by-role";
 import { loadPlatformUsersPage } from "@/features/platform/users-actions";
 import { USER_ROLES } from "@/config/roles";
+import { Button } from "@/components/ui/button";
 import { PageCard } from "@/features/shell/components/page-card";
 import { ShellPage } from "@/features/shell/components/shell-page";
+import { Link } from "@/i18n/navigation";
+import { ChevronRight } from "lucide-react";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -20,6 +23,8 @@ export default async function PlatformUsersPage({ params }: Props) {
 
   const pageData = await loadPlatformUsersPage();
   const grouped = groupUsersByRole(pageData.users ?? []);
+  const superAdmins = grouped[USER_ROLES.SUPER_ADMIN];
+  const unassigned = grouped.unassigned;
 
   return (
     <ShellPage title={t("title")}>
@@ -27,30 +32,49 @@ export default async function PlatformUsersPage({ params }: Props) {
         <p className="text-sm text-destructive">{pageData.error}</p>
       ) : (
         <div className="space-y-8">
-          {PLATFORM_USER_TABLE_ORDER.map((roleKey) => {
-            const users = grouped[roleKey];
-            if (roleKey === "unassigned" && users.length === 0) return null;
+          <UsersGlobalSearch users={pageData.users ?? []} />
 
-            const title =
-              roleKey === "unassigned"
-                ? t("sections.unassigned")
-                : t(`roles.${roleKey}`);
+          <section className="space-y-3">
+            <h2 className="text-sm font-medium text-foreground">
+              {t(`roles.${USER_ROLES.SUPER_ADMIN}`)}
+              <span className="ml-2 font-normal text-muted-foreground">
+                ({superAdmins.length})
+              </span>
+            </h2>
+            <UsersTable users={superAdmins} allowDelete={false} />
+          </section>
 
-            return (
-              <section key={roleKey} className="space-y-3">
-                <h2 className="text-sm font-medium text-foreground">
-                  {title}
-                  <span className="ml-2 font-normal text-muted-foreground">
-                    ({users.length})
-                  </span>
-                </h2>
-                <UsersTable
-                  users={users}
-                  allowDelete={roleKey !== USER_ROLES.SUPER_ADMIN}
-                />
-              </section>
-            );
-          })}
+          <section className="space-y-3">
+            <h2 className="text-sm font-medium text-foreground">
+              {t("sections.accounts")}
+            </h2>
+            <PageCard className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1">
+                <p className="text-sm text-foreground">{t("accountsHint")}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("accountsDescription")}
+                </p>
+              </div>
+              <Button asChild variant="outline" className="shrink-0">
+                <Link href="/platform/admin/accounts">
+                  {t("accountsCta")}
+                  <ChevronRight className="size-4" />
+                </Link>
+              </Button>
+            </PageCard>
+          </section>
+
+          {unassigned.length > 0 ? (
+            <section className="space-y-3">
+              <h2 className="text-sm font-medium text-foreground">
+                {t("sections.unassigned")}
+                <span className="ml-2 font-normal text-muted-foreground">
+                  ({unassigned.length})
+                </span>
+              </h2>
+              <UsersTable users={unassigned} />
+            </section>
+          ) : null}
         </div>
       )}
 

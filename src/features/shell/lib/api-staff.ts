@@ -1,35 +1,39 @@
 import { getOrganizationAccessAdmin } from "@/features/billing/lib/get-organization-access";
 import { isOrgStaffRole } from "@/features/projects/lib/project-status";
+import { getAppSession } from "@/features/shell/lib/require-organization";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function requireApiStaff() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
+  const session = await getAppSession();
+  if (!session) {
     return {
       error: NextResponse.json({ error: "unauthorized" }, { status: 401 }),
     };
   }
 
-  const { data: membership } = await supabase
-    .from("organization_memberships")
-    .select("organization_id, role")
-    .eq("user_id", user.id)
-    .limit(1)
-    .maybeSingle();
+  if (session.isImpersonating && session.impersonation && session.organizationId) {
+    return {
+      userId: session.impersonation.targetUserId,
+      organizationId: session.organizationId,
+    };
+  }
 
-  if (!membership || !isOrgStaffRole(membership.role)) {
+  if (!session.organizationId || !isOrgStaffRole(session.role)) {
+    if (session.isSuperAdmin && session.organizationId) {
+      return {
+        userId: session.user.id,
+        organizationId: session.organizationId,
+      };
+    }
     return {
       error: NextResponse.json({ error: "forbidden" }, { status: 403 }),
     };
   }
 
   return {
-    userId: user.id,
-    organizationId: membership.organization_id,
+    userId: session.user.id,
+    organizationId: session.organizationId,
   };
 }
 
@@ -37,6 +41,11 @@ export async function requireApiStaff() {
 export async function requireWritableApiStaff() {
   const gate = await requireApiStaff();
   if ("error" in gate) return gate;
+
+  const session = await getAppSession();
+  if (session?.isImpersonating) {
+    return gate;
+  }
 
   const access = await getOrganizationAccessAdmin(gate.organizationId, {
     userId: gate.userId,

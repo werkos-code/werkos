@@ -40,6 +40,8 @@ export type ShellNavSection = {
   defaultOpen?: boolean;
   /** When false, section is always open and the header is not a toggle. Default true. */
   collapsible?: boolean;
+  /** When true, no section header is rendered (items only). */
+  hideLabel?: boolean;
   /** Subtle top rule before this section */
   dividerBefore?: boolean;
   items: ShellNavItem[];
@@ -198,22 +200,31 @@ export const NEW_REQUEST_HREF = "/opdrachten/nieuw" as const;
 
 export const PLATFORM_ADMIN_NAV: ShellNavSection = {
   id: "platform-admin",
-  labelKey: "platform",
-  defaultOpen: false,
+  labelKey: "admin",
+  hideLabel: true,
+  collapsible: false,
   dividerBefore: true,
   items: [
     {
       id: "admin",
+      href: "/platform/admin",
       labelKey: "admin",
       icon: Shield,
-      children: [
-        { href: "/platform/admin", labelKey: "adminDashboard" },
-        { href: "/platform/admin/gebruikers", labelKey: "adminUsers" },
-        {
-          href: "/platform/admin/administratie",
-          labelKey: "adminAdministration",
-        },
-      ],
+    },
+    {
+      id: "admin-accounts",
+      href: "/platform/admin/accounts",
+      labelKey: "adminAccounts",
+    },
+    {
+      id: "admin-users",
+      href: "/platform/admin/gebruikers",
+      labelKey: "adminUsers",
+    },
+    {
+      id: "admin-administration",
+      href: "/platform/admin/administratie",
+      labelKey: "adminAdministration",
     },
   ],
 };

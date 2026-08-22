@@ -1934,6 +1934,11 @@
       "days": "Tage",
       "people": "Personen"
     },
+    "resourcePeriod": {
+      "day": "Tag",
+      "week": "Woche",
+      "month": "Monat"
+    },
     "resourceEmptyStaff": "Keine Mitarbeiter anzuzeigen. Personenfilter anpassen.",
     "setup": {
       "title": "Planung einrichten",
@@ -1941,7 +1946,7 @@
       "workDays": "Arbeitstage",
       "startHour": "Tagesbeginn",
       "endHour": "Tagesende",
-      "hoursHint": "Maximal {hours} Stunden pro Arbeitstag im Kalender.",
+      "hoursHint": "Lange Aufgaben werden über diese Stunden verteilt. Planung außerhalb der Arbeitszeiten ist jederzeit möglich.",
       "workDaysRequired": "Mindestens einen Arbeitstag wählen.",
       "hoursInvalid": "Endzeit muss nach der Startzeit liegen.",
       "save": "Planung starten",

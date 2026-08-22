@@ -35,7 +35,7 @@ type AppSidebarProps = {
 
 function isPathActive(pathname: string, href: string) {
   if (pathname === href) return true;
-  if (href === "/dashboard") return false;
+  if (href === "/dashboard" || href === "/platform/admin") return false;
   return pathname.startsWith(`${href}/`);
 }
 
@@ -190,7 +190,7 @@ function NavSection({
             )}
           />
         </button>
-      ) : (
+      ) : section.hideLabel ? null : (
         <p className="px-2.5 py-1 text-[10px] font-medium tracking-[0.08em] text-sidebar-muted/70 uppercase">
           {t(`sections.${section.labelKey}`)}
         </p>

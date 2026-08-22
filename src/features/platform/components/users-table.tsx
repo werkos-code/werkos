@@ -10,6 +10,7 @@ import {
   type PlatformUserRow,
 } from "@/features/platform/users-actions";
 import { PageCard } from "@/features/shell/components/page-card";
+import { Link } from "@/i18n/navigation";
 
 type UsersTableProps = {
   users: PlatformUserRow[];
@@ -55,10 +56,20 @@ export function UsersTable({ users, allowDelete = true }: UsersTableProps) {
                   className="align-top"
                 >
                   <td className="text-foreground">
-                    {user.fullName || "—"}
+                    <Link
+                      href={`/platform/admin/gebruikers/${user.id}`}
+                      className="hover:text-primary"
+                    >
+                      {user.fullName || "—"}
+                    </Link>
                   </td>
                   <td className="text-foreground">
-                    {user.email || "—"}
+                    <Link
+                      href={`/platform/admin/gebruikers/${user.id}`}
+                      className="hover:text-primary"
+                    >
+                      {user.email || "—"}
+                    </Link>
                   </td>
                   <td className="text-muted-foreground">
                     {user.memberships.length === 0

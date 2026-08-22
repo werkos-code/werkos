@@ -1,9 +1,23 @@
 import { cache } from "react";
 import type { User } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
 
 import { USER_ROLES } from "@/config/roles";
+import {
+  IMPERSONATION_COOKIE_NAME,
+  parseImpersonationCookie,
+} from "@/features/platform/lib/impersonation-cookie";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
+
+export type ImpersonationContext = {
+  targetUserId: string;
+  targetUserName: string;
+  targetEmail: string;
+  organizationId: string;
+  organizationName: string;
+};
 
 export type AppSession = {
   user: User;
@@ -13,7 +27,90 @@ export type AppSession = {
   userName: string;
   platformRole: "super_admin" | null;
   isSuperAdmin: boolean;
+  isImpersonating: boolean;
+  impersonation: ImpersonationContext | null;
 };
+
+async function lookupAuthEmail(userId: string): Promise<string> {
+  const admin = createAdminClient();
+  const { data, error } = await admin.auth.admin.getUserById(userId);
+  if (error || !data.user?.email) return "";
+  return data.user.email;
+}
+
+async function loadImpersonationOverlay(actor: User): Promise<{
+  organizationId: string | null;
+  role: string | null;
+  organizationName: string | null;
+  userName: string;
+  impersonation: ImpersonationContext | null;
+}> {
+  const cookieStore = await cookies();
+  const payload = parseImpersonationCookie(
+    cookieStore.get(IMPERSONATION_COOKIE_NAME)?.value,
+  );
+
+  if (!payload || payload.actorId !== actor.id) {
+    return {
+      organizationId: null,
+      role: null,
+      organizationName: null,
+      userName: "",
+      impersonation: null,
+    };
+  }
+
+  const supabase = await createClient();
+  const [{ data: membership }, { data: targetProfile }, { data: organization }] =
+    await Promise.all([
+      supabase
+        .from("organization_memberships")
+        .select("role")
+        .eq("organization_id", payload.organizationId)
+        .eq("user_id", payload.targetUserId)
+        .maybeSingle(),
+      supabase
+        .from("profiles")
+        .select("full_name, platform_role")
+        .eq("id", payload.targetUserId)
+        .maybeSingle(),
+      supabase
+        .from("organizations")
+        .select("name")
+        .eq("id", payload.organizationId)
+        .maybeSingle(),
+    ]);
+
+  if (!membership || targetProfile?.platform_role === USER_ROLES.SUPER_ADMIN) {
+    return {
+      organizationId: null,
+      role: null,
+      organizationName: null,
+      userName: "",
+      impersonation: null,
+    };
+  }
+
+  const targetEmail = await lookupAuthEmail(payload.targetUserId);
+  const targetUserName =
+    targetProfile?.full_name?.trim() ||
+    targetEmail.split("@")[0] ||
+    "Gebruiker";
+
+  return {
+    organizationId: payload.organizationId,
+    role: membership.role,
+    organizationName: organization?.name ?? null,
+    userName: targetUserName,
+    impersonation: {
+      targetUserId: payload.targetUserId,
+      targetUserName,
+      targetEmail,
+      organizationId: payload.organizationId,
+      organizationName: organization?.name ?? "",
+    },
+  };
+}
 
 /**
  * Request-scoped session load (React.cache).
@@ -45,8 +142,25 @@ export const getAppSession = cache(async (): Promise<AppSession | null> => {
   const profile = profileResult.data;
   const platformRole = (profile?.platform_role ?? null) as "super_admin" | null;
   const isSuperAdmin = platformRole === USER_ROLES.SUPER_ADMIN;
-  const userName =
+  const actorUserName =
     profile?.full_name?.trim() || user.email?.split("@")[0] || "Gebruiker";
+
+  if (isSuperAdmin) {
+    const overlay = await loadImpersonationOverlay(user);
+    if (overlay.impersonation) {
+      return {
+        user,
+        organizationId: overlay.organizationId,
+        role: overlay.role,
+        organizationName: overlay.organizationName,
+        userName: overlay.userName,
+        platformRole,
+        isSuperAdmin,
+        isImpersonating: true,
+        impersonation: overlay.impersonation,
+      };
+    }
+  }
 
   if (!membership) {
     return {
@@ -54,9 +168,11 @@ export const getAppSession = cache(async (): Promise<AppSession | null> => {
       organizationId: null,
       role: null,
       organizationName: null,
-      userName,
+      userName: actorUserName,
       platformRole,
       isSuperAdmin,
+      isImpersonating: false,
+      impersonation: null,
     };
   }
 
@@ -71,9 +187,11 @@ export const getAppSession = cache(async (): Promise<AppSession | null> => {
     organizationId: membership.organization_id,
     role: membership.role,
     organizationName: organization?.name ?? null,
-    userName,
+    userName: actorUserName,
     platformRole,
     isSuperAdmin,
+    isImpersonating: false,
+    impersonation: null,
   };
 });
 
@@ -84,7 +202,6 @@ export async function requireOrganization(locale: string): Promise<AppSession> {
     redirect({ href: "/login", locale });
   }
 
-  // redirect() never returns; narrow for TypeScript
   const resolved = session!;
 
   if (!resolved.organizationId) {

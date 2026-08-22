@@ -18,6 +18,15 @@ export async function getStaffOrgContext(): Promise<StaffOrgContext> {
   const session = await getAppSession();
   if (!session) return { error: "unauthorized" };
 
+  if (session.isImpersonating && session.impersonation && session.organizationId) {
+    const supabase = await createClient();
+    return {
+      supabase,
+      userId: session.impersonation.targetUserId,
+      organizationId: session.organizationId,
+    };
+  }
+
   if (!session.organizationId) return { error: "no_organization" };
   if (!isOrgStaffRole(session.role)) return { error: "forbidden" };
 
@@ -35,6 +44,16 @@ export async function getWritableStaffOrgContext(): Promise<
 > {
   const session = await getAppSession();
   if (!session) return { error: "unauthorized" };
+
+  if (session.isImpersonating && session.impersonation && session.organizationId) {
+    const supabase = await createClient();
+    return {
+      supabase,
+      userId: session.impersonation.targetUserId,
+      organizationId: session.organizationId,
+    };
+  }
+
   if (!session.organizationId) return { error: "no_organization" };
   if (!isOrgStaffRole(session.role)) return { error: "forbidden" };
 

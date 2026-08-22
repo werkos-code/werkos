@@ -1954,6 +1954,11 @@
       "days": "Days",
       "people": "People"
     },
+    "resourcePeriod": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month"
+    },
     "resourceEmptyStaff": "No team members to show. Adjust the person filter.",
     "setup": {
       "title": "Set up your schedule",
@@ -1961,7 +1966,7 @@
       "workDays": "Work days",
       "startHour": "Day starts",
       "endHour": "Day ends",
-      "hoursHint": "Up to {hours} hours per work day in the calendar.",
+      "hoursHint": "Long tasks are split across these hours. You can always schedule outside work hours.",
       "workDaysRequired": "Select at least one work day.",
       "hoursInvalid": "End time must be after start time.",
       "save": "Start planning",

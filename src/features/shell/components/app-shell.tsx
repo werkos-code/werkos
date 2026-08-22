@@ -7,6 +7,7 @@ import { TrialExpiredDialog } from "@/features/billing/components/trial-expired-
 import { fullOrgAccess } from "@/features/billing/lib/entitlements";
 import { getOrganizationAccess } from "@/features/billing/lib/get-organization-access";
 import { GuidedSetupCoachHost } from "@/features/guided-setup/components/guided-setup-coach-host";
+import { ImpersonationBanner } from "@/features/platform/components/impersonation-banner";
 import { AppSidebar } from "@/features/shell/components/app-sidebar";
 import { ShellChromeProvider } from "@/features/shell/components/shell-chrome-provider";
 import {
@@ -36,13 +37,17 @@ async function AppShellWithAccess({
     ? await requireSuperAdmin(locale)
     : await requireOrganization(locale);
 
-  const access = session.isSuperAdmin
-    ? fullOrgAccess()
-    : session.organizationId
-      ? await getOrganizationAccess(session.organizationId, {
-          userId: session.user.id,
-        })
-      : fullOrgAccess();
+  const access =
+    session.isSuperAdmin && !session.isImpersonating
+      ? fullOrgAccess()
+      : session.organizationId
+        ? await getOrganizationAccess(session.organizationId, {
+            userId: session.isImpersonating
+              ? session.impersonation!.targetUserId
+              : session.user.id,
+            isSuperAdmin: session.isSuperAdmin && !session.isImpersonating,
+          })
+        : fullOrgAccess();
 
   return (
     <OrgAccessProvider access={access}>
@@ -52,6 +57,18 @@ async function AppShellWithAccess({
         isSuperAdmin={session.isSuperAdmin}
       />
       <div className="min-h-dvh pl-[var(--sidebar-width)] print:pl-0">
+        {session.isImpersonating && session.impersonation ? (
+          <ImpersonationBanner
+            targetName={session.impersonation.targetUserName}
+            targetEmail={session.impersonation.targetEmail}
+            organizationName={session.impersonation.organizationName}
+            returnHref={
+              requireSuperAdminSession
+                ? "/platform/admin/gebruikers"
+                : undefined
+            }
+          />
+        ) : null}
         {children}
       </div>
       {!requireSuperAdminSession ? (
