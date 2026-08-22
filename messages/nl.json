@@ -1771,25 +1771,33 @@
     },
     "dashboard": {
       "title": "Admin",
-      "cockpitSubtitle": "Live platformsignalen — omzet uit Stripe, groei uit WerkOS.",
-      "stripeNotConfigured": "Stripe is niet gekoppeld. Omzet-KPI's tonen we pas wanneer STRIPE_SECRET_KEY is geconfigureerd.",
       "stripeError": "Stripe-data kon niet worden geladen: {message}",
-      "revenueHint": "Omzet uit Stripe — geen schattingen.",
-      "subscriptionsHint": "Abonnementsstatus uit de database.",
-      "funnelHint": "Milestone-tellingen uit profielen en organisaties.",
-      "sections": {
-        "revenue": "Omzet (Stripe)",
-        "subscriptions": "Abonnementen",
-        "funnel": "Groei-funnel"
-      },
       "kpi": {
         "mrr": "MRR",
         "arr": "ARR",
-        "stripeActive": "Actief in Stripe",
+        "activeSubscriptions": "Actieve abonnementen",
         "canceledLast30Days": "Opgezegd (30 dagen)",
-        "accounts": "Accounts",
-        "pendingCancel": "Opzegging gepland",
-        "stripeLinked": "Stripe-abonnement gekoppeld"
+        "cac": "CAC",
+        "ltv": "LTV",
+        "churn": "Churn",
+        "monthlyCosts": "Maandelijkse kosten",
+        "pendingCancel": "Opzegging gepland"
+      },
+      "sources": {
+        "mrr": "Som van actieve Stripe-abonnementen, genormaliseerd naar maandbedrag.",
+        "arr": "MRR × 12 uit Stripe.",
+        "activeSubscriptions": "Aantal actieve abonnementen in Stripe.",
+        "canceledLast30Days": "Abonnementen opgezegd in Stripe in de laatste 30 dagen.",
+        "cac": "Google Ads spend + marketingkosten (administratie) gedeeld door nieuwe betalende klanten deze maand.",
+        "ltv": "Gemiddelde totale betaalde omzet per Stripe-klant (alle betaalde facturen).",
+        "churn": "Opgezegde abonnementen (30 dagen) gedeeld door actief + opgezegd in die periode.",
+        "monthlyCosts": "Som handmatige bedrijfskosten incl. btw in administratie (huidige maand).",
+        "googleAdsSpend": "Advertentie-uitgaven uit Google Ads API.",
+        "googleAdsClicks": "Clicks uit Google Ads API.",
+        "googleAdsImpressions": "Impressies uit Google Ads API.",
+        "googleAdsCpc": "Cost per click uit Google Ads API.",
+        "googleAdsRoas": "Return on ad spend: Stripe-omzet gedeeld door ad spend (zodra gekoppeld).",
+        "gclidSignups": "Profielen in WerkOS met opgeslagen gclid (first-touch)."
       },
       "status": {
         "missing": "Geen abonnementsrecord"
@@ -1807,18 +1815,13 @@
         "paidSubscriptions": "Betaald abonnement"
       },
       "googleAds": {
-        "title": "Marketing (Google Ads)",
-        "hint": "Advertentieprestaties uit Google Ads — geen schattingen.",
-        "notConfigured": "Google Ads is nog niet gekoppeld. KPI's verschijnen zodra GOOGLE_ADS_* credentials zijn geconfigureerd.",
-        "attributionTitle": "Attributie (WerkOS)",
-        "attributionHint": "First-touch gclid opgeslagen in WerkOS — nog geen Google Ads API-data.",
-        "attributionSignups": "Profielen met gclid: {count}",
         "kpi": {
           "spend": "Ad spend",
           "clicks": "Clicks",
           "impressions": "Impressies",
           "cpc": "CPC",
-          "roas": "ROAS"
+          "roas": "ROAS",
+          "gclidSignups": "gclid signups"
         }
       }
     },

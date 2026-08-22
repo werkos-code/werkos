@@ -6,6 +6,7 @@ export type StripePlatformMetrics = {
   arrCents: number | null;
   activeSubscriptions: number | null;
   canceledLast30Days: number | null;
+  averageLtvCents: number | null;
   error?: string;
 };
 
@@ -52,6 +53,44 @@ function subscriptionMrrCents(
   return total;
 }
 
+async function fetchAverageLtvCents(stripe: ReturnType<typeof getStripe>): Promise<number | null> {
+  const totalsByCustomer = new Map<string, number>();
+  let startingAfter: string | undefined;
+
+  do {
+    const page = await stripe.invoices.list({
+      status: "paid",
+      limit: 100,
+      starting_after: startingAfter,
+    });
+
+    for (const invoice of page.data) {
+      const customerId =
+        typeof invoice.customer === "string"
+          ? invoice.customer
+          : invoice.customer?.id;
+      if (!customerId || invoice.amount_paid <= 0) continue;
+
+      totalsByCustomer.set(
+        customerId,
+        (totalsByCustomer.get(customerId) ?? 0) + invoice.amount_paid,
+      );
+    }
+
+    startingAfter = page.has_more
+      ? page.data[page.data.length - 1]?.id
+      : undefined;
+  } while (startingAfter);
+
+  if (totalsByCustomer.size === 0) return null;
+
+  const total = [...totalsByCustomer.values()].reduce(
+    (sum, value) => sum + value,
+    0,
+  );
+  return Math.round(total / totalsByCustomer.size);
+}
+
 export async function fetchStripePlatformMetrics(): Promise<StripePlatformMetrics> {
   if (!getStripeSecretKey()) {
     return {
@@ -60,6 +99,7 @@ export async function fetchStripePlatformMetrics(): Promise<StripePlatformMetric
       arrCents: null,
       activeSubscriptions: null,
       canceledLast30Days: null,
+      averageLtvCents: null,
     };
   }
 
@@ -112,12 +152,15 @@ export async function fetchStripePlatformMetrics(): Promise<StripePlatformMetric
         : undefined;
     } while (canceledStartingAfter);
 
+    const averageLtvCents = await fetchAverageLtvCents(stripe);
+
     return {
       configured: true,
       mrrCents,
       arrCents: mrrCents * 12,
       activeSubscriptions,
       canceledLast30Days,
+      averageLtvCents,
     };
   } catch (error) {
     return {
@@ -126,6 +169,7 @@ export async function fetchStripePlatformMetrics(): Promise<StripePlatformMetric
       arrCents: null,
       activeSubscriptions: null,
       canceledLast30Days: null,
+      averageLtvCents: null,
       error: error instanceof Error ? error.message : "stripe_fetch_failed",
     };
   }

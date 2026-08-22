@@ -7,6 +7,11 @@ import {
   type GoogleAdsAttributionMetrics,
   type GoogleAdsPlatformMetrics,
 } from "@/features/platform/lib/google-ads-platform-metrics";
+import {
+  computeSecondaryMetrics,
+  currentMonthRange,
+  type PlatformSecondaryMetrics,
+} from "@/features/platform/lib/platform-dashboard-secondary-metrics";
 import { fetchStripePlatformMetrics } from "@/features/platform/lib/stripe-platform-metrics";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { SubscriptionStatus } from "@/types/database";
@@ -42,6 +47,7 @@ export type PlatformDashboardData = {
   funnel: PlatformFunnelMetrics;
   googleAds: GoogleAdsPlatformMetrics;
   attribution: GoogleAdsAttributionMetrics;
+  secondary: PlatformSecondaryMetrics;
 };
 
 function emptySubscriptionBreakdown(): PlatformSubscriptionBreakdown {
@@ -83,6 +89,7 @@ export async function loadPlatformDashboard(): Promise<{
   if ("error" in gate && gate.error) return { error: gate.error };
 
   const admin = createAdminClient();
+  const { start, end } = currentMonthRange();
 
   const [
     stripeMetrics,
@@ -95,6 +102,8 @@ export async function loadPlatformDashboard(): Promise<{
     firstQuote,
     paidSubscriptionsResult,
     signupsWithGclidResult,
+    operatingCostsResult,
+    newPaidCustomersResult,
   ] = await Promise.all([
     fetchStripePlatformMetrics(),
     fetchGoogleAdsPlatformMetrics(),
@@ -112,6 +121,16 @@ export async function loadPlatformDashboard(): Promise<{
       .from("profiles")
       .select("*", { count: "exact", head: true })
       .not("gclid", "is", null),
+    admin
+      .from("platform_operating_costs")
+      .select("amount_cents, vat_rate_bps, category")
+      .gte("invoice_date", start)
+      .lte("invoice_date", end),
+    admin
+      .from("organizations")
+      .select("*", { count: "exact", head: true })
+      .gte("subscription_started_at", `${start}T00:00:00`)
+      .lte("subscription_started_at", `${end}T23:59:59`),
   ]);
 
   if (organizationsResult.error) {
@@ -125,6 +144,12 @@ export async function loadPlatformDashboard(): Promise<{
   }
   if (signupsWithGclidResult.error) {
     return { error: signupsWithGclidResult.error.message };
+  }
+  if (operatingCostsResult.error) {
+    return { error: operatingCostsResult.error.message };
+  }
+  if (newPaidCustomersResult.error) {
+    return { error: newPaidCustomersResult.error.message };
   }
 
   const breakdown = emptySubscriptionBreakdown();
@@ -146,6 +171,13 @@ export async function loadPlatformDashboard(): Promise<{
   if (orgCount > subscriptionRows) {
     breakdown.missing += orgCount - subscriptionRows;
   }
+
+  const secondary = computeSecondaryMetrics({
+    stripe: stripeMetrics,
+    googleAds: googleAdsMetrics,
+    operatingCosts: operatingCostsResult.data ?? [],
+    newPaidCustomersThisMonth: newPaidCustomersResult.count ?? 0,
+  });
 
   return {
     dashboard: {
@@ -184,6 +216,7 @@ export async function loadPlatformDashboard(): Promise<{
       attribution: {
         signupsWithGclid: signupsWithGclidResult.count ?? 0,
       },
+      secondary,
     },
   };
 }

@@ -1,5 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 
+import { CockpitSourceHint } from "@/features/platform/components/cockpit/cockpit-source-hint";
 import { cn } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
 
@@ -18,6 +19,7 @@ export function CockpitCard({ className, ...props }: CockpitCardProps) {
 type CockpitKpiProps = {
   label: string;
   value: React.ReactNode;
+  source?: string;
   muted?: boolean;
   variant?: "default" | "hero";
   accent?: "cyan" | "blue" | "emerald";
@@ -27,6 +29,7 @@ type CockpitKpiProps = {
 export function CockpitKpi({
   label,
   value,
+  source,
   muted,
   variant = "default",
   accent = "cyan",
@@ -41,6 +44,7 @@ export function CockpitKpi({
         className,
       )}
     >
+      {source ? <CockpitSourceHint text={source} /> : null}
       <div
         className="admin-cockpit-kpi-glow"
         data-accent={accent}
@@ -65,7 +69,7 @@ export function CockpitKpi({
 }
 
 type CockpitSectionProps = {
-  title: string;
+  title?: string;
   hint?: string;
   children: React.ReactNode;
   className?: string;
@@ -79,12 +83,14 @@ export function CockpitSection({
 }: CockpitSectionProps) {
   return (
     <section className={cn("space-y-4", className)}>
-      <div className="flex items-center gap-4">
-        <h2 className="shrink-0 text-[11px] font-medium tracking-[0.24em] text-cyan-300/90 uppercase">
-          {title}
-        </h2>
-        <div className="admin-cockpit-section-line" aria-hidden />
-      </div>
+      {title ? (
+        <div className="flex items-center gap-4">
+          <h2 className="shrink-0 text-[11px] font-medium tracking-[0.24em] text-cyan-300/90 uppercase">
+            {title}
+          </h2>
+          <div className="admin-cockpit-section-line" aria-hidden />
+        </div>
+      ) : null}
       {hint ? <p className="text-sm text-slate-400">{hint}</p> : null}
       {children}
     </section>

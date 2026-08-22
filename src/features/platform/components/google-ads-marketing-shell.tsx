@@ -4,12 +4,7 @@ import type {
   GoogleAdsAttributionMetrics,
   GoogleAdsPlatformMetrics,
 } from "@/features/platform/lib/google-ads-platform-metrics";
-import {
-  CockpitAlert,
-  CockpitCard,
-  CockpitKpi,
-  CockpitSection,
-} from "@/features/platform/components/cockpit/admin-cockpit-ui";
+import { CockpitKpi } from "@/features/platform/components/cockpit/admin-cockpit-ui";
 
 type GoogleAdsMarketingShellProps = {
   metrics: GoogleAdsPlatformMetrics;
@@ -36,58 +31,84 @@ export async function GoogleAdsMarketingShell({
       ? "platform.administration.googleAds"
       : "platform.dashboard.googleAds",
   );
+  const tSource = await getTranslations("platform.dashboard.sources");
 
-  return (
-    <CockpitSection title={t("title")} hint={t("hint")}>
-      {!metrics.configured ? (
-        <CockpitAlert>{t("notConfigured")}</CockpitAlert>
-      ) : null}
-
+  if (variant === "administration") {
+    return (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <CockpitKpi
           label={t("kpi.spend")}
           value={displayMoney(metrics.spendLabel)}
+          source={tSource("googleAdsSpend")}
           muted={metrics.spendLabel == null}
         />
         <CockpitKpi
           label={t("kpi.clicks")}
           value={displayMetric(metrics.clicks)}
+          source={tSource("googleAdsClicks")}
           muted={metrics.clicks == null}
         />
         <CockpitKpi
           label={t("kpi.impressions")}
           value={displayMetric(metrics.impressions)}
+          source={tSource("googleAdsImpressions")}
           muted={metrics.impressions == null}
         />
         <CockpitKpi
           label={t("kpi.cpc")}
           value={displayMoney(metrics.cpcLabel)}
+          source={tSource("googleAdsCpc")}
           muted={metrics.cpcLabel == null}
         />
         <CockpitKpi
           label={t("kpi.roas")}
           value={displayMetric(metrics.roas)}
+          source={tSource("googleAdsRoas")}
           muted={metrics.roas == null}
         />
       </div>
+    );
+  }
 
-      {variant === "administration" ? (
-        <CockpitAlert>{t("exportPending")}</CockpitAlert>
-      ) : null}
-
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+      <CockpitKpi
+        label={t("kpi.spend")}
+        value={displayMoney(metrics.spendLabel)}
+        source={tSource("googleAdsSpend")}
+        muted={metrics.spendLabel == null}
+      />
+      <CockpitKpi
+        label={t("kpi.clicks")}
+        value={displayMetric(metrics.clicks)}
+        source={tSource("googleAdsClicks")}
+        muted={metrics.clicks == null}
+      />
+      <CockpitKpi
+        label={t("kpi.impressions")}
+        value={displayMetric(metrics.impressions)}
+        source={tSource("googleAdsImpressions")}
+        muted={metrics.impressions == null}
+      />
+      <CockpitKpi
+        label={t("kpi.cpc")}
+        value={displayMoney(metrics.cpcLabel)}
+        source={tSource("googleAdsCpc")}
+        muted={metrics.cpcLabel == null}
+      />
+      <CockpitKpi
+        label={t("kpi.roas")}
+        value={displayMetric(metrics.roas)}
+        source={tSource("googleAdsRoas")}
+        muted={metrics.roas == null}
+      />
       {attribution ? (
-        <CockpitCard className="space-y-2 px-5 py-4">
-          <p className="text-sm font-medium text-slate-200">
-            {t("attributionTitle")}
-          </p>
-          <p className="text-sm text-slate-400">{t("attributionHint")}</p>
-          <p className="text-2xl font-light tabular-nums text-cyan-100">
-            {t("attributionSignups", {
-              count: attribution.signupsWithGclid,
-            })}
-          </p>
-        </CockpitCard>
+        <CockpitKpi
+          label={t("kpi.gclidSignups")}
+          value={String(attribution.signupsWithGclid)}
+          source={tSource("gclidSignups")}
+        />
       ) : null}
-    </CockpitSection>
+    </div>
   );
 }

@@ -76,3 +76,9 @@ drop policy if exists "platform_operating_costs_delete_super_admin" on public.pl
 create policy "platform_operating_costs_delete_super_admin"
   on public.platform_operating_costs for delete
   using (public.is_super_admin());
+
+grant all on table public.platform_audit_log to service_role;
+grant all on table public.platform_operating_costs to service_role;
+
+grant select, insert, update, delete on table public.platform_audit_log to authenticated;
+grant select, insert, update, delete on table public.platform_operating_costs to authenticated;

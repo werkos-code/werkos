@@ -1771,25 +1771,33 @@
     },
     "dashboard": {
       "title": "Admin",
-      "cockpitSubtitle": "Live platform signals — revenue from Stripe, growth from WerkOS.",
-      "stripeNotConfigured": "Stripe is not connected. Revenue KPIs appear only when STRIPE_SECRET_KEY is configured.",
       "stripeError": "Could not load Stripe data: {message}",
-      "revenueHint": "Revenue from Stripe — no estimates.",
-      "subscriptionsHint": "Subscription status from the database.",
-      "funnelHint": "Milestone counts from profiles and organizations.",
-      "sections": {
-        "revenue": "Revenue (Stripe)",
-        "subscriptions": "Subscriptions",
-        "funnel": "Growth funnel"
-      },
       "kpi": {
         "mrr": "MRR",
         "arr": "ARR",
-        "stripeActive": "Active in Stripe",
+        "activeSubscriptions": "Active subscriptions",
         "canceledLast30Days": "Canceled (30 days)",
-        "accounts": "Accounts",
-        "pendingCancel": "Cancel scheduled",
-        "stripeLinked": "Stripe subscription linked"
+        "cac": "CAC",
+        "ltv": "LTV",
+        "churn": "Churn",
+        "monthlyCosts": "Monthly costs",
+        "pendingCancel": "Cancel scheduled"
+      },
+      "sources": {
+        "mrr": "Sum of active Stripe subscriptions, normalized to a monthly amount.",
+        "arr": "MRR × 12 from Stripe.",
+        "activeSubscriptions": "Count of active subscriptions in Stripe.",
+        "canceledLast30Days": "Subscriptions canceled in Stripe in the last 30 days.",
+        "cac": "Google Ads spend + marketing costs (administration) divided by new paying customers this month.",
+        "ltv": "Average total paid revenue per Stripe customer (all paid invoices).",
+        "churn": "Canceled subscriptions (30 days) divided by active + canceled in that period.",
+        "monthlyCosts": "Sum of manual company costs incl. VAT in administration (current month).",
+        "googleAdsSpend": "Ad spend from the Google Ads API.",
+        "googleAdsClicks": "Clicks from the Google Ads API.",
+        "googleAdsImpressions": "Impressions from the Google Ads API.",
+        "googleAdsCpc": "Cost per click from the Google Ads API.",
+        "googleAdsRoas": "Return on ad spend: Stripe revenue divided by ad spend (once connected).",
+        "gclidSignups": "WerkOS profiles with a stored gclid (first touch)."
       },
       "status": {
         "missing": "No subscription record"
@@ -1807,18 +1815,13 @@
         "paidSubscriptions": "Paid subscription"
       },
       "googleAds": {
-        "title": "Marketing (Google Ads)",
-        "hint": "Ad performance from Google Ads — no estimates.",
-        "notConfigured": "Google Ads is not connected. KPIs appear once GOOGLE_ADS_* credentials are configured.",
-        "attributionTitle": "Attribution (WerkOS)",
-        "attributionHint": "First-touch gclid stored in WerkOS — not Google Ads API data yet.",
-        "attributionSignups": "Profiles with gclid: {count}",
         "kpi": {
           "spend": "Ad spend",
           "clicks": "Clicks",
           "impressions": "Impressions",
           "cpc": "CPC",
-          "roas": "ROAS"
+          "roas": "ROAS",
+          "gclidSignups": "gclid signups"
         }
       }
     },

@@ -15,7 +15,7 @@ export default async function PlatformAdminDashboardPage({ params }: Props) {
   const pageData = await loadPlatformDashboard();
 
   return (
-    <AdminCockpitPage title={t("title")} subtitle={t("cockpitSubtitle")}>
+    <AdminCockpitPage title={t("title")}>
       {pageData.error ? (
         <CockpitAlert variant="error">{pageData.error}</CockpitAlert>
       ) : pageData.dashboard ? (
