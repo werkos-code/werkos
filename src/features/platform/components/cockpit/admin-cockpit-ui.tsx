@@ -50,18 +50,22 @@ export function CockpitKpi({
       data-accent={accent}
       data-variant={variant}
       className={cn(
-        "admin-cockpit-kpi relative overflow-hidden",
+        "admin-cockpit-kpi relative z-0 overflow-visible has-[button:hover]:z-50 has-[button:focus-visible]:z-50",
         variant === "hero" ? "px-6 py-5 lg:px-7 lg:py-6" : "px-4 py-3.5",
         muted && "opacity-55",
         className,
       )}
     >
-      {source ? <CockpitSourceHint text={source} /> : null}
       <div
-        className="admin-cockpit-kpi-glow"
-        data-accent={accent}
+        className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]"
         aria-hidden
-      />
+      >
+        <div
+          className="admin-cockpit-kpi-glow"
+          data-accent={accent}
+        />
+      </div>
+      {source ? <CockpitSourceHint text={source} /> : null}
       <p className="admin-cockpit-kpi-label relative text-[10px] font-medium uppercase">
         {label}
       </p>
