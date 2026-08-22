@@ -1760,7 +1760,40 @@
   "platform": {
     "dashboard": {
       "title": "Admin",
-      "description": "Platform overview. Widgets come in a later phase."
+      "stripeNotConfigured": "Stripe is not connected. Revenue KPIs appear only when STRIPE_SECRET_KEY is configured.",
+      "stripeError": "Could not load Stripe data: {message}",
+      "revenueHint": "Revenue from Stripe — no estimates.",
+      "subscriptionsHint": "Subscription status from the database.",
+      "funnelHint": "Milestone counts from profiles and organizations.",
+      "sections": {
+        "revenue": "Revenue (Stripe)",
+        "subscriptions": "Subscriptions",
+        "funnel": "Growth funnel"
+      },
+      "kpi": {
+        "mrr": "MRR",
+        "arr": "ARR",
+        "stripeActive": "Active in Stripe",
+        "canceledLast30Days": "Canceled (30 days)",
+        "accounts": "Accounts",
+        "pendingCancel": "Cancel scheduled",
+        "stripeLinked": "Stripe subscription linked"
+      },
+      "status": {
+        "missing": "No subscription record"
+      },
+      "columns": {
+        "status": "Status",
+        "count": "Count",
+        "step": "Step"
+      },
+      "funnel": {
+        "signups": "Signups",
+        "companiesCreated": "Company created",
+        "firstProject": "First project",
+        "firstQuote": "First quote",
+        "paidSubscriptions": "Paid subscription"
+      }
     },
     "administration": {
       "title": "Administration",

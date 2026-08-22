@@ -1760,7 +1760,40 @@
   "platform": {
     "dashboard": {
       "title": "Admin",
-      "description": "Platformoverzicht. Widgets volgen in een volgende fase."
+      "stripeNotConfigured": "Stripe is niet gekoppeld. Omzet-KPI's tonen we pas wanneer STRIPE_SECRET_KEY is geconfigureerd.",
+      "stripeError": "Stripe-data kon niet worden geladen: {message}",
+      "revenueHint": "Omzet uit Stripe — geen schattingen.",
+      "subscriptionsHint": "Abonnementsstatus uit de database.",
+      "funnelHint": "Milestone-tellingen uit profielen en organisaties.",
+      "sections": {
+        "revenue": "Omzet (Stripe)",
+        "subscriptions": "Abonnementen",
+        "funnel": "Groei-funnel"
+      },
+      "kpi": {
+        "mrr": "MRR",
+        "arr": "ARR",
+        "stripeActive": "Actief in Stripe",
+        "canceledLast30Days": "Opgezegd (30 dagen)",
+        "accounts": "Accounts",
+        "pendingCancel": "Opzegging gepland",
+        "stripeLinked": "Stripe-abonnement gekoppeld"
+      },
+      "status": {
+        "missing": "Geen abonnementsrecord"
+      },
+      "columns": {
+        "status": "Status",
+        "count": "Aantal",
+        "step": "Stap"
+      },
+      "funnel": {
+        "signups": "Aanmeldingen",
+        "companiesCreated": "Bedrijf aangemaakt",
+        "firstProject": "Eerste project",
+        "firstQuote": "Eerste offerte",
+        "paidSubscriptions": "Betaald abonnement"
+      }
     },
     "administration": {
       "title": "Administratie",

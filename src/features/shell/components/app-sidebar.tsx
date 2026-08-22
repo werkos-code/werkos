@@ -113,6 +113,66 @@ function NavGroup({
   }
 
   const Icon = item.icon;
+  const parentActive = item.href ? isPathActive(pathname, item.href) : false;
+
+  if (item.href && hasChildren) {
+    return (
+      <div className="space-y-0.5">
+        <div
+          className={cn(
+            "relative flex items-center rounded-lg",
+            containsActive
+              ? "text-sidebar-foreground"
+              : "text-sidebar-foreground/85",
+          )}
+        >
+          {parentActive ? (
+            <span
+              aria-hidden
+              className="absolute top-1/2 left-0 h-4 w-0.5 -translate-y-1/2 rounded-full bg-[#3b82f6]"
+            />
+          ) : null}
+          <Link
+            href={item.href}
+            className={cn(
+              "flex min-w-0 flex-1 items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-white/[0.06] hover:text-sidebar-foreground",
+              parentActive && "bg-white/10 text-white",
+            )}
+          >
+            {Icon ? <Icon className="size-4 shrink-0 opacity-80" /> : null}
+            <span className="truncate">{t(item.labelKey)}</span>
+          </Link>
+          <button
+            type="button"
+            onClick={() => setManualOpen((value) => !value)}
+            aria-expanded={open}
+            aria-label={t(item.labelKey)}
+            className="rounded-lg px-2 py-2 text-sidebar-muted/80 transition-colors hover:bg-white/[0.06] hover:text-sidebar-foreground"
+          >
+            <ChevronDown
+              className={cn(
+                "size-3.5 transition-transform duration-200",
+                open ? "rotate-0" : "-rotate-90",
+              )}
+            />
+          </button>
+        </div>
+        {open ? (
+          <div className="ml-3 space-y-0.5 border-l border-white/8 pl-2.5">
+            {item.children?.map((child) => (
+              <NavItemLink
+                key={child.href}
+                href={child.href}
+                label={t(child.labelKey)}
+                active={isPathActive(pathname, child.href)}
+                nested
+              />
+            ))}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-0.5">

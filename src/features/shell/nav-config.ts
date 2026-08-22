@@ -210,21 +210,14 @@ export const PLATFORM_ADMIN_NAV: ShellNavSection = {
       href: "/platform/admin",
       labelKey: "admin",
       icon: Shield,
-    },
-    {
-      id: "admin-accounts",
-      href: "/platform/admin/accounts",
-      labelKey: "adminAccounts",
-    },
-    {
-      id: "admin-users",
-      href: "/platform/admin/gebruikers",
-      labelKey: "adminUsers",
-    },
-    {
-      id: "admin-administration",
-      href: "/platform/admin/administratie",
-      labelKey: "adminAdministration",
+      children: [
+        { href: "/platform/admin/accounts", labelKey: "adminAccounts" },
+        { href: "/platform/admin/gebruikers", labelKey: "adminUsers" },
+        {
+          href: "/platform/admin/administratie",
+          labelKey: "adminAdministration",
+        },
+      ],
     },
   ],
 };

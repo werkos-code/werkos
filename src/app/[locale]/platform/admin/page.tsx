@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import { ComingSoonPanel } from "@/features/shell/components/coming-soon-panel";
+import { AdminDashboardPanel } from "@/features/platform/components/admin-dashboard-panel";
+import { loadPlatformDashboard } from "@/features/platform/platform-dashboard-actions";
 import { ShellPage } from "@/features/shell/components/shell-page";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -10,9 +11,15 @@ export default async function PlatformAdminDashboardPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("platform.dashboard");
 
+  const pageData = await loadPlatformDashboard();
+
   return (
     <ShellPage title={t("title")}>
-      <ComingSoonPanel message={t("description")} />
+      {pageData.error ? (
+        <p className="text-sm text-destructive">{pageData.error}</p>
+      ) : pageData.dashboard ? (
+        <AdminDashboardPanel dashboard={pageData.dashboard} />
+      ) : null}
     </ShellPage>
   );
 }
